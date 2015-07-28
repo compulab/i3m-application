@@ -1,6 +1,7 @@
 #include <string.h>
 #include <math.h>
 #include "asf.h"
+#include "twi-slave/twi-xmega.h"
 
 unsigned char compulab_new [] = {
 	0x30, 0xF8, 0xD8, 0x08, 0x08, 0x08, 0x08, 0x0C, 0x0C, 0x2C, 0x44, 0x14, 0x24, 0x06, 0x96, 0xA6,
@@ -106,10 +107,15 @@ float adc_avg(){
 }
 
 
-void printTest(){
-
+ISR(TWIC_TWIS_vect)
+{
+	TWI_interrupt_handler();
 }
 
+void enable_interrupts(){
+	PMIC.CTRL |= PMIC_MEDLVLEN_bm | PMIC_LOLVLEN_bm;
+		sei();
+}
 
 void printPower(){
 //    int power_result, power_result_old=1000;
@@ -160,22 +166,23 @@ PROGMEM_STRING_T main_menu_strings[] = {
 };
 
 
+struct gfx_mono_bitmap compulab_logo = {
+	.type = GFX_MONO_BITMAP_RAM,
+	.width = 128,
+	.height = 32,
+	.data.pixmap = compulab_new
+};
+struct gfx_mono_menu testMenu = {
+	.title= main_menu_title,
+	.strings = main_menu_strings,
+	.num_elements = 6,
+	.current_selection = 3
+};
+
 int main(void){
+    enable_interrupts();
 
-	struct gfx_mono_bitmap compulab_logo = {
-			.type = GFX_MONO_BITMAP_RAM,
-			.width = 128,
-			.height = 32,
-			.data.pixmap = compulab_new
-	};
-	struct gfx_mono_menu testMenu = {
-			.title= main_menu_title,
-			.strings = main_menu_strings,
-			.num_elements = 6,
-			.current_selection = 3
-	};
-
-	board_init();
+    board_init();
 	sysclk_init();
 	gfx_mono_init();
 	adc_init();

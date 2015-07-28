@@ -106,7 +106,7 @@ main.d: ../main.c ../asf.h ../conf.h ../ASF/xmega/drivers/adc/adc.h \
  ../ASF/common/services/sleepmgr/sleepmgr.h \
  ../ASF/common/services/sleepmgr/xmega/sleepmgr.h \
  ../ASF/common/services/clock/sysclk.h ../ASF/xmega/utils/compiler.h \
- ../ASF/xmega/utils/status_codes.h
+ ../ASF/xmega/utils/status_codes.h ../twi-slave/twi-xmega.h
 
 ../asf.h:
 
@@ -341,3 +341,5 @@ main.d: ../main.c ../asf.h ../conf.h ../ASF/xmega/drivers/adc/adc.h \
 ../ASF/xmega/utils/compiler.h:
 
 ../ASF/xmega/utils/status_codes.h:
+
+../twi-slave/twi-xmega.h:

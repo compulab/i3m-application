@@ -8,6 +8,7 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include twi-slave/subdir.mk
 -include ASF/xmega/drivers/spi/subdir.mk
 -include ASF/xmega/drivers/nvm/subdir.mk
 -include ASF/xmega/drivers/cpu/subdir.mk
