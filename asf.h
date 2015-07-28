@@ -65,6 +65,7 @@
 
 // From module: GFX Monochrome - Monochrome Graphic Library
 #include "ASF/common/services/gfx_mono/gfx_mono.h"
+#include "ASF/common/services/gfx_mono/gfx_mono_menu.h"
 
 // From module: GPIO - General purpose Input/Output
 #include "ASF/common/services/gpio/gpio.h"

@@ -1,10 +1,6 @@
-
-#include "ASF/common/boards/board.h"
-#include "ASF/common/services/clock/sysclk.h"
 #include <string.h>
-#include "asf.h"
 #include <math.h>
-#include "ASF/xmega/boards/stk600/rc064x/stk600_rc064x.h"
+#include "asf.h"
 
 unsigned char compulab_new [] = {
 	0x30, 0xF8, 0xD8, 0x08, 0x08, 0x08, 0x08, 0x0C, 0x0C, 0x2C, 0x44, 0x14, 0x24, 0x06, 0x96, 0xA6,
@@ -43,22 +39,21 @@ unsigned char compulab_new [] = {
 
 int power;
 char powerstring[5];
+bool leftButtonStatus,rightButtonStatus,selectButtonStatus;
+bool menuEnable;
 bool buttonStatus;
 bool buttenLastStatus, screen_changed;
-
-typedef enum {SCREEN_compulab_logo, SCREEN_POWER} SCREEN_TYPE;
-SCREEN_TYPE screen;
-
-
-SCREEN_TYPE changeScreen(SCREEN_TYPE type);
-
+long currentPower;
 
 void InitGlobalVars()
 {
 	power = 999;
 	buttenLastStatus = false;
+	leftButtonStatus = false;
+	rightButtonStatus = false;
+	selectButtonStatus = false;
 	screen_changed = false;
-	screen = SCREEN_compulab_logo;
+	menuEnable = true;
 }
 
 //***ADC configuration
@@ -67,7 +62,6 @@ void InitGlobalVars()
 
 static void adc_init(void)
 {
-
 	struct adc_config adc_conf;
 	struct adc_channel_config adcch_conf;
 
@@ -86,25 +80,6 @@ static void adc_init(void)
 //***END of ADC Config
 
 
-SCREEN_TYPE changeScreen(SCREEN_TYPE type)
-{
-	SCREEN_TYPE ret = SCREEN_compulab_logo;
-	
-	switch(type)
-	{
-		case SCREEN_compulab_logo:
-			ret = SCREEN_POWER;
-			break;
-		case SCREEN_POWER:
-			ret = SCREEN_compulab_logo;
-			break;
-		default:
-			LED_Toggle(LED6_GPIO);
-			break;
-	}
-	return ret;
-}
-
 void printLogo(struct gfx_mono_bitmap logo){
 	gfx_mono_put_bitmap(&logo, 0, 8);
 }
@@ -115,46 +90,90 @@ void writeText(char* text,int pageAddr,int colAddr){
 	ssd1306_write_text(text);
 }
 
-void printPower(){
-	int adca1_result;
-    int power_result, power_result_old=1000;
-    int i;
-    char resString[7];
-    long power_avg;
-
-	power_avg=0;
-
-	for (i=0;i<1000;i++){
+float adc_avg(){
+	int i;
+	long power_avg =0;
+	for (i=0;i<5000;i++){
 		adc_start_conversion(&MY_ADC, MY_ADC_CH);  //one conversion begins
 		LED_On(LED3_GPIO);
 //		adc_wait_for_interrupt_flag(&MY_ADC, MY_ADC_CH);
 		LED_Off(LED3_GPIO);
-		adca1_result = adc_get_result(&MY_ADC, MY_ADC_CH);
+		int adca1_result = adc_get_result(&MY_ADC, MY_ADC_CH);
 		power_avg=power_avg+adca1_result;
 	}
 
-	power_avg=power_avg/(i);
+	return power_avg/(i);
+}
 
-	power_result=round(power_avg); //*0.07731r
-	itoa(power_result, powerstring,10);//power_result
-	if (screen_changed) {  //if just moved to this screen
+
+void printTest(){
+
+}
+
+
+void printPower(){
+//    int power_result, power_result_old=1000;
+    char resString[7];
+
+    currentPower=round(adc_avg()*0.177); //*0.07731r
+    if (currentPower < 0)
+    	currentPower=0;
+	itoa(currentPower, powerstring,10);//power_result
+//	if (screen_changed) {  //if just moved to this screen
 		ssd1306_clear();
 		writeText("Power consumption: ",1,25);
-	}	else if (power_result==power_result_old) return;
+//	}	//else if (power_result==power_result_old) return;
 	strcpy(resString,powerstring);
-//	resString[2]=resString[1];
-//	resString[3]=resString[2];
-//	resString[1]='.';
-	resString[3]=' ';
-	resString[4]='W';
-	resString[5]='\0';
+	if (currentPower >0){
+		resString[2]=resString[1];
+		resString[3]=resString[2];
+		resString[1]='.';
+		resString[3]=' ';
+		resString[4]='W';
+		resString[5]='\0';
+	} else {
+		resString[1]=' ';
+		resString[2]='W';
+		resString[3]='\0';
+	}
 	writeText(resString,3,55);
 
-	power_result_old=power_result;
+//	power_result_old=power_result;
 }
+
+PROGMEM_DECLARE(char const, main_menu_title[]) = "Menu Test Title";
+PROGMEM_DECLARE(char const, main_menu_1[]) = "Show Compulab logo";
+PROGMEM_DECLARE(char const, main_menu_2[]) = "Do Nothing";
+PROGMEM_DECLARE(char const, main_menu_3[]) = "Do Nothing";
+PROGMEM_DECLARE(char const, main_menu_4[]) = "Do Nothing";
+PROGMEM_DECLARE(char const, main_menu_5[]) = "Do Nothing";
+PROGMEM_DECLARE(char const, main_menu_6[]) = "Show voltage";
+//@}
+
+PROGMEM_STRING_T main_menu_strings[] = {
+	main_menu_1,
+	main_menu_2,
+	main_menu_3,
+	main_menu_4,
+	main_menu_5,
+	main_menu_6,
+};
+
+
 int main(void){
 
-	struct gfx_mono_bitmap compulab_logo;
+	struct gfx_mono_bitmap compulab_logo = {
+			.type = GFX_MONO_BITMAP_RAM,
+			.width = 128,
+			.height = 32,
+			.data.pixmap = compulab_new
+	};
+	struct gfx_mono_menu testMenu = {
+			.title= main_menu_title,
+			.strings = main_menu_strings,
+			.num_elements = 6,
+			.current_selection = 3
+	};
 
 	board_init();
 	sysclk_init();
@@ -165,76 +184,64 @@ int main(void){
 	
 	InitGlobalVars();
 	
-	compulab_logo.type = GFX_MONO_BITMAP_RAM;
-	compulab_logo.width = 128;
-	compulab_logo.height = 32;
-	compulab_logo.data.pixmap = compulab_new;
+	ssd1306_set_column_address(0);
+	ssd1306_set_page_address(0);
+	gfx_mono_menu_init(&testMenu);
 
-
-	int count =0;
 	adc_enable(&MY_ADC);
 
+	bool isButtonPressed(bool * lastStatus, uint8_t buttonPos){
+		bool currentStatus = ioport_get_value(buttonPos);
+		bool result = currentStatus && !(*lastStatus);
+		*lastStatus = currentStatus;
+		return result;
+	}
+
+
+	bool isLeftButtonPressed(){
+		return isButtonPressed(&leftButtonStatus,FP_LEFT_BUTTON);
+	}
+
+	bool isRightButtonPressed(){
+		return isButtonPressed(&rightButtonStatus,FP_RIGHT_BUTTON);
+	}
+
+	bool isSelectButtonPressed(){
+		return isButtonPressed(&selectButtonStatus,FP_OK_BUTTON);
+	}
+
+	int returnToMenuCount = 0;
 	while(true) 
 	{
-		buttonStatus = ioport_get_value(FP_RIGHT_BUTTON);
-		if (buttenLastStatus && !buttonStatus)
-		{
-			count++;
-//			screen = changeScreen(screen);
-			screen_changed = true;
-		}
-		if (screen_changed){
-			ssd1306_clear();
-			screen_changed = false;
-			if (count %2 ==1){
-				printLogo(compulab_logo);
+		if (menuEnable){
+			if (isLeftButtonPressed())
+			{
+				gfx_mono_menu_process_key(&testMenu,GFX_MONO_MENU_KEYCODE_UP);
+			} else if(isRightButtonPressed()){
+				gfx_mono_menu_process_key(&testMenu,GFX_MONO_MENU_KEYCODE_DOWN);
+			} else if(isSelectButtonPressed()){
+				uint8_t selection = gfx_mono_menu_process_key(&testMenu,GFX_MONO_MENU_KEYCODE_ENTER);
+				menuEnable = false;
+				if (selection == 0x00){
+					ssd1306_clear();
+					printLogo(compulab_logo);
+				} else if (selection == 0x05){
+					ssd1306_clear();
+					printPower();
+				} else {
+					menuEnable = true;
+				}
+			}
+		}else if (isSelectButtonPressed()){
+			if (returnToMenuCount == 1){
+				returnToMenuCount=0;
+				menuEnable = true;
+				ssd1306_clear();
+				gfx_mono_menu_init(&testMenu);
 			}else {
-				printPower();
+				returnToMenuCount++;
 			}
 		}
-		buttenLastStatus = buttonStatus;
-//		switch(screen)
-//		{
-//			case SCREEN_compulab_logo :
-//				if (screen_changed) {  //if just moved to this screen
-//					ssd1306_clear();
-//					gfx_mono_put_bitmap(&compulab_logo, 0, 8);
-//				}
-//				break;
-//
-//			case SCREEN_POWER :
-//				power_avg=0;
-//				for (i=0;i<1000;i++){
-//					adc_start_conversion(&MY_ADC, MY_ADC_CH);  //one conversion begins
-//					LED_On(LED3_GPIO);
-//				//	adc_wait_for_interrupt_flag(&MY_ADC, MY_ADC_CH);
-//					LED_Off(LED3_GPIO);
-//					adca1_result = adc_get_result(&MY_ADC, MY_ADC_CH);
-//					power_avg=power_avg+adca1_result;
-//				}
-//				power_avg=power_avg/(i);
-//				power_result=round(power_avg*0.07731);
-//				itoa(power_result, powerstring,10);//power_result
-//				if (screen_changed) {  //if just moved to this screen
-//					ssd1306_clear();
-//					ssd1306_set_page_address(1);
-//					ssd1306_set_column_address(25);
-//					ssd1306_write_text("Power consumption: ");
-//				}
-//
-//				else if (power_result==power_result_old) break;
-//				ssd1306_set_page_address(3);
-//				ssd1306_set_column_address(55);
-//				ssd1306_write_text(powerstring);
-//				ssd1306_write_text(" W     ");
-//				power_result_old=power_result;
-//
-//				break;
-//
-//			default:
-//				break;
-//		}
-//		screen_changed = false;
 		delay_us(100000); //10ms
 	}
 

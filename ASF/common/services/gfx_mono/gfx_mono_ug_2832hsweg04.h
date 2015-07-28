@@ -69,7 +69,7 @@
  */
 
 #define GFX_MONO_LCD_WIDTH              128
-#define GFX_MONO_LCD_HEIGHT             32
+#define GFX_MONO_LCD_HEIGHT             64
 #define GFX_MONO_LCD_PIXELS_PER_BYTE    8
 #define GFX_MONO_LCD_PAGES              (GFX_MONO_LCD_HEIGHT / \
 	GFX_MONO_LCD_PIXELS_PER_BYTE)
