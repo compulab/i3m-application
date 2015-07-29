@@ -4,3 +4,4 @@
 #ifndef FLASH_PAGE_SIZE
 	#define FLASH_PAGE_SIZE 256
 #endif
+#endif

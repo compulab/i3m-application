@@ -81,10 +81,10 @@ static void menu_draw(struct gfx_mono_menu *menu, bool redraw)
 	if (menu->current_page != menu_page || redraw == true) {
 		/* clear screen if we have changed the page or menu and prepare
 		 * redraw */
-		gfx_mono_draw_filled_rect(0, SYSFONT_LINESPACING,
-				GFX_MONO_LCD_WIDTH,
-				GFX_MONO_LCD_HEIGHT - SYSFONT_LINESPACING,
-				GFX_PIXEL_CLR);
+//		gfx_mono_draw_filled_rect(0, SYSFONT_LINESPACING,
+//				GFX_MONO_LCD_WIDTH,
+//				GFX_MONO_LCD_HEIGHT - SYSFONT_LINESPACING,
+//				GFX_PIXEL_CLR);
 		redraw_state = true;
 	}
 
@@ -126,9 +126,10 @@ static void menu_draw(struct gfx_mono_menu *menu, bool redraw)
 void gfx_mono_menu_init(struct gfx_mono_menu *menu)
 {
 	/* Clear screen */
-	gfx_mono_draw_filled_rect(0, 0,
-			GFX_MONO_LCD_WIDTH, GFX_MONO_LCD_HEIGHT, GFX_PIXEL_CLR);
+//	gfx_mono_draw_filled_rect(0, 0,
+//			GFX_MONO_LCD_WIDTH, GFX_MONO_LCD_HEIGHT, GFX_PIXEL_CLR);
 
+//	ssd1306_clear();
 	/* Draw the menu title on the top of the screen */
 	gfx_mono_draw_progmem_string((char PROGMEM_PTR_T)menu->title,
 			0, 0, &sysfont);
