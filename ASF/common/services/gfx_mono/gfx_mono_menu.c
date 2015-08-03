@@ -78,9 +78,11 @@ static void menu_draw(struct gfx_mono_menu *menu, bool redraw)
 	uint8_t menu_page = menu->current_selection /
 			GFX_MONO_MENU_ELEMENTS_PER_SCREEN;
 
+
 	if (menu->current_page != menu_page || redraw == true) {
 		/* clear screen if we have changed the page or menu and prepare
 		 * redraw */
+		ssd1306_clear_body();
 //		gfx_mono_draw_filled_rect(0, SYSFONT_LINESPACING,
 //				GFX_MONO_LCD_WIDTH,
 //				GFX_MONO_LCD_HEIGHT - SYSFONT_LINESPACING,
@@ -90,31 +92,33 @@ static void menu_draw(struct gfx_mono_menu *menu, bool redraw)
 
 	menu->current_page = menu_page;
 
+
 	/* Clear old indicator icon */
 	gfx_mono_draw_filled_rect(0, SYSFONT_LINESPACING,
 			GFX_MONO_MENU_INDICATOR_WIDTH, GFX_MONO_LCD_HEIGHT -
 			SYSFONT_LINESPACING, GFX_PIXEL_CLR);
+	/* Print visible options if page or menu has changed */
+	if (redraw_state == true) {
+			for (i = menu_page * GFX_MONO_MENU_ELEMENTS_PER_SCREEN;
+					i < menu_page *
+					GFX_MONO_MENU_ELEMENTS_PER_SCREEN +
+					GFX_MONO_MENU_ELEMENTS_PER_SCREEN &&
+					i < menu->num_elements; i++) {
+				gfx_mono_draw_progmem_string(
+						(char PROGMEM_PTR_T)menu->strings[i],
+						GFX_MONO_MENU_INDICATOR_WIDTH + 1,
+						line * SYSFONT_LINESPACING, &sysfont);
+				line++;
+			}
+			redraw_state = false;
+		}
 
 	/* Put indicator icon on current selection */
 	gfx_mono_put_bitmap(&menu_bitmap_indicator, 0,
 			SYSFONT_LINESPACING * ((menu->current_selection %
 			GFX_MONO_MENU_ELEMENTS_PER_SCREEN) + 1));
 
-	/* Print visible options if page or menu has changed */
-	if (redraw_state == true) {
-		for (i = menu_page * GFX_MONO_MENU_ELEMENTS_PER_SCREEN;
-				i < menu_page *
-				GFX_MONO_MENU_ELEMENTS_PER_SCREEN +
-				GFX_MONO_MENU_ELEMENTS_PER_SCREEN &&
-				i < menu->num_elements; i++) {
-			gfx_mono_draw_progmem_string(
-					(char PROGMEM_PTR_T)menu->strings[i],
-					GFX_MONO_MENU_INDICATOR_WIDTH + 1,
-					line * SYSFONT_LINESPACING, &sysfont);
-			line++;
-		}
-		redraw_state = false;
-	}
+
 }
 
 /**
@@ -129,7 +133,8 @@ void gfx_mono_menu_init(struct gfx_mono_menu *menu)
 //	gfx_mono_draw_filled_rect(0, 0,
 //			GFX_MONO_LCD_WIDTH, GFX_MONO_LCD_HEIGHT, GFX_PIXEL_CLR);
 
-//	ssd1306_clear();
+	ssd1306_clear();
+
 	/* Draw the menu title on the top of the screen */
 	gfx_mono_draw_progmem_string((char PROGMEM_PTR_T)menu->title,
 			0, 0, &sysfont);

@@ -421,6 +421,22 @@ static inline void ssd1306_clear(void)
 }
 //@}
 
+
+static inline void ssd1306_clear_body(void)
+{
+	uint8_t page = 0;
+	uint8_t col = 0;
+
+	for (page = 1; page < 8; ++page)
+	{
+		ssd1306_set_page_address(page);
+		ssd1306_set_column_address(0);
+		for (col = 0; col < 128; ++col)
+		{
+			ssd1306_write_data(0x00);
+		}
+	}
+}
 //! \name Initialization
 //@{
 void ssd1306_init(void);

@@ -4,13 +4,19 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../main.c 
+../adc.c \
+../main.c \
+../oled-menu.c 
 
 OBJS += \
-./main.o 
+./adc.o \
+./main.o \
+./oled-menu.o 
 
 C_DEPS += \
-./main.d 
+./adc.d \
+./main.d \
+./oled-menu.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

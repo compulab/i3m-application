@@ -90,7 +90,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
 #define UNSET_ADDRESS 0x00
 
 static int index =0;
-static uint8_t flashBuffer[FLASH_PAGE_SIZE];
+//static uint8_t flashBuffer[FLASH_PAGE_SIZE];
 static uint8_t host_address = UNSET_ADDRESS;
 static uint8_t reg_address = UNSET_ADDRESS;
 static bool data_sent;
@@ -132,23 +132,23 @@ void TWI_EndTransmission(){
 }
 
 void handleRead(uint8_t address){
-//	TWI_BASE.DATA = twi_EEPROM_ReadByte(address);
+	TWI_BASE.DATA = twi_EEPROM_ReadByte(address);
 	++reg_address;
 }
+//
+//void handleFlashWrite(){
+////	twi_Flash_WriteWord(reg_address,flashBuffer);
+//	TWI_ACK();
+//	TWI_CLEAR_DIF();
+//}
 
-void handleFlashWrite(){
-//	twi_Flash_WriteWord(reg_address,flashBuffer);
-	TWI_ACK();
-	TWI_CLEAR_DIF();
-}
-
-void TWI_HandleFlashData(){
-	flashBuffer[index]= TWI_BASE.DATA;
-	++index;
-	if (index == FLASH_PAGE_SIZE ){
-		handleFlashWrite();
-	}
-}
+//void TWI_HandleFlashData(){
+//	flashBuffer[index]= TWI_BASE.DATA;
+//	++index;
+//	if (index == FLASH_PAGE_SIZE ){
+//		handleFlashWrite();
+//	}
+//}
 
 void handleWrite(uint8_t data){
 	twi_EEPROM_WriteByte(reg_address,data);
