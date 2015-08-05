@@ -34,5 +34,6 @@ ASF/xmega/drivers/cpu \
 ASF/xmega/drivers/nvm \
 ASF/xmega/drivers/spi \
 . \
-twi-slave \
+gfx \
+twi \
 

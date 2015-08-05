@@ -10,6 +10,7 @@
 #endif
 
 #include "../asf.h"
+#include "twi-master.h"
 //#include "avr_compiler.h"
 
 #define LARGE_MEMORY
@@ -23,6 +24,12 @@
 #define CPU_FREQ    2000000
 //#define   BAUD_RATE   9600
 #define BAUD_RATE 115200
+
+#define CPU_SPEED       CPU_FREQ
+#define BAUDRATE	100000
+#define TWI_BAUDSETTING TWI_BAUD(CPU_SPEED, BAUDRATE)
+
+
 
 #define BRREG_VALUE  12
 

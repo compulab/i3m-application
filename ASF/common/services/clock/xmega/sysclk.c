@@ -155,7 +155,7 @@ void sysclk_init(void)
 				CONFIG_OSC_AUTOCAL_RC2MHZ_REF_OSC);
 #endif
 	} else {
-		osc_disable(OSC_ID_RC2MHZ);
+//		osc_disable(OSC_ID_RC2MHZ);
 	}
 
 #ifdef CONFIG_RTC_SOURCE

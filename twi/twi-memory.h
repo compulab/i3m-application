@@ -8,9 +8,10 @@
 #ifndef TWI_MEMORY_H_
 #define TWI_MEMORY_H_
 #include <stdint.h>
-#include "defines.h"
-#include "eeprom_driver.h"
-#include "sp_driver.h"
+
+#include "../twi/defines.h"
+#include "../twi/eeprom_driver.h"
+#include "../twi/sp_driver.h"
 
 uint8_t twi_EEPROM_ReadByte(uint8_t regAddr);
 void twi_EEPROM_WriteByte(uint8_t regAddr, uint8_t value);

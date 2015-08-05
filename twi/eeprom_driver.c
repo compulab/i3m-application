@@ -56,7 +56,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include "eeprom_driver.h"
+#include "../twi/eeprom_driver.h"
 
 /*! \brief Write one byte to EEPROM using IO mapping.
  *

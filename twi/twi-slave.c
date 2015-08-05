@@ -78,97 +78,104 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
 
 
 //
-#include <stdint.h>
-#include <stdbool.h>
+#include "twi-slave.h"
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include "twi-xmega.h"
-#include "twi-memory.h"
 #include "../config/conf-twi.h"
-
+#include "../twi/twi-memory.h"
+#include "../debug.h"
 
 #define UNSET_ADDRESS 0x00
 
+char debug[3];
 static int index =0;
-//static uint8_t flashBuffer[FLASH_PAGE_SIZE];
-static uint8_t host_address = UNSET_ADDRESS;
+static uint8_t slave_address = UNSET_ADDRESS;
 static uint8_t reg_address = UNSET_ADDRESS;
 static bool data_sent;
-
-void twi_init()
+static bool isReadRequest;
+void twi_slave_init()
 {
-		TWI_BASE.ADDR = TWI_ADDRESS << 1;
-        TWI_BASE.CTRLA = TWI_SLAVE_INTLVL_MED_gc |
+		TWI_SLAVE_BASE.ADDR = TWI_SLAVE_ADDRESS << 1;
+		TWI_SLAVE_BASE.ADDRMASK = TWI_SLAVE_MSK << 1;
+        TWI_SLAVE_BASE.CTRLA = TWI_SLAVE_INTLVL_MED_gc |
                 TWI_SLAVE_DIEN_bm |
                 TWI_SLAVE_APIEN_bm |
                 TWI_SLAVE_ENABLE_bm |
 				TWI_SLAVE_PIEN_bm;
 }
 
+void clear(){
+	index = 0;
+}
+
 void clear_addresses(){
-	 host_address = UNSET_ADDRESS;
+	 slave_address = UNSET_ADDRESS;
 	 reg_address = UNSET_ADDRESS;
-	 index = 0;
 }
 
 void TWI_ACK(){
-	TWI_BASE.CTRLB = TWI_SLAVE_CMD_RESPONSE_gc;
+	TWI_SLAVE_BASE.CTRLB = TWI_SLAVE_CMD_RESPONSE_gc;
 }
 
 void TWI_NACK(){
-	TWI_BASE.CTRLB = TWI_SLAVE_CMD_COMPTRANS_gc;
+	TWI_SLAVE_BASE.CTRLB = TWI_SLAVE_CMD_COMPTRANS_gc;
 }
 
 void TWI_CLEAR_APIF(){
-	TWI_BASE.STATUS |= TWI_SLAVE_APIF_bm;
+	TWI_SLAVE_BASE.STATUS |= TWI_SLAVE_APIF_bm;
 }
 
 void TWI_CLEAR_DIF(){
-	TWI_BASE.STATUS |= TWI_SLAVE_DIF_bm;
+	TWI_SLAVE_BASE.STATUS |= TWI_SLAVE_DIF_bm;
 }
 
 void TWI_EndTransmission(){
-	clear_addresses();
+	clear();
 }
 
 void handleRead(uint8_t address){
-	TWI_BASE.DATA = twi_EEPROM_ReadByte(address);
+
+	if (slave_address == 0x31){
+		uint8_t data = twi_EEPROM_ReadByte(address);
+		TWI_SLAVE_BASE.DATA = data;
+	}
+	else{
+
+		TWI_SLAVE_BASE.DATA = 0xff;
+
+	}
 	++reg_address;
 }
-//
-//void handleFlashWrite(){
-////	twi_Flash_WriteWord(reg_address,flashBuffer);
-//	TWI_ACK();
-//	TWI_CLEAR_DIF();
-//}
-
-//void TWI_HandleFlashData(){
-//	flashBuffer[index]= TWI_BASE.DATA;
-//	++index;
-//	if (index == FLASH_PAGE_SIZE ){
-//		handleFlashWrite();
-//	}
-//}
 
 void handleWrite(uint8_t data){
-	twi_EEPROM_WriteByte(reg_address,data);
+
+	if (slave_address == 0x32)
+		twi_EEPROM_WriteByte(reg_address,data);
 	++reg_address;
 }
 
 void TWI_SlaveAddressMatchHandler(){
+
+	isReadRequest = (TWI_SLAVE_BASE.STATUS & TWI_SLAVE_DIR_bm) == TWI_SLAVE_DIR_bm;
 	data_sent = false;
-	host_address= (TWI_BASE.DATA >>1);
+	uint8_t address = (TWI_SLAVE_BASE.DATA >>1);
+
+	if (address != slave_address || !isReadRequest){
+		clear_addresses();
+		slave_address= address;
+	}
+
 	TWI_ACK();
 	TWI_CLEAR_APIF();
 }
 
 void TWI_SlaveStopHandler(){
-	clear_addresses();
+	clear();
 	TWI_CLEAR_APIF();
 }
 
 void TWI_SlaveReadDataHandler(){
-	uint8_t status = TWI_BASE.STATUS;
+	uint8_t status = TWI_SLAVE_BASE.STATUS;
 	if (((status & TWI_SLAVE_RXACK_bm) == TWI_SLAVE_RXACK_bm) &&\
 		(data_sent == true)) {
 		TWI_NACK();
@@ -181,19 +188,23 @@ void TWI_SlaveReadDataHandler(){
 }
 
 void TWI_SlaveWriteDataHandler(){
-	handleWrite(TWI_BASE.DATA);
+	handleWrite(TWI_SLAVE_BASE.DATA);
 	TWI_ACK();
 	TWI_CLEAR_DIF();
 }
 
 void TWI_SaveAddress(){
-	reg_address = TWI_BASE.DATA;
-	TWI_ACK();
+	reg_address = TWI_SLAVE_BASE.DATA;
+	if (isReadRequest){
+		TWI_SlaveReadDataHandler();
+	} else {
+		TWI_ACK();
+	}
 	TWI_CLEAR_DIF();
 }
 
 void TWI_interrupt_handler(){
-	uint8_t currentStatus = TWI_BASE.STATUS;
+	uint8_t currentStatus = TWI_SLAVE_BASE.STATUS;
 	if (currentStatus & TWI_SLAVE_BUSERR_bm) {    		/* If bus error. */
 		TWI_EndTransmission();
 	}
@@ -208,9 +219,9 @@ void TWI_interrupt_handler(){
 		TWI_SlaveStopHandler();
 	}
 	else if (currentStatus & TWI_SLAVE_DIF_bm) { 		/* If data interrupt. */
-		if (currentStatus & TWI_SLAVE_DIR_bm)
+		if (currentStatus & TWI_SLAVE_DIR_bm){
 			TWI_SlaveReadDataHandler();
-		else if (reg_address == UNSET_ADDRESS) {
+		} else if (reg_address == UNSET_ADDRESS){
 			TWI_SaveAddress();
 		}else{
 			TWI_SlaveWriteDataHandler();

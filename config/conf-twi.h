@@ -1,8 +1,10 @@
 #ifndef CONF_TWI_H_INCLUDED
 #define CONF_TWI_H_INCLUDED
 
-#define TWI_ADDRESS     (0x30)
-#define TWI_BASE        (TWIC.SLAVE)
-#define TWI_LAST_REG    (270)
+#define TWI_SLAVE_ADDRESS     (0x30)
+#define TWI_SLAVE_MSK			(0x03)
+#define TWI_SLAVE_BASE        (TWIC.SLAVE)
 
+
+#define TWI_MASTER_BASE 	  (TWIE.MASTER)
 #endif /*CONF_TWI_H_INCLUDED*/

@@ -4,7 +4,7 @@
  *  Created on: Jul 26, 2015
  *      Author: arkadi
  */
-#include "twi-memory.h"
+#include "../twi/twi-memory.h"
 
 void twi_EEPROM_WriteByte(uint8_t regAddr, uint8_t value)
 {
