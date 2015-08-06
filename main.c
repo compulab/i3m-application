@@ -1,9 +1,8 @@
 #include <string.h>
 #include <math.h>
-#include "asf.h"
 #include "twi/twi-slave.h"
-#include "twi/twi-master.h"
-#include "gfx/logos.h"
+#include "gfx/menu.h"
+#include "gfx/gfx_components.h"
 #include "debug.h"
 #include "gfx/test/sampleMainMenu.h"
 #include "gfx/menu-handler.h"
@@ -57,12 +56,7 @@ void enable_interrupts(){
 		sei();
 }
 
-void updateData(uint8_t data){
-	char debug[4];
-	CLEAR
-	MSG("UPDATED DATA")
-	MSG2(data,debug)
-}
+void updateData(uint8_t data){}
 
 
 void power_state_init(){
@@ -77,13 +71,13 @@ void power_state_init(){
 void init(){
 	enable_interrupts();
 	board_init();
-	gfx_mono_init();
-	adc_init();
-	pmic_init();
-	power_state_init();
-//	tc_init();
-	twi_slave_init();
-	twi_master_init();
+}
+
+
+void printWindow(){
+	gfx_window window;
+	gfx_window_init(&window,0,0,true,true,10,10);
+	gfx_window_draw(&window);
 }
 
 void testTWI(){
@@ -92,19 +86,14 @@ void testTWI(){
 }
 
 
-void initMenu(){
-	gfx_action_menu_init(getSampleMenu());
-}
-
 int main(void){
 	init();
 	initMenu();
-
 //	testTWI();
 	while(true)
 	{
 		menu_handler();
-		delay_us(100000); //10ms
+	int returnToMenuCount = 0;
 	}
 
 }

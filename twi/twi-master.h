@@ -29,6 +29,4 @@ void twi_master_init();
 void handleReadInterrupt(void);
 void handleWriteInterrupt(void);
 
-
-
 #endif /* TWI_TWI_MASTER_H_ */
