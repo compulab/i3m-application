@@ -10,6 +10,7 @@ RM := rm -rf
 -include sources.mk
 -include twi/subdir.mk
 -include gfx/subdir.mk
+-include action_menu/subdir.mk
 -include ASF/xmega/drivers/spi/subdir.mk
 -include ASF/xmega/drivers/nvm/subdir.mk
 -include ASF/xmega/drivers/cpu/subdir.mk

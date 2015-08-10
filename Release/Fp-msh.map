@@ -11,7 +11,7 @@ Archive member included to satisfy reference by file (symbol)
 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_exit.o)
                               /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/crtx64a3u.o (exit)
 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_copy_data.o)
-                              ./ASF/common/services/sleepmgr/xmega/sleepmgr.o (__do_copy_data)
+                              ./gfx/logos.o (__do_copy_data)
 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_clear_bss.o)
                               ./twi/twi-master.o (__do_clear_bss)
 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fixsfsi.o)
@@ -44,6 +44,8 @@ Archive member included to satisfy reference by file (symbol)
                               /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(mulsf3x.o) (__fp_pscB)
 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_round.o)
                               /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(mulsf3.o) (__fp_round)
+/usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(malloc.o)
+                              ./action_menu/action_menu_factory.o (malloc)
 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(memcpy.o)
                               ./ASF/xmega/drivers/nvm/nvm.o (memcpy)
 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(strcpy.o)
@@ -62,18 +64,19 @@ powerstring         0x5               ./main.o
 currentPower        0x4               ./main.o
 power               0x2               ./main.o
 currentPackage      0x205             ./twi/twi-master.o
-buttenLastStatus    0x1               ./main.o
 adcb_callback       0x2               ./ASF/xmega/drivers/adc/adc.o
 debug               0x3               ./twi/twi-slave.o
 selectButtonStatus  0x1               ./main.o
 menuEnable          0x1               ./main.o
+__brkval            0x2               /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(malloc.o)
 isExacuting         0x1               ./twi/twi-master.o
+presentMenu         0x2               ./action_menu/action_menu_factory.o
 sendIndex           0x2               ./twi/twi-master.o
 retryingCount       0x2               ./twi/twi-master.o
 leftButtonStatus    0x1               ./main.o
 sleepmgr_locks      0x6               ./ASF/common/services/sleepmgr/xmega/sleepmgr.o
 rightButtonStatus   0x1               ./main.o
-screen_changed      0x1               ./main.o
+__flp               0x2               /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(malloc.o)
 adca_callback       0x2               ./ASF/xmega/drivers/adc/adc.o
 buttonStatus        0x1               ./main.o
 
@@ -96,7 +99,14 @@ LOAD ./twi/sp_driver.o
 LOAD ./twi/twi-master.o
 LOAD ./twi/twi-memory.o
 LOAD ./twi/twi-slave.o
+LOAD ./gfx/keypad.o
+LOAD ./gfx/logos.o
+LOAD ./gfx/menu-handler.o
+LOAD ./gfx/menu.o
 LOAD ./gfx/testMenu.o
+LOAD ./action_menu/action_menu_factory.o
+LOAD ./action_menu/gfx_action_menu.o
+LOAD ./action_menu/sampleMenu.o
 LOAD ./ASF/xmega/drivers/spi/spi.o
 LOAD ./ASF/xmega/drivers/nvm/nvm.o
 LOAD ./ASF/xmega/drivers/nvm/nvm_asm.o
@@ -116,9 +126,7 @@ LOAD ./ASF/common/services/gfx_mono/sysfont.o
 LOAD ./ASF/common/services/clock/xmega/sysclk.o
 LOAD ./ASF/common/components/display/ssd1306/font.o
 LOAD ./ASF/common/components/display/ssd1306/ssd1306.o
-LOAD ./adc.o
 LOAD ./main.o
-LOAD ./oled-menu.o
 START GROUP
 LOAD /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a
 LOAD /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a
@@ -215,7 +223,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x0000000000000000     0x370c
+.text           0x0000000000000000     0x3c58
  *(.vectors)
  .vectors       0x0000000000000000      0x1fc /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/crtx64a3u.o
                 0x0000000000000000                __vectors
@@ -229,32 +237,32 @@ END GROUP
  *(.trampolines*)
                 0x00000000000001fc                __trampolines_end = .
  *(.progmem*)
- .progmem.data.arrow_right_data
-                0x00000000000001fc        0x4 ./ASF/common/services/gfx_mono/gfx_mono_menu.o
-                0x00000000000001fc                arrow_right_data
- .progmem.data.sysfont_glyphs
-                0x0000000000000200      0x2a0 ./ASF/common/services/gfx_mono/sysfont.o
  .progmem.data.main_menu_6
-                0x00000000000004a0        0xd ./main.o
-                0x00000000000004a0                main_menu_6
+                0x00000000000001fc        0xd ./gfx/menu.o
+                0x00000000000001fc                main_menu_6
  .progmem.data.main_menu_5
-                0x00000000000004ad        0xb ./main.o
-                0x00000000000004ad                main_menu_5
+                0x0000000000000209        0xb ./gfx/menu.o
+                0x0000000000000209                main_menu_5
  .progmem.data.main_menu_4
-                0x00000000000004b8        0xb ./main.o
-                0x00000000000004b8                main_menu_4
+                0x0000000000000214        0xb ./gfx/menu.o
+                0x0000000000000214                main_menu_4
  .progmem.data.main_menu_3
-                0x00000000000004c3        0xb ./main.o
-                0x00000000000004c3                main_menu_3
+                0x000000000000021f        0xb ./gfx/menu.o
+                0x000000000000021f                main_menu_3
  .progmem.data.main_menu_2
-                0x00000000000004ce        0xb ./main.o
-                0x00000000000004ce                main_menu_2
+                0x000000000000022a        0xb ./gfx/menu.o
+                0x000000000000022a                main_menu_2
  .progmem.data.main_menu_1
-                0x00000000000004d9       0x13 ./main.o
-                0x00000000000004d9                main_menu_1
+                0x0000000000000235       0x13 ./gfx/menu.o
+                0x0000000000000235                main_menu_1
  .progmem.data.main_menu_title
-                0x00000000000004ec       0x10 ./main.o
-                0x00000000000004ec                main_menu_title
+                0x0000000000000248       0x10 ./gfx/menu.o
+                0x0000000000000248                main_menu_title
+ .progmem.data.arrow_right_data
+                0x0000000000000258        0x4 ./ASF/common/services/gfx_mono/gfx_mono_menu.o
+                0x0000000000000258                arrow_right_data
+ .progmem.data.sysfont_glyphs
+                0x000000000000025c      0x2a0 ./ASF/common/services/gfx_mono/sysfont.o
                 0x00000000000004fc                . = ALIGN (0x2)
  *(.jumptables)
  *(.jumptables*)
@@ -443,7 +451,14 @@ END GROUP
  .text          0x0000000000000668        0x0 ./twi/twi-master.o
  .text          0x0000000000000668        0x0 ./twi/twi-memory.o
  .text          0x0000000000000668        0x0 ./twi/twi-slave.o
+ .text          0x0000000000000668        0x0 ./gfx/keypad.o
+ .text          0x0000000000000668        0x0 ./gfx/logos.o
+ .text          0x0000000000000668        0x0 ./gfx/menu-handler.o
+ .text          0x0000000000000668        0x0 ./gfx/menu.o
  .text          0x0000000000000668        0x0 ./gfx/testMenu.o
+ .text          0x0000000000000668        0x0 ./action_menu/action_menu_factory.o
+ .text          0x0000000000000668        0x0 ./action_menu/gfx_action_menu.o
+ .text          0x0000000000000668        0x0 ./action_menu/sampleMenu.o
  .text          0x0000000000000668        0x0 ./ASF/xmega/drivers/spi/spi.o
  .text          0x0000000000000668        0x0 ./ASF/xmega/drivers/nvm/nvm.o
  .text          0x0000000000000668        0x0 ./ASF/xmega/drivers/nvm/nvm_asm.o
@@ -463,9 +478,7 @@ END GROUP
  .text          0x0000000000000668        0x0 ./ASF/common/services/clock/xmega/sysclk.o
  .text          0x0000000000000668        0x0 ./ASF/common/components/display/ssd1306/font.o
  .text          0x0000000000000668        0x0 ./ASF/common/components/display/ssd1306/ssd1306.o
- .text          0x0000000000000668        0x0 ./adc.o
  .text          0x0000000000000668        0x0 ./main.o
- .text          0x0000000000000668        0x0 ./oled-menu.o
  .text          0x0000000000000668        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodqi4.o)
  .text          0x0000000000000668        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodsi4.o)
  .text          0x0000000000000668        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_divmodsi4.o)
@@ -488,6 +501,7 @@ END GROUP
  .text          0x0000000000000668        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_pscA.o)
  .text          0x0000000000000668        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_pscB.o)
  .text          0x0000000000000668        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_round.o)
+ .text          0x0000000000000668        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(malloc.o)
  .text          0x0000000000000668        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(memcpy.o)
  .text          0x0000000000000668        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(strcpy.o)
  .text          0x0000000000000668        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(itoa_ncheck.o)
@@ -620,520 +634,576 @@ END GROUP
  .text.TWI_interrupt_handler
                 0x0000000000000b82       0x3e ./twi/twi-slave.o
                 0x0000000000000b82                TWI_interrupt_handler
- .text.spi_xmega_set_baud_div
-                0x0000000000000bc0       0x9c ./ASF/xmega/drivers/spi/spi.o
-                0x0000000000000bc0                spi_xmega_set_baud_div
- .text.nvm_wait_until_ready
-                0x0000000000000c5c        0xa ./ASF/xmega/drivers/nvm/nvm.o
- .text.nvm_read_production_signature_row
-                0x0000000000000c66        0xa ./ASF/xmega/drivers/nvm/nvm.o
- .text.nvm_issue_command
-                0x0000000000000c70       0x22 ./ASF/xmega/drivers/nvm/nvm.o
- .text.nvm_read_device_serial
-                0x0000000000000c92       0x64 ./ASF/xmega/drivers/nvm/nvm.o
-                0x0000000000000c92                nvm_read_device_serial
- .text.nvm_eeprom_read_byte
-                0x0000000000000cf6       0x24 ./ASF/xmega/drivers/nvm/nvm.o
-                0x0000000000000cf6                nvm_eeprom_read_byte
- .text.nvm_eeprom_read_buffer
-                0x0000000000000d1a       0x5e ./ASF/xmega/drivers/nvm/nvm.o
-                0x0000000000000d1a                nvm_eeprom_read_buffer
- .text.nvm_eeprom_flush_buffer
-                0x0000000000000d78       0x1e ./ASF/xmega/drivers/nvm/nvm.o
-                0x0000000000000d78                nvm_eeprom_flush_buffer
- .text.nvm_eeprom_load_byte_to_buffer
-                0x0000000000000d96       0x38 ./ASF/xmega/drivers/nvm/nvm.o
-                0x0000000000000d96                nvm_eeprom_load_byte_to_buffer
- .text.nvm_eeprom_write_byte
-                0x0000000000000dce       0x62 ./ASF/xmega/drivers/nvm/nvm.o
-                0x0000000000000dce                nvm_eeprom_write_byte
- .text.nvm_eeprom_load_page_to_buffer
-                0x0000000000000e30       0x28 ./ASF/xmega/drivers/nvm/nvm.o
-                0x0000000000000e30                nvm_eeprom_load_page_to_buffer
- .text.nvm_eeprom_atomic_write_page
-                0x0000000000000e58       0x30 ./ASF/xmega/drivers/nvm/nvm.o
-                0x0000000000000e58                nvm_eeprom_atomic_write_page
- .text.nvm_eeprom_erase_and_write_buffer
-                0x0000000000000e88       0x7e ./ASF/xmega/drivers/nvm/nvm.o
-                0x0000000000000e88                nvm_eeprom_erase_and_write_buffer
- .text.nvm_eeprom_split_write_page
-                0x0000000000000f06       0x30 ./ASF/xmega/drivers/nvm/nvm.o
-                0x0000000000000f06                nvm_eeprom_split_write_page
- .text.nvm_eeprom_fill_buffer_with_value
-                0x0000000000000f36       0x24 ./ASF/xmega/drivers/nvm/nvm.o
-                0x0000000000000f36                nvm_eeprom_fill_buffer_with_value
- .text.nvm_eeprom_erase_bytes_in_page
-                0x0000000000000f5a       0x30 ./ASF/xmega/drivers/nvm/nvm.o
-                0x0000000000000f5a                nvm_eeprom_erase_bytes_in_page
- .text.nvm_eeprom_erase_page
-                0x0000000000000f8a       0x12 ./ASF/xmega/drivers/nvm/nvm.o
-                0x0000000000000f8a                nvm_eeprom_erase_page
- .text.nvm_eeprom_erase_bytes_in_all_pages
-                0x0000000000000f9c        0xa ./ASF/xmega/drivers/nvm/nvm.o
-                0x0000000000000f9c                nvm_eeprom_erase_bytes_in_all_pages
- .text.nvm_eeprom_erase_all
-                0x0000000000000fa6        0xa ./ASF/xmega/drivers/nvm/nvm.o
-                0x0000000000000fa6                nvm_eeprom_erase_all
- .text.nvm_issue_flash_range_crc
-                0x0000000000000fb0       0x5a ./ASF/xmega/drivers/nvm/nvm.o
-                0x0000000000000fb0                nvm_issue_flash_range_crc
- .text.nvm_flash_read_buffer
-                0x000000000000100a       0x4c ./ASF/xmega/drivers/nvm/nvm.o
-                0x000000000000100a                nvm_flash_read_buffer
- .text.nvm_user_sig_read_buffer
-                0x0000000000001056       0x40 ./ASF/xmega/drivers/nvm/nvm.o
-                0x0000000000001056                nvm_user_sig_read_buffer
- .text.nvm_user_sig_write_buffer
-                0x0000000000001096      0x12c ./ASF/xmega/drivers/nvm/nvm.o
-                0x0000000000001096                nvm_user_sig_write_buffer
- .text.nvm_flash_erase_and_write_buffer
-                0x00000000000011c2      0x12e ./ASF/xmega/drivers/nvm/nvm.o
-                0x00000000000011c2                nvm_flash_erase_and_write_buffer
- .text.nvm_fuses_read
-                0x00000000000012f0       0x34 ./ASF/xmega/drivers/nvm/nvm.o
-                0x00000000000012f0                nvm_fuses_read
- .text.nvm_read_byte
-                0x0000000000001324       0x14 ./ASF/xmega/drivers/nvm/nvm_asm.o
-                0x0000000000001324                nvm_read_byte
- .text.ccp_write_io
-                0x0000000000001338        0xc ./ASF/xmega/drivers/cpu/ccp.o
-                0x0000000000001338                ccp_write_io
- .text.__vector_71
-                0x0000000000001344       0x64 ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
-                0x0000000000001344                __vector_71
- .text.__vector_72
-                0x00000000000013a8       0x64 ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
-                0x00000000000013a8                __vector_72
- .text.__vector_73
-                0x000000000000140c       0x64 ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
-                0x000000000000140c                __vector_73
- .text.__vector_74
-                0x0000000000001470       0x64 ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
-                0x0000000000001470                __vector_74
- .text.__vector_39
-                0x00000000000014d4       0x64 ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
-                0x00000000000014d4                __vector_39
- .text.__vector_40
-                0x0000000000001538       0x64 ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
-                0x0000000000001538                __vector_40
- .text.__vector_41
-                0x000000000000159c       0x64 ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
-                0x000000000000159c                __vector_41
- .text.__vector_42
-                0x0000000000001600       0x64 ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
-                0x0000000000001600                __vector_42
- .text.adc_write_configuration
-                0x0000000000001664       0xbc ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
-                0x0000000000001664                adc_write_configuration
- .text.adc_read_configuration
-                0x0000000000001720       0x4a ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
-                0x0000000000001720                adc_read_configuration
- .text.adcch_write_configuration
-                0x000000000000176a       0x96 ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
-                0x000000000000176a                adcch_write_configuration
- .text.adcch_read_configuration
-                0x0000000000001800       0x96 ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
-                0x0000000000001800                adcch_read_configuration
- .text.adc_set_callback
-                0x0000000000001896       0x28 ./ASF/xmega/drivers/adc/adc.o
-                0x0000000000001896                adc_set_callback
- .text.adc_enable_clock
-                0x00000000000018be       0x3e ./ASF/xmega/drivers/adc/adc.o
-                0x00000000000018be                adc_enable_clock
- .text.adc_disable_clock
-                0x00000000000018fc       0x3a ./ASF/xmega/drivers/adc/adc.o
-                0x00000000000018fc                adc_disable_clock
- .text.adc_enable
-                0x0000000000001936       0x30 ./ASF/xmega/drivers/adc/adc.o
-                0x0000000000001936                adc_enable
- .text.adc_disable
-                0x0000000000001966       0x28 ./ASF/xmega/drivers/adc/adc.o
-                0x0000000000001966                adc_disable
- .text.adc_is_enabled
-                0x000000000000198e       0x24 ./ASF/xmega/drivers/adc/adc.o
-                0x000000000000198e                adc_is_enabled
- .text.ioport_configure_pin
-                0x00000000000019b2       0x28 ./ASF/xmega/boards/stk600/rc064x/init.o
- .text.board_init
-                0x00000000000019da       0x8c ./ASF/xmega/boards/stk600/rc064x/init.o
-                0x00000000000019da                board_init
- .text.spi_master_init
-                0x0000000000001a66       0x3e ./ASF/common/services/spi/xmega_spi/spi_master.o
-                0x0000000000001a66                spi_master_init
- .text.spi_master_setup_device
-                0x0000000000001aa4       0x44 ./ASF/common/services/spi/xmega_spi/spi_master.o
-                0x0000000000001aa4                spi_master_setup_device
- .text.spi_write_packet
-                0x0000000000001ae8       0x24 ./ASF/common/services/spi/xmega_spi/spi_master.o
-                0x0000000000001ae8                spi_write_packet
- .text.spi_read_packet
-                0x0000000000001b0c       0x2e ./ASF/common/services/spi/xmega_spi/spi_master.o
-                0x0000000000001b0c                spi_read_packet
- .text.spi_select_device
-                0x0000000000001b3a       0x2c ./ASF/common/services/spi/xmega_spi/spi_master.o
-                0x0000000000001b3a                spi_select_device
- .text.spi_deselect_device
-                0x0000000000001b66       0x2c ./ASF/common/services/spi/xmega_spi/spi_master.o
-                0x0000000000001b66                spi_deselect_device
- .text.ioport_configure_port_pin
-                0x0000000000001b92       0x44 ./ASF/common/services/ioport/xmega/ioport_compat.o
-                0x0000000000001b92                ioport_configure_port_pin
- .text.gfx_mono_set_framebuffer
-                0x0000000000001bd6        0xa ./ASF/common/services/gfx_mono/gfx_mono_framebuffer.o
-                0x0000000000001bd6                gfx_mono_set_framebuffer
- .text.gfx_mono_framebuffer_put_page
-                0x0000000000001be0       0x2c ./ASF/common/services/gfx_mono/gfx_mono_framebuffer.o
-                0x0000000000001be0                gfx_mono_framebuffer_put_page
- .text.gfx_mono_framebuffer_get_page
-                0x0000000000001c0c       0x2a ./ASF/common/services/gfx_mono/gfx_mono_framebuffer.o
-                0x0000000000001c0c                gfx_mono_framebuffer_get_page
- .text.gfx_mono_framebuffer_put_byte
-                0x0000000000001c36       0x1c ./ASF/common/services/gfx_mono/gfx_mono_framebuffer.o
-                0x0000000000001c36                gfx_mono_framebuffer_put_byte
- .text.gfx_mono_framebuffer_get_byte
-                0x0000000000001c52       0x1c ./ASF/common/services/gfx_mono/gfx_mono_framebuffer.o
-                0x0000000000001c52                gfx_mono_framebuffer_get_byte
- .text.gfx_mono_framebuffer_draw_pixel
-                0x0000000000001c6e       0x76 ./ASF/common/services/gfx_mono/gfx_mono_framebuffer.o
-                0x0000000000001c6e                gfx_mono_framebuffer_draw_pixel
- .text.gfx_mono_framebuffer_get_pixel
-                0x0000000000001ce4       0x44 ./ASF/common/services/gfx_mono/gfx_mono_framebuffer.o
-                0x0000000000001ce4                gfx_mono_framebuffer_get_pixel
- .text.gfx_mono_framebuffer_mask_byte
-                0x0000000000001d28       0x4c ./ASF/common/services/gfx_mono/gfx_mono_framebuffer.o
-                0x0000000000001d28                gfx_mono_framebuffer_mask_byte
- .text.gfx_mono_generic_draw_horizontal_line
-                0x0000000000001d74       0xd2 ./ASF/common/services/gfx_mono/gfx_mono_generic.o
-                0x0000000000001d74                gfx_mono_generic_draw_horizontal_line
- .text.gfx_mono_generic_draw_vertical_line
-                0x0000000000001e46       0xbc ./ASF/common/services/gfx_mono/gfx_mono_generic.o
-                0x0000000000001e46                gfx_mono_generic_draw_vertical_line
- .text.gfx_mono_generic_draw_line
-                0x0000000000001f02       0xd0 ./ASF/common/services/gfx_mono/gfx_mono_generic.o
-                0x0000000000001f02                gfx_mono_generic_draw_line
- .text.gfx_mono_generic_draw_rect
-                0x0000000000001fd2       0x4e ./ASF/common/services/gfx_mono/gfx_mono_generic.o
-                0x0000000000001fd2                gfx_mono_generic_draw_rect
- .text.gfx_mono_generic_draw_filled_rect
-                0x0000000000002020       0x36 ./ASF/common/services/gfx_mono/gfx_mono_generic.o
-                0x0000000000002020                gfx_mono_generic_draw_filled_rect
- .text.gfx_mono_generic_draw_circle
-                0x0000000000002056      0x172 ./ASF/common/services/gfx_mono/gfx_mono_generic.o
-                0x0000000000002056                gfx_mono_generic_draw_circle
- .text.gfx_mono_generic_draw_filled_circle
-                0x00000000000021c8      0x150 ./ASF/common/services/gfx_mono/gfx_mono_generic.o
-                0x00000000000021c8                gfx_mono_generic_draw_filled_circle
- .text.gfx_mono_generic_put_bitmap
-                0x0000000000002318       0xb6 ./ASF/common/services/gfx_mono/gfx_mono_generic.o
-                0x0000000000002318                gfx_mono_generic_put_bitmap
- .text.__portable_avr_delay_cycles.constprop.3
-                0x00000000000023ce        0x2 ./ASF/common/services/gfx_mono/gfx_mono_menu.o
- .text.ssd1306_write_command
-                0x00000000000023d0       0x46 ./ASF/common/services/gfx_mono/gfx_mono_menu.o
- .text.ssd1306_write_data.constprop.1
-                0x0000000000002416       0x40 ./ASF/common/services/gfx_mono/gfx_mono_menu.o
- .text.menu_draw
-                0x0000000000002456       0xfa ./ASF/common/services/gfx_mono/gfx_mono_menu.o
- .text.gfx_mono_menu_init
-                0x0000000000002550       0x54 ./ASF/common/services/gfx_mono/gfx_mono_menu.o
-                0x0000000000002550                gfx_mono_menu_init
- .text.gfx_mono_menu_process_key
-                0x00000000000025a4       0x52 ./ASF/common/services/gfx_mono/gfx_mono_menu.o
-                0x00000000000025a4                gfx_mono_menu_process_key
- .text.gfx_mono_draw_char
-                0x00000000000025f6       0xd4 ./ASF/common/services/gfx_mono/gfx_mono_text.o
-                0x00000000000025f6                gfx_mono_draw_char
- .text.gfx_mono_draw_string
-                0x00000000000026ca       0x5a ./ASF/common/services/gfx_mono/gfx_mono_text.o
-                0x00000000000026ca                gfx_mono_draw_string
- .text.gfx_mono_draw_progmem_string
-                0x0000000000002724       0x5e ./ASF/common/services/gfx_mono/gfx_mono_text.o
-                0x0000000000002724                gfx_mono_draw_progmem_string
- .text.gfx_mono_get_string_bounding_box
-                0x0000000000002782       0x3e ./ASF/common/services/gfx_mono/gfx_mono_text.o
-                0x0000000000002782                gfx_mono_get_string_bounding_box
- .text.gfx_mono_get_progmem_string_bounding_box
-                0x00000000000027c0       0x54 ./ASF/common/services/gfx_mono/gfx_mono_text.o
-                0x00000000000027c0                gfx_mono_get_progmem_string_bounding_box
+ .text.item_data_init
+                0x0000000000000bc0       0x28 ./action_menu/action_menu_factory.o
+                0x0000000000000bc0                item_data_init
+ .text.reset_item_action
+                0x0000000000000be8       0x26 ./action_menu/action_menu_factory.o
+                0x0000000000000be8                reset_item_action
+ .text.item_none_action_init
+                0x0000000000000c0e        0x6 ./action_menu/action_menu_factory.o
+                0x0000000000000c0e                item_none_action_init
+ .text.item_menu_action_init
+                0x0000000000000c14        0xc ./action_menu/action_menu_factory.o
+                0x0000000000000c14                item_menu_action_init
+ .text.item_data_action_init
+                0x0000000000000c20       0x1c ./action_menu/action_menu_factory.o
+                0x0000000000000c20                item_data_action_init
+ .text.item_data_function_action_init
+                0x0000000000000c3c       0x2c ./action_menu/action_menu_factory.o
+                0x0000000000000c3c                item_data_function_action_init
+ .text.item_splash_action_init
+                0x0000000000000c68        0xc ./action_menu/action_menu_factory.o
+                0x0000000000000c68                item_splash_action_init
  .text.__portable_avr_delay_cycles.constprop.2
-                0x0000000000002814        0x2 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
+                0x0000000000000c74        0x2 ./action_menu/gfx_action_menu.o
  .text.ssd1306_write_command
-                0x0000000000002816       0x46 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
- .text.ssd1306_set_page_address
-                0x000000000000285c        0x8 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
- .text.ssd1306_set_column_address
-                0x0000000000002864       0x1e ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
- .text.ssd1306_write_data
-                0x0000000000002882       0x46 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
- .text.gfx_mono_ssd1306_get_pixel
-                0x00000000000028c8       0x44 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
-                0x00000000000028c8                gfx_mono_ssd1306_get_pixel
- .text.gfx_mono_ssd1306_put_page
-                0x000000000000290c       0x40 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
-                0x000000000000290c                gfx_mono_ssd1306_put_page
- .text.gfx_mono_ssd1306_put_framebuffer
-                0x000000000000294c       0x36 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
-                0x000000000000294c                gfx_mono_ssd1306_put_framebuffer
- .text.gfx_mono_ssd1306_get_page
-                0x0000000000002982        0x4 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
-                0x0000000000002982                gfx_mono_ssd1306_get_page
- .text.gfx_mono_ssd1306_put_byte
-                0x0000000000002986       0x42 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
-                0x0000000000002986                gfx_mono_ssd1306_put_byte
- .text.gfx_mono_ssd1306_init
-                0x00000000000029c8       0x38 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
-                0x00000000000029c8                gfx_mono_ssd1306_init
- .text.gfx_mono_ssd1306_draw_pixel
-                0x0000000000002a00       0x78 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
-                0x0000000000002a00                gfx_mono_ssd1306_draw_pixel
- .text.gfx_mono_ssd1306_get_byte
-                0x0000000000002a78        0x4 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
-                0x0000000000002a78                gfx_mono_ssd1306_get_byte
- .text.gfx_mono_ssd1306_mask_byte
-                0x0000000000002a7c       0x4c ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
-                0x0000000000002a7c                gfx_mono_ssd1306_mask_byte
- .text.sysclk_init
-                0x0000000000002ac8       0x20 ./ASF/common/services/clock/xmega/sysclk.o
-                0x0000000000002ac8                sysclk_init
- .text.sysclk_enable_module
-                0x0000000000002ae8       0x18 ./ASF/common/services/clock/xmega/sysclk.o
-                0x0000000000002ae8                sysclk_enable_module
- .text.sysclk_disable_module
-                0x0000000000002b00       0x16 ./ASF/common/services/clock/xmega/sysclk.o
-                0x0000000000002b00                sysclk_disable_module
- .text.sysclk_enable_usb
-                0x0000000000002b16       0x3e ./ASF/common/services/clock/xmega/sysclk.o
-                0x0000000000002b16                sysclk_enable_usb
- .text.sysclk_disable_usb
-                0x0000000000002b54       0x12 ./ASF/common/services/clock/xmega/sysclk.o
-                0x0000000000002b54                sysclk_disable_usb
- .text.__portable_avr_delay_cycles
-                0x0000000000002b66        0xc ./ASF/common/components/display/ssd1306/ssd1306.o
- .text.ssd1306_write_command
-                0x0000000000002b72       0x4e ./ASF/common/components/display/ssd1306/ssd1306.o
- .text.ssd1306_write_data
-                0x0000000000002bc0       0x4e ./ASF/common/components/display/ssd1306/ssd1306.o
- .text.ssd1306_init
-                0x0000000000002c0e      0x146 ./ASF/common/components/display/ssd1306/ssd1306.o
-                0x0000000000002c0e                ssd1306_init
- .text.ssd1306_write_text
-                0x0000000000002d54       0x56 ./ASF/common/components/display/ssd1306/ssd1306.o
-                0x0000000000002d54                ssd1306_write_text
- .text.__portable_avr_delay_cycles.constprop.4
-                0x0000000000002daa        0x2 ./main.o
- .text.ssd1306_write_command
-                0x0000000000002dac       0x46 ./main.o
- .text.ssd1306_set_column_address
-                0x0000000000002df2       0x1e ./main.o
- .text.ssd1306_clear
-                0x0000000000002e10       0x72 ./main.o
- .text.updateData
-                0x0000000000002e82       0x6e ./main.o
-                0x0000000000002e82                updateData
- .text.InitGlobalVars
-                0x0000000000002ef0       0x28 ./main.o
-                0x0000000000002ef0                InitGlobalVars
- .text.printLogo
-                0x0000000000002f18       0x30 ./main.o
-                0x0000000000002f18                printLogo
+                0x0000000000000c76       0x46 ./action_menu/gfx_action_menu.o
+ .text.gfx_action_menu_init
+                0x0000000000000cbc       0x16 ./action_menu/gfx_action_menu.o
+                0x0000000000000cbc                gfx_action_menu_init
+ .text.showMenu
+                0x0000000000000cd2        0x4 ./action_menu/gfx_action_menu.o
+                0x0000000000000cd2                showMenu
  .text.writeText
-                0x0000000000002f48       0x34 ./main.o
-                0x0000000000002f48                writeText
- .text.adc_avg  0x0000000000002f7c       0x68 ./main.o
-                0x0000000000002f7c                adc_avg
+                0x0000000000000cd6       0x38 ./action_menu/gfx_action_menu.o
+                0x0000000000000cd6                writeText
+ .text.showData
+                0x0000000000000d0e       0x2a ./action_menu/gfx_action_menu.o
+                0x0000000000000d0e                showData
+ .text.showSplash
+                0x0000000000000d38        0x8 ./action_menu/gfx_action_menu.o
+                0x0000000000000d38                showSplash
+ .text.gfx_action_menu_process_key
+                0x0000000000000d40      0x154 ./action_menu/gfx_action_menu.o
+                0x0000000000000d40                gfx_action_menu_process_key
+ .text.sampleDataFunc
+                0x0000000000000e94        0xc ./action_menu/sampleMenu.o
+                0x0000000000000e94                sampleDataFunc
+ .text.sampleMenu
+                0x0000000000000ea0       0x7c ./action_menu/sampleMenu.o
+                0x0000000000000ea0                sampleMenu
+ .text.spi_xmega_set_baud_div
+                0x0000000000000f1c       0x9c ./ASF/xmega/drivers/spi/spi.o
+                0x0000000000000f1c                spi_xmega_set_baud_div
+ .text.nvm_wait_until_ready
+                0x0000000000000fb8        0xa ./ASF/xmega/drivers/nvm/nvm.o
+ .text.nvm_read_production_signature_row
+                0x0000000000000fc2        0xa ./ASF/xmega/drivers/nvm/nvm.o
+ .text.nvm_issue_command
+                0x0000000000000fcc       0x22 ./ASF/xmega/drivers/nvm/nvm.o
+ .text.nvm_read_device_serial
+                0x0000000000000fee       0x64 ./ASF/xmega/drivers/nvm/nvm.o
+                0x0000000000000fee                nvm_read_device_serial
+ .text.nvm_eeprom_read_byte
+                0x0000000000001052       0x24 ./ASF/xmega/drivers/nvm/nvm.o
+                0x0000000000001052                nvm_eeprom_read_byte
+ .text.nvm_eeprom_read_buffer
+                0x0000000000001076       0x5e ./ASF/xmega/drivers/nvm/nvm.o
+                0x0000000000001076                nvm_eeprom_read_buffer
+ .text.nvm_eeprom_flush_buffer
+                0x00000000000010d4       0x1e ./ASF/xmega/drivers/nvm/nvm.o
+                0x00000000000010d4                nvm_eeprom_flush_buffer
+ .text.nvm_eeprom_load_byte_to_buffer
+                0x00000000000010f2       0x38 ./ASF/xmega/drivers/nvm/nvm.o
+                0x00000000000010f2                nvm_eeprom_load_byte_to_buffer
+ .text.nvm_eeprom_write_byte
+                0x000000000000112a       0x62 ./ASF/xmega/drivers/nvm/nvm.o
+                0x000000000000112a                nvm_eeprom_write_byte
+ .text.nvm_eeprom_load_page_to_buffer
+                0x000000000000118c       0x28 ./ASF/xmega/drivers/nvm/nvm.o
+                0x000000000000118c                nvm_eeprom_load_page_to_buffer
+ .text.nvm_eeprom_atomic_write_page
+                0x00000000000011b4       0x30 ./ASF/xmega/drivers/nvm/nvm.o
+                0x00000000000011b4                nvm_eeprom_atomic_write_page
+ .text.nvm_eeprom_erase_and_write_buffer
+                0x00000000000011e4       0x7e ./ASF/xmega/drivers/nvm/nvm.o
+                0x00000000000011e4                nvm_eeprom_erase_and_write_buffer
+ .text.nvm_eeprom_split_write_page
+                0x0000000000001262       0x30 ./ASF/xmega/drivers/nvm/nvm.o
+                0x0000000000001262                nvm_eeprom_split_write_page
+ .text.nvm_eeprom_fill_buffer_with_value
+                0x0000000000001292       0x24 ./ASF/xmega/drivers/nvm/nvm.o
+                0x0000000000001292                nvm_eeprom_fill_buffer_with_value
+ .text.nvm_eeprom_erase_bytes_in_page
+                0x00000000000012b6       0x30 ./ASF/xmega/drivers/nvm/nvm.o
+                0x00000000000012b6                nvm_eeprom_erase_bytes_in_page
+ .text.nvm_eeprom_erase_page
+                0x00000000000012e6       0x12 ./ASF/xmega/drivers/nvm/nvm.o
+                0x00000000000012e6                nvm_eeprom_erase_page
+ .text.nvm_eeprom_erase_bytes_in_all_pages
+                0x00000000000012f8        0xa ./ASF/xmega/drivers/nvm/nvm.o
+                0x00000000000012f8                nvm_eeprom_erase_bytes_in_all_pages
+ .text.nvm_eeprom_erase_all
+                0x0000000000001302        0xa ./ASF/xmega/drivers/nvm/nvm.o
+                0x0000000000001302                nvm_eeprom_erase_all
+ .text.nvm_issue_flash_range_crc
+                0x000000000000130c       0x5a ./ASF/xmega/drivers/nvm/nvm.o
+                0x000000000000130c                nvm_issue_flash_range_crc
+ .text.nvm_flash_read_buffer
+                0x0000000000001366       0x4c ./ASF/xmega/drivers/nvm/nvm.o
+                0x0000000000001366                nvm_flash_read_buffer
+ .text.nvm_user_sig_read_buffer
+                0x00000000000013b2       0x40 ./ASF/xmega/drivers/nvm/nvm.o
+                0x00000000000013b2                nvm_user_sig_read_buffer
+ .text.nvm_user_sig_write_buffer
+                0x00000000000013f2      0x12c ./ASF/xmega/drivers/nvm/nvm.o
+                0x00000000000013f2                nvm_user_sig_write_buffer
+ .text.nvm_flash_erase_and_write_buffer
+                0x000000000000151e      0x12e ./ASF/xmega/drivers/nvm/nvm.o
+                0x000000000000151e                nvm_flash_erase_and_write_buffer
+ .text.nvm_fuses_read
+                0x000000000000164c       0x34 ./ASF/xmega/drivers/nvm/nvm.o
+                0x000000000000164c                nvm_fuses_read
+ .text.nvm_read_byte
+                0x0000000000001680       0x14 ./ASF/xmega/drivers/nvm/nvm_asm.o
+                0x0000000000001680                nvm_read_byte
+ .text.ccp_write_io
+                0x0000000000001694        0xc ./ASF/xmega/drivers/cpu/ccp.o
+                0x0000000000001694                ccp_write_io
+ .text.__vector_71
+                0x00000000000016a0       0x64 ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
+                0x00000000000016a0                __vector_71
+ .text.__vector_72
+                0x0000000000001704       0x64 ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
+                0x0000000000001704                __vector_72
+ .text.__vector_73
+                0x0000000000001768       0x64 ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
+                0x0000000000001768                __vector_73
+ .text.__vector_74
+                0x00000000000017cc       0x64 ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
+                0x00000000000017cc                __vector_74
+ .text.__vector_39
+                0x0000000000001830       0x64 ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
+                0x0000000000001830                __vector_39
+ .text.__vector_40
+                0x0000000000001894       0x64 ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
+                0x0000000000001894                __vector_40
+ .text.__vector_41
+                0x00000000000018f8       0x64 ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
+                0x00000000000018f8                __vector_41
+ .text.__vector_42
+                0x000000000000195c       0x64 ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
+                0x000000000000195c                __vector_42
+ .text.adc_write_configuration
+                0x00000000000019c0       0xbc ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
+                0x00000000000019c0                adc_write_configuration
+ .text.adc_read_configuration
+                0x0000000000001a7c       0x4a ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
+                0x0000000000001a7c                adc_read_configuration
+ .text.adcch_write_configuration
+                0x0000000000001ac6       0x96 ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
+                0x0000000000001ac6                adcch_write_configuration
+ .text.adcch_read_configuration
+                0x0000000000001b5c       0x96 ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
+                0x0000000000001b5c                adcch_read_configuration
+ .text.adc_set_callback
+                0x0000000000001bf2       0x28 ./ASF/xmega/drivers/adc/adc.o
+                0x0000000000001bf2                adc_set_callback
+ .text.adc_enable_clock
+                0x0000000000001c1a       0x3e ./ASF/xmega/drivers/adc/adc.o
+                0x0000000000001c1a                adc_enable_clock
+ .text.adc_disable_clock
+                0x0000000000001c58       0x3a ./ASF/xmega/drivers/adc/adc.o
+                0x0000000000001c58                adc_disable_clock
+ .text.adc_enable
+                0x0000000000001c92       0x30 ./ASF/xmega/drivers/adc/adc.o
+                0x0000000000001c92                adc_enable
+ .text.adc_disable
+                0x0000000000001cc2       0x28 ./ASF/xmega/drivers/adc/adc.o
+                0x0000000000001cc2                adc_disable
+ .text.adc_is_enabled
+                0x0000000000001cea       0x24 ./ASF/xmega/drivers/adc/adc.o
+                0x0000000000001cea                adc_is_enabled
+ .text.ioport_configure_pin
+                0x0000000000001d0e       0x28 ./ASF/xmega/boards/stk600/rc064x/init.o
+ .text.board_init
+                0x0000000000001d36       0x8c ./ASF/xmega/boards/stk600/rc064x/init.o
+                0x0000000000001d36                board_init
+ .text.spi_master_init
+                0x0000000000001dc2       0x3e ./ASF/common/services/spi/xmega_spi/spi_master.o
+                0x0000000000001dc2                spi_master_init
+ .text.spi_master_setup_device
+                0x0000000000001e00       0x44 ./ASF/common/services/spi/xmega_spi/spi_master.o
+                0x0000000000001e00                spi_master_setup_device
+ .text.spi_write_packet
+                0x0000000000001e44       0x24 ./ASF/common/services/spi/xmega_spi/spi_master.o
+                0x0000000000001e44                spi_write_packet
+ .text.spi_read_packet
+                0x0000000000001e68       0x2e ./ASF/common/services/spi/xmega_spi/spi_master.o
+                0x0000000000001e68                spi_read_packet
+ .text.spi_select_device
+                0x0000000000001e96       0x2c ./ASF/common/services/spi/xmega_spi/spi_master.o
+                0x0000000000001e96                spi_select_device
+ .text.spi_deselect_device
+                0x0000000000001ec2       0x2c ./ASF/common/services/spi/xmega_spi/spi_master.o
+                0x0000000000001ec2                spi_deselect_device
+ .text.ioport_configure_port_pin
+                0x0000000000001eee       0x44 ./ASF/common/services/ioport/xmega/ioport_compat.o
+                0x0000000000001eee                ioport_configure_port_pin
+ .text.gfx_mono_set_framebuffer
+                0x0000000000001f32        0xa ./ASF/common/services/gfx_mono/gfx_mono_framebuffer.o
+                0x0000000000001f32                gfx_mono_set_framebuffer
+ .text.gfx_mono_framebuffer_put_page
+                0x0000000000001f3c       0x2c ./ASF/common/services/gfx_mono/gfx_mono_framebuffer.o
+                0x0000000000001f3c                gfx_mono_framebuffer_put_page
+ .text.gfx_mono_framebuffer_get_page
+                0x0000000000001f68       0x2a ./ASF/common/services/gfx_mono/gfx_mono_framebuffer.o
+                0x0000000000001f68                gfx_mono_framebuffer_get_page
+ .text.gfx_mono_framebuffer_put_byte
+                0x0000000000001f92       0x1c ./ASF/common/services/gfx_mono/gfx_mono_framebuffer.o
+                0x0000000000001f92                gfx_mono_framebuffer_put_byte
+ .text.gfx_mono_framebuffer_get_byte
+                0x0000000000001fae       0x1c ./ASF/common/services/gfx_mono/gfx_mono_framebuffer.o
+                0x0000000000001fae                gfx_mono_framebuffer_get_byte
+ .text.gfx_mono_framebuffer_draw_pixel
+                0x0000000000001fca       0x76 ./ASF/common/services/gfx_mono/gfx_mono_framebuffer.o
+                0x0000000000001fca                gfx_mono_framebuffer_draw_pixel
+ .text.gfx_mono_framebuffer_get_pixel
+                0x0000000000002040       0x44 ./ASF/common/services/gfx_mono/gfx_mono_framebuffer.o
+                0x0000000000002040                gfx_mono_framebuffer_get_pixel
+ .text.gfx_mono_framebuffer_mask_byte
+                0x0000000000002084       0x4c ./ASF/common/services/gfx_mono/gfx_mono_framebuffer.o
+                0x0000000000002084                gfx_mono_framebuffer_mask_byte
+ .text.gfx_mono_generic_draw_horizontal_line
+                0x00000000000020d0       0xd2 ./ASF/common/services/gfx_mono/gfx_mono_generic.o
+                0x00000000000020d0                gfx_mono_generic_draw_horizontal_line
+ .text.gfx_mono_generic_draw_vertical_line
+                0x00000000000021a2       0xbc ./ASF/common/services/gfx_mono/gfx_mono_generic.o
+                0x00000000000021a2                gfx_mono_generic_draw_vertical_line
+ .text.gfx_mono_generic_draw_line
+                0x000000000000225e       0xd0 ./ASF/common/services/gfx_mono/gfx_mono_generic.o
+                0x000000000000225e                gfx_mono_generic_draw_line
+ .text.gfx_mono_generic_draw_rect
+                0x000000000000232e       0x4e ./ASF/common/services/gfx_mono/gfx_mono_generic.o
+                0x000000000000232e                gfx_mono_generic_draw_rect
+ .text.gfx_mono_generic_draw_filled_rect
+                0x000000000000237c       0x36 ./ASF/common/services/gfx_mono/gfx_mono_generic.o
+                0x000000000000237c                gfx_mono_generic_draw_filled_rect
+ .text.gfx_mono_generic_draw_circle
+                0x00000000000023b2      0x172 ./ASF/common/services/gfx_mono/gfx_mono_generic.o
+                0x00000000000023b2                gfx_mono_generic_draw_circle
+ .text.gfx_mono_generic_draw_filled_circle
+                0x0000000000002524      0x150 ./ASF/common/services/gfx_mono/gfx_mono_generic.o
+                0x0000000000002524                gfx_mono_generic_draw_filled_circle
+ .text.gfx_mono_generic_put_bitmap
+                0x0000000000002674       0xb6 ./ASF/common/services/gfx_mono/gfx_mono_generic.o
+                0x0000000000002674                gfx_mono_generic_put_bitmap
+ .text.__portable_avr_delay_cycles.constprop.3
+                0x000000000000272a        0x2 ./ASF/common/services/gfx_mono/gfx_mono_menu.o
+ .text.ssd1306_write_command
+                0x000000000000272c       0x46 ./ASF/common/services/gfx_mono/gfx_mono_menu.o
+ .text.ssd1306_write_data.constprop.1
+                0x0000000000002772       0x40 ./ASF/common/services/gfx_mono/gfx_mono_menu.o
+ .text.menu_draw
+                0x00000000000027b2       0xfa ./ASF/common/services/gfx_mono/gfx_mono_menu.o
+ .text.gfx_mono_menu_init
+                0x00000000000028ac       0x54 ./ASF/common/services/gfx_mono/gfx_mono_menu.o
+                0x00000000000028ac                gfx_mono_menu_init
+ .text.gfx_mono_menu_process_key
+                0x0000000000002900       0x52 ./ASF/common/services/gfx_mono/gfx_mono_menu.o
+                0x0000000000002900                gfx_mono_menu_process_key
+ .text.gfx_mono_draw_char
+                0x0000000000002952       0xd4 ./ASF/common/services/gfx_mono/gfx_mono_text.o
+                0x0000000000002952                gfx_mono_draw_char
+ .text.gfx_mono_draw_string
+                0x0000000000002a26       0x5a ./ASF/common/services/gfx_mono/gfx_mono_text.o
+                0x0000000000002a26                gfx_mono_draw_string
+ .text.gfx_mono_draw_progmem_string
+                0x0000000000002a80       0x5e ./ASF/common/services/gfx_mono/gfx_mono_text.o
+                0x0000000000002a80                gfx_mono_draw_progmem_string
+ .text.gfx_mono_get_string_bounding_box
+                0x0000000000002ade       0x3e ./ASF/common/services/gfx_mono/gfx_mono_text.o
+                0x0000000000002ade                gfx_mono_get_string_bounding_box
+ .text.gfx_mono_get_progmem_string_bounding_box
+                0x0000000000002b1c       0x54 ./ASF/common/services/gfx_mono/gfx_mono_text.o
+                0x0000000000002b1c                gfx_mono_get_progmem_string_bounding_box
+ .text.__portable_avr_delay_cycles.constprop.2
+                0x0000000000002b70        0x2 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
+ .text.ssd1306_write_command
+                0x0000000000002b72       0x46 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
+ .text.ssd1306_set_page_address
+                0x0000000000002bb8        0x8 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
+ .text.ssd1306_set_column_address
+                0x0000000000002bc0       0x1e ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
+ .text.ssd1306_write_data
+                0x0000000000002bde       0x46 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
+ .text.gfx_mono_ssd1306_get_pixel
+                0x0000000000002c24       0x44 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
+                0x0000000000002c24                gfx_mono_ssd1306_get_pixel
+ .text.gfx_mono_ssd1306_put_page
+                0x0000000000002c68       0x40 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
+                0x0000000000002c68                gfx_mono_ssd1306_put_page
+ .text.gfx_mono_ssd1306_put_framebuffer
+                0x0000000000002ca8       0x36 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
+                0x0000000000002ca8                gfx_mono_ssd1306_put_framebuffer
+ .text.gfx_mono_ssd1306_get_page
+                0x0000000000002cde        0x4 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
+                0x0000000000002cde                gfx_mono_ssd1306_get_page
+ .text.gfx_mono_ssd1306_put_byte
+                0x0000000000002ce2       0x42 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
+                0x0000000000002ce2                gfx_mono_ssd1306_put_byte
+ .text.gfx_mono_ssd1306_init
+                0x0000000000002d24       0x38 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
+                0x0000000000002d24                gfx_mono_ssd1306_init
+ .text.gfx_mono_ssd1306_draw_pixel
+                0x0000000000002d5c       0x78 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
+                0x0000000000002d5c                gfx_mono_ssd1306_draw_pixel
+ .text.gfx_mono_ssd1306_get_byte
+                0x0000000000002dd4        0x4 ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
+                0x0000000000002dd4                gfx_mono_ssd1306_get_byte
+ .text.gfx_mono_ssd1306_mask_byte
+                0x0000000000002dd8       0x4c ./ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.o
+                0x0000000000002dd8                gfx_mono_ssd1306_mask_byte
+ .text.sysclk_init
+                0x0000000000002e24       0x20 ./ASF/common/services/clock/xmega/sysclk.o
+                0x0000000000002e24                sysclk_init
+ .text.sysclk_enable_module
+                0x0000000000002e44       0x18 ./ASF/common/services/clock/xmega/sysclk.o
+                0x0000000000002e44                sysclk_enable_module
+ .text.sysclk_disable_module
+                0x0000000000002e5c       0x16 ./ASF/common/services/clock/xmega/sysclk.o
+                0x0000000000002e5c                sysclk_disable_module
+ .text.sysclk_enable_usb
+                0x0000000000002e72       0x3e ./ASF/common/services/clock/xmega/sysclk.o
+                0x0000000000002e72                sysclk_enable_usb
+ .text.sysclk_disable_usb
+                0x0000000000002eb0       0x12 ./ASF/common/services/clock/xmega/sysclk.o
+                0x0000000000002eb0                sysclk_disable_usb
+ .text.__portable_avr_delay_cycles
+                0x0000000000002ec2        0xc ./ASF/common/components/display/ssd1306/ssd1306.o
+ .text.ssd1306_write_command
+                0x0000000000002ece       0x4e ./ASF/common/components/display/ssd1306/ssd1306.o
+ .text.ssd1306_write_data
+                0x0000000000002f1c       0x4e ./ASF/common/components/display/ssd1306/ssd1306.o
+ .text.ssd1306_init
+                0x0000000000002f6a      0x146 ./ASF/common/components/display/ssd1306/ssd1306.o
+                0x0000000000002f6a                ssd1306_init
+ .text.ssd1306_write_text
+                0x00000000000030b0       0x56 ./ASF/common/components/display/ssd1306/ssd1306.o
+                0x00000000000030b0                ssd1306_write_text
+ .text.__portable_avr_delay_cycles
+                0x0000000000003106        0xc ./main.o
+ .text.updateData
+                0x0000000000003112        0x2 ./main.o
+                0x0000000000003112                updateData
+ .text.ssd1306_write_command
+                0x0000000000003114       0x4e ./main.o
+ .text.ssd1306_clear
+                0x0000000000003162       0x80 ./main.o
+ .text.InitGlobalVars
+                0x00000000000031e2       0x14 ./main.o
+                0x00000000000031e2                InitGlobalVars
+ .text.printLogo
+                0x00000000000031f6       0x30 ./main.o
+                0x00000000000031f6                printLogo
+ .text.adc_avg  0x0000000000003226       0x68 ./main.o
+                0x0000000000003226                adc_avg
  .text.__vector_12
-                0x0000000000002fe4       0x50 ./main.o
-                0x0000000000002fe4                __vector_12
+                0x000000000000328e       0x50 ./main.o
+                0x000000000000328e                __vector_12
  .text.enable_interrupts
-                0x0000000000003034        0xe ./main.o
-                0x0000000000003034                enable_interrupts
+                0x00000000000032de        0xe ./main.o
+                0x00000000000032de                enable_interrupts
  .text.printPower
-                0x0000000000003042       0xd2 ./main.o
-                0x0000000000003042                printPower
+                0x00000000000032ec       0x7a ./main.o
+                0x00000000000032ec                printPower
  .text.__vector_46
-                0x0000000000003114       0x50 ./main.o
-                0x0000000000003114                __vector_46
+                0x0000000000003366       0x50 ./main.o
+                0x0000000000003366                __vector_46
  .text.sendWritePackage
-                0x0000000000003164       0x62 ./main.o
-                0x0000000000003164                sendWritePackage
+                0x00000000000033b6       0x62 ./main.o
+                0x00000000000033b6                sendWritePackage
  .text.sendReadPackage
-                0x00000000000031c6       0x5a ./main.o
-                0x00000000000031c6                sendReadPackage
+                0x0000000000003418       0x5a ./main.o
+                0x0000000000003418                sendReadPackage
+ .text.init     0x0000000000003472       0x88 ./main.o
+                0x0000000000003472                init
+ .text.isButtonPressed
+                0x00000000000034fa       0x42 ./main.o
+                0x00000000000034fa                isButtonPressed
+ .text.isLeftButtonPressed
+                0x000000000000353c        0xa ./main.o
+                0x000000000000353c                isLeftButtonPressed
+ .text.isRightButtonPressed
+                0x0000000000003546        0xa ./main.o
+                0x0000000000003546                isRightButtonPressed
+ .text.isSelectButtonPressed
+                0x0000000000003550        0xa ./main.o
+                0x0000000000003550                isSelectButtonPressed
  .text.startup.main
-                0x0000000000003220       0x9a ./main.o
-                0x0000000000003220                main
- .text.oled_menu_init
-                0x00000000000032ba        0xa ./oled-menu.o
-                0x00000000000032ba                oled_menu_init
- .text.oled_menu_process_key
-                0x00000000000032c4       0x4a ./oled-menu.o
-                0x00000000000032c4                oled_menu_process_key
+                0x000000000000355a       0xa6 ./main.o
+                0x000000000000355a                main
  .text.libgcc.mul
-                0x000000000000330e        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodqi4.o)
+                0x0000000000003600        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodqi4.o)
  .text.libgcc.div
-                0x000000000000330e       0x18 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodqi4.o)
-                0x000000000000330e                __udivmodqi4
- .text.libgcc   0x0000000000003326        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodqi4.o)
+                0x0000000000003600       0x18 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodqi4.o)
+                0x0000000000003600                __udivmodqi4
+ .text.libgcc   0x0000000000003618        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodqi4.o)
  .text.libgcc.prologue
-                0x0000000000003326        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodqi4.o)
+                0x0000000000003618        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodqi4.o)
  .text.libgcc.builtins
-                0x0000000000003326        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodqi4.o)
+                0x0000000000003618        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodqi4.o)
  .text.libgcc.fmul
-                0x0000000000003326        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodqi4.o)
+                0x0000000000003618        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodqi4.o)
  .text.libgcc.fixed
-                0x0000000000003326        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodqi4.o)
+                0x0000000000003618        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodqi4.o)
  .text.libgcc.mul
-                0x0000000000003326        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodsi4.o)
+                0x0000000000003618        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodsi4.o)
  .text.libgcc.div
-                0x0000000000003326       0x44 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodsi4.o)
-                0x0000000000003326                __udivmodsi4
- .text.libgcc   0x000000000000336a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodsi4.o)
+                0x0000000000003618       0x44 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodsi4.o)
+                0x0000000000003618                __udivmodsi4
+ .text.libgcc   0x000000000000365c        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodsi4.o)
  .text.libgcc.prologue
-                0x000000000000336a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodsi4.o)
+                0x000000000000365c        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodsi4.o)
  .text.libgcc.builtins
-                0x000000000000336a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodsi4.o)
+                0x000000000000365c        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodsi4.o)
  .text.libgcc.fmul
-                0x000000000000336a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodsi4.o)
+                0x000000000000365c        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodsi4.o)
  .text.libgcc.fixed
-                0x000000000000336a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodsi4.o)
+                0x000000000000365c        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodsi4.o)
  .text.libgcc.mul
-                0x000000000000336a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_divmodsi4.o)
+                0x000000000000365c        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_divmodsi4.o)
  .text.libgcc.div
-                0x000000000000336a       0x2e /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_divmodsi4.o)
-                0x000000000000336a                __divmodsi4
- .text.libgcc   0x0000000000003398        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_divmodsi4.o)
+                0x000000000000365c       0x2e /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_divmodsi4.o)
+                0x000000000000365c                __divmodsi4
+ .text.libgcc   0x000000000000368a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_divmodsi4.o)
  .text.libgcc.prologue
-                0x0000000000003398        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_divmodsi4.o)
+                0x000000000000368a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_divmodsi4.o)
  .text.libgcc.builtins
-                0x0000000000003398        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_divmodsi4.o)
+                0x000000000000368a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_divmodsi4.o)
  .text.libgcc.fmul
-                0x0000000000003398        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_divmodsi4.o)
+                0x000000000000368a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_divmodsi4.o)
  .text.libgcc.fixed
-                0x0000000000003398        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_divmodsi4.o)
+                0x000000000000368a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_divmodsi4.o)
  .text.libgcc.mul
-                0x0000000000003398        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_negsi2.o)
+                0x000000000000368a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_negsi2.o)
  .text.libgcc.div
-                0x0000000000003398       0x10 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_negsi2.o)
-                0x0000000000003398                __negsi2
- .text.libgcc   0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_negsi2.o)
+                0x000000000000368a       0x10 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_negsi2.o)
+                0x000000000000368a                __negsi2
+ .text.libgcc   0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_negsi2.o)
  .text.libgcc.prologue
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_negsi2.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_negsi2.o)
  .text.libgcc.builtins
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_negsi2.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_negsi2.o)
  .text.libgcc.fmul
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_negsi2.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_negsi2.o)
  .text.libgcc.fixed
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_negsi2.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_negsi2.o)
  .text.libgcc.mul
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_exit.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_exit.o)
  .text.libgcc.div
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_exit.o)
- .text.libgcc   0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_exit.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_exit.o)
+ .text.libgcc   0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_exit.o)
  .text.libgcc.prologue
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_exit.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_exit.o)
  .text.libgcc.builtins
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_exit.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_exit.o)
  .text.libgcc.fmul
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_exit.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_exit.o)
  .text.libgcc.fixed
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_exit.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_exit.o)
  .text.libgcc.mul
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_copy_data.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_copy_data.o)
  .text.libgcc.div
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_copy_data.o)
- .text.libgcc   0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_copy_data.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_copy_data.o)
+ .text.libgcc   0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_copy_data.o)
  .text.libgcc.prologue
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_copy_data.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_copy_data.o)
  .text.libgcc.builtins
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_copy_data.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_copy_data.o)
  .text.libgcc.fmul
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_copy_data.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_copy_data.o)
  .text.libgcc.fixed
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_copy_data.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_copy_data.o)
  .text.libgcc.mul
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_clear_bss.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_clear_bss.o)
  .text.libgcc.div
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_clear_bss.o)
- .text.libgcc   0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_clear_bss.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_clear_bss.o)
+ .text.libgcc   0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_clear_bss.o)
  .text.libgcc.prologue
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_clear_bss.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_clear_bss.o)
  .text.libgcc.builtins
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_clear_bss.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_clear_bss.o)
  .text.libgcc.fmul
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_clear_bss.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_clear_bss.o)
  .text.libgcc.fixed
-                0x00000000000033a8        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_clear_bss.o)
+                0x000000000000369a        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_clear_bss.o)
  .text.avr-libc.fplib
-                0x00000000000033a8        0xa /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fixsfsi.o)
-                0x00000000000033a8                __fixsfsi
+                0x000000000000369a        0xa /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fixsfsi.o)
+                0x000000000000369a                __fixsfsi
  .text.avr-libc.fplib
-                0x00000000000033b2       0x58 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fixunssfsi.o)
-                0x00000000000033b2                __fixunssfsi
+                0x00000000000036a4       0x58 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fixunssfsi.o)
+                0x00000000000036a4                __fixunssfsi
  .text.avr-libc.fplib
-                0x000000000000340a       0x7a /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(floatsisf.o)
-                0x000000000000340a                __floatunsisf
-                0x000000000000340e                __floatsisf
+                0x00000000000036fc       0x7a /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(floatsisf.o)
+                0x00000000000036fc                __floatunsisf
+                0x0000000000003700                __floatsisf
  .text.avr-libc.fplib
-                0x0000000000003484       0x44 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_split3.o)
-                0x0000000000003484                __fp_split3
-                0x0000000000003494                __fp_splitA
+                0x0000000000003776       0x44 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_split3.o)
+                0x0000000000003776                __fp_split3
+                0x0000000000003786                __fp_splitA
  .text.avr-libc.fplib
-                0x00000000000034c8        0xe /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_zero.o)
-                0x00000000000034c8                __fp_zero
-                0x00000000000034ca                __fp_szero
+                0x00000000000037ba        0xe /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_zero.o)
+                0x00000000000037ba                __fp_zero
+                0x00000000000037bc                __fp_szero
  .text.avr-libc.fplib
-                0x00000000000034d6        0x4 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(mulsf3.o)
-                0x00000000000034d6                __mulsf3
+                0x00000000000037c8        0x4 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(mulsf3.o)
+                0x00000000000037c8                __mulsf3
  .text.avr-libc.fplib
-                0x00000000000034da       0xc2 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(mulsf3x.o)
-                0x00000000000034ee                __mulsf3x
-                0x00000000000034f2                __mulsf3_pse
+                0x00000000000037cc       0xc2 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(mulsf3x.o)
+                0x00000000000037e0                __mulsf3x
+                0x00000000000037e4                __mulsf3_pse
  .text.avr-libc.fplib
-                0x000000000000359c       0x40 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(round.o)
-                0x000000000000359c                round
+                0x000000000000388e       0x40 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(round.o)
+                0x000000000000388e                round
  .text.avr-libc.fplib
-                0x00000000000035dc        0xc /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_inf.o)
-                0x00000000000035dc                __fp_inf
+                0x00000000000038ce        0xc /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_inf.o)
+                0x00000000000038ce                __fp_inf
  .text.avr-libc.fplib
-                0x00000000000035e8       0x36 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_mintl.o)
-                0x00000000000035e8                __fp_mintl
+                0x00000000000038da       0x36 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_mintl.o)
+                0x00000000000038da                __fp_mintl
  .text.avr-libc.fplib
-                0x000000000000361e       0x1c /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_mpack.o)
-                0x000000000000361e                __fp_mpack
-                0x0000000000003622                __fp_mpack_finite
+                0x0000000000003910       0x1c /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_mpack.o)
+                0x0000000000003910                __fp_mpack
+                0x0000000000003914                __fp_mpack_finite
  .text.avr-libc.fplib
-                0x000000000000363a        0x6 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_nan.o)
-                0x000000000000363a                __fp_nan
+                0x000000000000392c        0x6 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_nan.o)
+                0x000000000000392c                __fp_nan
  .text.avr-libc.fplib
-                0x0000000000003640        0xe /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_pscA.o)
-                0x0000000000003640                __fp_pscA
+                0x0000000000003932        0xe /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_pscA.o)
+                0x0000000000003932                __fp_pscA
  .text.avr-libc.fplib
-                0x000000000000364e        0xe /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_pscB.o)
-                0x000000000000364e                __fp_pscB
+                0x0000000000003940        0xe /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_pscB.o)
+                0x0000000000003940                __fp_pscB
  .text.avr-libc.fplib
-                0x000000000000365c       0x22 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_round.o)
-                0x000000000000365c                __fp_round
+                0x000000000000394e       0x22 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_round.o)
+                0x000000000000394e                __fp_round
  .text.avr-libc
-                0x000000000000367e       0x12 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(memcpy.o)
-                0x000000000000367e                memcpy
+                0x0000000000003970      0x25a /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(malloc.o)
+                0x0000000000003970                malloc
+                0x0000000000003a9a                free
  .text.avr-libc
-                0x0000000000003690        0xe /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(strcpy.o)
-                0x0000000000003690                strcpy
+                0x0000000000003bca       0x12 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(memcpy.o)
+                0x0000000000003bca                memcpy
  .text.avr-libc
-                0x000000000000369e       0x16 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(itoa_ncheck.o)
-                0x000000000000369e                __itoa_ncheck
+                0x0000000000003bdc        0xe /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(strcpy.o)
+                0x0000000000003bdc                strcpy
  .text.avr-libc
-                0x00000000000036b4       0x34 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(utoa_ncheck.o)
-                0x00000000000036b4                __utoa_ncheck
-                0x00000000000036b6                __utoa_common
+                0x0000000000003bea       0x16 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(itoa_ncheck.o)
+                0x0000000000003bea                __itoa_ncheck
  .text.avr-libc
-                0x00000000000036e8       0x20 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(strrev.o)
-                0x00000000000036e8                strrev
-                0x0000000000003708                . = ALIGN (0x2)
+                0x0000000000003c00       0x34 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(utoa_ncheck.o)
+                0x0000000000003c00                __utoa_ncheck
+                0x0000000000003c02                __utoa_common
+ .text.avr-libc
+                0x0000000000003c34       0x20 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(strrev.o)
+                0x0000000000003c34                strrev
+                0x0000000000003c54                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x0000000000003708        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_exit.o)
-                0x0000000000003708                exit
-                0x0000000000003708                _exit
+ .fini9         0x0000000000003c54        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_exit.o)
+                0x0000000000003c54                exit
+                0x0000000000003c54                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -1152,18 +1222,18 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x0000000000003708        0x4 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_exit.o)
+ .fini0         0x0000000000003c54        0x4 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_exit.o)
  *(.fini0)
-                0x000000000000370c                _etext = .
+                0x0000000000003c58                _etext = .
 
-.BOOT           0x000000000000370c       0x7e
- .BOOT          0x000000000000370c       0x3a ./twi/sp_driver.o
-                0x000000000000370c                SP_LoadFlashPage
- .BOOT          0x0000000000003746       0x44 ./ASF/xmega/drivers/nvm/nvm_asm.o
-                0x0000000000003746                nvm_common_spm
-                0x0000000000003764                nvm_flash_load_word_to_buffer
+.BOOT           0x0000000000003c58       0x7e
+ .BOOT          0x0000000000003c58       0x3a ./twi/sp_driver.o
+                0x0000000000003c58                SP_LoadFlashPage
+ .BOOT          0x0000000000003c92       0x44 ./ASF/xmega/drivers/nvm/nvm_asm.o
+                0x0000000000003c92                nvm_common_spm
+                0x0000000000003cb0                nvm_flash_load_word_to_buffer
 
-.data           0x0000000000802000      0x4d4 load address 0x000000000000378a
+.data           0x0000000000802000      0x4d4 load address 0x0000000000003cd6
                 0x0000000000802000                PROVIDE (__data_start, .)
  *(.data)
  .data          0x0000000000802000        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/crtx64a3u.o
@@ -1172,7 +1242,14 @@ END GROUP
  .data          0x0000000000802000        0x0 ./twi/twi-master.o
  .data          0x0000000000802000        0x0 ./twi/twi-memory.o
  .data          0x0000000000802000        0x0 ./twi/twi-slave.o
+ .data          0x0000000000802000        0x0 ./gfx/keypad.o
+ .data          0x0000000000802000        0x0 ./gfx/logos.o
+ .data          0x0000000000802000        0x0 ./gfx/menu-handler.o
+ .data          0x0000000000802000        0x0 ./gfx/menu.o
  .data          0x0000000000802000        0x0 ./gfx/testMenu.o
+ .data          0x0000000000802000        0x0 ./action_menu/action_menu_factory.o
+ .data          0x0000000000802000        0x0 ./action_menu/gfx_action_menu.o
+ .data          0x0000000000802000        0x0 ./action_menu/sampleMenu.o
  .data          0x0000000000802000        0x0 ./ASF/xmega/drivers/spi/spi.o
  .data          0x0000000000802000        0x0 ./ASF/xmega/drivers/nvm/nvm.o
  .data          0x0000000000802000        0x0 ./ASF/xmega/drivers/nvm/nvm_asm.o
@@ -1192,9 +1269,7 @@ END GROUP
  .data          0x0000000000802000        0x0 ./ASF/common/services/clock/xmega/sysclk.o
  .data          0x0000000000802000        0x0 ./ASF/common/components/display/ssd1306/font.o
  .data          0x0000000000802000        0x0 ./ASF/common/components/display/ssd1306/ssd1306.o
- .data          0x0000000000802000        0x0 ./adc.o
  .data          0x0000000000802000        0x0 ./main.o
- .data          0x0000000000802000        0x0 ./oled-menu.o
  .data          0x0000000000802000        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodqi4.o)
  .data          0x0000000000802000        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodsi4.o)
  .data          0x0000000000802000        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_divmodsi4.o)
@@ -1217,331 +1292,338 @@ END GROUP
  .data          0x0000000000802000        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_pscA.o)
  .data          0x0000000000802000        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_pscB.o)
  .data          0x0000000000802000        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_round.o)
- .data          0x0000000000802000        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(memcpy.o)
- .data          0x0000000000802000        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(strcpy.o)
- .data          0x0000000000802000        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(itoa_ncheck.o)
- .data          0x0000000000802000        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(utoa_ncheck.o)
- .data          0x0000000000802000        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(strrev.o)
+ .data          0x0000000000802000        0x6 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(malloc.o)
+                0x0000000000802000                __malloc_heap_end
+                0x0000000000802002                __malloc_heap_start
+                0x0000000000802004                __malloc_margin
+ .data          0x0000000000802006        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(memcpy.o)
+ .data          0x0000000000802006        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(strcpy.o)
+ .data          0x0000000000802006        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(itoa_ncheck.o)
+ .data          0x0000000000802006        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(utoa_ncheck.o)
+ .data          0x0000000000802006        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(strrev.o)
  *(.data*)
- .data.sleepmgr_configs
-                0x0000000000802000        0x6 ./ASF/common/services/sleepmgr/xmega/sleepmgr.o
-                0x0000000000802000                sleepmgr_configs
- .data.menu_bitmap_indicator
-                0x0000000000802006        0x5 ./ASF/common/services/gfx_mono/gfx_mono_menu.o
-                0x0000000000802006                menu_bitmap_indicator
- .data.sysfont  0x000000000080200b        0x7 ./ASF/common/services/gfx_mono/sysfont.o
-                0x000000000080200b                sysfont
- .data.Font08px_126
-                0x0000000000802012        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802012                Font08px_126
- .data.Font08px_125
-                0x0000000000802018        0x4 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802018                Font08px_125
- .data.Font08px_124
-                0x000000000080201c        0x2 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080201c                Font08px_124
- .data.Font08px_123
-                0x000000000080201e        0x4 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080201e                Font08px_123
- .data.Font08px_lz
-                0x0000000000802022        0x4 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802022                Font08px_lz
- .data.Font08px_ly
-                0x0000000000802026        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802026                Font08px_ly
- .data.Font08px_lx
-                0x000000000080202b        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080202b                Font08px_lx
- .data.Font08px_lw
-                0x0000000000802031        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802031                Font08px_lw
- .data.Font08px_lv
-                0x0000000000802037        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802037                Font08px_lv
- .data.Font08px_lu
-                0x000000000080203d        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080203d                Font08px_lu
- .data.Font08px_lt
-                0x0000000000802042        0x4 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802042                Font08px_lt
- .data.Font08px_ls
-                0x0000000000802046        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802046                Font08px_ls
- .data.Font08px_lr
-                0x000000000080204b        0x4 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080204b                Font08px_lr
- .data.Font08px_lq
-                0x000000000080204f        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080204f                Font08px_lq
- .data.Font08px_lp
-                0x0000000000802054        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802054                Font08px_lp
- .data.Font08px_lo
-                0x0000000000802059        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802059                Font08px_lo
- .data.Font08px_ln
-                0x000000000080205e        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080205e                Font08px_ln
- .data.Font08px_lm
-                0x0000000000802063        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802063                Font08px_lm
- .data.Font08px_ll
-                0x0000000000802069        0x2 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802069                Font08px_ll
- .data.Font08px_lk
-                0x000000000080206b        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080206b                Font08px_lk
- .data.Font08px_lj
-                0x0000000000802070        0x3 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802070                Font08px_lj
- .data.Font08px_li
-                0x0000000000802073        0x2 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802073                Font08px_li
- .data.Font08px_lh
-                0x0000000000802075        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802075                Font08px_lh
- .data.Font08px_lg
-                0x000000000080207a        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080207a                Font08px_lg
- .data.Font08px_lf
-                0x000000000080207f        0x4 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080207f                Font08px_lf
- .data.Font08px_le
-                0x0000000000802083        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802083                Font08px_le
- .data.Font08px_ld
-                0x0000000000802088        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802088                Font08px_ld
- .data.Font08px_lc
-                0x000000000080208d        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080208d                Font08px_lc
- .data.Font08px_lb
-                0x0000000000802092        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802092                Font08px_lb
- .data.Font08px_la
-                0x0000000000802097        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802097                Font08px_la
- .data.Font08px_96
-                0x000000000080209c        0x3 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080209c                Font08px_96
- .data.Font08px_95
-                0x000000000080209f        0x4 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080209f                Font08px_95
- .data.Font08px_94
-                0x00000000008020a3        0x4 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008020a3                Font08px_94
- .data.Font08px_93
-                0x00000000008020a7        0x4 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008020a7                Font08px_93
- .data.Font08px_92
-                0x00000000008020ab        0x4 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008020ab                Font08px_92
- .data.Font08px_91
-                0x00000000008020af        0x4 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008020af                Font08px_91
- .data.Font08px_UZ
-                0x00000000008020b3        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008020b3                Font08px_UZ
- .data.Font08px_UY
-                0x00000000008020b9        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008020b9                Font08px_UY
- .data.Font08px_UX
-                0x00000000008020bf        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008020bf                Font08px_UX
- .data.Font08px_UW
-                0x00000000008020c5        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008020c5                Font08px_UW
- .data.Font08px_UV
-                0x00000000008020cb        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008020cb                Font08px_UV
- .data.Font08px_UU
-                0x00000000008020d1        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008020d1                Font08px_UU
- .data.Font08px_UT
-                0x00000000008020d6        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008020d6                Font08px_UT
- .data.Font08px_US
-                0x00000000008020dc        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008020dc                Font08px_US
- .data.Font08px_UR
-                0x00000000008020e1        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008020e1                Font08px_UR
- .data.Font08px_UQ
-                0x00000000008020e6        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008020e6                Font08px_UQ
- .data.Font08px_UP
-                0x00000000008020ec        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008020ec                Font08px_UP
- .data.Font08px_UO
-                0x00000000008020f1        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008020f1                Font08px_UO
- .data.Font08px_UN
-                0x00000000008020f6        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008020f6                Font08px_UN
- .data.Font08px_UM
-                0x00000000008020fc        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008020fc                Font08px_UM
- .data.Font08px_UL
-                0x0000000000802102        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802102                Font08px_UL
- .data.Font08px_UK
-                0x0000000000802107        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802107                Font08px_UK
- .data.Font08px_UJ
-                0x000000000080210d        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080210d                Font08px_UJ
- .data.Font08px_UI
-                0x0000000000802112        0x4 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802112                Font08px_UI
- .data.Font08px_UH
-                0x0000000000802116        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802116                Font08px_UH
- .data.Font08px_UG
-                0x000000000080211b        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080211b                Font08px_UG
- .data.Font08px_UF
-                0x0000000000802121        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802121                Font08px_UF
- .data.Font08px_UE
-                0x0000000000802126        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802126                Font08px_UE
- .data.Font08px_UD
-                0x000000000080212b        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080212b                Font08px_UD
- .data.Font08px_UC
-                0x0000000000802130        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802130                Font08px_UC
- .data.Font08px_UB
-                0x0000000000802135        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802135                Font08px_UB
- .data.Font08px_UA
-                0x000000000080213a        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080213a                Font08px_UA
- .data.Font08px_64
-                0x0000000000802140        0x9 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802140                Font08px_64
- .data.Font08px_63
-                0x0000000000802149        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802149                Font08px_63
- .data.Font08px_62
-                0x000000000080214f        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080214f                Font08px_62
- .data.Font08px_61
-                0x0000000000802154        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802154                Font08px_61
- .data.Font08px_60
-                0x0000000000802159        0x5 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802159                Font08px_60
- .data.Font08px_59
-                0x000000000080215e        0x2 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080215e                Font08px_59
- .data.Font08px_58
-                0x0000000000802160        0x2 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802160                Font08px_58
- .data.Font08px_N9
-                0x0000000000802162        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802162                Font08px_N9
- .data.Font08px_N8
-                0x0000000000802168        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802168                Font08px_N8
- .data.Font08px_N7
-                0x000000000080216e        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080216e                Font08px_N7
- .data.Font08px_N6
-                0x0000000000802174        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802174                Font08px_N6
- .data.Font08px_N5
-                0x000000000080217a        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080217a                Font08px_N5
- .data.Font08px_N4
-                0x0000000000802180        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802180                Font08px_N4
- .data.Font08px_N3
-                0x0000000000802186        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802186                Font08px_N3
- .data.Font08px_N2
-                0x000000000080218c        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080218c                Font08px_N2
- .data.Font08px_N1
-                0x0000000000802192        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802192                Font08px_N1
- .data.Font08px_N0
-                0x0000000000802198        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x0000000000802198                Font08px_N0
- .data.Font08px_47
-                0x000000000080219e        0x4 ./ASF/common/components/display/ssd1306/font.o
-                0x000000000080219e                Font08px_47
- .data.Font08px_46
-                0x00000000008021a2        0x2 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008021a2                Font08px_46
- .data.Font08px_45
-                0x00000000008021a4        0x4 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008021a4                Font08px_45
- .data.Font08px_44
-                0x00000000008021a8        0x2 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008021a8                Font08px_44
- .data.Font08px_43
-                0x00000000008021aa        0x4 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008021aa                Font08px_43
- .data.Font08px_42
-                0x00000000008021ae        0x4 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008021ae                Font08px_42
- .data.Font08px_41
-                0x00000000008021b2        0x4 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008021b2                Font08px_41
- .data.Font08px_40
-                0x00000000008021b6        0x4 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008021b6                Font08px_40
- .data.Font08px_39
-                0x00000000008021ba        0x2 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008021ba                Font08px_39
- .data.Font08px_38
-                0x00000000008021bc        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008021bc                Font08px_38
- .data.Font08px_37
-                0x00000000008021c2        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008021c2                Font08px_37
- .data.Font08px_36
-                0x00000000008021c8        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008021c8                Font08px_36
- .data.Font08px_35
-                0x00000000008021ce        0x6 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008021ce                Font08px_35
- .data.Font08px_34
-                0x00000000008021d4        0x4 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008021d4                Font08px_34
- .data.Font08px_33
-                0x00000000008021d8        0x2 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008021d8                Font08px_33
- .data.Font08px_32
-                0x00000000008021da        0x3 ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008021da                Font08px_32
- .data.font_table
-                0x00000000008021dd       0xbe ./ASF/common/components/display/ssd1306/font.o
-                0x00000000008021dd                font_table
- .data.testMenu
-                0x000000000080229b        0x7 ./main.o
-                0x000000000080229b                testMenu
- .data.compulab_logo
-                0x00000000008022a2        0x5 ./main.o
-                0x00000000008022a2                compulab_logo
- .data.main_menu_strings
-                0x00000000008022a7        0xc ./main.o
-                0x00000000008022a7                main_menu_strings
  .data.compulab_new
-                0x00000000008022b3      0x200 ./main.o
-                0x00000000008022b3                compulab_new
+                0x0000000000802006      0x200 ./gfx/logos.o
+                0x0000000000802006                compulab_new
+ .data.testMenu
+                0x0000000000802206        0x7 ./gfx/menu.o
+                0x0000000000802206                testMenu
+ .data.compulab_logo
+                0x000000000080220d        0x5 ./gfx/menu.o
+                0x000000000080220d                compulab_logo
+ .data.main_menu_strings
+                0x0000000000802212        0xc ./gfx/menu.o
+                0x0000000000802212                main_menu_strings
+ .data.sleepmgr_configs
+                0x000000000080221e        0x6 ./ASF/common/services/sleepmgr/xmega/sleepmgr.o
+                0x000000000080221e                sleepmgr_configs
+ .data.menu_bitmap_indicator
+                0x0000000000802224        0x5 ./ASF/common/services/gfx_mono/gfx_mono_menu.o
+                0x0000000000802224                menu_bitmap_indicator
+ .data.sysfont  0x0000000000802229        0x7 ./ASF/common/services/gfx_mono/sysfont.o
+                0x0000000000802229                sysfont
+ .data.Font08px_126
+                0x0000000000802230        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802230                Font08px_126
+ .data.Font08px_125
+                0x0000000000802236        0x4 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802236                Font08px_125
+ .data.Font08px_124
+                0x000000000080223a        0x2 ./ASF/common/components/display/ssd1306/font.o
+                0x000000000080223a                Font08px_124
+ .data.Font08px_123
+                0x000000000080223c        0x4 ./ASF/common/components/display/ssd1306/font.o
+                0x000000000080223c                Font08px_123
+ .data.Font08px_lz
+                0x0000000000802240        0x4 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802240                Font08px_lz
+ .data.Font08px_ly
+                0x0000000000802244        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802244                Font08px_ly
+ .data.Font08px_lx
+                0x0000000000802249        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802249                Font08px_lx
+ .data.Font08px_lw
+                0x000000000080224f        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x000000000080224f                Font08px_lw
+ .data.Font08px_lv
+                0x0000000000802255        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802255                Font08px_lv
+ .data.Font08px_lu
+                0x000000000080225b        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x000000000080225b                Font08px_lu
+ .data.Font08px_lt
+                0x0000000000802260        0x4 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802260                Font08px_lt
+ .data.Font08px_ls
+                0x0000000000802264        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802264                Font08px_ls
+ .data.Font08px_lr
+                0x0000000000802269        0x4 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802269                Font08px_lr
+ .data.Font08px_lq
+                0x000000000080226d        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x000000000080226d                Font08px_lq
+ .data.Font08px_lp
+                0x0000000000802272        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802272                Font08px_lp
+ .data.Font08px_lo
+                0x0000000000802277        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802277                Font08px_lo
+ .data.Font08px_ln
+                0x000000000080227c        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x000000000080227c                Font08px_ln
+ .data.Font08px_lm
+                0x0000000000802281        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802281                Font08px_lm
+ .data.Font08px_ll
+                0x0000000000802287        0x2 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802287                Font08px_ll
+ .data.Font08px_lk
+                0x0000000000802289        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802289                Font08px_lk
+ .data.Font08px_lj
+                0x000000000080228e        0x3 ./ASF/common/components/display/ssd1306/font.o
+                0x000000000080228e                Font08px_lj
+ .data.Font08px_li
+                0x0000000000802291        0x2 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802291                Font08px_li
+ .data.Font08px_lh
+                0x0000000000802293        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802293                Font08px_lh
+ .data.Font08px_lg
+                0x0000000000802298        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802298                Font08px_lg
+ .data.Font08px_lf
+                0x000000000080229d        0x4 ./ASF/common/components/display/ssd1306/font.o
+                0x000000000080229d                Font08px_lf
+ .data.Font08px_le
+                0x00000000008022a1        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008022a1                Font08px_le
+ .data.Font08px_ld
+                0x00000000008022a6        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008022a6                Font08px_ld
+ .data.Font08px_lc
+                0x00000000008022ab        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008022ab                Font08px_lc
+ .data.Font08px_lb
+                0x00000000008022b0        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008022b0                Font08px_lb
+ .data.Font08px_la
+                0x00000000008022b5        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008022b5                Font08px_la
+ .data.Font08px_96
+                0x00000000008022ba        0x3 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008022ba                Font08px_96
+ .data.Font08px_95
+                0x00000000008022bd        0x4 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008022bd                Font08px_95
+ .data.Font08px_94
+                0x00000000008022c1        0x4 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008022c1                Font08px_94
+ .data.Font08px_93
+                0x00000000008022c5        0x4 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008022c5                Font08px_93
+ .data.Font08px_92
+                0x00000000008022c9        0x4 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008022c9                Font08px_92
+ .data.Font08px_91
+                0x00000000008022cd        0x4 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008022cd                Font08px_91
+ .data.Font08px_UZ
+                0x00000000008022d1        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008022d1                Font08px_UZ
+ .data.Font08px_UY
+                0x00000000008022d7        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008022d7                Font08px_UY
+ .data.Font08px_UX
+                0x00000000008022dd        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008022dd                Font08px_UX
+ .data.Font08px_UW
+                0x00000000008022e3        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008022e3                Font08px_UW
+ .data.Font08px_UV
+                0x00000000008022e9        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008022e9                Font08px_UV
+ .data.Font08px_UU
+                0x00000000008022ef        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008022ef                Font08px_UU
+ .data.Font08px_UT
+                0x00000000008022f4        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008022f4                Font08px_UT
+ .data.Font08px_US
+                0x00000000008022fa        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008022fa                Font08px_US
+ .data.Font08px_UR
+                0x00000000008022ff        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008022ff                Font08px_UR
+ .data.Font08px_UQ
+                0x0000000000802304        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802304                Font08px_UQ
+ .data.Font08px_UP
+                0x000000000080230a        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x000000000080230a                Font08px_UP
+ .data.Font08px_UO
+                0x000000000080230f        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x000000000080230f                Font08px_UO
+ .data.Font08px_UN
+                0x0000000000802314        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802314                Font08px_UN
+ .data.Font08px_UM
+                0x000000000080231a        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x000000000080231a                Font08px_UM
+ .data.Font08px_UL
+                0x0000000000802320        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802320                Font08px_UL
+ .data.Font08px_UK
+                0x0000000000802325        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802325                Font08px_UK
+ .data.Font08px_UJ
+                0x000000000080232b        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x000000000080232b                Font08px_UJ
+ .data.Font08px_UI
+                0x0000000000802330        0x4 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802330                Font08px_UI
+ .data.Font08px_UH
+                0x0000000000802334        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802334                Font08px_UH
+ .data.Font08px_UG
+                0x0000000000802339        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802339                Font08px_UG
+ .data.Font08px_UF
+                0x000000000080233f        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x000000000080233f                Font08px_UF
+ .data.Font08px_UE
+                0x0000000000802344        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802344                Font08px_UE
+ .data.Font08px_UD
+                0x0000000000802349        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802349                Font08px_UD
+ .data.Font08px_UC
+                0x000000000080234e        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x000000000080234e                Font08px_UC
+ .data.Font08px_UB
+                0x0000000000802353        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802353                Font08px_UB
+ .data.Font08px_UA
+                0x0000000000802358        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802358                Font08px_UA
+ .data.Font08px_64
+                0x000000000080235e        0x9 ./ASF/common/components/display/ssd1306/font.o
+                0x000000000080235e                Font08px_64
+ .data.Font08px_63
+                0x0000000000802367        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802367                Font08px_63
+ .data.Font08px_62
+                0x000000000080236d        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x000000000080236d                Font08px_62
+ .data.Font08px_61
+                0x0000000000802372        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802372                Font08px_61
+ .data.Font08px_60
+                0x0000000000802377        0x5 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802377                Font08px_60
+ .data.Font08px_59
+                0x000000000080237c        0x2 ./ASF/common/components/display/ssd1306/font.o
+                0x000000000080237c                Font08px_59
+ .data.Font08px_58
+                0x000000000080237e        0x2 ./ASF/common/components/display/ssd1306/font.o
+                0x000000000080237e                Font08px_58
+ .data.Font08px_N9
+                0x0000000000802380        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802380                Font08px_N9
+ .data.Font08px_N8
+                0x0000000000802386        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802386                Font08px_N8
+ .data.Font08px_N7
+                0x000000000080238c        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x000000000080238c                Font08px_N7
+ .data.Font08px_N6
+                0x0000000000802392        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802392                Font08px_N6
+ .data.Font08px_N5
+                0x0000000000802398        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x0000000000802398                Font08px_N5
+ .data.Font08px_N4
+                0x000000000080239e        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x000000000080239e                Font08px_N4
+ .data.Font08px_N3
+                0x00000000008023a4        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008023a4                Font08px_N3
+ .data.Font08px_N2
+                0x00000000008023aa        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008023aa                Font08px_N2
+ .data.Font08px_N1
+                0x00000000008023b0        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008023b0                Font08px_N1
+ .data.Font08px_N0
+                0x00000000008023b6        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008023b6                Font08px_N0
+ .data.Font08px_47
+                0x00000000008023bc        0x4 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008023bc                Font08px_47
+ .data.Font08px_46
+                0x00000000008023c0        0x2 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008023c0                Font08px_46
+ .data.Font08px_45
+                0x00000000008023c2        0x4 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008023c2                Font08px_45
+ .data.Font08px_44
+                0x00000000008023c6        0x2 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008023c6                Font08px_44
+ .data.Font08px_43
+                0x00000000008023c8        0x4 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008023c8                Font08px_43
+ .data.Font08px_42
+                0x00000000008023cc        0x4 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008023cc                Font08px_42
+ .data.Font08px_41
+                0x00000000008023d0        0x4 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008023d0                Font08px_41
+ .data.Font08px_40
+                0x00000000008023d4        0x4 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008023d4                Font08px_40
+ .data.Font08px_39
+                0x00000000008023d8        0x2 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008023d8                Font08px_39
+ .data.Font08px_38
+                0x00000000008023da        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008023da                Font08px_38
+ .data.Font08px_37
+                0x00000000008023e0        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008023e0                Font08px_37
+ .data.Font08px_36
+                0x00000000008023e6        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008023e6                Font08px_36
+ .data.Font08px_35
+                0x00000000008023ec        0x6 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008023ec                Font08px_35
+ .data.Font08px_34
+                0x00000000008023f2        0x4 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008023f2                Font08px_34
+ .data.Font08px_33
+                0x00000000008023f6        0x2 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008023f6                Font08px_33
+ .data.Font08px_32
+                0x00000000008023f8        0x3 ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008023f8                Font08px_32
+ .data.font_table
+                0x00000000008023fb       0xbe ./ASF/common/components/display/ssd1306/font.o
+                0x00000000008023fb                font_table
  *(.rodata)
  *(.rodata*)
  .rodata.str1.1
-                0x00000000008024b3       0x20 ./main.o
+                0x00000000008024b9        0x0 ./action_menu/action_menu_factory.o
+                                          0x1 (size before relaxing)
+ .rodata.str1.1
+                0x00000000008024b9       0x1a ./action_menu/sampleMenu.o
  *(.gnu.linkonce.d*)
                 0x00000000008024d4                . = ALIGN (0x2)
  *fill*         0x00000000008024d3        0x1 
                 0x00000000008024d4                _edata = .
                 0x00000000008024d4                PROVIDE (__data_end, .)
 
-.bss            0x00000000008024d4      0x634
+.bss            0x00000000008024d4      0x638
                 0x00000000008024d4                PROVIDE (__bss_start, .)
  *(.bss)
  .bss           0x00000000008024d4        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/crtx64a3u.o
@@ -1550,7 +1632,14 @@ END GROUP
  .bss           0x00000000008024d4        0x0 ./twi/twi-master.o
  .bss           0x00000000008024d4        0x0 ./twi/twi-memory.o
  .bss           0x00000000008024d4        0x0 ./twi/twi-slave.o
+ .bss           0x00000000008024d4        0x0 ./gfx/keypad.o
+ .bss           0x00000000008024d4        0x0 ./gfx/logos.o
+ .bss           0x00000000008024d4        0x0 ./gfx/menu-handler.o
+ .bss           0x00000000008024d4        0x0 ./gfx/menu.o
  .bss           0x00000000008024d4        0x0 ./gfx/testMenu.o
+ .bss           0x00000000008024d4        0x0 ./action_menu/action_menu_factory.o
+ .bss           0x00000000008024d4        0x0 ./action_menu/gfx_action_menu.o
+ .bss           0x00000000008024d4        0x0 ./action_menu/sampleMenu.o
  .bss           0x00000000008024d4        0x0 ./ASF/xmega/drivers/spi/spi.o
  .bss           0x00000000008024d4        0x0 ./ASF/xmega/drivers/nvm/nvm.o
  .bss           0x00000000008024d4        0x0 ./ASF/xmega/drivers/nvm/nvm_asm.o
@@ -1570,9 +1659,7 @@ END GROUP
  .bss           0x00000000008024d4        0x0 ./ASF/common/services/clock/xmega/sysclk.o
  .bss           0x00000000008024d4        0x0 ./ASF/common/components/display/ssd1306/font.o
  .bss           0x00000000008024d4        0x0 ./ASF/common/components/display/ssd1306/ssd1306.o
- .bss           0x00000000008024d4        0x0 ./adc.o
  .bss           0x00000000008024d4        0x0 ./main.o
- .bss           0x00000000008024d4        0x0 ./oled-menu.o
  .bss           0x00000000008024d4        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodqi4.o)
  .bss           0x00000000008024d4        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_udivmodsi4.o)
  .bss           0x00000000008024d4        0x0 /usr/lib/gcc/avr/4.9.2/avrxmega4/libgcc.a(_divmodsi4.o)
@@ -1595,6 +1682,7 @@ END GROUP
  .bss           0x00000000008024d4        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_pscA.o)
  .bss           0x00000000008024d4        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_pscB.o)
  .bss           0x00000000008024d4        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libm.a(fp_round.o)
+ .bss           0x00000000008024d4        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(malloc.o)
  .bss           0x00000000008024d4        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(memcpy.o)
  .bss           0x00000000008024d4        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(strcpy.o)
  .bss           0x00000000008024d4        0x0 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(itoa_ncheck.o)
@@ -1628,32 +1716,35 @@ END GROUP
                 0x0000000000802ae7                retryingCount
  COMMON         0x0000000000802ae9        0x3 ./twi/twi-slave.o
                 0x0000000000802ae9                debug
- COMMON         0x0000000000802aec        0x4 ./ASF/xmega/drivers/adc/adc.o
-                0x0000000000802aec                adcb_callback
-                0x0000000000802aee                adca_callback
- COMMON         0x0000000000802af0        0x6 ./ASF/common/services/sleepmgr/xmega/sleepmgr.o
-                0x0000000000802af0                sleepmgr_locks
- COMMON         0x0000000000802af6       0x12 ./main.o
-                0x0000000000802af6                powerstring
-                0x0000000000802afb                currentPower
-                0x0000000000802aff                power
-                0x0000000000802b01                buttenLastStatus
-                0x0000000000802b02                selectButtonStatus
-                0x0000000000802b03                menuEnable
-                0x0000000000802b04                leftButtonStatus
-                0x0000000000802b05                rightButtonStatus
-                0x0000000000802b06                screen_changed
+ COMMON         0x0000000000802aec        0x2 ./action_menu/action_menu_factory.o
+                0x0000000000802aec                presentMenu
+ COMMON         0x0000000000802aee        0x4 ./ASF/xmega/drivers/adc/adc.o
+                0x0000000000802aee                adcb_callback
+                0x0000000000802af0                adca_callback
+ COMMON         0x0000000000802af2        0x6 ./ASF/common/services/sleepmgr/xmega/sleepmgr.o
+                0x0000000000802af2                sleepmgr_locks
+ COMMON         0x0000000000802af8       0x10 ./main.o
+                0x0000000000802af8                powerstring
+                0x0000000000802afd                currentPower
+                0x0000000000802b01                power
+                0x0000000000802b03                selectButtonStatus
+                0x0000000000802b04                menuEnable
+                0x0000000000802b05                leftButtonStatus
+                0x0000000000802b06                rightButtonStatus
                 0x0000000000802b07                buttonStatus
-                0x0000000000802b08                PROVIDE (__bss_end, .)
-                0x000000000000378a                __data_load_start = LOADADDR (.data)
-                0x0000000000003c5e                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x0000000000802b08        0x4 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(malloc.o)
+                0x0000000000802b08                __brkval
+                0x0000000000802b0a                __flp
+                0x0000000000802b0c                PROVIDE (__bss_end, .)
+                0x0000000000003cd6                __data_load_start = LOADADDR (.data)
+                0x00000000000041aa                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x0000000000802b08        0x0
-                0x0000000000802b08                PROVIDE (__noinit_start, .)
+.noinit         0x0000000000802b0c        0x0
+                0x0000000000802b0c                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x0000000000802b08                PROVIDE (__noinit_end, .)
-                0x0000000000802b08                _end = .
-                0x0000000000802b08                PROVIDE (__heap_start, .)
+                0x0000000000802b0c                PROVIDE (__noinit_end, .)
+                0x0000000000802b0c                _end = .
+                0x0000000000802b0c                PROVIDE (__heap_start, .)
 
 .eeprom         0x0000000000810000        0x0
  *(.eeprom*)
@@ -1696,7 +1787,14 @@ END GROUP
  .comment       0x0000000000000027       0x28 ./twi/twi-master.o
  .comment       0x0000000000000027       0x28 ./twi/twi-memory.o
  .comment       0x0000000000000027       0x28 ./twi/twi-slave.o
+ .comment       0x0000000000000027       0x28 ./gfx/keypad.o
+ .comment       0x0000000000000027       0x28 ./gfx/logos.o
+ .comment       0x0000000000000027       0x28 ./gfx/menu-handler.o
+ .comment       0x0000000000000027       0x28 ./gfx/menu.o
  .comment       0x0000000000000027       0x28 ./gfx/testMenu.o
+ .comment       0x0000000000000027       0x28 ./action_menu/action_menu_factory.o
+ .comment       0x0000000000000027       0x28 ./action_menu/gfx_action_menu.o
+ .comment       0x0000000000000027       0x28 ./action_menu/sampleMenu.o
  .comment       0x0000000000000027       0x28 ./ASF/xmega/drivers/spi/spi.o
  .comment       0x0000000000000027       0x28 ./ASF/xmega/drivers/nvm/nvm.o
  .comment       0x0000000000000027       0x28 ./ASF/xmega/drivers/adc/xmega_aau/adc_aau.o
@@ -1714,9 +1812,8 @@ END GROUP
  .comment       0x0000000000000027       0x28 ./ASF/common/services/clock/xmega/sysclk.o
  .comment       0x0000000000000027       0x28 ./ASF/common/components/display/ssd1306/font.o
  .comment       0x0000000000000027       0x28 ./ASF/common/components/display/ssd1306/ssd1306.o
- .comment       0x0000000000000027       0x28 ./adc.o
  .comment       0x0000000000000027       0x28 ./main.o
- .comment       0x0000000000000027       0x28 ./oled-menu.o
+ .comment       0x0000000000000027       0x28 /usr/lib/gcc/avr/4.9.2/../../../../avr/lib/avrxmega4/libc.a(malloc.o)
 
 .note.gnu.build-id
  *(.note.gnu.build-id)

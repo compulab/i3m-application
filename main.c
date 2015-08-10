@@ -6,24 +6,26 @@
 #include "gfx/logos.h"
 #include "gfx/menu.h"
 #include "debug.h"
+#include "action_menu/sampleMenu.h"
+
 
 int power;
 char powerstring[5];
 bool leftButtonStatus,rightButtonStatus,selectButtonStatus;
 bool menuEnable;
 bool buttonStatus;
-bool buttenLastStatus, screen_changed;
+//bool buttenLastStatus, screen_changed;
 long currentPower;
 char debug[2];
 
 void InitGlobalVars()
 {
-	power = 999;
-	buttenLastStatus = false;
-	leftButtonStatus = false;
-	rightButtonStatus = false;
-	selectButtonStatus = false;
-	screen_changed = false;
+//	power = 999;
+//	buttenLastStatus = false;
+	leftButtonStatus = true;
+	rightButtonStatus = true;
+	selectButtonStatus = true;
+//	screen_changed = false;
 	menuEnable = true;
 }
 
@@ -54,12 +56,12 @@ static void adc_init(void)
 void printLogo(struct gfx_mono_bitmap logo){
 	gfx_mono_put_bitmap(&logo, 0, 8);
 }
-
-void writeText(char* text,int pageAddr,int colAddr){
-	ssd1306_set_page_address(pageAddr);
-	ssd1306_set_column_address(colAddr);
-	ssd1306_write_text(text);
-}
+//
+//void writeText(char* text,int pageAddr,int colAddr){
+//	ssd1306_set_page_address(pageAddr);
+//	ssd1306_set_column_address(colAddr);
+//	ssd1306_write_text(text);
+//}
 
 float adc_avg(){
 	int i;
@@ -99,7 +101,7 @@ void printPower(){
 	itoa(currentPower, powerstring,10);//power_result
 //	if (screen_changed) {  //if just moved to this screen
 		ssd1306_clear();
-		writeText("Power consumption: ",1,25);
+//		writeText("Power consumption: ",1,25);
 //	}	//else if (power_result==power_result_old) return;
 	strcpy(resString,powerstring);
 	if (currentPower >0){
@@ -114,7 +116,7 @@ void printPower(){
 		resString[2]='W';
 		resString[3]='\0';
 	}
-	writeText(resString,3,55);
+//	writeText(resString,3,55);
 
 //	power_result_old=power_result;
 }
@@ -124,14 +126,10 @@ ISR(TWIE_TWIM_vect){
 }
 
 void updateData(uint8_t data){
-
 	char dataStr[4];
 //	itoa(data, dataStr,10);
-	CLEAR
-	MSG("Update Data")
-	MSG2(data,dataStr)
 //	delay_s(10);
-	testMenu.strings[3] = dataStr;
+//	testMenu.strings[3] = dataStr;
 //	gfx_mono_menu_init(&testMenu);
 }
 
@@ -160,60 +158,111 @@ void sendReadPackage(){
 	SendPackage(&packageToRead);
 }
 
-int main(void){
-
-	bool sent = false;
-    enable_interrupts();
-
-    board_init();
+void init(){
+	enable_interrupts();
+	board_init();
 //	sysclk_init();
 	gfx_mono_init();
 	adc_init();
 	pmic_init();
-	twi_slave_init();
-	twi_master_init();
+//	twi_slave_init();
+//	twi_master_init();
+}
 
-	sendWritePackage();
-	sendReadPackage();
+bool isButtonPressed(bool * lastStatus, uint8_t buttonPos){
+	bool currentStatus = ioport_get_value(buttonPos);
+	bool result = currentStatus && !(*lastStatus);
+	*lastStatus = currentStatus;
+	return result;
+}
+
+
+bool isLeftButtonPressed(){
+	return isButtonPressed(&leftButtonStatus,FP_LEFT_BUTTON);
+}
+
+bool isRightButtonPressed(){
+	return isButtonPressed(&rightButtonStatus,FP_RIGHT_BUTTON);
+}
+
+bool isSelectButtonPressed(){
+	return isButtonPressed(&selectButtonStatus,FP_OK_BUTTON);
+}
+
+
+int main(void){
+	init();
+	gfx_action_menu action;
+	sampleMenu(&action);
 	InitGlobalVars();
-//	sysclk_enable_peripheral_clock(&TWIC);
-//	sysclk_enable_peripheral_clock(&TWIE);
 
-//	gfx_mono_menu_init(&testMenu);
+	gfx_action_menu_init(&action);
 
-	adc_enable(&MY_ADC);
-
-	bool isButtonPressed(bool * lastStatus, uint8_t buttonPos){
-		bool currentStatus = ioport_get_value(buttonPos);
-		bool result = currentStatus && !(*lastStatus);
-		*lastStatus = currentStatus;
-		return result;
-	}
-
-
-	bool isLeftButtonPressed(){
-		return isButtonPressed(&leftButtonStatus,FP_LEFT_BUTTON);
-	}
-
-	bool isRightButtonPressed(){
-		return isButtonPressed(&rightButtonStatus,FP_RIGHT_BUTTON);
-	}
-
-	bool isSelectButtonPressed(){
-		return isButtonPressed(&selectButtonStatus,FP_OK_BUTTON);
-	}
-
-//	int returnToMenuCount = 0;
-	while(true) 
+	int returnToMenuCount = 0;
+	while(true)
 	{
+		if (action.visible){
+			if (isLeftButtonPressed())
+			{
+				gfx_action_menu_process_key(&action,GFX_MONO_MENU_KEYCODE_UP);
+			} else if(isRightButtonPressed()){
+				gfx_action_menu_process_key(&action,GFX_MONO_MENU_KEYCODE_DOWN);
+			} else if(isSelectButtonPressed()){
+				gfx_action_menu_process_key(&action,GFX_MONO_MENU_KEYCODE_ENTER);
+			}
+		}else if (isSelectButtonPressed()){
+			if (returnToMenuCount == 1){
+				returnToMenuCount=0;
+				menuEnable = true;
+				ssd1306_clear();
+				gfx_action_menu_init(&action);
+			}else {
+				returnToMenuCount++;
+			}
+		}
+		delay_us(100000); //10ms
+	}
+
+}
+//
+//int main2(void){
+//	init();
+//    //
+////	sendWritePackage();
+////	sendReadPackage();
+//	InitGlobalVars();
+//
+//	gfx_mono_menu_init(&testMenu);
+//
+//	adc_enable(&MY_ADC);
+//
+//	bool isButtonPressed(bool * lastStatus, uint8_t buttonPos){
+//		bool currentStatus = ioport_get_value(buttonPos);
+//		bool result = currentStatus && !(*lastStatus);
+//		*lastStatus = currentStatus;
+//		return result;
+//	}
+//
+//
+//	bool isLeftButtonPressed(){
+//		return isButtonPressed(&leftButtonStatus,FP_LEFT_BUTTON);
+//	}
+//
+//	bool isRightButtonPressed(){
+//		return isButtonPressed(&rightButtonStatus,FP_RIGHT_BUTTON);
+//	}
+//
+//	bool isSelectButtonPressed(){
+//		return isButtonPressed(&selectButtonStatus,FP_OK_BUTTON);
+//	}
+//
+//	int returnToMenuCount = 0;
+//	while(true)
+//	{
 //		if (menuEnable){
 //			if (isLeftButtonPressed())
 //			{
 //				gfx_mono_menu_process_key(&testMenu,GFX_MONO_MENU_KEYCODE_UP);
-//				if (!sent){
-//					sent = true;
-//
-//				}
 //			} else if(isRightButtonPressed()){
 //				gfx_mono_menu_process_key(&testMenu,GFX_MONO_MENU_KEYCODE_DOWN);
 //			} else if(isSelectButtonPressed()){
@@ -240,8 +289,8 @@ int main(void){
 //			}
 //		}
 //		delay_us(100000); //10ms
-	}
-
-
-	return 0;	
-}
+//	}
+//
+//
+//	return 0;
+//}

@@ -33,7 +33,8 @@ ASF/xmega/drivers/adc/xmega_aau \
 ASF/xmega/drivers/cpu \
 ASF/xmega/drivers/nvm \
 ASF/xmega/drivers/spi \
-. \
+action_menu \
 gfx \
+. \
 twi \
 
