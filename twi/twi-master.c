@@ -38,7 +38,7 @@ void sendAddress(){
 	TWI_MASTER_BASE.CTRLC = TWI_MASTER_CMD_REPSTART_gc;
 }
 
-void SendReadPackage(){
+void SendReadRequest(){
 	uint8_t address =  currentPackage.slaveAddress << 1;
 	address = address | 0x01;
 	TWI_MASTER_BASE.ADDR = address;
@@ -79,7 +79,7 @@ void handleSendData(){
 	} else {
 		SendStop();
 		if (!currentPackage.writeRequest)
-			SendReadPackage();
+			SendReadRequest();
 	}
 	isExacuting = true;
 }

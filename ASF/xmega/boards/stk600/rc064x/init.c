@@ -58,6 +58,11 @@ ioport_configure_pin(FP_RIGHT_BUTTON, IOPORT_DIR_INPUT | IOPORT_PULL_UP);
 ioport_configure_pin(FP_OK_BUTTON, IOPORT_DIR_INPUT | IOPORT_PULL_UP);
 ioport_configure_pin(FP_LEFT_BUTTON, IOPORT_DIR_INPUT | IOPORT_PULL_UP);
 
+
+ioport_configure_pin(FP_S3, IOPORT_DIR_INPUT | IOPORT_PULL_UP);
+ioport_configure_pin(FP_S4, IOPORT_DIR_INPUT | IOPORT_PULL_UP);
+ioport_configure_pin(FP_S5, IOPORT_DIR_INPUT | IOPORT_PULL_UP);
+
 //Display interface:
 ioport_configure_pin(FP_DC, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
 ioport_configure_pin(FP_CS, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);

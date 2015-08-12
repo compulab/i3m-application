@@ -6,6 +6,7 @@
  */
 
 #include "gfx_action_menu.h"
+#include <string.h>
 
 void reset_item_action(item_action* item);
 

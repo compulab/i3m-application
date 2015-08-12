@@ -6,8 +6,14 @@ void gfx_action_menu_init(struct gfx_action_menu_t *actionMenu){
 	gfx_mono_menu_init(actionMenu->menu);
 }
 
-void showMenu(struct gfx_action_menu_t *menu){
+void showMenu(struct gfx_action_menu_t *menu,bool updateParent){
+	if (updateParent)
+		menu->parent = presentMenu;
 	gfx_action_menu_init(menu);
+}
+
+void showThisMenu(){
+	gfx_action_menu_init(presentMenu);
 }
 
 void writeText(char* text,int pageAddr,int colAddr){
@@ -45,17 +51,21 @@ uint8_t gfx_action_menu_process_key(struct gfx_action_menu_t *actionMenu, uint8_
 			showData(selectedAction.data);
 			break;
 		case ACTION_TYPE_SHOW_MENU:
-			showMenu(selectedAction.menu);
+			showMenu(selectedAction.menu,true);
 			break;
 		case ACTION_TYPE_NONE:
-//			actionMenu->visible= false;
 			break;
 		}
 	} else if (keycode == GFX_MONO_MENU_KEYCODE_BACK) {
-		showMenu(actionMenu->parent);
+		if (presentMenu->visible){
+			if (actionMenu->parent != NULL)
+				showMenu(actionMenu->parent,false);
+		}else
+				showThisMenu();
 	}else {
 		return gfx_mono_menu_process_key(actionMenu->menu,keycode);
 	}
+
 	return 0;
 }
 

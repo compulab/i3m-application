@@ -34,7 +34,10 @@ ASF/xmega/drivers/cpu \
 ASF/xmega/drivers/nvm \
 ASF/xmega/drivers/spi \
 action_menu \
+adc \
 gfx \
+gfx/test \
 . \
+timer \
 twi \
 

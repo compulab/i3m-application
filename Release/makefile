@@ -9,7 +9,10 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include twi/subdir.mk
+-include timer/subdir.mk
+-include gfx/test/subdir.mk
 -include gfx/subdir.mk
+-include adc/subdir.mk
 -include action_menu/subdir.mk
 -include ASF/xmega/drivers/spi/subdir.mk
 -include ASF/xmega/drivers/nvm/subdir.mk

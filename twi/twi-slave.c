@@ -134,10 +134,9 @@ void TWI_EndTransmission(){
 }
 
 void handleRead(uint8_t address){
-
 	if (slave_address == 0x31){
 		uint8_t data = twi_EEPROM_ReadByte(address);
-		TWI_SLAVE_BASE.DATA = data;
+			TWI_SLAVE_BASE.DATA = data;
 	}
 	else{
 
@@ -148,7 +147,6 @@ void handleRead(uint8_t address){
 }
 
 void handleWrite(uint8_t data){
-
 	if (slave_address == 0x32)
 		twi_EEPROM_WriteByte(reg_address,data);
 	++reg_address;

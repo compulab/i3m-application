@@ -67,9 +67,9 @@ void sysclk_init(void)
 	bool need_rc2mhz = false;
 
 	/* Turn off all peripheral clocks that can be turned off. */
-	for (i = 0; i <= SYSCLK_PORT_F; i++) {
-		*(reg++) = 0xff;
-	}
+//	for (i = 0; i <= SYSCLK_PORT_F; i++) {
+//		*(reg++) = 0xff;
+//	}
 
 	/* Set up system clock prescalers if different from defaults */
 	if ((CONFIG_SYSCLK_PSADIV != SYSCLK_PSADIV_1)

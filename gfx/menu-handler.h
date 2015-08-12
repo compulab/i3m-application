@@ -10,6 +10,12 @@
 #include "../asf.h"
 #include "keypad.h"
 
-//void menu_handler(struct gfx_action_menu_t *menu);
+void menu_handler(void);
+
+void rightButtonPressed();
+
+void leftButtonPressed();
+
+void selectButtonPressed();
 
 #endif /* GFX_MENU_HANDLER_H_ */

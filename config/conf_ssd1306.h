@@ -88,7 +88,7 @@
 #  define SSD1306_CS_PIN       FP_CS
 #  define SSD1306_RES_PIN      FP_RST
 
-#  define UG_2832HSWEG04_BAUDRATE  1000000
+#  define UG_2832HSWEG04_BAUDRATE  2000000
 //#endif // BOARD
 
 // Board independent configuration
