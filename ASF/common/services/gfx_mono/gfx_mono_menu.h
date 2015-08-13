@@ -48,6 +48,7 @@
 
 #include "../../../xmega/utils/compiler.h"
 #include "../../../../config/conf_menu.h"
+#include "../../../../config/conf_sysfont.h"
 #include "gfx_mono.h"
 
 #ifdef __cplusplus
@@ -112,8 +113,7 @@ extern "C" {
 /** @} */
 
 /** Maximum number of menu elements on display */
-#define GFX_MONO_MENU_ELEMENTS_PER_SCREEN ((GFX_MONO_LCD_HEIGHT / \
-	SYSFONT_LINESPACING) - 1)
+#define GFX_MONO_MENU_ELEMENTS_PER_SCREEN ((GFX_MONO_LCD_HEIGHT / SYSFONT_LINESPACING) - 1)
 
 /** Menu struct */
 struct gfx_mono_menu {

@@ -93,6 +93,7 @@ ASF/common/services/gfx_mono/gfx_mono_text.d: \
  ../ASF/common/services/gfx_mono/../../../../ASF/common/services/gfx_mono/gfx_mono_menu.h \
  ../ASF/common/services/gfx_mono/../../../../ASF/common/services/gfx_mono/../../../xmega/utils/compiler.h \
  ../ASF/common/services/gfx_mono/../../../../ASF/common/services/gfx_mono/../../../../config/conf_menu.h \
+ ../ASF/common/services/gfx_mono/../../../../ASF/common/services/gfx_mono/../../../../config/conf_sysfont.h \
  ../ASF/common/services/gfx_mono/../../../../ASF/common/services/gfx_mono/gfx_mono.h \
  ../ASF/common/services/gfx_mono/../../../../ASF/common/services/gpio/gpio.h \
  ../ASF/common/services/gfx_mono/../../../../ASF/common/services/gpio/../../utils/parts.h \
@@ -306,6 +307,8 @@ ASF/common/services/gfx_mono/gfx_mono_text.d: \
 ../ASF/common/services/gfx_mono/../../../../ASF/common/services/gfx_mono/../../../xmega/utils/compiler.h:
 
 ../ASF/common/services/gfx_mono/../../../../ASF/common/services/gfx_mono/../../../../config/conf_menu.h:
+
+../ASF/common/services/gfx_mono/../../../../ASF/common/services/gfx_mono/../../../../config/conf_sysfont.h:
 
 ../ASF/common/services/gfx_mono/../../../../ASF/common/services/gfx_mono/gfx_mono.h:
 

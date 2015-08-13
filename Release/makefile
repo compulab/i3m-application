@@ -10,7 +10,6 @@ RM := rm -rf
 -include sources.mk
 -include twi/subdir.mk
 -include timer/subdir.mk
--include gfx/test/subdir.mk
 -include gfx/subdir.mk
 -include adc/subdir.mk
 -include action_menu/subdir.mk

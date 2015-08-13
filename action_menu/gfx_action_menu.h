@@ -8,6 +8,10 @@
 #ifndef GFX_GFX_ACTION_MENU_H_
 #define GFX_GFX_ACTION_MENU_H_
 #include "../asf.h"
+#include "../info.h"
+#include "../power-state.h"
+#include "../adc/adc.h"
+#include "../ASF/common/services/gfx_mono/sysfont.h"
 
 typedef void (*func_ptr)(char **);
 
@@ -24,16 +28,16 @@ typedef enum gfx_item_action_type_t {
 } item_action_type;
 
 typedef struct item_data_t {
-	char * title;
+	PROGMEM_STRING_T title;
 	char * text;
 } item_data;
 
 
 typedef struct item_action_t {
 	item_action_type type;
-	struct gfx_action_menu_t * menu;
-	struct item_data_t * data;
-	func_ptr dataFunc;
+	struct gfx_action_menu_t * subMenu;
+	struct item_data_t data;
+	information_type info_type;
 	struct gfx_mono_bitmap *  splashData;
 } item_action;
 
@@ -41,7 +45,7 @@ typedef struct item_action_t {
 typedef struct gfx_action_menu_t {
 	struct gfx_mono_menu * menu;
 	bool visible;
-	item_action *actions;
+	item_action actions[GFX_MONO_MENU_ELEMENTS_PER_SCREEN];
 	struct gfx_action_menu_t * parent;
 }gfx_action_menu;
 

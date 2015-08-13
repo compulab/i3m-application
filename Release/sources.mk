@@ -36,7 +36,6 @@ ASF/xmega/drivers/spi \
 action_menu \
 adc \
 gfx \
-gfx/test \
 . \
 timer \
 twi \

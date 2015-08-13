@@ -21,4 +21,6 @@ extern power_state currentPowerState;
 
 void changePowerState();
 
+void showState(char ** data);
+
 #endif /* POWER_STATE_H_ */

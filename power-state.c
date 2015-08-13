@@ -21,3 +21,22 @@ void changePowerState(){
 		currentPowerState = POWER_ON;
 	}
 }
+
+void showState(char ** data){
+	char * state = "";
+	switch (currentPowerState){
+	case POWER_ON:
+		state = "Computer is on";
+		break;
+	case POWER_STR:
+		state = "Sleep mode";
+		break;
+	case POWER_STD:
+		state = "Hibernate mode";
+		break;
+	case POWER_OFF:
+		state = "Computer off";
+		break;
+	}
+	*data = state;
+}
