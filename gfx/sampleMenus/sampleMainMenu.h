@@ -1,10 +1,10 @@
 
-#ifndef GFX_TEST_SAMPLEMAINMENU_H_
-#define GFX_TEST_SAMPLEMAINMENU_H_
+#ifndef GFX_SAMPLEMENUS_SAMPLEMAINMENU_H_
+#define GFX_SAMPLEMENUS_SAMPLEMAINMENU_H_
 
 #include "../../action_menu/gfx_action_menu.h"
-#include "sampleSubMenu.h"
 #include "../logos.h"
+#include "../sampleMenus/sampleSubMenu.h"
 
 /*
  * 		Building Menu:
@@ -50,6 +50,13 @@ struct gfx_mono_bitmap compulab_logo = {
 	.data.pixmap = compulab_new
 };
 
+struct gfx_mono_bitmap avr_microcontroller = {
+	.type = GFX_MONO_BITMAP_RAM,
+	.width = avr_icon_width,
+	.height = avr_icon_height,
+	.data.pixmap = avr_icon
+};
+
 /* Initialize Mono Menu */
 struct gfx_mono_menu testMenu = {
 	.title= main_menu_title,
@@ -79,4 +86,4 @@ struct gfx_action_menu_t  mainMenu = {
 };
 
 
-#endif /* GFX_TEST_SAMPLEMAINMENU_H_ */
+#endif /* GFX_SAMPLEMENUS_SAMPLEMAINMENU_H_ */

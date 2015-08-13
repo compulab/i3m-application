@@ -3,13 +3,13 @@
 #include "twi/twi-slave.h"
 #include "gfx/gfx_components.h"
 #include "debug.h"
-#include "gfx/test/sampleMainMenu.h"
 #include "gfx/menu-handler.h"
 #include "twi/testTwi.h"
 #include "timer/tc.h"
 #include "power-state.h"
 #include "adc/adc.h"
 #include "gfx/gfx_utils.h"
+#include "gfx/sampleMenus/sampleMainMenu.h"
 
 #define PORT_SetPinsAsInput( _port, _inputMask) ( (_port)->DIRCLR = _inputMask )
 
@@ -60,10 +60,17 @@ void updateData(uint8_t data){}
 
 
 
-void printWindow(){
-	gfx_window window;
-	gfx_window_init(&window,0,0,true,true,120,8);
-	gfx_window_draw(&window);
+void printitem(){
+	gfx_image image;
+	gfx_image_init(&image,&avr_microcontroller,45,35,false);
+	gfx_image_draw(&image);
+
+	gfx_label welcome,screen;
+	gfx_label_init(&welcome,"Welcome to ",15,5,false);
+	gfx_label_draw(&welcome);
+	gfx_label_init(&screen,"new screen view!",17,14,false);
+	gfx_label_draw(&screen);
+
 }
 
 void power_state_init(){
@@ -100,7 +107,7 @@ void initMenu(){
 int main(void){
 	init();
 	initMenu();
-//	printWindow();
+//	printitem();
 
 	while(true)
 	{

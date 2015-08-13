@@ -5,8 +5,8 @@
  *      Author: arkadi
  */
 
-#ifndef GFX_TEST_SAMPLESUBMENU_H_
-#define GFX_TEST_SAMPLESUBMENU_H_
+#ifndef GFX_SAMPLEMENUS_SAMPLESUBMENU_H_
+#define GFX_SAMPLEMENUS_SAMPLESUBMENU_H_
 
 #include "../../action_menu/gfx_action_menu.h"
 #include "../../action_menu/action_menu_factory.h"
@@ -55,4 +55,4 @@ struct gfx_action_menu_t subMenu = {
 		.actions[1].type = ACTION_TYPE_NONE
 };
 
-#endif /* GFX_TEST_SAMPLESUBMENU_H_ */
+#endif /* GFX_SAMPLEMENUS_SAMPLESUBMENU_H_ */
