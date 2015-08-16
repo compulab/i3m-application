@@ -16,10 +16,6 @@
 #define SIGNATURE_BYTE_3    0x4C
 
 
-#ifndef FLASH_PAGE_SIZE
-	#define FLASH_PAGE_SIZE 256
-#endif
-
 #define CPU_FREQ    2000000
 
 #define CPU_SPEED	CPU_FREQ

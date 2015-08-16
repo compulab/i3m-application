@@ -67,7 +67,7 @@ all: Fp-msh.elf secondary-outputs
 Fp-msh.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: AVR C Linker'
-	avr-gcc -Wl,-Map,Fp-msh.map -mmcu=atxmega64a3u -o "Fp-msh.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	avr-gcc -Wl,-Map,Fp-msh.map -Wl,--section-start=.configSec=0x803000 -mmcu=atxmega64a3u -o "Fp-msh.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

@@ -17,18 +17,14 @@ key_Select selectedKey;
 
 //TODO: enter bootloader threw SW
 void enterBootloaderMode(){
-
-	/* Jump to 0x401FC = BOOT_SECTION_START + 0x1FC which is
-	 * the stated location of the bootloader entry (AVR1916).
-	 * Note the address used is the word address = byte addr/2.
-	 * My ASM fu isn't that strong, there are probably nicer
-	 * ways to do this with, yennow, defined symbols .. */
-
+//	udc_detach();
+//	udc_stop();
 	asm ("ldi r30, 0xFE\n"  /* Low byte to ZL */
-		  "ldi r31, 0x00\n" /* mid byte to ZH */
-		  "ldi r24, 0x02\n" /* high byte to EIND which lives */
-		  "out 0x3c, r24\n" /* at addr 0x3c in I/O space */
+		  "ldi r31, 0x40\n" /* mid byte to ZH */
+		  "ldi r24, 0x00\n" /* high byte to EIND which lives */
+		  "out 0x3c, r24\n" /* at addr 0x3c in I/O space Extended Indirect register */
 		  "eijmp":  :: "r24", "r30", "r31");
+
 }
 
 

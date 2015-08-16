@@ -3,7 +3,7 @@
 void gfx_action_menu_init(struct gfx_action_menu_t *actionMenu){
 	presentMenu = actionMenu;
 	actionMenu->visible = true;
-	gfx_mono_menu_init(actionMenu->menu);
+	gfx_mono_menu_init(&actionMenu->menu);
 }
 
 void showMenu(struct gfx_action_menu_t *menu,bool updateParent){
@@ -80,7 +80,7 @@ uint8_t gfx_action_menu_process_key(struct gfx_action_menu_t *actionMenu, uint8_
 		}else
 				showThisMenu();
 	}else {
-		return gfx_mono_menu_process_key(actionMenu->menu,keycode);
+		return gfx_mono_menu_process_key(&actionMenu->menu,keycode);
 	}
 
 	return 0;

@@ -53,8 +53,8 @@ struct gfx_mono_bitmap compulab_logo = {
 
 struct gfx_mono_bitmap voltage = {
 	.type = GFX_MONO_BITMAP_RAM,
-	.width = 32,
-	.height = 32,
+	.width = 28,
+	.height = 35,
 	.data.pixmap = voltage_icon
 };
 
@@ -75,7 +75,7 @@ struct gfx_mono_menu testMenu = {
 };
 
 /* Initialize Action Menu */
-struct gfx_action_menu_t  mainMenu = {
+struct gfx_action_menu_t __attribute__((section ("configSec"))) mainMenu  = {
 		.menu = &testMenu,
 		.visible = false,
 		.actions[0].type = ACTION_TYPE_SHOW_SPLASH,

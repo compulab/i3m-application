@@ -31,18 +31,9 @@ ISR(PORTF_INT0_vect){
 	changePowerState();
 }
 
-//ISR(PORTF_INT1_vect){
-//	leftButtonPressed();
-//}
-//
-//ISR(PORTE_INT0_vect){
-//	selectButtonPressed();
-//}
-//
 ISR(TCC0_OVF_vect){
 	menu_handler();
 }
-
 
 void powerState_interrupts_init(){
 	PORTF.INTCTRL =  PORT_INT0LVL_MED_gc;
@@ -65,9 +56,9 @@ void updateData(uint8_t data){
 #define PAGE_SPACING 8
 
 void printitem(){
-//	gfx_image image;
-//	gfx_image_init(&image,&voltage,0,0,false);
-//	gfx_image_draw(&image);
+	gfx_image image;
+	gfx_image_init(&image,&voltage,0,0,false);
+	gfx_image_draw(&image);
 
 	gfx_label welcome,screen;
 	gfx_label_init(&welcome,"Welcome to ",0,voltage.height+PAGE_SPACING,false);
@@ -110,13 +101,10 @@ void initMenu(){
 
 int main(void){
 	init();
-	initMenu();
-	testTWI();
-//	printitem();
+//	initMenu();
+//	testTWI();
+	printitem();
 
 	while(true)
-	{
-
-	}
-
+	{}
 }
