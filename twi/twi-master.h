@@ -8,7 +8,9 @@
 #ifndef TWI_TWI_MASTER_H_
 #define TWI_TWI_MASTER_H_
 
-#include "defines.h"
+#include <stdint.h>
+#include <stdbool.h>
+#include "../config/conf-twi.h"
 
 typedef void (*handleDataFunc)(uint8_t);
 
@@ -16,7 +18,7 @@ typedef void (*handleDataFunc)(uint8_t);
 
 typedef struct TWI_PACKAGE_t{
 	uint8_t slaveAddress;
-	uint8_t buffer[PAGESIZE];
+	uint8_t buffer[EEPROM_BYTES_IN_PAGE];
 	uint8_t length;
 	bool writeRequest;
 	handleDataFunc handleData;

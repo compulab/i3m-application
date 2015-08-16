@@ -4,7 +4,7 @@ ASF/common/services/gfx_mono/gfx_mono_generic.d: \
  ../ASF/common/services/gfx_mono/gfx_mono.h \
  ../ASF/common/services/gfx_mono/../../../xmega/utils/compiler.h \
  ../ASF/common/services/gfx_mono/../../../xmega/utils/../../common/utils/parts.h \
- ../ASF/common/services/gfx_mono/../../../xmega/utils/../../common/utils/../../../conf.h \
+ ../ASF/common/services/gfx_mono/../../../xmega/utils/../../common/utils/../../../config/conf_board.h \
  ../ASF/common/services/gfx_mono/../../../xmega/utils/bit_handling/clz_ctz.h \
  ../ASF/common/services/gfx_mono/../../../xmega/utils/preprocessor/preprocessor.h \
  ../ASF/common/services/gfx_mono/../../../xmega/utils/preprocessor/tpaste.h \
@@ -74,7 +74,7 @@ ASF/common/services/gfx_mono/gfx_mono_generic.d: \
 
 ../ASF/common/services/gfx_mono/../../../xmega/utils/../../common/utils/parts.h:
 
-../ASF/common/services/gfx_mono/../../../xmega/utils/../../common/utils/../../../conf.h:
+../ASF/common/services/gfx_mono/../../../xmega/utils/../../common/utils/../../../config/conf_board.h:
 
 ../ASF/common/services/gfx_mono/../../../xmega/utils/bit_handling/clz_ctz.h:
 

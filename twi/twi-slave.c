@@ -82,8 +82,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "../config/conf-twi.h"
-#include "../twi/twi-memory.h"
 #include "../debug.h"
+#include "eeprom.h"
 
 #define UNSET_ADDRESS 0x00
 

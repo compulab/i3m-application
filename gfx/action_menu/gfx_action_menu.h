@@ -7,11 +7,11 @@
 
 #ifndef GFX_GFX_ACTION_MENU_H_
 #define GFX_GFX_ACTION_MENU_H_
-#include "../asf.h"
-#include "../info.h"
-#include "../power-state.h"
-#include "../adc/adc.h"
-#include "../ASF/common/services/gfx_mono/sysfont.h"
+#include "../../asf.h"
+#include "../../power-state/info.h"
+#include "../../power-state/power-state.h"
+#include "../../adc/adc.h"
+#include "../../ASF/common/services/gfx_mono/sysfont.h"
 
 typedef void (*func_ptr)(char **);
 

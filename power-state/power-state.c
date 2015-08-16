@@ -6,7 +6,7 @@
  */
 
 #include "power-state.h"
-#include "debug.h"
+#include "../debug.h"
 
 power_state currentPowerState = POWER_ON;
 

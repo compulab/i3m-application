@@ -8,8 +8,8 @@
 #ifndef GFX_SAMPLEMENUS_SAMPLESUBMENU_H_
 #define GFX_SAMPLEMENUS_SAMPLESUBMENU_H_
 
-#include "../../action_menu/gfx_action_menu.h"
-#include "../../action_menu/action_menu_factory.h"
+#include "../action_menu/gfx_action_menu.h"
+#include "../action_menu/action_menu_factory.h"
 #include "../logos.h"
 
 /*

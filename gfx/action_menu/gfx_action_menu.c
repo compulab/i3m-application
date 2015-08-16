@@ -1,5 +1,5 @@
 #include "gfx_action_menu.h"
-#include "../debug.h"
+#include "../../debug.h"
 void gfx_action_menu_init(struct gfx_action_menu_t *actionMenu){
 	presentMenu = actionMenu;
 	actionMenu->visible = true;

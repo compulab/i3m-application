@@ -2,7 +2,7 @@ ASF/xmega/drivers/spi/spi.d: ../ASF/xmega/drivers/spi/spi.c \
  ../ASF/xmega/drivers/spi/spi.h \
  ../ASF/xmega/drivers/spi/../../utils/compiler.h \
  ../ASF/xmega/drivers/spi/../../utils/../../common/utils/parts.h \
- ../ASF/xmega/drivers/spi/../../utils/../../common/utils/../../../conf.h \
+ ../ASF/xmega/drivers/spi/../../utils/../../common/utils/../../../config/conf_board.h \
  ../ASF/xmega/drivers/spi/../../utils/bit_handling/clz_ctz.h \
  ../ASF/xmega/drivers/spi/../../utils/preprocessor/preprocessor.h \
  ../ASF/xmega/drivers/spi/../../utils/preprocessor/tpaste.h \
@@ -28,7 +28,7 @@ ASF/xmega/drivers/spi/spi.d: ../ASF/xmega/drivers/spi/spi.c \
 
 ../ASF/xmega/drivers/spi/../../utils/../../common/utils/parts.h:
 
-../ASF/xmega/drivers/spi/../../utils/../../common/utils/../../../conf.h:
+../ASF/xmega/drivers/spi/../../utils/../../common/utils/../../../config/conf_board.h:
 
 ../ASF/xmega/drivers/spi/../../utils/bit_handling/clz_ctz.h:
 

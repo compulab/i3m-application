@@ -47,7 +47,7 @@
 #ifndef ATMEL_PARTS_H
 #define ATMEL_PARTS_H
 
-#include "../../../conf.h"
+#include "../../../config/conf_board.h"
 /**
  * \defgroup part_macros_group Atmel part identification macros
  *

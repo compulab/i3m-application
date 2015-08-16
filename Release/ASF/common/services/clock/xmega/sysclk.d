@@ -2,7 +2,7 @@ ASF/common/services/clock/xmega/sysclk.d: \
  ../ASF/common/services/clock/xmega/sysclk.c \
  ../ASF/common/services/clock/xmega/../../../../xmega/utils/compiler.h \
  ../ASF/common/services/clock/xmega/../../../../xmega/utils/../../common/utils/parts.h \
- ../ASF/common/services/clock/xmega/../../../../xmega/utils/../../common/utils/../../../conf.h \
+ ../ASF/common/services/clock/xmega/../../../../xmega/utils/../../common/utils/../../../config/conf_board.h \
  ../ASF/common/services/clock/xmega/../../../../xmega/utils/bit_handling/clz_ctz.h \
  ../ASF/common/services/clock/xmega/../../../../xmega/utils/preprocessor/preprocessor.h \
  ../ASF/common/services/clock/xmega/../../../../xmega/utils/preprocessor/tpaste.h \
@@ -40,7 +40,7 @@ ASF/common/services/clock/xmega/sysclk.d: \
 
 ../ASF/common/services/clock/xmega/../../../../xmega/utils/../../common/utils/parts.h:
 
-../ASF/common/services/clock/xmega/../../../../xmega/utils/../../common/utils/../../../conf.h:
+../ASF/common/services/clock/xmega/../../../../xmega/utils/../../common/utils/../../../config/conf_board.h:
 
 ../ASF/common/services/clock/xmega/../../../../xmega/utils/bit_handling/clz_ctz.h:
 

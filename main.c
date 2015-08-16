@@ -6,7 +6,7 @@
 #include "gfx/menu-handler.h"
 #include "twi/testTwi.h"
 #include "timer/tc.h"
-#include "power-state.h"
+#include "power-state/power-state.h"
 #include "adc/adc.h"
 #include "gfx/gfx_utils.h"
 #include "gfx/sampleMenus/sampleMainMenu.h"
@@ -56,19 +56,23 @@ void enable_interrupts(){
 		sei();
 }
 
-void updateData(uint8_t data){}
+void updateData(uint8_t data){
+	CLEAR
+	MSG("Yeah!!!")
+}
 
 
+#define PAGE_SPACING 8
 
 void printitem(){
-	gfx_image image;
-	gfx_image_init(&image,&avr_microcontroller,45,35,false);
-	gfx_image_draw(&image);
+//	gfx_image image;
+//	gfx_image_init(&image,&voltage,0,0,false);
+//	gfx_image_draw(&image);
 
 	gfx_label welcome,screen;
-	gfx_label_init(&welcome,"Welcome to ",15,5,false);
+	gfx_label_init(&welcome,"Welcome to ",0,voltage.height+PAGE_SPACING,false);
 	gfx_label_draw(&welcome);
-	gfx_label_init(&screen,"new screen view!",17,14,false);
+	gfx_label_init(&screen,"new screen view!",0,voltage.height+2*PAGE_SPACING,false);
 	gfx_label_draw(&screen);
 
 }
@@ -107,6 +111,7 @@ void initMenu(){
 int main(void){
 	init();
 	initMenu();
+	testTWI();
 //	printitem();
 
 	while(true)

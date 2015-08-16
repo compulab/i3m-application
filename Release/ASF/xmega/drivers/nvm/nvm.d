@@ -1,7 +1,7 @@
 ASF/xmega/drivers/nvm/nvm.d: ../ASF/xmega/drivers/nvm/nvm.c \
  ../ASF/xmega/drivers/nvm/../../utils/compiler.h \
  ../ASF/xmega/drivers/nvm/../../utils/../../common/utils/parts.h \
- ../ASF/xmega/drivers/nvm/../../utils/../../common/utils/../../../conf.h \
+ ../ASF/xmega/drivers/nvm/../../utils/../../common/utils/../../../config/conf_board.h \
  ../ASF/xmega/drivers/nvm/../../utils/bit_handling/clz_ctz.h \
  ../ASF/xmega/drivers/nvm/../../utils/preprocessor/preprocessor.h \
  ../ASF/xmega/drivers/nvm/../../utils/preprocessor/tpaste.h \
@@ -22,7 +22,7 @@ ASF/xmega/drivers/nvm/nvm.d: ../ASF/xmega/drivers/nvm/nvm.c \
 
 ../ASF/xmega/drivers/nvm/../../utils/../../common/utils/parts.h:
 
-../ASF/xmega/drivers/nvm/../../utils/../../common/utils/../../../conf.h:
+../ASF/xmega/drivers/nvm/../../utils/../../common/utils/../../../config/conf_board.h:
 
 ../ASF/xmega/drivers/nvm/../../utils/bit_handling/clz_ctz.h:
 

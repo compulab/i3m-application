@@ -2,7 +2,7 @@ ASF/common/services/spi/xmega_spi/spi_master.d: \
  ../ASF/common/services/spi/xmega_spi/spi_master.c \
  ../ASF/common/services/spi/xmega_spi/../spi_master.h \
  ../ASF/common/services/spi/xmega_spi/../../../utils/parts.h \
- ../ASF/common/services/spi/xmega_spi/../../../utils/../../../conf.h \
+ ../ASF/common/services/spi/xmega_spi/../../../utils/../../../config/conf_board.h \
  ../ASF/common/services/spi/xmega_spi/../xmega_spi/spi_master.h \
  ../ASF/common/services/spi/xmega_spi/../xmega_spi/../../../../xmega/utils/compiler.h \
  ../ASF/common/services/spi/xmega_spi/../xmega_spi/../../../../xmega/utils/../../common/utils/parts.h \
@@ -55,7 +55,7 @@ ASF/common/services/spi/xmega_spi/spi_master.d: \
 
 ../ASF/common/services/spi/xmega_spi/../../../utils/parts.h:
 
-../ASF/common/services/spi/xmega_spi/../../../utils/../../../conf.h:
+../ASF/common/services/spi/xmega_spi/../../../utils/../../../config/conf_board.h:
 
 ../ASF/common/services/spi/xmega_spi/../xmega_spi/spi_master.h:
 

@@ -1,7 +1,7 @@
 ASF/xmega/drivers/adc/adc.d: ../ASF/xmega/drivers/adc/adc.c \
  ../ASF/xmega/drivers/adc/../../utils/compiler.h \
  ../ASF/xmega/drivers/adc/../../utils/../../common/utils/parts.h \
- ../ASF/xmega/drivers/adc/../../utils/../../common/utils/../../../conf.h \
+ ../ASF/xmega/drivers/adc/../../utils/../../common/utils/../../../config/conf_board.h \
  ../ASF/xmega/drivers/adc/../../utils/bit_handling/clz_ctz.h \
  ../ASF/xmega/drivers/adc/../../utils/preprocessor/preprocessor.h \
  ../ASF/xmega/drivers/adc/../../utils/preprocessor/tpaste.h \
@@ -54,7 +54,7 @@ ASF/xmega/drivers/adc/adc.d: ../ASF/xmega/drivers/adc/adc.c \
 
 ../ASF/xmega/drivers/adc/../../utils/../../common/utils/parts.h:
 
-../ASF/xmega/drivers/adc/../../utils/../../common/utils/../../../conf.h:
+../ASF/xmega/drivers/adc/../../utils/../../common/utils/../../../config/conf_board.h:
 
 ../ASF/xmega/drivers/adc/../../utils/bit_handling/clz_ctz.h:
 

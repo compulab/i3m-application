@@ -9,7 +9,7 @@
 #define GFX_MENU_HANDLER_H_
 #include "../asf.h"
 #include "keypad.h"
-
+#include "action_menu/gfx_action_menu.h"
 void menu_handler(void);
 
 void rightButtonPressed();

@@ -8,7 +8,7 @@
 key_Select selectedKey;
 
 #include "menu-handler.h"
-#include "../action_menu/gfx_action_menu.h"
+
 uint32_t leftTimeStamp = 0,rightTimeStamp = 0,selectTimeStamp = 0;
 bool isLeftSet = false, isRightSet = false, isSelectSet = false;
 int returnToMenuCount = 0;

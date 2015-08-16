@@ -2,7 +2,7 @@ ASF/common/services/ioport/xmega/ioport_compat.d: \
  ../ASF/common/services/ioport/xmega/ioport_compat.c \
  ../ASF/common/services/ioport/xmega/../ioport.h \
  ../ASF/common/services/ioport/xmega/../../../utils/parts.h \
- ../ASF/common/services/ioport/xmega/../../../utils/../../../conf.h \
+ ../ASF/common/services/ioport/xmega/../../../utils/../../../config/conf_board.h \
  ../ASF/common/services/ioport/xmega/../../../../xmega/utils/compiler.h \
  ../ASF/common/services/ioport/xmega/../../../../xmega/utils/../../common/utils/parts.h \
  ../ASF/common/services/ioport/xmega/../../../../xmega/utils/bit_handling/clz_ctz.h \
@@ -24,7 +24,7 @@ ASF/common/services/ioport/xmega/ioport_compat.d: \
 
 ../ASF/common/services/ioport/xmega/../../../utils/parts.h:
 
-../ASF/common/services/ioport/xmega/../../../utils/../../../conf.h:
+../ASF/common/services/ioport/xmega/../../../utils/../../../config/conf_board.h:
 
 ../ASF/common/services/ioport/xmega/../../../../xmega/utils/compiler.h:
 

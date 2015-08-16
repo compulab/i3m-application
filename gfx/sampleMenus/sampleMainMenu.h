@@ -2,7 +2,7 @@
 #ifndef GFX_SAMPLEMENUS_SAMPLEMAINMENU_H_
 #define GFX_SAMPLEMENUS_SAMPLEMAINMENU_H_
 
-#include "../../action_menu/gfx_action_menu.h"
+#include "../action_menu/gfx_action_menu.h"
 #include "../logos.h"
 #include "../sampleMenus/sampleSubMenu.h"
 
@@ -49,6 +49,15 @@ struct gfx_mono_bitmap compulab_logo = {
 	.height = 32,
 	.data.pixmap = compulab_new
 };
+
+
+struct gfx_mono_bitmap voltage = {
+	.type = GFX_MONO_BITMAP_RAM,
+	.width = 32,
+	.height = 32,
+	.data.pixmap = voltage_icon
+};
+
 
 struct gfx_mono_bitmap avr_microcontroller = {
 	.type = GFX_MONO_BITMAP_RAM,

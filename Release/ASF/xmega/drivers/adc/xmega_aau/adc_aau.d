@@ -3,7 +3,7 @@ ASF/xmega/drivers/adc/xmega_aau/adc_aau.d: \
  ../ASF/xmega/drivers/adc/xmega_aau/../adc.h \
  ../ASF/xmega/drivers/adc/xmega_aau/../../../utils/compiler.h \
  ../ASF/xmega/drivers/adc/xmega_aau/../../../utils/../../common/utils/parts.h \
- ../ASF/xmega/drivers/adc/xmega_aau/../../../utils/../../common/utils/../../../conf.h \
+ ../ASF/xmega/drivers/adc/xmega_aau/../../../utils/../../common/utils/../../../config/conf_board.h \
  ../ASF/xmega/drivers/adc/xmega_aau/../../../utils/bit_handling/clz_ctz.h \
  ../ASF/xmega/drivers/adc/xmega_aau/../../../utils/preprocessor/preprocessor.h \
  ../ASF/xmega/drivers/adc/xmega_aau/../../../utils/preprocessor/tpaste.h \
@@ -57,7 +57,7 @@ ASF/xmega/drivers/adc/xmega_aau/adc_aau.d: \
 
 ../ASF/xmega/drivers/adc/xmega_aau/../../../utils/../../common/utils/parts.h:
 
-../ASF/xmega/drivers/adc/xmega_aau/../../../utils/../../common/utils/../../../conf.h:
+../ASF/xmega/drivers/adc/xmega_aau/../../../utils/../../common/utils/../../../config/conf_board.h:
 
 ../ASF/xmega/drivers/adc/xmega_aau/../../../utils/bit_handling/clz_ctz.h:
 

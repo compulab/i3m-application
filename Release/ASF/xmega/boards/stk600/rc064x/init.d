@@ -3,7 +3,7 @@ ASF/xmega/boards/stk600/rc064x/init.d: \
  ../ASF/xmega/boards/stk600/rc064x/../../../../common/boards/board.h \
  ../ASF/xmega/boards/stk600/rc064x/../../../../common/boards/../../xmega/utils/compiler.h \
  ../ASF/xmega/boards/stk600/rc064x/../../../../common/boards/../../xmega/utils/../../common/utils/parts.h \
- ../ASF/xmega/boards/stk600/rc064x/../../../../common/boards/../../xmega/utils/../../common/utils/../../../conf.h \
+ ../ASF/xmega/boards/stk600/rc064x/../../../../common/boards/../../xmega/utils/../../common/utils/../../../config/conf_board.h \
  ../ASF/xmega/boards/stk600/rc064x/../../../../common/boards/../../xmega/utils/bit_handling/clz_ctz.h \
  ../ASF/xmega/boards/stk600/rc064x/../../../../common/boards/../../xmega/utils/preprocessor/preprocessor.h \
  ../ASF/xmega/boards/stk600/rc064x/../../../../common/boards/../../xmega/utils/preprocessor/tpaste.h \
@@ -33,7 +33,7 @@ ASF/xmega/boards/stk600/rc064x/init.d: \
 
 ../ASF/xmega/boards/stk600/rc064x/../../../../common/boards/../../xmega/utils/../../common/utils/parts.h:
 
-../ASF/xmega/boards/stk600/rc064x/../../../../common/boards/../../xmega/utils/../../common/utils/../../../conf.h:
+../ASF/xmega/boards/stk600/rc064x/../../../../common/boards/../../xmega/utils/../../common/utils/../../../config/conf_board.h:
 
 ../ASF/xmega/boards/stk600/rc064x/../../../../common/boards/../../xmega/utils/bit_handling/clz_ctz.h:
 

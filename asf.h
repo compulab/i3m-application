@@ -52,7 +52,7 @@
  * running the ASF driver selector tool. Any changes will be discarded.
  */
 
-#include "conf.h"
+#include "config/conf_board.h"
 // From module: ADC - XMEGA A/AU Implementation
 #include "ASF/xmega/drivers/adc/adc.h"
 

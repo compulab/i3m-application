@@ -11,5 +11,8 @@
 #ifndef CONF_BOARD_H
 #define CONF_BOARD_H
 
+#define BOARD STK600_RC064X
+#define IOPORT_XMEGA_COMPAT
+
 
 #endif // CONF_BOARD_H

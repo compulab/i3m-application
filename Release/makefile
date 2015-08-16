@@ -10,9 +10,10 @@ RM := rm -rf
 -include sources.mk
 -include twi/subdir.mk
 -include timer/subdir.mk
+-include power-state/subdir.mk
+-include gfx/action_menu/subdir.mk
 -include gfx/subdir.mk
 -include adc/subdir.mk
--include action_menu/subdir.mk
 -include ASF/xmega/drivers/spi/subdir.mk
 -include ASF/xmega/drivers/nvm/subdir.mk
 -include ASF/xmega/drivers/cpu/subdir.mk
