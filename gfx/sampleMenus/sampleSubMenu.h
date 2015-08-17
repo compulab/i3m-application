@@ -38,7 +38,7 @@ PROGMEM_STRING_T sub_menu_strings[] = {
 };
 
 /* Initialize Mono Menu */
-struct gfx_mono_menu subTestMenu = {
+struct gfx_mono_menu  __attribute__((section (".configData"))) subTestMenu = {
 	.title= sub_menu_title,
 	.strings = sub_menu_strings,
 	.num_elements = 2,
@@ -46,7 +46,7 @@ struct gfx_mono_menu subTestMenu = {
 };
 
 /* Initialize Action Menu */
-struct gfx_action_menu_t subMenu = {
+struct gfx_action_menu_t  __attribute__((section (".configData"))) subMenu = {
 		.menu = &subTestMenu,
 		.visible = false,
 		.actions[0].type = ACTION_TYPE_SHOW_DATA,

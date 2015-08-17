@@ -9,6 +9,8 @@
 #include "power-state/power-state.h"
 #include "adc/adc.h"
 #include "gfx/gfx_utils.h"
+#include "config/cnf_blk_header.h"
+#include "gfx/sampleMenus/sampleConfig.h"
 #include "gfx/sampleMenus/sampleMainMenu.h"
 
 #define PORT_SetPinsAsInput( _port, _inputMask) ( (_port)->DIRCLR = _inputMask )
@@ -56,16 +58,15 @@ void updateData(uint8_t data){
 #define PAGE_SPACING 8
 
 void printitem(){
-	gfx_image image;
-	gfx_image_init(&image,&voltage,0,0,false);
-	gfx_image_draw(&image);
-
-	gfx_label welcome,screen;
-	gfx_label_init(&welcome,"Welcome to ",0,voltage.height+PAGE_SPACING,false);
-	gfx_label_draw(&welcome);
-	gfx_label_init(&screen,"new screen view!",0,voltage.height+2*PAGE_SPACING,false);
-	gfx_label_draw(&screen);
-
+//	gfx_image image;
+//	gfx_image_init(&image,&voltage,0,0,false);
+//	gfx_image_draw(&image);
+//
+//	gfx_label welcome,screen;
+//	gfx_label_init(&welcome,"Welcome to ",0,voltage.height+PAGE_SPACING,false);
+//	gfx_label_draw(&welcome);
+//	gfx_label_init(&screen,"new screen view!",0,voltage.height+2*PAGE_SPACING,false);
+//	gfx_label_draw(&screen);
 }
 
 void power_state_init(){
@@ -80,6 +81,7 @@ void power_state_init(){
 void init(){
 	enable_interrupts();
 	board_init();
+	sysclk_init();
 	gfx_mono_init();
 	adc_init();
 	pmic_init();
@@ -96,14 +98,15 @@ void testTWI(){
 
 
 void initMenu(){
-	gfx_action_menu_init(&mainMenu);
+	struct cnf_blk * config = &sampleConfig;//  (struct cnf_blk *) 0x44;
+	gfx_action_menu_init(config->mainMenu);
 }
 
 int main(void){
 	init();
-//	initMenu();
+	initMenu();
 //	testTWI();
-	printitem();
+//	printitem();
 
 	while(true)
 	{}
