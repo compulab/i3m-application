@@ -73,7 +73,7 @@
 # define FP_S5			 	IOPORT_CREATE_PIN(PORTF,2)
 
 
-#define FP_VCC_EN			IOPORT_CREATE_PIN(PORTE,5) 
+#define FP_VCC_EN			IOPORT_CREATE_PIN(PORTE,4)
 
 
 //! Number of LEDs.

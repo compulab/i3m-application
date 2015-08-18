@@ -8,11 +8,12 @@
 #ifndef CONFIG_CNF_BLK_HEADER_H_
 #define CONFIG_CNF_BLK_HEADER_H_
 #include "../asf.h"
+#include "../gfx/sampleMenus/menuConfig.h"
 
 struct cnf_blk  {
 	uint8_t signature;
 	uint8_t size;
-	gfx_action_menu * mainMenu;
+	struct MENU_CONFIG_T * menuConfig;
 	uint32_t reserved[24];
 };
 

@@ -98,8 +98,10 @@ void testTWI(){
 
 
 void initMenu(){
-	struct cnf_blk * config = &sampleConfig;//  (struct cnf_blk *) 0x44;
-	gfx_action_menu_init(config->mainMenu);
+//	struct cnf_blk * config = pgm_read_ptr(&sampleConfig);
+//	struct cnf_blk * config = &sampleConfig;
+//	void * mainMenuPgm = pgm_read_byte(&sampleConfig.mainMenu);
+//	gfx_action_menu_init(config->mainMenu);
 }
 
 int main(void){

@@ -3,6 +3,7 @@
 #include "menu-handler.h"
 #include "../debug.h"
 #include "../timer/tc.h"
+#include "../asf.h"
 
 #define isKeySelected(var,key) (var & key) == key
 key_Select selectedKey;
@@ -19,11 +20,13 @@ key_Select selectedKey;
 void enterBootloaderMode(){
 //	udc_detach();
 //	udc_stop();
-	asm ("ldi r30, 0xFE\n"  /* Low byte to ZL */
-		  "ldi r31, 0x40\n" /* mid byte to ZH */
-		  "ldi r24, 0x00\n" /* high byte to EIND which lives */
-		  "out 0x3c, r24\n" /* at addr 0x3c in I/O space Extended Indirect register */
-		  "eijmp":  :: "r24", "r30", "r31");
+//	asm ("ldi r30, 0xFE\n"  /* Low byte to ZL */
+//		  "ldi r31, 0x40\n" /* mid byte to ZH */
+//		  "ldi r24, 0x00\n" /* high byte to EIND which lives */
+//		  "out 0x3c, r24\n" /* at addr 0x3c in I/O space Extended Indirect register */
+//		  "eijmp":  :: "r24", "r30", "r31");
+
+
 
 }
 

@@ -35,7 +35,7 @@ typedef struct item_data_t {
 
 typedef struct item_action_t {
 	item_action_type type;
-	struct gfx_action_menu_t * subMenu;
+	uint8_t menuId;
 	struct item_data_t data;
 	information_type info_type;
 	struct gfx_mono_bitmap *  splashData;

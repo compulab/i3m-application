@@ -1,5 +1,7 @@
 #include "gfx_action_menu.h"
 #include "../../debug.h"
+#include "../menuFactory.h"
+
 void gfx_action_menu_init(struct gfx_action_menu_t *actionMenu){
 	presentMenu = actionMenu;
 	actionMenu->visible = true;
@@ -31,6 +33,8 @@ void showSplash(struct gfx_mono_bitmap * splash){
 	gfx_mono_put_bitmap(splash,0,8);
 }
 
+struct gfx_action_menu_t * menu;
+
 void updateDataByType(information_type type, char ** data){
 	func_ptr ptr= NULL;
 	switch (type){
@@ -47,6 +51,8 @@ void updateDataByType(information_type type, char ** data){
 	if (ptr != NULL)
 		ptr(data);
 }
+
+
 
 uint8_t gfx_action_menu_process_key(struct gfx_action_menu_t *actionMenu, uint8_t keycode){
 	if (keycode == GFX_MONO_MENU_KEYCODE_ENTER){
@@ -68,7 +74,8 @@ uint8_t gfx_action_menu_process_key(struct gfx_action_menu_t *actionMenu, uint8_
 			showData(&selectedAction.data);
 			break;
 		case ACTION_TYPE_SHOW_MENU:
-			showMenu(selectedAction.subMenu,true);
+			setMenuById(menu,selectedAction.menuId);
+			showMenu(menu,true);
 			break;
 		case ACTION_TYPE_NONE:
 			break;

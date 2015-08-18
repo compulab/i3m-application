@@ -12,6 +12,10 @@
 #include "../action_menu/action_menu_factory.h"
 #include "../logos.h"
 
+#define SAMPLE_MAIN_MENU 0
+#define SAMPLE_SUB_MENU 1
+
+
 /*
  * 		Building Menu:
  *

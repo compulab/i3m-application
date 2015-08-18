@@ -70,8 +70,8 @@ struct gfx_mono_bitmap  compulab_logo = {
 //};
 
 /* Initialize Mono Menu */
-//struct gfx_mono_menu  __attribute__((section (".configData"))) testMenu = {
-struct gfx_mono_menu  testMenu = {
+struct gfx_mono_menu  __attribute__((section (".configData"))) testMenu = {
+//struct gfx_mono_menu  testMenu = {
 	.title= main_menu_title,
 	.strings = main_menu_strings,
 	.num_elements = 6,
@@ -79,8 +79,8 @@ struct gfx_mono_menu  testMenu = {
 };
 
 /* Initialize Action Menu */
-//struct gfx_action_menu_t  __attribute__((section (".configData"))) mainMenu  = {
-struct gfx_action_menu_t   mainMenu  = {
+struct gfx_action_menu_t  __attribute__((section (".configData"))) mainMenu  = {
+//struct gfx_action_menu_t   mainMenu  = {
 		.menu = &testMenu,
 		.visible = false,
 		.actions[0].type = ACTION_TYPE_SHOW_SPLASH,
@@ -92,12 +92,13 @@ struct gfx_action_menu_t   mainMenu  = {
 		.actions[2].data.title = main_menu_title3,
 		.actions[2].data.text = "Test Data",
 		.actions[3].type = ACTION_TYPE_SHOW_MENU,
-		.actions[3].subMenu = &subMenu,
+		.actions[3].menuId = SAMPLE_SUB_MENU,
 		.actions[4].type = ACTION_TYPE_NONE,
 		.actions[5].type = ACTION_TYPE_SHOW_DATA_FROM_FUNC,
 		.actions[5].data.title =main_menu_title6,
 		.actions[5].info_type = SHOW_VOLTAGE
 };
+
 
 
 #endif /* GFX_SAMPLEMENUS_SAMPLEMAINMENU_H_ */
