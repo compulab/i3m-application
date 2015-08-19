@@ -39,7 +39,6 @@ void gfx_item_init(gfx_item * item, uint8_t x, uint8_t y, bool borderVisible, ui
 }
 
 void gfx_label_init(gfx_label * label,char * text, uint8_t x, uint8_t y, bool borderVisible){
-
 	struct font * font = &sysfont;
 	uint8_t width = strlen(text)*font->width +2,
 			height = font->height +4;
@@ -50,9 +49,33 @@ void gfx_label_init(gfx_label * label,char * text, uint8_t x, uint8_t y, bool bo
 //	}
 }
 
+void set_size_by_text(char * text,struct font* font,gfx_item * item){
+	uint8_t width = strlen(text)*font->width +2,
+			height = font->height +4;
+	item->width = width;
+	item->height = height;
+}
+
+void gfx_information_label_init(gfx_information_label * label,information_type info_type, uint8_t x, uint8_t y, bool borderVisible){
+	struct font * font = &sysfont;
+	label->info_type = info_type;
+	gfx_item_init(&label->postion,x,y,borderVisible,0,0);
+	label->text.font = font;
+}
+
 void gfx_label_with_font_init(gfx_label * label,char * text, struct font * font, uint8_t x, uint8_t y, bool borderVisible){
 	gfx_label_init(label,text,x,y,borderVisible);
 	label->text.font = font;
+}
+
+void gfx_information_label_draw(gfx_information_label * info_label){
+	updateDataByType(info_label->info_type, &((info_label->text).text));
+	set_size_by_text(info_label->text.text,info_label->text.font, &info_label->postion);
+	gfx_item_draw(&info_label->postion);
+	int x = info_label->postion.x +2,
+			y = info_label->postion.y +2;
+	gfx_text data = info_label->text;
+	gfx_mono_draw_string(data.text,x,y,data.font);
 }
 
 void gfx_label_draw(gfx_label * label){

@@ -42,32 +42,16 @@ PROGMEM_STRING_T main_menu_strings[] = {
 };
 
 
-/* Initialize Splash */
-//struct gfx_mono_bitmap  __attribute__((section (".configData"))) compulab_logo = {
-struct gfx_mono_bitmap  compulab_logo = {
+
+struct gfx_mono_bitmap  v_logo = {
 
 	.type = GFX_MONO_BITMAP_RAM,
-	.width = 128,
-	.height = 32,
-	.data.pixmap = compulab_new
+	.width = v_width,
+	.height = v_height,
+	.data.pixmap = v_bits
 };
 
-//
-////struct gfx_mono_bitmap  __attribute__((section (".configData"))) voltage = {
-//struct gfx_mono_bitmap  voltage = {
-//	.type = GFX_MONO_BITMAP_RAM,
-//	.width = 32,
-//	.height = 32,
-//	.data.pixmap = voltage_icon
-//};
-//
-//
-//struct gfx_mono_bitmap  __attribute__((section (".configData"))) avr_microcontroller = {
-//	.type = GFX_MONO_BITMAP_RAM,
-//	.width = avr_icon_width,
-//	.height = avr_icon_height,
-//	.data.pixmap = avr_icon
-//};
+
 
 /* Initialize Mono Menu */
 struct gfx_mono_menu  __attribute__((section (".configData"))) testMenu = {
@@ -75,7 +59,7 @@ struct gfx_mono_menu  __attribute__((section (".configData"))) testMenu = {
 	.title= main_menu_title,
 	.strings = main_menu_strings,
 	.num_elements = 6,
-	.current_selection = 3
+	.current_selection = 0
 };
 
 /* Initialize Action Menu */
@@ -84,7 +68,10 @@ struct gfx_action_menu_t  __attribute__((section (".configData"))) mainMenu  = {
 		.menu = &testMenu,
 		.visible = false,
 		.actions[0].type = ACTION_TYPE_SHOW_SPLASH,
-		.actions[0].splashData = &compulab_logo,
+		.actions[0].splashData.height = 32,
+		.actions[0].splashData.width = 128,
+		.actions[0].splashData.type = GFX_MONO_BITMAP_PROGMEM,
+		.actions[0].splashData.data.progmem = &compulab_new,
 		.actions[1].type = ACTION_TYPE_SHOW_DATA_FROM_FUNC,
 		.actions[1].data.title =main_menu_title2,
 		.actions[1].info_type = SHOW_POWER_STATE,

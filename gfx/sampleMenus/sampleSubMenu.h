@@ -9,7 +9,6 @@
 #define GFX_SAMPLEMENUS_SAMPLESUBMENU_H_
 
 #include "../action_menu/gfx_action_menu.h"
-#include "../action_menu/action_menu_factory.h"
 #include "../logos.h"
 
 #define SAMPLE_MAIN_MENU 0
@@ -52,6 +51,7 @@ struct gfx_mono_menu  __attribute__((section (".configData"))) subTestMenu = {
 /* Initialize Action Menu */
 struct gfx_action_menu_t  __attribute__((section (".configData"))) subMenu = {
 		.menu = &subTestMenu,
+		.id = 1,
 		.visible = false,
 		.actions[0].type = ACTION_TYPE_SHOW_DATA,
 		.actions[0].data.title = sub_menu_title1,

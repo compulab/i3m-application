@@ -14,8 +14,13 @@
 #include <string.h>
 #include "../config/cnf_blk_header.h"
 
-void menuFactoryInit(void * cnf_blk);
+#define CONFIG_SECTION_ADDRESS 0x4b00
 
-void setMenuById(struct gfx_action_menu_t * menu, uint8_t index);
+gfx_action_menu ** menus;
+struct cnf_blk configBlock;
+
+void loadConfigBlock();
+
+void setMenuById(struct gfx_action_menu_t ** menu, uint8_t index);
 
 #endif /* GFX_MENUFACTORY_H_ */

@@ -12,6 +12,7 @@
 #include "config/cnf_blk_header.h"
 #include "gfx/sampleMenus/sampleConfig.h"
 #include "gfx/sampleMenus/sampleMainMenu.h"
+#include "gfx/menuFactory.h"
 
 #define PORT_SetPinsAsInput( _port, _inputMask) ( (_port)->DIRCLR = _inputMask )
 
@@ -58,15 +59,15 @@ void updateData(uint8_t data){
 #define PAGE_SPACING 8
 
 void printitem(){
-//	gfx_image image;
-//	gfx_image_init(&image,&voltage,0,0,false);
-//	gfx_image_draw(&image);
-//
-//	gfx_label welcome,screen;
-//	gfx_label_init(&welcome,"Welcome to ",0,voltage.height+PAGE_SPACING,false);
-//	gfx_label_draw(&welcome);
-//	gfx_label_init(&screen,"new screen view!",0,voltage.height+2*PAGE_SPACING,false);
-//	gfx_label_draw(&screen);
+	gfx_label volt_title;
+	gfx_information_label volt_data;
+	gfx_label_init(&volt_title,"Computer Voltage",10,0,false);
+	gfx_label_draw(&volt_title);
+	gfx_image image;
+	gfx_image_init(&image,&v_logo,30,PAGE_SPACING*2,false);
+	gfx_image_draw(&image);
+	gfx_information_label_init(&volt_data,SHOW_VOLTAGE,45,v_logo.height+PAGE_SPACING+5,false);
+	gfx_information_label_draw(&volt_data);
 }
 
 void power_state_init(){
@@ -98,10 +99,9 @@ void testTWI(){
 
 
 void initMenu(){
-//	struct cnf_blk * config = pgm_read_ptr(&sampleConfig);
-//	struct cnf_blk * config = &sampleConfig;
-//	void * mainMenuPgm = pgm_read_byte(&sampleConfig.mainMenu);
-//	gfx_action_menu_init(config->mainMenu);
+	loadConfigBlock();
+	setMenuById(&presentMenu,0);
+	gfx_action_menu_init(presentMenu);
 }
 
 int main(void){

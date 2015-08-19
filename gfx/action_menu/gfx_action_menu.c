@@ -2,7 +2,7 @@
 #include "../../debug.h"
 #include "../menuFactory.h"
 
-void gfx_action_menu_init(struct gfx_action_menu_t *actionMenu){
+void gfx_action_menu_init(gfx_action_menu *actionMenu){
 	presentMenu = actionMenu;
 	actionMenu->visible = true;
 	gfx_mono_menu_init(actionMenu->menu);
@@ -35,22 +35,6 @@ void showSplash(struct gfx_mono_bitmap * splash){
 
 struct gfx_action_menu_t * menu;
 
-void updateDataByType(information_type type, char ** data){
-	func_ptr ptr= NULL;
-	switch (type){
-	case SHOW_VOLTAGE:
-		ptr = setPowerString;
-		break;
-	case SHOW_POWER_STATE:
-		ptr = showState;
-		break;
-	case SHOW_CPU_TEMPERTURE:
-	case SHOW_GPU_TEMPERTURE:
-		break;
-	}
-	if (ptr != NULL)
-		ptr(data);
-}
 
 
 
@@ -67,14 +51,14 @@ uint8_t gfx_action_menu_process_key(struct gfx_action_menu_t *actionMenu, uint8_
 			showData(&selectedAction.data);
 			break;
 		case ACTION_TYPE_SHOW_SPLASH:
-			showSplash(selectedAction.splashData);
+			showSplash(&selectedAction.splashData);
 			break;
 		case ACTION_TYPE_SHOW_DATA_FROM_FUNC:
 			updateDataByType(selectedAction.info_type,&(selectedAction.data).text);
 			showData(&selectedAction.data);
 			break;
 		case ACTION_TYPE_SHOW_MENU:
-			setMenuById(menu,selectedAction.menuId);
+			menu = selectedAction.menu;
 			showMenu(menu,true);
 			break;
 		case ACTION_TYPE_NONE:
