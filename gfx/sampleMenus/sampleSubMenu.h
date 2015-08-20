@@ -49,14 +49,14 @@ struct gfx_mono_menu  __attribute__((section (".configData"))) subTestMenu = {
 };
 
 /* Initialize Action Menu */
-struct gfx_action_menu_t  __attribute__((section (".configData"))) subMenu = {
-		.menu = &subTestMenu,
-		.id = 1,
-		.visible = false,
-		.actions[0].type = ACTION_TYPE_SHOW_DATA,
-		.actions[0].data.title = sub_menu_title1,
-		.actions[0].data.text = "1.. 2.. 3..",
-		.actions[1].type = ACTION_TYPE_NONE
-};
+//struct gfx_action_menu_t  __attribute__((section (".configData"))) subMenu = {
+//		.menu = &subTestMenu,
+//		.id = 1,
+//		.visible = false,
+//		.actions[0].type = ACTION_TYPE_SHOW_DATA,
+//		.actions[0].data.title = sub_menu_title1,
+//		.actions[0].data.text = "1.. 2.. 3..",
+//		.actions[1].type = ACTION_TYPE_NONE
+//};
 
 #endif /* GFX_SAMPLEMENUS_SAMPLESUBMENU_H_ */

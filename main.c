@@ -8,8 +8,8 @@
 #include "timer/tc.h"
 #include "power-state/power-state.h"
 #include "adc/adc.h"
+#include "config/cnf_blk_components.h"
 #include "gfx/gfx_utils.h"
-#include "config/cnf_blk_header.h"
 #include "gfx/sampleMenus/sampleConfig.h"
 #include "gfx/sampleMenus/sampleMainMenu.h"
 #include "gfx/menuFactory.h"
@@ -58,16 +58,22 @@ void updateData(uint8_t data){
 
 #define PAGE_SPACING 8
 
+
 void printitem(){
-	gfx_label volt_title;
-	gfx_information_label volt_data;
-	gfx_label_init(&volt_title,"Computer Voltage",10,0,false);
-	gfx_label_draw(&volt_title);
-	gfx_image image;
-	gfx_image_init(&image,&v_logo,30,PAGE_SPACING*2,false);
-	gfx_image_draw(&image);
-	gfx_information_label_init(&volt_data,SHOW_VOLTAGE,45,v_logo.height+PAGE_SPACING+5,false);
-	gfx_information_label_draw(&volt_data);
+
+	gfx_frame * frame = malloc(sizeof(gfx_frame));
+	gfx_frame_init(frame,&testFrame);
+	gfx_frame_draw(frame);
+
+//	gfx_label volt_title;
+//	gfx_information_label volt_data;
+//	gfx_label_init(&volt_title,"Computer Voltage",10,0,false);
+//	gfx_label_draw(&volt_title);
+//	gfx_image image;
+//	gfx_image_init(&image,&v_logo,30,PAGE_SPACING*2,false);
+//	gfx_image_draw(&image);
+//	gfx_information_label_init(&volt_data,SHOW_VOLTAGE,45,v_logo.height+PAGE_SPACING+5,false);
+//	gfx_information_label_draw(&volt_data);
 }
 
 void power_state_init(){
@@ -106,9 +112,9 @@ void initMenu(){
 
 int main(void){
 	init();
-	initMenu();
+//	initMenu();
 //	testTWI();
-//	printitem();
+	printitem();
 
 	while(true)
 	{}

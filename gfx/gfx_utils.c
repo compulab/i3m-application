@@ -5,10 +5,8 @@
  *      Author: arkadi
  */
 
-#include "gfx_components.h"
-#include "../asf.h"
-#include <math.h>
-#include <string.h>
+
+#include "gfx_utils.h"
 
 #define PAGE_ADDRESS(y) floor (y/8)
 
@@ -86,9 +84,12 @@ void gfx_label_draw(gfx_label * label){
 	gfx_mono_draw_string(data.text,x,y,data.font);
 }
 
-void gfx_image_init(gfx_image * image, struct gfx_mono_bitmap * bitmap, uint8_t x, uint8_t y, bool borderVisible){
-	image->bitmap = bitmap;
-	gfx_item_init(&image->postion,x,y,borderVisible,(bitmap->width+2),(bitmap->height+2));
+void gfx_image_init(gfx_image * image, gfx_mono_color_t PROGMEM_T * bitmapProgmem,uint8_t height,uint8_t width, uint8_t x, uint8_t y, bool borderVisible){
+	image->bitmap->width = width;
+	image->bitmap->height = height;
+	image->bitmap->data.progmem = bitmapProgmem;
+	image->bitmap->type = GFX_MONO_BITMAP_PROGMEM;
+	gfx_item_init(&image->postion,x,y,borderVisible,(image->bitmap->width+2),(image->bitmap->height+2));
 }
 
 void gfx_image_draw(gfx_image * image){
@@ -96,3 +97,48 @@ void gfx_image_draw(gfx_image * image){
 	gfx_mono_generic_put_bitmap(image->bitmap,image->postion.x,image->postion.y);
 }
 
+void setFrameSizes(gfx_frame * frame, cnf_frame * cnf_frame){
+	frame->image_size = cnf_frame->image_size;
+	frame->information_size= cnf_frame->information_size;
+	frame->label_size= cnf_frame->label_size;
+}
+
+char debug[2];
+
+void gfx_frame_init(gfx_frame * frame, cnf_frame * cnf_frame_pgmem){
+	cnf_gfx_image cnf_image;
+	cnf_gfx_information_label cnf_information;
+	cnf_gfx_label cnf_label;
+	cnf_frame cnf_frame;
+	memcpy_P(&cnf_frame,cnf_frame_pgmem,sizeof(cnf_frame));
+	setFrameSizes(frame,&cnf_frame);
+	frame->images = malloc (sizeof(gfx_image *) * frame->image_size);
+	for (int i=0; i < frame->image_size; i++) {
+		frame->images[i] = malloc (sizeof(gfx_image));
+		memcpy_P(&cnf_image,(cnf_frame.image[i]),sizeof(cnf_gfx_image));
+		MSG3(cnf_image.width,debug)
+		delay_s(5);
+		gfx_image_init(frame->images[i],cnf_image.bitmapProgmem, cnf_image.height,cnf_image.width,cnf_image.x,cnf_image.y,cnf_image.borderVisible);
+	}
+	frame->labels = malloc (sizeof(gfx_label *) * frame->label_size);
+	for (int i=0; i < frame->label_size; i++) {
+		frame->labels[i] = malloc (sizeof(gfx_label));
+		memcpy_P(&cnf_label,cnf_frame.label[i],sizeof(cnf_gfx_label));
+		gfx_label_init(frame->labels[i],cnf_label.text,cnf_label.x,cnf_label.y,cnf_label.borderVisible);
+	}
+	frame->informationLabels = malloc (sizeof(gfx_information_label *) * frame->information_size);
+	for (int i=0; i < frame->information_size; i++) {
+		frame->informationLabels[i] = malloc (sizeof(gfx_information_label));
+		memcpy_P(&cnf_information,(cnf_frame.information_label[i]),sizeof(cnf_gfx_information_label));
+		gfx_information_label_init(frame->informationLabels[i],cnf_information.info_type,cnf_information.x,cnf_information.y,cnf_information.borderVisible);
+	}
+}
+
+void gfx_frame_draw(gfx_frame * frame){
+	for (int i=0; i < frame->label_size; i++)
+		gfx_label_draw(frame->labels[i]);
+	for (int i=0; i < frame->information_size; i++)
+			gfx_information_label_draw(frame->informationLabels[i]);
+	for (int i=0; i < frame->image_size; i++)
+			gfx_image_draw(frame->images[i]);
+}

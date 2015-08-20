@@ -12,7 +12,7 @@
 #include "../../power-state/power-state.h"
 #include "../../adc/adc.h"
 #include "../../ASF/common/services/gfx_mono/sysfont.h"
-#include "../../config/cnf_blk_header.h"
+#include "../../config/cnf_blk_components.h"
 
 
 
@@ -23,9 +23,7 @@ struct gfx_action_menu_t * presentMenu;
 typedef enum gfx_item_action_type_t {
 	ACTION_TYPE_NONE,
 	ACTION_TYPE_SHOW_MENU,
-	ACTION_TYPE_SHOW_DATA_FROM_FUNC,
-	ACTION_TYPE_SHOW_DATA,
-	ACTION_TYPE_SHOW_SPLASH
+	ACTION_TYPE_SHOW_FRAME
 } item_action_type;
 
 typedef struct item_data_t {
@@ -38,10 +36,7 @@ typedef struct item_action_t {
 	item_action_type type;
 	uint8_t menuId;
 	struct gfx_action_menu_t * menu;
-	struct item_data_t data;
-	information_type info_type;
-	struct gfx_mono_bitmap  splashData;
-	gfx_mono_color_t PROGMEM_T * splash;
+	gfx_frame * frame;
 } item_action;
 
 
@@ -49,7 +44,7 @@ typedef struct gfx_action_menu_t {
 	struct gfx_mono_menu * menu;
 	uint8_t id;
 	bool visible;
-	item_action actions[GFX_MONO_MENU_ELEMENTS_PER_SCREEN];
+	item_action * actions;
 	struct gfx_action_menu_t * parent;
 }gfx_action_menu;
 

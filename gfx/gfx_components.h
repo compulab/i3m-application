@@ -40,6 +40,11 @@ typedef struct GFX_BITMAP {
 	struct gfx_mono_bitmap * bitmap;
 } gfx_image;
 
-
+typedef struct GFX_FRAME {
+	gfx_image ** images;
+	gfx_information_label ** informationLabels;
+	gfx_label ** labels;
+	uint8_t image_size, information_size, label_size;
+} gfx_frame;
 
 #endif /* GFX_GFX_COMPONENTS_H_ */

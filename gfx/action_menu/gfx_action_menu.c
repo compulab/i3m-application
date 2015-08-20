@@ -47,16 +47,16 @@ uint8_t gfx_action_menu_process_key(struct gfx_action_menu_t *actionMenu, uint8_
 			actionMenu->visible = false;
 		}
 		switch (type){
-		case ACTION_TYPE_SHOW_DATA:
-			showData(&selectedAction.data);
-			break;
-		case ACTION_TYPE_SHOW_SPLASH:
-			showSplash(&selectedAction.splashData);
-			break;
-		case ACTION_TYPE_SHOW_DATA_FROM_FUNC:
-			updateDataByType(selectedAction.info_type,&(selectedAction.data).text);
-			showData(&selectedAction.data);
-			break;
+//		case ACTION_TYPE_SHOW_DATA:
+//			showData(&selectedAction.data);
+//			break;
+//		case ACTION_TYPE_SHOW_SPLASH:
+//			showSplash(&selectedAction.splashData);
+//			break;
+//		case ACTION_TYPE_SHOW_DATA_FROM_FUNC:
+//			updateDataByType(selectedAction.info_type,&(selectedAction.data).text);
+//			showData(&selectedAction.data);
+//			break;
 		case ACTION_TYPE_SHOW_MENU:
 			menu = selectedAction.menu;
 			showMenu(menu,true);

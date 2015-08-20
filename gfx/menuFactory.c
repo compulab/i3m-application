@@ -62,18 +62,37 @@ void action_types_init(){
 	}
 }
 
+void loadActions(item_action ** actions, cnf_action ** cnfActions,uint8_t size){
+	MSG("3")
+	cnf_frame configFrame;
+	(*actions) = malloc (sizeof(item_action) * size);
+	for (int i=0; i<size ; i++){
+		if (cnfActions[i]->isFrame){
+			actions[i]->type = ACTION_TYPE_SHOW_FRAME;
+			actions[i]->frame = malloc (sizeof(gfx_frame));
+			memcpy_P(&configFrame,&cnfActions[i]->frame,sizeof(cnf_frame));
+			gfx_frame_init(actions[i]->frame,&configFrame);
+		} else {
+			actions[i]->type = ACTION_TYPE_SHOW_MENU;
+			actions[i]->menuId = cnfActions[i]->menuId;
+		}
+	}
+}
+
 void loadConfigBlock(){
 	struct cnf_blk configBlock;
+	cnf_menu configMenu;
 	struct gfx_mono_menu * monoMenu;
 	memcpy_P(&configBlock,(void *) CONFIG_SECTION_ADDRESS,sizeof(struct cnf_blk));
 	size = configBlock.size;
 	menus = malloc(sizeof (gfx_action_menu *) * configBlock.size);
 	for (int i=0; i < configBlock.size; i++){
 	menus[i] = malloc(sizeof(gfx_action_menu));
-	memcpy_P(menus[i], configBlock.menus[i],sizeof(gfx_action_menu));
+	memcpy_P(&configMenu, configBlock.menus[i],sizeof(cnf_menu));
 	monoMenu = malloc(sizeof(struct gfx_mono_menu));
-	memcpy_P(monoMenu,menus[i]->menu,sizeof(struct gfx_mono_menu));
+	memcpy_P(monoMenu,configMenu.menu,sizeof(struct gfx_mono_menu));
 	menus[i]->menu= monoMenu;
+	loadActions(menus[i]->actions,configMenu.actions,monoMenu->num_elements);
 	}
 
 	action_types_init();
