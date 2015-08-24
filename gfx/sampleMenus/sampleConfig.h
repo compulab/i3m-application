@@ -63,7 +63,7 @@ cnf_action  __attribute__((section (".configData"))) testAction = {
 		.frame = &testFrame
 };
 
-cnf_menu  __attribute__((section (".configData")))  mainMenuCnf = {
+cnf_menu  __attribute__((section (".configData")))  testMainMenuCnf = {
 		.menu = &testMonoMenu,
 		/* Splash screen settings */
 		.actions[0] = &testAction,

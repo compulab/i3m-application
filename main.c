@@ -63,16 +63,6 @@ void printitem(){
 	gfx_frame * frame = malloc(sizeof(gfx_frame));
 	gfx_frame_init(frame,&testFrame);
 	gfx_frame_draw(frame);
-
-//	gfx_label volt_title;
-//	gfx_information_label volt_data;
-//	gfx_label_init(&volt_title,"Computer Voltage",10,0,false);
-//	gfx_label_draw(&volt_title);
-//	gfx_image image;
-//	gfx_image_init(&image,&v_logo,30,PAGE_SPACING*2,false);
-//	gfx_image_draw(&image);
-//	gfx_information_label_init(&volt_data,SHOW_VOLTAGE,45,v_logo.height+PAGE_SPACING+5,false);
-//	gfx_information_label_draw(&volt_data);
 }
 
 void power_state_init(){
@@ -107,8 +97,6 @@ void initMenu(){
 	loadConfigBlock();
 	setMenuById(&presentMenu,0);
 	gfx_action_menu_init(presentMenu);
-//	CLEAR
-//	printitem();
 }
 
 int main(void){

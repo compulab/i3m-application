@@ -2,9 +2,15 @@
 #include "../../debug.h"
 #include "../menuFactory.h"
 
+
+void clearMenu(){
+	gfx_mono_generic_draw_filled_rect(0,0,128,64,GFX_PIXEL_CLR);
+}
+
 void gfx_action_menu_init(gfx_action_menu *actionMenu){
 	presentMenu = actionMenu;
 	actionMenu->visible = true;
+	clearMenu();
 	gfx_mono_menu_init(actionMenu->menu);
 }
 
@@ -35,9 +41,6 @@ void showSplash(struct gfx_mono_bitmap * splash){
 
 struct gfx_action_menu_t * menu;
 
-void clearMenu(){
-	gfx_mono_draw_rect(0,0,128,64,GFX_PIXEL_CLR);
-}
 
 
 uint8_t gfx_action_menu_process_key(struct gfx_action_menu_t *actionMenu, uint8_t keycode){
@@ -50,7 +53,6 @@ uint8_t gfx_action_menu_process_key(struct gfx_action_menu_t *actionMenu, uint8_
 		}
 		switch (type){
 		case ACTION_TYPE_SHOW_FRAME:
-			CLEAR
 			gfx_frame_draw(selectedAction.frame);
 			break;
 		case ACTION_TYPE_SHOW_MENU:
