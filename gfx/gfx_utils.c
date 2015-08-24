@@ -89,10 +89,12 @@ void gfx_label_draw(gfx_label * label){
 }
 
 void gfx_image_init(gfx_image * image, gfx_mono_color_t PROGMEM_T * bitmapProgmem,uint8_t height,uint8_t width, uint8_t x, uint8_t y, bool borderVisible){
-	image->bitmap->width = width;
-	image->bitmap->height = height;
-	image->bitmap->data.progmem = bitmapProgmem;
-	image->bitmap->type = GFX_MONO_BITMAP_PROGMEM;
+	struct gfx_mono_bitmap * bitmap = malloc(sizeof(struct gfx_mono_bitmap));
+	bitmap->width = width;
+	bitmap->height = height;
+	bitmap->data.progmem = bitmapProgmem;
+	bitmap->type = GFX_MONO_BITMAP_PROGMEM;
+	image->bitmap = bitmap;
 	gfx_item_init(&image->postion,x,y,borderVisible,(image->bitmap->width+2),(image->bitmap->height+2));
 }
 

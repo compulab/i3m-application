@@ -63,8 +63,8 @@ struct gfx_mono_menu  __attribute__((section (".configData"))) testMenu = {
 
 cnf_gfx_information_label __attribute__((section (".configData"))) voltageInfo = {
 		.info_type = SHOW_VOLTAGE,
-		.x = 45,
-		.y = 45+PAGE_SPACING,
+		.x = 44,
+		.y = 46 + PAGE_SPACING,
 		.borderVisible = false
 };
 
@@ -73,13 +73,13 @@ cnf_gfx_image __attribute__((section (".configData"))) voltageImage = {
 	.height = v_height,
 	.width = v_width,
 	.x = 30,
-	.y = PAGE_SPACING*2,
+	.y = PAGE_SPACING * 2,
 	.borderVisible = false
 };
 
 cnf_gfx_label __attribute__((section (".configData"))) voltageTitle = {
 	.text = "Computer Voltage",
-	.x = 10,
+	.x = 0,
 	.y = 0,
 	.borderVisible = false
 };
@@ -126,13 +126,13 @@ cnf_action  __attribute__((section (".configData"))) compulabLogoAction = {
 
 cnf_gfx_label __attribute__((section (".configData"))) testTitle = {
 		.text = "Testing ...",
-		.x = 10,
+		.x = 0,
 		.y = PAGE_SPACING*4,
 		.borderVisible = false
 };
 
 cnf_gfx_label __attribute__((section (".configData"))) testDataLabel = {
-		.x = 10,
+		.x = 0,
 		.y = PAGE_SPACING*2,
 		.borderVisible = false,
 		.text = "Test Data"
@@ -168,14 +168,14 @@ cnf_action __attribute__((section (".configData"))) doNothingAction = {
 
 cnf_gfx_label __attribute__((section (".configData"))) powerStateTitle = {
 		.text = "Computer Power State",
-		.x = 10,
+		.x = 0,
 		.y = 0,
 		.borderVisible = false
 };
 
 cnf_gfx_information_label __attribute__((section (".configData"))) powerStateInfo = {
 		.info_type = SHOW_POWER_STATE,
-		.x = 45,
+		.x = 0,
 		.y = 45+PAGE_SPACING,
 		.borderVisible = false
 };
@@ -208,30 +208,6 @@ cnf_menu   __attribute__((section (".configData")))mainMenuCnf = {
 //		/* Computer Voltage Settings */
 		.actions[5] = &voltageAction
 };
-//
-///* Initialize Action Menu */
-//struct gfx_action_menu_t  __attribute__((section (".configData"))) mainMenu  = {
-////struct gfx_action_menu_t   mainMenu  = {
-//		.menu = &testMenu,
-//		.visible = false,
-////		.actions[0].type = ACTION_TYPE_SHOW_SPLASH,
-////		.actions[0].splashData.height = 32,
-////		.actions[0].splashData.width = 128,
-////		.actions[0].splashData.type = GFX_MONO_BITMAP_PROGMEM,
-////		.actions[0].splashData.data.progmem = compulab_new,
-//		.actions[1].type = ACTION_TYPE_SHOW_DATA_FROM_FUNC,
-//		.actions[1].data.title =main_menu_title2,
-//		.actions[1].info_type = SHOW_POWER_STATE,
-//		.actions[2].type = ACTION_TYPE_SHOW_DATA,
-//		.actions[2].data.title = main_menu_title3,
-//		.actions[2].data.text = "Test Data",
-//		.actions[3].type = ACTION_TYPE_SHOW_MENU,
-//		.actions[3].menuId = SAMPLE_SUB_MENU,
-//		.actions[4].type = ACTION_TYPE_NONE,
-//		.actions[5].type = ACTION_TYPE_SHOW_DATA_FROM_FUNC,
-//		.actions[5].data.title =main_menu_title6,
-//		.actions[5].info_type = SHOW_VOLTAGE
-//};
 
 
 
