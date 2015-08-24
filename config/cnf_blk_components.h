@@ -54,7 +54,7 @@ typedef struct CNF_FRAME_T {
 
 typedef struct CNF_ACTION_T {
 	bool isFrame;
-	cnf_frame frame;
+	cnf_frame * frame;
 	uint8_t menuId;
 } cnf_action;
 

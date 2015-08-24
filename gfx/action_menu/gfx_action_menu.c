@@ -35,7 +35,9 @@ void showSplash(struct gfx_mono_bitmap * splash){
 
 struct gfx_action_menu_t * menu;
 
-
+void clearMenu(){
+	gfx_mono_draw_rect(0,0,128,64,GFX_PIXEL_CLR);
+}
 
 
 uint8_t gfx_action_menu_process_key(struct gfx_action_menu_t *actionMenu, uint8_t keycode){
@@ -43,25 +45,19 @@ uint8_t gfx_action_menu_process_key(struct gfx_action_menu_t *actionMenu, uint8_
 		item_action selectedAction = actionMenu->actions[(actionMenu->menu)->current_selection];
 		item_action_type type = selectedAction.type;
 		if (type != ACTION_TYPE_NONE){
-			ssd1306_clear();
+			clearMenu();
 			actionMenu->visible = false;
 		}
 		switch (type){
-//		case ACTION_TYPE_SHOW_DATA:
-//			showData(&selectedAction.data);
-//			break;
-//		case ACTION_TYPE_SHOW_SPLASH:
-//			showSplash(&selectedAction.splashData);
-//			break;
-//		case ACTION_TYPE_SHOW_DATA_FROM_FUNC:
-//			updateDataByType(selectedAction.info_type,&(selectedAction.data).text);
-//			showData(&selectedAction.data);
-//			break;
+		case ACTION_TYPE_SHOW_FRAME:
+			CLEAR
+			gfx_frame_draw(selectedAction.frame);
+			break;
 		case ACTION_TYPE_SHOW_MENU:
 			menu = selectedAction.menu;
 			showMenu(menu,true);
 			break;
-		case ACTION_TYPE_NONE:
+		default:
 			break;
 		}
 	} else if (keycode == GFX_MONO_MENU_KEYCODE_BACK) {

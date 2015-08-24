@@ -11,8 +11,6 @@
 
 #define MAX_RETRY 2
 
-char debug[1];
-
 twi_package currentPackage;
 int sendIndex;
 int retryingCount;

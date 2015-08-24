@@ -82,6 +82,10 @@ void gfx_label_draw(gfx_label * label){
 			y = label->postion.y +2;
 	gfx_text data = label->text;
 	gfx_mono_draw_string(data.text,x,y,data.font);
+	#ifdef DEBUG_MODE
+		MSG_T_T("string to print:",data.text)
+		MSG_T_N("first char of font", data.font->first_char)
+	#endif
 }
 
 void gfx_image_init(gfx_image * image, gfx_mono_color_t PROGMEM_T * bitmapProgmem,uint8_t height,uint8_t width, uint8_t x, uint8_t y, bool borderVisible){
@@ -101,9 +105,13 @@ void setFrameSizes(gfx_frame * frame, cnf_frame * cnf_frame){
 	frame->image_size = cnf_frame->image_size;
 	frame->information_size= cnf_frame->information_size;
 	frame->label_size= cnf_frame->label_size;
-}
 
-char debug[2];
+	#ifdef DEBUG_MODE
+		MSG_T_N("images in frame: ", frame->image_size)
+		MSG_T_N("labels in frame: ", frame->label_size)
+		MSG_T_N("infos in frame: ", frame->information_size)
+	#endif
+}
 
 void gfx_frame_init(gfx_frame * frame, cnf_frame * cnf_frame_pgmem){
 	cnf_gfx_image cnf_image;
@@ -116,25 +124,35 @@ void gfx_frame_init(gfx_frame * frame, cnf_frame * cnf_frame_pgmem){
 	for (int i=0; i < frame->image_size; i++) {
 		frame->images[i] = malloc (sizeof(gfx_image));
 		memcpy_P(&cnf_image,(cnf_frame.image[i]),sizeof(cnf_gfx_image));
-		MSG3(cnf_image.width,debug)
-		delay_s(5);
 		gfx_image_init(frame->images[i],cnf_image.bitmapProgmem, cnf_image.height,cnf_image.width,cnf_image.x,cnf_image.y,cnf_image.borderVisible);
+		#ifdef DEBUG_MODE
+			MSG_T_N("image height:",cnf_image.height)
+			MSG_T_N("image width:",cnf_image.width)
+		#endif
 	}
 	frame->labels = malloc (sizeof(gfx_label *) * frame->label_size);
 	for (int i=0; i < frame->label_size; i++) {
 		frame->labels[i] = malloc (sizeof(gfx_label));
 		memcpy_P(&cnf_label,cnf_frame.label[i],sizeof(cnf_gfx_label));
 		gfx_label_init(frame->labels[i],cnf_label.text,cnf_label.x,cnf_label.y,cnf_label.borderVisible);
+		#ifdef DEBUG_MODE
+			MSG_T_T("label title:",cnf_label.text)
+		#endif
 	}
 	frame->informationLabels = malloc (sizeof(gfx_information_label *) * frame->information_size);
 	for (int i=0; i < frame->information_size; i++) {
 		frame->informationLabels[i] = malloc (sizeof(gfx_information_label));
 		memcpy_P(&cnf_information,(cnf_frame.information_label[i]),sizeof(cnf_gfx_information_label));
 		gfx_information_label_init(frame->informationLabels[i],cnf_information.info_type,cnf_information.x,cnf_information.y,cnf_information.borderVisible);
+#		ifdef DEBUG_MODE
+			MSG_T_N("[0] powerState [1]voltage :",cnf_information.info_type)
+		#endif
 	}
 }
 
 void gfx_frame_draw(gfx_frame * frame){
+	gfx_mono_draw_filled_rect(
+				GFX_MONO_LCD_WIDTH, GFX_MONO_LCD_HEIGHT, 0, 0,GFX_PIXEL_CLR);
 	for (int i=0; i < frame->label_size; i++)
 		gfx_label_draw(frame->labels[i]);
 	for (int i=0; i < frame->information_size; i++)

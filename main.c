@@ -51,8 +51,7 @@ void enable_interrupts(){
 }
 
 void updateData(uint8_t data){
-	CLEAR
-	MSG("Yeah!!!")
+
 }
 
 
@@ -108,13 +107,15 @@ void initMenu(){
 	loadConfigBlock();
 	setMenuById(&presentMenu,0);
 	gfx_action_menu_init(presentMenu);
+//	CLEAR
+//	printitem();
 }
 
 int main(void){
 	init();
-//	initMenu();
+	initMenu();
 //	testTWI();
-	printitem();
+//	printitem();
 
 	while(true)
 	{}

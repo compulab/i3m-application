@@ -10,22 +10,57 @@
 #include <stdlib.h>
 #include "asf.h"
 
-#define CLEAR	ssd1306_clear();
+//#define DEBUG_MODE
+
+#define DELAY_TIME 1
+
+char debug[5];
+
+
+#ifdef DEBUG_MODE
+
+#endif
+
+#define CLEAR	ssd1306_init();
 #define MSG(str)	ssd1306_set_page_address(3); \
 					ssd1306_set_column_address(3); \
-					ssd1306_write_text(str);
-//					delay_s(1);
+					ssd1306_write_text(str); \
+					delay_s(DELAY_TIME); \
+					CLEAR
 
-#define MSG2(num,str)   ssd1306_set_page_address(4); \
+#define MSG_hex(num)   ssd1306_set_page_address(4); \
 					ssd1306_set_column_address(3); \
-					itoa(num,str,16); \
-					ssd1306_write_text(str);
-//					delay_s(2);
+					itoa(num,debug,16); \
+					ssd1306_write_text(debug); \
+					delay_s(DELAY_TIME); \
+					CLEAR
 
-#define MSG3(num,str)   ssd1306_set_page_address(6); \
+#define MSG_dec(num)   ssd1306_set_page_address(6); \
 					ssd1306_set_column_address(3); \
-					itoa(num,str,10); \
-					ssd1306_write_text(str);
+					itoa(num,debug,10); \
+					ssd1306_write_text(debug);  \
+					delay_s(DELAY_TIME); \
+					CLEAR
+
+#define MSG_T_N(str,num)	ssd1306_set_page_address(3); \
+					ssd1306_set_column_address(3); \
+					ssd1306_write_text(str); \
+		   			ssd1306_set_page_address(6); \
+					ssd1306_set_column_address(3); \
+					itoa(num,debug,10); \
+					ssd1306_write_text(debug);  \
+					delay_s(DELAY_TIME); \
+					CLEAR
+
+#define MSG_T_T(title,str)	ssd1306_set_page_address(3); \
+					ssd1306_set_column_address(3); \
+					ssd1306_write_text(title); \
+					ssd1306_set_page_address(5); \
+					ssd1306_set_column_address(3); \
+					ssd1306_write_text(str); \
+					delay_s(DELAY_TIME); \
+					CLEAR
+
 
 //
 #endif /* DEBUG_H_ */

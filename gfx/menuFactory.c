@@ -8,7 +8,6 @@
 #include "../debug.h"
 gfx_action_menu ** menus;
 uint8_t size;
-char debug[2];
 
 unsigned char   compulab_new2 [] = {
 	0x30, 0xF8, 0xD8, 0x08, 0x08, 0x08, 0x08, 0x0C, 0x0C, 0x2C, 0x44, 0x14, 0x24, 0x06, 0x96, 0xA6,
@@ -62,20 +61,22 @@ void action_types_init(){
 	}
 }
 
-void loadActions(item_action ** actions, cnf_action ** cnfActions,uint8_t size){
-	MSG("3")
-	cnf_frame configFrame;
-	(*actions) = malloc (sizeof(item_action) * size);
-	for (int i=0; i<size ; i++){
-		if (cnfActions[i]->isFrame){
-			actions[i]->type = ACTION_TYPE_SHOW_FRAME;
-			actions[i]->frame = malloc (sizeof(gfx_frame));
-			memcpy_P(&configFrame,&cnfActions[i]->frame,sizeof(cnf_frame));
-			gfx_frame_init(actions[i]->frame,&configFrame);
-		} else {
-			actions[i]->type = ACTION_TYPE_SHOW_MENU;
-			actions[i]->menuId = cnfActions[i]->menuId;
-		}
+void loadAction(item_action * action, cnf_action * cnfAction){
+	cnf_action configAction;
+	memcpy_P(&configAction,cnfAction,sizeof(cnf_action));
+	if (configAction.isFrame){
+#ifdef DEBUG_MODE
+		MSG("action is frame")
+#endif
+		action->type = ACTION_TYPE_SHOW_FRAME;
+		action->frame = malloc (sizeof(gfx_frame));
+		gfx_frame_init(action->frame,configAction.frame);
+	} else {
+#ifdef DEBUG_MODE
+		MSG("action is menu")
+#endif
+		action->type = ACTION_TYPE_SHOW_MENU;
+		action->menuId = cnfAction->menuId;
 	}
 }
 
@@ -87,20 +88,30 @@ void loadConfigBlock(){
 	size = configBlock.size;
 	menus = malloc(sizeof (gfx_action_menu *) * configBlock.size);
 	for (int i=0; i < configBlock.size; i++){
-	menus[i] = malloc(sizeof(gfx_action_menu));
-	memcpy_P(&configMenu, configBlock.menus[i],sizeof(cnf_menu));
-	monoMenu = malloc(sizeof(struct gfx_mono_menu));
-	memcpy_P(monoMenu,configMenu.menu,sizeof(struct gfx_mono_menu));
-	menus[i]->menu= monoMenu;
-	loadActions(menus[i]->actions,configMenu.actions,monoMenu->num_elements);
+#ifdef DEBUG_MODE
+		MSG_T_N("Config menu: " ,i)
+#endif
+		menus[i] = malloc(sizeof(gfx_action_menu));
+		memcpy_P(&configMenu, configBlock.menus[i],sizeof(cnf_menu));
+		monoMenu = malloc(sizeof(struct gfx_mono_menu));
+		memcpy_P(monoMenu,configMenu.menu,sizeof(struct gfx_mono_menu));
+		menus[i]->menu= monoMenu;
+		menus[i]->actions = malloc (sizeof(item_action) * monoMenu->num_elements);
+		for (uint8_t j=0; j < monoMenu->num_elements; j++){
+			loadAction(&(menus[i]->actions[j]),configMenu.actions[j]);
+		}
 	}
 
 	action_types_init();
 }
 
 void setMenuById(struct gfx_action_menu_t ** menu, uint8_t index){
-	if (index < size)
+	if (index < size){
 		*menu = menus[index];
+		#ifdef DEBUG_MODE
+			MSG_T_N("setting menu number: ", index)
+		#endif
+	}
 }
 
 
