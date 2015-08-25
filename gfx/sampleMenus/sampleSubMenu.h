@@ -9,7 +9,7 @@
 #define GFX_SAMPLEMENUS_SAMPLESUBMENU_H_
 
 #include "../action_menu/gfx_action_menu.h"
-#include "../logos.h"
+#include "logos.h"
 
 #define SAMPLE_MAIN_MENU 0
 #define SAMPLE_SUB_MENU 1
@@ -48,15 +48,49 @@ struct gfx_mono_menu  __attribute__((section (".configData"))) subTestMenu = {
 	.current_selection = 1
 };
 
-/* Initialize Action Menu */
-//struct gfx_action_menu_t  __attribute__((section (".configData"))) subMenu = {
-//		.menu = &subTestMenu,
-//		.id = 1,
-//		.visible = false,
-//		.actions[0].type = ACTION_TYPE_SHOW_DATA,
-//		.actions[0].data.title = sub_menu_title1,
-//		.actions[0].data.text = "1.. 2.. 3..",
-//		.actions[1].type = ACTION_TYPE_NONE
-//};
+
+cnf_gfx_label __attribute__((section (".configData"))) titleLabel = {
+		.text = "Testing...",
+		.x=0,
+		.y=0,
+		.borderVisible = false
+};
+
+cnf_gfx_label __attribute__((section (".configData"))) dataLabel = {
+		.text = "1.. 2.. 3..",
+		.x=0,
+		.y=40,
+		.borderVisible = false
+};
+
+cnf_frame __attribute__((section (".configData"))) testDataFrame = {
+		.image_size = 0,
+		.information_size = 0,
+		.label_size = 2,
+		.label[0] = &titleLabel,
+		.label[1] = &dataLabel
+};
+
+cnf_action __attribute__((section (".configData"))) testDataAction = {
+		.isFrame = true,
+		.frame = &testDataFrame
+};
+
+cnf_frame __attribute__((section (".configData"))) doNothingSubFrame = {
+		.image_size = 0,
+		.information_size = 0,
+		.label_size = 0
+};
+
+cnf_action __attribute__((section (".configData")))  doNothingSubAction = {
+		.isFrame = true,
+		.frame = &doNothingSubFrame
+};
+
+cnf_menu __attribute__((section (".configData"))) subMenuCnf = {
+		.menu = &subTestMenu,
+		.actions[0] = &testDataAction,
+		.actions[1] = &doNothingSubAction
+};
 
 #endif /* GFX_SAMPLEMENUS_SAMPLESUBMENU_H_ */

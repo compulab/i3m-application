@@ -55,7 +55,6 @@ void setPowerString(char **str){
     if (currentPower < 0)
     	currentPower=0;
 	itoa(currentPower, resString,10);//power_result
-
 	if (currentPower >0){
 		resString[2]=resString[1];
 		resString[3]=resString[2];

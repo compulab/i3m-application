@@ -10,7 +10,8 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "../config/conf-twi.h"
+
+#include "../config/conf_twi.h"
 
 typedef void (*handleDataFunc)(uint8_t);
 

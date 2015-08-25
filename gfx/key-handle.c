@@ -4,7 +4,8 @@
  *  Created on: Aug 6, 2015
  *      Author: arkadi
  */
-#include "keypad.h"
+#include "key-handle.h"
+
 #include "../asf.h"
 
 bool leftButtonStatus = true,
@@ -15,13 +16,13 @@ bool leftButtonStatus = true,
 Button_State getButtonStatus(bool * lastStatus, uint8_t buttonPos){
 		bool currentStatus = ioport_get_value(buttonPos);
 		Button_State buttonState;
-//		delay_ms(300);
-//		bool longStatus = ioport_get_value(buttonPos);
+/*		delay_ms(300);
+		bool longStatus = ioport_get_value(buttonPos); */
 
 		if (currentStatus && !(*lastStatus))
-//			if (longStatus == currentStatus)
-//				return BUTTON_HOLD;
-//			else
+/*			if (longStatus == currentStatus)
+				return BUTTON_HOLD;
+			else */
 				buttonState = BUTTON_CLICK;
 		else
 			buttonState = BUTTON_NOT_PRESSED;
@@ -44,8 +45,7 @@ bool getHoldStatus(){
 }
 
 Button_State getSelectButtonStatus(){
-	if (getHoldStatus()) /* for debug only */
-		return BUTTON_HOLD;
+	if (getHoldStatus()) return BUTTON_HOLD; /* for debug only */
 	return getButtonStatus(&selectButtonStatus,FP_OK_BUTTON);
 }
 
@@ -54,13 +54,8 @@ void getPressedKey(key_Select* selectedKey){
 			rightButton = getRightButtonStatus(),
 			selectButton = getSelectButtonStatus();
 	*selectedKey = KEY_NONE;
-	if (leftButton == BUTTON_CLICK)
-		*selectedKey = *selectedKey | KEY_LEFT;
-	if (rightButton == BUTTON_CLICK)
-		*selectedKey = *selectedKey | KEY_RIGHT;
-	if (selectButton == BUTTON_CLICK)
-		*selectedKey = *selectedKey | KEY_SELECT;
-	if (selectButton == BUTTON_HOLD)
-		*selectedKey = *selectedKey | KEY_HOLD;
+	if (leftButton == BUTTON_CLICK) *selectedKey = *selectedKey | KEY_LEFT;
+	if (rightButton == BUTTON_CLICK) *selectedKey = *selectedKey | KEY_RIGHT;
+	if (selectButton == BUTTON_CLICK) *selectedKey = *selectedKey | KEY_SELECT;
+	if (selectButton == BUTTON_HOLD) *selectedKey = *selectedKey | KEY_HOLD;
 }
-

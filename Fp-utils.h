@@ -1,12 +1,13 @@
 /*
- * utils.h
+ * Fp-utils.h
  *
- *  Created on: Aug 19, 2015
+ *  Created on: Aug 26, 2015
  *      Author: arkadi
  */
 
-#ifndef UTILS_H_
-#define UTILS_H_
+#ifndef FP_UTILS_H_
+#define FP_UTILS_H_
+
 
 #include "asf.h"
 #include "adc/adc.h"
@@ -38,4 +39,4 @@ void showState(char ** data);
 void updateDataByType(information_type type, char ** data);
 
 
-#endif /* UTILS_H_ */
+#endif /* FP_UTILS_H_ */

@@ -7,15 +7,14 @@
 
 #ifndef GFX_GFX_ACTION_MENU_H_
 #define GFX_GFX_ACTION_MENU_H_
+
+#include "../gfx_components.h"
+#include "../gfx_utils.h"
 #include "../../asf.h"
-#include "../../utils.h"
-#include "../../power-state/power-state.h"
+#include "../../Fp-utils.h"
 #include "../../adc/adc.h"
 #include "../../ASF/common/services/gfx_mono/sysfont.h"
 #include "../../config/cnf_blk_components.h"
-
-
-
 
 struct gfx_action_menu_t * presentMenu;
 

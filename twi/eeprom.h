@@ -9,8 +9,8 @@
 #define EEPROM_H
 #include <stdint.h>
 
-#include "../config/conf-twi.h"
-#include "../twi/eeprom_driver.h"
+#include "../config/conf_twi.h"
+#include "eeprom_driver.h"
 
 
 uint8_t twi_EEPROM_ReadByte(uint8_t regAddr);

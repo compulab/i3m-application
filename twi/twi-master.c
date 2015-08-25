@@ -6,8 +6,9 @@
  */
 
 #include "twi-master.h"
+
 #include "../debug.h"
-#include "../config/conf-twi.h"
+
 
 #define MAX_RETRY 2
 
@@ -76,18 +77,17 @@ void handleSendData(){
 		SendNextData();
 	} else {
 		SendStop();
-		if (!currentPackage.writeRequest)
-			SendReadRequest();
+		if (!currentPackage.writeRequest) SendReadRequest();
 	}
 	isExacuting = true;
 }
 
 
 void handleError(){
-if (retryingCount < MAX_RETRY){
-	retryingCount++;
-	sendAddress();
-}
+	if (retryingCount < MAX_RETRY){
+		retryingCount++;
+		sendAddress();
+	}
 }
 
 void handleBusError(){
@@ -98,21 +98,20 @@ void handleArbitrationError(){
 	handleError();
 }
 
-void handleAddressNotAcknowledged(){
-}
+void handleAddressNotAcknowledged(){}
 
 void InterruptHandler(){
 	uint8_t status = TWI_MASTER_BASE.STATUS;
-	if ((status & (TWI_MASTER_WIF_bm | TWI_MASTER_ARBLOST_bm)) == (TWI_MASTER_WIF_bm | TWI_MASTER_ARBLOST_bm)){
+	if ((status & (TWI_MASTER_WIF_bm | TWI_MASTER_ARBLOST_bm)) == (TWI_MASTER_WIF_bm | TWI_MASTER_ARBLOST_bm))
 		if ((status & TWI_MASTER_BUSERR_bm) == TWI_MASTER_BUSERR_bm)
 			handleBusError();
 		else
 			handleArbitrationError();
-	} else if ((status & (TWI_MASTER_WIF_bm | TWI_MASTER_RXACK_bm))==(TWI_MASTER_WIF_bm | TWI_MASTER_RXACK_bm)) {
+	else if ((status & (TWI_MASTER_WIF_bm | TWI_MASTER_RXACK_bm))==(TWI_MASTER_WIF_bm | TWI_MASTER_RXACK_bm))
 		handleAddressNotAcknowledged();
-	} else if ((status & TWI_MASTER_RIF_bm) == TWI_MASTER_RIF_bm){
+	else if ((status & TWI_MASTER_RIF_bm) == TWI_MASTER_RIF_bm)
 			handleGetData();
-	} else if ((status & TWI_MASTER_WIF_bm) == TWI_MASTER_WIF_bm){
+	else if ((status & TWI_MASTER_WIF_bm) == TWI_MASTER_WIF_bm)
 		handleSendData();
-	}
+
 }

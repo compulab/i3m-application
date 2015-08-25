@@ -9,12 +9,14 @@
 
 void sendWritePackage(){
 	twi_package packageToWriteSend = {
-			.slaveAddress = 0x32,
-			.buffer[0] =  0x03,
+			.slaveAddress = TWI_WRITE_ADDRESS,
+			.buffer[0] =  0x43,
 			.buffer[1] = 0x3f,
 			.buffer[2] = 0xe2,
-			.buffer[3] = 0x2d,
-			.length = 4,
+			.buffer[3] = 0x3e,
+			.buffer[4] = 0x4f,
+			.buffer[5] = 0x53,
+			.length = 6,
 			.writeRequest = true
 	};
 	SendPackage(&packageToWriteSend);
@@ -22,8 +24,8 @@ void sendWritePackage(){
 
 void sendReadPackage(handleDataFunc updateData){
 	twi_package packageToRead = {
-			.slaveAddress = 0x31,
-			.buffer[0] =  0x03,
+			.slaveAddress = TWI_READ_ADDRESS,
+			.buffer[0] =  0x05,
 			.length = 1,
 			.writeRequest = false,
 			.handleData = updateData

@@ -76,12 +76,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * Support mail: avr@atmel.com
  */
 
-
-//
 #include "twi-slave.h"
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include "../config/conf-twi.h"
+
+#include "../config/conf_twi.h"
 #include "../debug.h"
 #include "eeprom.h"
 
@@ -133,20 +132,18 @@ void TWI_EndTransmission(){
 }
 
 void handleRead(uint8_t address){
-	if (slave_address == 0x31){
+	if (slave_address == TWI_READ_ADDRESS){
 		uint8_t data = twi_EEPROM_ReadByte(address);
 			TWI_SLAVE_BASE.DATA = data;
 	}
 	else{
-
 		TWI_SLAVE_BASE.DATA = 0xff;
-
 	}
 	++reg_address;
 }
 
 void handleWrite(uint8_t data){
-	if (slave_address == 0x32)
+	if (slave_address == TWI_WRITE_ADDRESS)
 		twi_EEPROM_WriteByte(reg_address,data);
 	++reg_address;
 }
@@ -192,39 +189,31 @@ void TWI_SlaveWriteDataHandler(){
 
 void TWI_SaveAddress(){
 	reg_address = TWI_SLAVE_BASE.DATA;
-	if (isReadRequest){
+	if (isReadRequest)
 		TWI_SlaveReadDataHandler();
-	} else {
+	 else
 		TWI_ACK();
-	}
 	TWI_CLEAR_DIF();
 }
 
 void TWI_interrupt_handler(){
 	uint8_t currentStatus = TWI_SLAVE_BASE.STATUS;
-	if (currentStatus & TWI_SLAVE_BUSERR_bm) {    		/* If bus error. */
+	if (currentStatus & TWI_SLAVE_BUSERR_bm)     		/* If bus error. */
 		TWI_EndTransmission();
-	}
-	else if (currentStatus & TWI_SLAVE_COLL_bm) { 		/* If transmit collision. */
+	else if (currentStatus & TWI_SLAVE_COLL_bm) 		/* If transmit collision. */
 		TWI_EndTransmission();
-	}
 	else if ((currentStatus & TWI_SLAVE_APIF_bm) && 	/* If address match. */
-			(currentStatus & TWI_SLAVE_AP_bm)) {
+			(currentStatus & TWI_SLAVE_AP_bm))
 		TWI_SlaveAddressMatchHandler();
-	}
-	else if (currentStatus & TWI_SLAVE_APIF_bm) {		/* If stop (only enabled through slave read transaction). */
+	else if (currentStatus & TWI_SLAVE_APIF_bm) 		/* If stop (only enabled through slave read transaction). */
 		TWI_SlaveStopHandler();
-	}
-	else if (currentStatus & TWI_SLAVE_DIF_bm) { 		/* If data interrupt. */
-		if (currentStatus & TWI_SLAVE_DIR_bm){
+	else if (currentStatus & TWI_SLAVE_DIF_bm) 		/* If data interrupt. */
+		if (currentStatus & TWI_SLAVE_DIR_bm)
 			TWI_SlaveReadDataHandler();
-		} else if (reg_address == UNSET_ADDRESS){
+		else if (reg_address == UNSET_ADDRESS)
 			TWI_SaveAddress();
-		}else{
+		else
 			TWI_SlaveWriteDataHandler();
-		}
-	}
-	else {												/* If unexpected state. */
+	else 												/* If unexpected state. */
 		TWI_EndTransmission();
-	}
 }

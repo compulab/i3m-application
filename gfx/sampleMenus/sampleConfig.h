@@ -73,9 +73,9 @@ cnf_menu  __attribute__((section (".configData")))  testMainMenuCnf = {
 
 struct cnf_blk  __attribute__((section (".configSec"))) sampleConfig = {
 	.signature = 0x40,
-	.size = 1,
+	.size = 2,
 	.menus[0] = &mainMenuCnf,
-//	.menus[1] = &subMenu
+	.menus[1] = &subMenuCnf
 	};
 
 

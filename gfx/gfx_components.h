@@ -9,7 +9,7 @@
 #define GFX_GFX_COMPONENTS_H_
 #include <stdbool.h>
 #include <stdint.h>
-#include "../utils.h"
+#include "../Fp-utils.h"
 
 typedef struct GFX_ITEM {
 	uint8_t x,y;
@@ -33,7 +33,6 @@ typedef struct GFX_INFORMATION_LABEL {
 	information_type info_type;
 	gfx_text text;
 } gfx_information_label;
-
 
 typedef struct GFX_BITMAP {
 	gfx_item postion;

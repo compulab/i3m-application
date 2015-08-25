@@ -12,7 +12,7 @@
 
 //#define DEBUG_MODE
 
-#define DELAY_TIME 1
+#define DELAY_TIME 0.01
 
 char debug[5];
 
@@ -32,8 +32,8 @@ char debug[5];
 					ssd1306_set_column_address(3); \
 					itoa(num,debug,16); \
 					ssd1306_write_text(debug); \
-					delay_s(DELAY_TIME); \
-					CLEAR
+					delay_s(DELAY_TIME);
+//					CLEAR
 
 #define MSG_dec(num)   ssd1306_set_page_address(6); \
 					ssd1306_set_column_address(3); \
@@ -47,7 +47,7 @@ char debug[5];
 					ssd1306_write_text(str); \
 		   			ssd1306_set_page_address(6); \
 					ssd1306_set_column_address(3); \
-					itoa(num,debug,10); \
+					itoa(num,debug,16); \
 					ssd1306_write_text(debug);  \
 					delay_s(DELAY_TIME); \
 					CLEAR

@@ -1,7 +1,5 @@
 #include "gfx_action_menu.h"
 #include "../../debug.h"
-#include "../menuFactory.h"
-
 
 void clearMenu(){
 	gfx_mono_generic_draw_filled_rect(0,0,128,64,GFX_PIXEL_CLR);
@@ -15,8 +13,7 @@ void gfx_action_menu_init(gfx_action_menu *actionMenu){
 }
 
 void showMenu(struct gfx_action_menu_t *menu,bool updateParent){
-	if (updateParent)
-		menu->parent = presentMenu;
+	if (updateParent) menu->parent = presentMenu;
 	gfx_action_menu_init(menu);
 }
 
@@ -41,8 +38,6 @@ void showSplash(struct gfx_mono_bitmap * splash){
 
 struct gfx_action_menu_t * menu;
 
-
-
 uint8_t gfx_action_menu_process_key(struct gfx_action_menu_t *actionMenu, uint8_t keycode){
 	if (keycode == GFX_MONO_MENU_KEYCODE_ENTER){
 		item_action selectedAction = actionMenu->actions[(actionMenu->menu)->current_selection];
@@ -64,14 +59,13 @@ uint8_t gfx_action_menu_process_key(struct gfx_action_menu_t *actionMenu, uint8_
 		}
 	} else if (keycode == GFX_MONO_MENU_KEYCODE_BACK) {
 		if (presentMenu->visible){
-			if (actionMenu->parent != NULL)
-				showMenu(actionMenu->parent,false);
-		}else
+			if (actionMenu->parent != NULL) showMenu(actionMenu->parent,false);
+		}else{
 				showThisMenu();
+		}
 	}else {
 		return gfx_mono_menu_process_key(actionMenu->menu,keycode);
 	}
-
 	return 0;
 }
 

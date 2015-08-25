@@ -3,7 +3,7 @@
 #define GFX_SAMPLEMENUS_SAMPLEMAINMENU_H_
 
 #include "../action_menu/gfx_action_menu.h"
-#include "../logos.h"
+#include "logos.h"
 #include "../sampleMenus/sampleSubMenu.h"
 
 /*
@@ -40,16 +40,6 @@ PROGMEM_STRING_T main_menu_strings[] = {
 	main_menu_5,
 	main_menu_6,
 };
-
-
-//
-//struct gfx_mono_bitmap  v_logo = {
-//	.type = GFX_MONO_BITMAP_PROGMEM,
-//	.width = v_width,
-//	.height = v_height,
-//	.data.progmem = v_bits
-//};
-
 
 
 /* Initialize Mono Menu */
@@ -107,7 +97,7 @@ cnf_gfx_image __attribute__((section (".configData"))) copmulabLogo = {
 		.bitmapProgmem = compulab_new,
 		.height = 32,
 		.width = 128,
-		.x = 30,
+		.x = 0,
 		.y = PAGE_SPACING*2,
 		.borderVisible = false
 };
@@ -153,13 +143,13 @@ cnf_action __attribute__((section (".configData"))) testLabelAction  = {
 
 cnf_action __attribute__((section (".configData"))) showSubMenuAction = {
 		.isFrame = false,
-		.menuId = SAMPLE_SUB_MENU,
+		.menuId = 1
 };
 
 cnf_frame __attribute__((section (".configData"))) doNothingFrame = {
 		.label_size = 0,
 		.information_size = 0,
-		.image_size = 0,
+		.image_size = 0
 };
 cnf_action __attribute__((section (".configData"))) doNothingAction = {
 		.isFrame = true,
@@ -208,7 +198,5 @@ cnf_menu   __attribute__((section (".configData")))mainMenuCnf = {
 //		/* Computer Voltage Settings */
 		.actions[5] = &voltageAction
 };
-
-
 
 #endif /* GFX_SAMPLEMENUS_SAMPLEMAINMENU_H_ */
