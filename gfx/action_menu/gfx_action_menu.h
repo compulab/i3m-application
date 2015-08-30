@@ -16,38 +16,38 @@
 #include "../../ASF/common/services/gfx_mono/sysfont.h"
 #include "../../config/cnf_blk_components.h"
 
-struct gfx_action_menu_t * presentMenu;
+struct gfx_action_menu *present_menu;
 
 
-typedef enum gfx_item_action_type_t {
+enum gfx_item_action_type {
 	ACTION_TYPE_NONE,
 	ACTION_TYPE_SHOW_MENU,
 	ACTION_TYPE_SHOW_FRAME
-} item_action_type;
+};
 
-typedef struct item_data_t {
+struct gfx_item_data {
 	PROGMEM_STRING_T title;
-	char * text;
-} item_data;
+	char *text;
+};
 
 
-typedef struct item_action_t {
-	item_action_type type;
+struct gfx_item_action {
+	enum gfx_item_action_type type;
 	uint8_t menuId;
-	struct gfx_action_menu_t * menu;
-	gfx_frame * frame;
-} item_action;
+	struct gfx_action_menu *menu;
+	struct gfx_frame *frame;
+};
 
 
-typedef struct gfx_action_menu_t {
-	struct gfx_mono_menu * menu;
+struct gfx_action_menu {
+	struct gfx_mono_menu *menu;
+	struct gfx_item_action *actions;
+	struct gfx_action_menu *parent;
 	uint8_t id;
 	bool visible;
-	item_action * actions;
-	struct gfx_action_menu_t * parent;
-}gfx_action_menu;
+};
 
-void gfx_action_menu_init(struct gfx_action_menu_t *actionMenu);
-uint8_t gfx_action_menu_process_key(struct gfx_action_menu_t *actionMenu, uint8_t keycode);
+void gfx_action_menu_init(struct gfx_action_menu *actionMenu);
+uint8_t gfx_action_menu_process_key(struct gfx_action_menu *actionMenu, uint8_t keycode);
 
 #endif /* GFX_GFX_ACTION_MENU_H_ */

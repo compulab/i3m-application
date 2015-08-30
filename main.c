@@ -14,49 +14,49 @@
 
 ISR(TWIE_TWIS_vect)
 {
-	TWI_interrupt_handler();
+	twi_slave_interrupt_handler();
 }
 
 ISR(TWIC_TWIM_vect){
-	InterruptHandler();
+	interrupt_handler();
 }
 
 
 ISR(PORTF_INT0_vect){
-	changePowerState();
+	update_power_state();
 }
 
 ISR(TCC0_OVF_vect){
 	menu_handler();
 }
 
-void initMenu(){
-	loadConfigBlock();
-	setMenuById(&presentMenu,0);
-	gfx_action_menu_init(presentMenu);
+void init_menu(){
+	load_config_block();
+	set_menu_by_id(&present_menu,0);
+	gfx_action_menu_init(present_menu);
 }
 
-void powerState_interrupts_init(){
+void power_state_interrupts_init(){
 	PORTF.INTCTRL =  PORT_INT0LVL_MED_gc;
 	PORTF.INT0MASK = PIN0_bm | PIN1_bm |PIN2_bm;
-	changePowerState();
+	update_power_state();
 }
 
 
 
-void updateData(uint8_t data){
+void update_data(uint8_t data){
 	MSG_T_N("data updated:" ,data)
 	delay_s(3);
-	initMenu();
+	init_menu();
 }
 
 void power_state_init(){
-	powerState_interrupts_init();
+	power_state_interrupts_init();
 	uint8_t sreg = SREG;
-	uint8_t pinCfg =(uint8_t)  PORT_ISC_BOTHEDGES_gc | PORT_OPC_PULLUP_gc;
+	uint8_t pin_cfg =(uint8_t)  PORT_ISC_BOTHEDGES_gc | PORT_OPC_PULLUP_gc;
 	cli();
 	PORTCFG.MPCMASK = PIN0_bm | PIN1_bm | PIN2_bm;
-	PORTF.PIN0CTRL = pinCfg;
+	PORTF.PIN0CTRL = pin_cfg;
 	SREG = sreg;
 }
 
@@ -73,17 +73,17 @@ void init(){
 	twi_master_init();
 }
 
-void testTWI(){
-	sendWritePackage();
+void test_twi(){
+	send_write_package();
 	delay_s(1);
-	sendReadPackage(updateData);
+	send_read_package(update_data);
 }
 
 
 
 int main(void){
 	init();
-	initMenu();
+	init_menu();
 //	testTWI();
 //	delay_s(5);
 //	initMenu();

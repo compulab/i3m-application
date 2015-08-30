@@ -7,12 +7,12 @@
 
 #include "eeprom.h"
 
-void twi_EEPROM_WriteByte(uint8_t regAddr, uint8_t value)
+void eeprom_write_byte(uint8_t reg_addr, uint8_t value)
 {
-	EEPROM_WriteByte((unsigned char)(regAddr / EEPROM_BYTES_IN_PAGE) , (unsigned char)(regAddr & EEPROM_BYTE_ADDRESS_MASK), value );
+	EEPROM_WriteByte((unsigned char)(reg_addr / EEPROM_BYTES_IN_PAGE) , (unsigned char)(reg_addr & EEPROM_BYTE_ADDRESS_MASK), value);
 }
 
-uint8_t twi_EEPROM_ReadByte(uint8_t regAddr)
+uint8_t eeprom_read_byte(uint8_t reg_addr)
 {
-	return EEPROM_ReadByte((unsigned char)(regAddr / EEPROM_BYTES_IN_PAGE), (unsigned char)(regAddr & EEPROM_BYTE_ADDRESS_MASK));
+	return EEPROM_ReadByte((unsigned char)(reg_addr / EEPROM_BYTES_IN_PAGE), (unsigned char)(reg_addr & EEPROM_BYTE_ADDRESS_MASK));
 }

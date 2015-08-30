@@ -6,22 +6,22 @@
  */
 #include "Fp-utils.h"
 
-power_state currentPowerState = POWER_ON;
+enum power_state current_power_state = POWER_ON;
 
-void changePowerState(){
+void update_power_state(){
 	if (gpio_pin_is_low(FP_S5))
-		currentPowerState = POWER_OFF;
+		current_power_state = POWER_OFF;
 	else if (gpio_pin_is_low(FP_S4))
-		currentPowerState = POWER_STD;
+		current_power_state = POWER_STD;
 	else if (gpio_pin_is_low(FP_S3))
-		currentPowerState = POWER_STR;
+		current_power_state = POWER_STR;
 	else
-		currentPowerState = POWER_ON;
+		current_power_state = POWER_ON;
 }
 
-void showState(char ** data){
-	char * state = "";
-	switch (currentPowerState){
+void show_state(char **data){
+	char *state = "";
+	switch (current_power_state){
 	case POWER_ON:
 		state = "Computer is on";
 		break;
@@ -38,14 +38,14 @@ void showState(char ** data){
 	*data = state;
 }
 
-void updateDataByType(information_type type, char ** data){
+void update_data_by_type(enum information_type type, char **data){
 	func_ptr ptr= NULL;
 	switch (type){
 	case SHOW_VOLTAGE:
 		ptr = setPowerString;
 		break;
 	case SHOW_POWER_STATE:
-		ptr = showState;
+		ptr = show_state;
 		break;
 	case SHOW_CPU_TEMPERTURE:
 	case SHOW_GPU_TEMPERTURE:

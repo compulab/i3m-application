@@ -49,45 +49,45 @@ struct gfx_mono_menu  __attribute__((section (".configData"))) subTestMenu = {
 };
 
 
-cnf_gfx_label __attribute__((section (".configData"))) titleLabel = {
+struct cnf_label __attribute__((section (".configData"))) titleLabel = {
 		.text = "Testing...",
 		.x=0,
 		.y=0,
-		.borderVisible = false
+		.border_visible = false
 };
 
-cnf_gfx_label __attribute__((section (".configData"))) dataLabel = {
+struct cnf_label __attribute__((section (".configData"))) dataLabel = {
 		.text = "1.. 2.. 3..",
 		.x=0,
 		.y=40,
-		.borderVisible = false
+		.border_visible = false
 };
 
-cnf_frame __attribute__((section (".configData"))) testDataFrame = {
+struct cnf_frame __attribute__((section (".configData"))) testDataFrame = {
 		.image_size = 0,
 		.information_size = 0,
 		.label_size = 2,
-		.label[0] = &titleLabel,
-		.label[1] = &dataLabel
+		.labels[0] = &titleLabel,
+		.labels[1] = &dataLabel
 };
 
-cnf_action __attribute__((section (".configData"))) testDataAction = {
-		.isFrame = true,
+struct cnf_action __attribute__((section (".configData"))) testDataAction = {
+		.is_frame = true,
 		.frame = &testDataFrame
 };
 
-cnf_frame __attribute__((section (".configData"))) doNothingSubFrame = {
+struct cnf_frame __attribute__((section (".configData"))) doNothingSubFrame = {
 		.image_size = 0,
 		.information_size = 0,
 		.label_size = 0
 };
 
-cnf_action __attribute__((section (".configData")))  doNothingSubAction = {
-		.isFrame = true,
+struct cnf_action __attribute__((section (".configData")))  doNothingSubAction = {
+		.is_frame = true,
 		.frame = &doNothingSubFrame
 };
 
-cnf_menu __attribute__((section (".configData"))) subMenuCnf = {
+struct cnf_menu __attribute__((section (".configData"))) subMenuCnf = {
 		.menu = &subTestMenu,
 		.actions[0] = &testDataAction,
 		.actions[1] = &doNothingSubAction

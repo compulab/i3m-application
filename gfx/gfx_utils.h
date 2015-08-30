@@ -15,8 +15,8 @@
 #include "../config/cnf_blk_components.h"
 #include "gfx_components.h"
 
-void gfx_frame_init(gfx_frame * frame, cnf_frame * cnf_frame);
+void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame);
 
-void gfx_frame_draw(gfx_frame * frame);
+void gfx_frame_draw(struct gfx_frame *frame);
 
 #endif /* GFX_GFX_UTILS_H_ */

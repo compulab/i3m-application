@@ -13,54 +13,54 @@
 #include "../config/cnf_blk_components.h"
 
 #define MAX_MENUS 15
-#define MAX_INFORMATION_LABEL 3
+#define MAX_INFORMATION 3
 #define MAX_LABEL 7
 #define MAX_IMAGE 4
 #define MAX_ACTIONS 6
 
 struct cnf_blk  {
+	struct cnf_menu *menus[MAX_MENUS];
 	uint8_t signature;
 	uint8_t size;
-	struct CNF_MENU_T * menus[MAX_MENUS];
 	uint32_t reserved[24];
 };
 
 
-typedef struct CNF_LABEL_T {
-	char * text;
-	uint8_t x,y;
-	bool borderVisible;
-} cnf_gfx_label;
-
-typedef struct CNF_IMAGE_T {
-	gfx_mono_color_t PROGMEM_T * bitmapProgmem;
-	uint8_t height,width;
-	uint8_t x,y;
-	bool borderVisible;
-}cnf_gfx_image ;
-
-typedef struct CNF_INFORMATION_LABEL_T {
-	information_type info_type;
+struct cnf_label{
+	char *text;
 	uint8_t x, y;
-	bool borderVisible;
-} cnf_gfx_information_label;
+	bool border_visible;
+};
 
-typedef struct CNF_FRAME_T {
-	cnf_gfx_information_label * information_label[MAX_INFORMATION_LABEL];
-	cnf_gfx_label * label[MAX_LABEL];
-	cnf_gfx_image * image[MAX_IMAGE];
+struct cnf_image{
+	gfx_mono_color_t PROGMEM_T *bitmapProgmem;
+	uint8_t height, width;
+	uint8_t x, y;
+	bool border_visible;
+};
+
+struct cnf_info{
+	enum information_type info_type;
+	uint8_t x, y;
+	bool border_visible;
+};
+
+struct cnf_frame{
+	struct cnf_info *informations[MAX_INFORMATION];
+	struct cnf_label *labels[MAX_LABEL];
+	struct cnf_image *images[MAX_IMAGE];
 	uint8_t information_size,label_size,image_size;
-}cnf_frame;
+};
 
-typedef struct CNF_ACTION_T {
-	bool isFrame;
-	cnf_frame * frame;
+struct cnf_action{
+	struct cnf_frame *frame;
+	bool is_frame;
 	uint8_t menuId;
-} cnf_action;
+};
 
-typedef struct CNF_MENU_T {
-	struct gfx_mono_menu * menu;
-	cnf_action * actions[MAX_ACTIONS];
-} cnf_menu;
+struct cnf_menu{
+	struct gfx_mono_menu *menu;
+	struct cnf_action *actions[MAX_ACTIONS];
+};
 
 #endif /* CONFIG_CNF_BLK_COMPONENTS_H_ */

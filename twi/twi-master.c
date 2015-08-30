@@ -10,12 +10,10 @@
 #include "../debug.h"
 
 
-#define MAX_RETRY 2
-
-twi_package currentPackage;
-int sendIndex;
-int retryingCount;
-bool isExacuting;
+struct twi_package current_package;
+int send_index;
+int retrying_count;
+bool is_exacuting;
 
 void twi_master_init()
 {
@@ -26,92 +24,89 @@ void twi_master_init()
 }
 
 void reset(){
-	sendIndex = 0 ;
-	retryingCount = 0;
-	isExacuting = false;
+	send_index = 0;
+	retrying_count = 0;
+	is_exacuting = false;
 }
 
-void sendAddress(){
-	uint8_t address =  currentPackage.slaveAddress << 1;
+void send_address(){
+	uint8_t address =  current_package.slave_address << 1;
 	TWI_MASTER_BASE.ADDR = address;
 	TWI_MASTER_BASE.CTRLC = TWI_MASTER_CMD_REPSTART_gc;
 }
 
-void SendReadRequest(){
-	uint8_t address =  currentPackage.slaveAddress << 1;
-	address = address | 0x01;
+void send_read_request(){
+	uint8_t address =  current_package.slave_address << 1;
+	address = address | READ_REQUEST;
 	TWI_MASTER_BASE.ADDR = address;
 	TWI_MASTER_BASE.CTRLC = TWI_MASTER_CMD_REPSTART_gc;
 }
 
-void SendPackage(twi_package *package){
+void send_package(struct twi_package *package){
 	reset();
-	currentPackage = *package;
-	sendAddress();
+	current_package = *package;
+	send_address();
 }
 
-void SendAck(){
+void send_ack(){
 	TWI_MASTER_BASE.CTRLC = TWI_MASTER_ACKACT_bm;
 }
 
-void SendStop(){
+void send_stop(){
 	TWI_MASTER_BASE.CTRLC = TWI_MASTER_CMD_gm;
 }
 
-void SendNextData(){
-	uint8_t data = currentPackage.buffer[sendIndex++];
+void send_next_data(){
+	uint8_t data = current_package.buffer[send_index++];
 	TWI_MASTER_BASE.DATA = data;
-	SendAck();
+	send_ack();
 }
 
 
-void handleGetData(){
+void handle_get_data(){
 	uint8_t data = TWI_MASTER_BASE.DATA;
-	currentPackage.handleData(data);
-	SendStop();
+	current_package.handle_data_received(data);
+	send_stop();
 }
 
-
-void handleSendData(){
-	if (currentPackage.length > sendIndex){
-		SendNextData();
+void handle_send_data(){
+	if (current_package.length > send_index){
+		send_next_data();
 	} else {
-		SendStop();
-		if (!currentPackage.writeRequest) SendReadRequest();
+		send_stop();
+		if (!current_package.is_write_request) send_read_request();
 	}
-	isExacuting = true;
+	is_exacuting = true;
 }
 
-
-void handleError(){
-	if (retryingCount < MAX_RETRY){
-		retryingCount++;
-		sendAddress();
+void handle_error(){
+	if (retrying_count < MAX_RETRY){
+		retrying_count++;
+		send_address();
 	}
 }
 
-void handleBusError(){
-	handleError();
+void handle_bus_error(){
+	handle_error();
 }
 
-void handleArbitrationError(){
-	handleError();
+void handle_arbitration_error(){
+	handle_error();
 }
 
-void handleAddressNotAcknowledged(){}
+void handle_address_not_acknowledged(){}
 
-void InterruptHandler(){
+void interrupt_handler(){
 	uint8_t status = TWI_MASTER_BASE.STATUS;
 	if ((status & (TWI_MASTER_WIF_bm | TWI_MASTER_ARBLOST_bm)) == (TWI_MASTER_WIF_bm | TWI_MASTER_ARBLOST_bm))
 		if ((status & TWI_MASTER_BUSERR_bm) == TWI_MASTER_BUSERR_bm)
-			handleBusError();
+			handle_bus_error();
 		else
-			handleArbitrationError();
+			handle_arbitration_error();
 	else if ((status & (TWI_MASTER_WIF_bm | TWI_MASTER_RXACK_bm))==(TWI_MASTER_WIF_bm | TWI_MASTER_RXACK_bm))
-		handleAddressNotAcknowledged();
+		handle_address_not_acknowledged();
 	else if ((status & TWI_MASTER_RIF_bm) == TWI_MASTER_RIF_bm)
-			handleGetData();
+			handle_get_data();
 	else if ((status & TWI_MASTER_WIF_bm) == TWI_MASTER_WIF_bm)
-		handleSendData();
-
+		handle_send_data();
 }

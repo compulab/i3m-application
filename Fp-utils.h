@@ -14,29 +14,27 @@
 
 typedef void (*func_ptr)(char **);
 
-typedef enum INFORMATION_t {
+enum information_type{
 	SHOW_POWER_STATE,
 	SHOW_VOLTAGE,
 	SHOW_CPU_TEMPERTURE,
 	SHOW_GPU_TEMPERTURE
-} information_type;
+};
 
 
-typedef enum POWER_STATE_T {
+enum power_state{
 	POWER_ON,
 	POWER_STR,
 	POWER_STD,
 	POWER_OFF
-} power_state;
+};
 
-extern power_state currentPowerState;
+extern enum power_state current_power_state;
 
-void changePowerState();
+void update_power_state();
 
-void showState(char ** data);
+void show_state(char **data);
 
-
-void updateDataByType(information_type type, char ** data);
-
+void update_data_by_type(enum information_type type, char **data);
 
 #endif /* FP_UTILS_H_ */

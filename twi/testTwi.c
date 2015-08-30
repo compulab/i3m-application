@@ -7,9 +7,9 @@
 
 #include "testTwi.h"
 
-void sendWritePackage(){
-	twi_package packageToWriteSend = {
-			.slaveAddress = TWI_WRITE_ADDRESS,
+void send_write_package(){
+	struct twi_package package_to_write = {
+			.slave_address = TWI_WRITE_ADDRESS,
 			.buffer[0] =  0x43,
 			.buffer[1] = 0x3f,
 			.buffer[2] = 0xe2,
@@ -17,18 +17,18 @@ void sendWritePackage(){
 			.buffer[4] = 0x4f,
 			.buffer[5] = 0x53,
 			.length = 6,
-			.writeRequest = true
+			.is_write_request = true
 	};
-	SendPackage(&packageToWriteSend);
+	send_package(&package_to_write);
 }
 
-void sendReadPackage(handleDataFunc updateData){
-	twi_package packageToRead = {
-			.slaveAddress = TWI_READ_ADDRESS,
+void send_read_package(handle_data_func update_data){
+	struct twi_package package_to_read = {
+			.slave_address = TWI_READ_ADDRESS,
 			.buffer[0] =  0x05,
 			.length = 1,
-			.writeRequest = false,
-			.handleData = updateData
+			.is_write_request = false,
+			.handle_data_received = update_data
 	};
-	SendPackage(&packageToRead);
+	send_package(&package_to_read);
 }

@@ -19,13 +19,13 @@
 
 #define CONFIG_SECTION_ADDRESS 0x8000
 
-gfx_action_menu ** action_menus;
+struct gfx_action_menu **action_menus;
 
-void loadConfigBlock();
+void load_config_block();
 
-void setMenuById(struct gfx_action_menu_t ** menu, uint8_t index);
+void set_menu_by_id(struct gfx_action_menu **menu, uint8_t index);
 
-void menu_handler(void);
+void menu_handler();
 
 
 #endif /* GFX_MENU_HANDLER_H_ */

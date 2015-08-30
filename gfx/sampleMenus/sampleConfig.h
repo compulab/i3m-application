@@ -13,35 +13,35 @@
 
 
 
-cnf_gfx_label  __attribute__((section (".configData"))) title = {
+struct cnf_label __attribute__((section (".configData"))) title = {
 			.text = "Computer Voltage",
 			.x = 10,
 			.y = 0,
-			.borderVisible = false
+			.border_visible = false
 };
 
-cnf_gfx_image  __attribute__((section (".configData"))) voltageImageTest = {
+struct cnf_image __attribute__((section (".configData"))) voltageImageTest = {
 		.bitmapProgmem = v_bits,
 		.height = v_height,
 		.width = v_width,
 		.x = 30,
 		.y = PAGE_SPACING*2,
-		.borderVisible = false
+		.border_visible = false
 
 };
-cnf_gfx_information_label  __attribute__((section (".configData"))) voltageInfoTest = {
+struct cnf_info __attribute__((section (".configData"))) voltageInfoTest = {
 		.info_type = SHOW_VOLTAGE,
 		.x = 45,
 		.y = v_height+PAGE_SPACING+7,
-		.borderVisible = false
+		.border_visible = false
 };
-cnf_frame  __attribute__((section (".configData"))) testFrame = {
+struct cnf_frame  __attribute__((section (".configData"))) testFrame = {
 		.label_size = 1,
 		.information_size = 1,
 		.image_size = 1,
-		.label[0] = &title,
-		.image[0] = & voltageImageTest,
-		.information_label[0] = &voltageInfoTest
+		.labels[0] = &title,
+		.images[0] = & voltageImageTest,
+		.informations[0] = &voltageInfoTest
 };
 
 PROGMEM_STRING_T test_main_menu_strings[] = {
@@ -58,12 +58,12 @@ struct gfx_mono_menu  __attribute__((section (".configData"))) testMonoMenu = {
 };
 
 
-cnf_action  __attribute__((section (".configData"))) testAction = {
-		.isFrame = true,
+struct cnf_action  __attribute__((section (".configData"))) testAction = {
+		.is_frame = true,
 		.frame = &testFrame
 };
 
-cnf_menu  __attribute__((section (".configData")))  testMainMenuCnf = {
+struct cnf_menu  __attribute__((section (".configData")))  testMainMenuCnf = {
 		.menu = &testMonoMenu,
 		/* Splash screen settings */
 		.actions[0] = &testAction,

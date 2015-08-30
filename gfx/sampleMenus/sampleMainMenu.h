@@ -51,139 +51,139 @@ struct gfx_mono_menu  __attribute__((section (".configData"))) testMenu = {
 	.current_selection = 0
 };
 
-cnf_gfx_information_label __attribute__((section (".configData"))) voltageInfo = {
+struct cnf_info __attribute__((section (".configData"))) voltageInfo = {
 		.info_type = SHOW_VOLTAGE,
 		.x = 44,
 		.y = 46 + PAGE_SPACING,
-		.borderVisible = false
+		.border_visible = false
 };
 
-cnf_gfx_image __attribute__((section (".configData"))) voltageImage = {
+struct cnf_image __attribute__((section (".configData"))) voltageImage = {
 	.bitmapProgmem = v_bits,
 	.height = v_height,
 	.width = v_width,
 	.x = 30,
 	.y = PAGE_SPACING * 2,
-	.borderVisible = false
+	.border_visible = false
 };
 
-cnf_gfx_label __attribute__((section (".configData"))) voltageTitle = {
+struct cnf_label __attribute__((section (".configData"))) voltageTitle = {
 	.text = "Computer Voltage",
 	.x = 0,
 	.y = 0,
-	.borderVisible = false
+	.border_visible = false
 };
 
-cnf_frame __attribute__((section (".configData"))) voltageFrame = {
+struct cnf_frame __attribute__((section (".configData"))) voltageFrame = {
 		.label_size = 1,
 		.information_size = 1,
 		.image_size = 1,
-		.label[0] = &voltageTitle,
-		.information_label[0] = &voltageInfo,
-		.image[0] = &voltageImage
+		.labels[0] = &voltageTitle,
+		.informations[0] = &voltageInfo,
+		.images[0] = &voltageImage
 };
 
-cnf_action __attribute__((section (".configData"))) voltageAction = {
-	.isFrame = true,
+struct cnf_action __attribute__((section (".configData"))) voltageAction = {
+	.is_frame = true,
 	.frame = &voltageFrame
 };
 
-cnf_action __attribute__((section (".configData"))) subMenuAction = {
-	.isFrame = false,
+struct cnf_action __attribute__((section (".configData"))) subMenuAction = {
+	.is_frame = false,
 	.menuId = SAMPLE_SUB_MENU
 };
 
-cnf_gfx_image __attribute__((section (".configData"))) copmulabLogo = {
+struct cnf_image __attribute__((section (".configData"))) copmulabLogo = {
 		.bitmapProgmem = compulab_new,
 		.height = 32,
 		.width = 128,
 		.x = 0,
 		.y = PAGE_SPACING*2,
-		.borderVisible = false
+		.border_visible = false
 };
 
-cnf_frame __attribute__((section (".configData"))) compulabLogoFrame = {
+struct cnf_frame __attribute__((section (".configData"))) compulabLogoFrame = {
 		.label_size = 0,
 		.information_size = 0,
 		.image_size = 1,
-		.image[0] = &copmulabLogo
+		.images[0] = &copmulabLogo
 };
 
-cnf_action  __attribute__((section (".configData"))) compulabLogoAction = {
-		.isFrame = true,
+struct cnf_action  __attribute__((section (".configData"))) compulabLogoAction = {
+		.is_frame = true,
 		.frame = &compulabLogoFrame
 };
 
-cnf_gfx_label __attribute__((section (".configData"))) testTitle = {
+struct cnf_label __attribute__((section (".configData"))) testTitle = {
 		.text = "Testing ...",
 		.x = 0,
 		.y = PAGE_SPACING*4,
-		.borderVisible = false
+		.border_visible = false
 };
 
-cnf_gfx_label __attribute__((section (".configData"))) testDataLabel = {
+struct cnf_label __attribute__((section (".configData"))) testDataLabel = {
 		.x = 0,
 		.y = PAGE_SPACING*2,
-		.borderVisible = false,
+		.border_visible = false,
 		.text = "Test Data"
 };
 
-cnf_frame __attribute__((section (".configData"))) testLabelFrame = {
+struct cnf_frame __attribute__((section (".configData"))) testLabelFrame = {
 		.label_size = 2,
 		.information_size = 0,
 		.image_size = 0,
-		.label[0] = &testTitle,
-		.label[1] = &testDataLabel
+		.labels[0] = &testTitle,
+		.labels[1] = &testDataLabel
 };
 
-cnf_action __attribute__((section (".configData"))) testLabelAction  = {
-		.isFrame = true,
+struct cnf_action __attribute__((section (".configData"))) testLabelAction  = {
+		.is_frame = true,
 		.frame = &testLabelFrame
 };
 
-cnf_action __attribute__((section (".configData"))) showSubMenuAction = {
-		.isFrame = false,
+struct cnf_action __attribute__((section (".configData"))) showSubMenuAction = {
+		.is_frame = false,
 		.menuId = 1
 };
 
-cnf_frame __attribute__((section (".configData"))) doNothingFrame = {
+struct cnf_frame __attribute__((section (".configData"))) doNothingFrame = {
 		.label_size = 0,
 		.information_size = 0,
 		.image_size = 0
 };
-cnf_action __attribute__((section (".configData"))) doNothingAction = {
-		.isFrame = true,
+struct cnf_action __attribute__((section (".configData"))) doNothingAction = {
+		.is_frame = true,
 		.frame = &doNothingFrame
 };
 
-cnf_gfx_label __attribute__((section (".configData"))) powerStateTitle = {
+struct cnf_label __attribute__((section (".configData"))) powerStateTitle = {
 		.text = "Computer Power State",
 		.x = 0,
 		.y = 0,
-		.borderVisible = false
+		.border_visible = false
 };
 
-cnf_gfx_information_label __attribute__((section (".configData"))) powerStateInfo = {
+struct cnf_info __attribute__((section (".configData"))) powerStateInfo = {
 		.info_type = SHOW_POWER_STATE,
 		.x = 0,
 		.y = 45+PAGE_SPACING,
-		.borderVisible = false
+		.border_visible = false
 };
 
-cnf_frame __attribute__((section (".configData"))) powerStateFrame = {
+struct cnf_frame __attribute__((section (".configData"))) powerStateFrame = {
 		.label_size = 1,
 		.information_size = 1,
 		.image_size = 0,
-		.label[0] = & powerStateTitle,
-		.information_label[0] = &powerStateInfo
+		.labels[0] = & powerStateTitle,
+		.informations[0] = &powerStateInfo
 };
 
-cnf_action __attribute__((section (".configData"))) powerStateAction = {
-		.isFrame = true,
+struct cnf_action __attribute__((section (".configData"))) powerStateAction = {
+		.is_frame = true,
 		.frame = &powerStateFrame
 };
 
-cnf_menu   __attribute__((section (".configData")))mainMenuCnf = {
+struct cnf_menu   __attribute__((section (".configData")))mainMenuCnf = {
 		.menu = &testMenu,
 		/* Splash screen settings */
 		.actions[0] = &compulabLogoAction,

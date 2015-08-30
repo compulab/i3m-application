@@ -10,26 +10,25 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-
 #include "../config/conf_twi.h"
 
-typedef void (*handleDataFunc)(uint8_t);
 
+#define MAX_RETRY 2
+#define READ_REQUEST 0x01
 #define TWI_BAUD(F_SYS, F_TWI) ((F_SYS / (2 * F_TWI)) - 5)
 
-typedef struct TWI_PACKAGE_t{
-	uint8_t slaveAddress;
+typedef void (*handle_data_func)(uint8_t);
+
+struct twi_package{
+	uint8_t slave_address;
 	uint8_t buffer[EEPROM_BYTES_IN_PAGE];
 	uint8_t length;
-	bool writeRequest;
-	handleDataFunc handleData;
-} twi_package;
+	bool is_write_request;
+	handle_data_func handle_data_received;
+};
 
-void SendPackage(twi_package *package);
-void InterruptHandler();
+void send_package(struct twi_package *package);
+void interrupt_handler();
 void twi_master_init();
-
-void handleReadInterrupt(void);
-void handleWriteInterrupt(void);
 
 #endif /* TWI_TWI_MASTER_H_ */
