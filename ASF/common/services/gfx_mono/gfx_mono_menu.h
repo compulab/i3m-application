@@ -117,8 +117,8 @@ extern "C" {
 
 /** Menu struct */
 struct gfx_mono_menu {
-	PROGMEM_STRING_T title;
-	PROGMEM_STRING_T *strings;
+	char * title;
+	char *strings[6];
 	uint8_t num_elements;
 	uint8_t current_selection;
 	uint8_t current_page;

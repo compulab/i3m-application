@@ -8,7 +8,8 @@
 
 enum power_state current_power_state = POWER_ON;
 
-void update_power_state(){
+void update_power_state()
+{
 	if (gpio_pin_is_low(FP_S5))
 		current_power_state = POWER_OFF;
 	else if (gpio_pin_is_low(FP_S4))
@@ -19,7 +20,8 @@ void update_power_state(){
 		current_power_state = POWER_ON;
 }
 
-void show_state(char **data){
+void set_state(char **data)
+{
 	char *state = "";
 	switch (current_power_state){
 	case POWER_ON:
@@ -38,17 +40,40 @@ void show_state(char **data){
 	*data = state;
 }
 
-void update_data_by_type(enum information_type type, char **data){
+void set_temp_string(char **str, uint8_t temp)
+{
+
+}
+
+void set_gpu_updated_temp(char **data)
+{
+	uint8_t temp = computer_data.gpu_temp;
+	set_temp_string(data,temp);
+}
+
+void set_cpu_updated_temp(char **data)
+{
+	uint8_t temp = computer_data.cpu_temp;
+	set_temp_string(data,temp);
+}
+
+void update_data_by_type(enum information_type type, char **data)
+{
 	func_ptr ptr= NULL;
 	switch (type){
 	case SHOW_VOLTAGE:
-		ptr = setPowerString;
+		ptr = set_voltage_data;
 		break;
 	case SHOW_POWER_STATE:
-		ptr = show_state;
+		ptr = set_state;
 		break;
 	case SHOW_CPU_TEMPERTURE:
+		ptr = set_cpu_updated_temp;
+		break;
 	case SHOW_GPU_TEMPERTURE:
+		ptr = set_gpu_updated_temp;
+		break;
+	default:
 		break;
 	}
 	if (ptr != NULL)

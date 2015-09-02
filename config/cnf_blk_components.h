@@ -7,16 +7,22 @@
 
 #ifndef CONFIG_CNF_BLK_COMPONENTS_H_
 #define CONFIG_CNF_BLK_COMPONENTS_H_
-#include "../asf.h"
-#include "../gfx/action_menu/gfx_action_menu.h"
-#include "../gfx/gfx_components.h"
-#include "../config/cnf_blk_components.h"
+
+#include <stdbool.h>
+#include <avr/pgmspace.h>
+#include "../Fp-utils.h"
+typedef uint8_t gfx_mono_color_t;
 
 #define MAX_MENUS 15
 #define MAX_INFORMATION 3
 #define MAX_LABEL 7
 #define MAX_IMAGE 4
 #define MAX_ACTIONS 6
+#define MAX_TITLES 6
+
+struct cnf_menu_titles {
+	char * titles[MAX_TITLES];
+};
 
 struct cnf_blk  {
 	struct cnf_menu *menus[MAX_MENUS];
@@ -33,7 +39,7 @@ struct cnf_label{
 };
 
 struct cnf_image{
-	gfx_mono_color_t PROGMEM_T *bitmapProgmem;
+	gfx_mono_color_t *bitmapProgmem;
 	uint8_t height, width;
 	uint8_t x, y;
 	bool border_visible;
@@ -41,6 +47,7 @@ struct cnf_image{
 
 struct cnf_info{
 	enum information_type info_type;
+	uint8_t information;
 	uint8_t x, y;
 	bool border_visible;
 };
@@ -54,7 +61,7 @@ struct cnf_frame{
 
 struct cnf_action{
 	struct cnf_frame *frame;
-	bool is_frame;
+	enum action_type type;
 	uint8_t menuId;
 };
 

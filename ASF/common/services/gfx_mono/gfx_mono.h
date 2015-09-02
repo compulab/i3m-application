@@ -103,7 +103,8 @@ enum gfx_mono_bitmap_type {
 	/** Bitmap stored in SRAM */
 	GFX_MONO_BITMAP_RAM,
 	/** Bitmap stored in progmem */
-	GFX_MONO_BITMAP_PROGMEM
+	GFX_MONO_BITMAP_PROGMEM,
+	GFX_MONO_BITMAP_SECTION
 };
 
 ///* Cannot be moved to top, as they use the bitmap and color enums. */

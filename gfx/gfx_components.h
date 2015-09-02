@@ -31,6 +31,7 @@ struct gfx_label {
 struct gfx_information {
 	struct gfx_item postion;
 	enum information_type info_type;
+	uint8_t info_data;
 	struct gfx_text text;
 };
 

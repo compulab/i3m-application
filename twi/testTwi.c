@@ -7,9 +7,10 @@
 
 #include "testTwi.h"
 
-void send_write_package(){
+void send_write_package()
+{
 	struct twi_package package_to_write = {
-			.slave_address = TWI_WRITE_ADDRESS,
+			.slave_address = TWI_EEPROM_ADDRESS,
 			.buffer[0] =  0x43,
 			.buffer[1] = 0x3f,
 			.buffer[2] = 0xe2,
@@ -22,9 +23,10 @@ void send_write_package(){
 	send_package(&package_to_write);
 }
 
-void send_read_package(handle_data_func update_data){
+void send_read_package(handle_data_func update_data)
+{
 	struct twi_package package_to_read = {
-			.slave_address = TWI_READ_ADDRESS,
+			.slave_address = TWI_EEPROM_ADDRESS,
 			.buffer[0] =  0x05,
 			.length = 1,
 			.is_write_request = false,

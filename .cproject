@@ -52,7 +52,7 @@
 							<tool id="de.innot.avreclipse.tool.archiver.winavr.base.674207082" name="AVR Archiver" superClass="de.innot.avreclipse.tool.archiver.winavr.base"/>
 							<tool id="de.innot.avreclipse.tool.objdump.winavr.app.release.851998822" name="AVR Create Extended Listing" superClass="de.innot.avreclipse.tool.objdump.winavr.app.release"/>
 							<tool id="de.innot.avreclipse.tool.objcopy.flash.winavr.app.release.1731183415" name="AVR Create Flash image" superClass="de.innot.avreclipse.tool.objcopy.flash.winavr.app.release">
-								<option id="de.innot.avreclipse.objcopy.option.flash.addopts.1807317945" name="Additional Options for objcopy" superClass="de.innot.avreclipse.objcopy.option.flash.addopts" value="-j .text -j .data -j .configSec -j  .configData" valueType="string"/>
+								<option id="de.innot.avreclipse.objcopy.option.flash.addopts.1807317945" name="Additional Options for objcopy" superClass="de.innot.avreclipse.objcopy.option.flash.addopts" value="-j .text -j .data -R .configSec -R .configData" valueType="string"/>
 								<option id="de.innot.avreclipse.objcopy.option.flash.stdopts.859040854" name="Options to create flash image" superClass="de.innot.avreclipse.objcopy.option.flash.stdopts" value="-O ihex" valueType="string"/>
 							</tool>
 							<tool id="de.innot.avreclipse.tool.objcopy.eeprom.winavr.app.release.162219157" name="AVR Create EEPROM image" superClass="de.innot.avreclipse.tool.objcopy.eeprom.winavr.app.release"/>
@@ -61,7 +61,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="twi/sp_driver.s" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="gfx/sampleMenus|twi/sp_driver.s" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

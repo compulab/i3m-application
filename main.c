@@ -9,8 +9,7 @@
 #include "adc/adc.h"
 #include "config/cnf_blk_components.h"
 #include "gfx/gfx_utils.h"
-#include "gfx/sampleMenus/sampleConfig.h"
-#include "gfx/sampleMenus/sampleMainMenu.h"
+
 
 ISR(TWIE_TWIS_vect)
 {
@@ -64,6 +63,10 @@ void init(){
 	board_init();
 	sysclk_init();
 	gfx_mono_init();
+#ifdef SPID_32MHZ
+	uint8_t ctrl = 0x00 ;// SPI_CLK2X_bm | SPI_PRESCALER_DIV64_gc;
+	SPID.CTRL = (SPID.CTRL & ~(SPI_CLK2X_bm | SPI_PRESCALER_gm)) | ctrl;
+#endif
 	adc_init();
 	pmic_init();
 	power_state_init();
@@ -83,10 +86,8 @@ void test_twi(){
 
 int main(void){
 	init();
+	MSG("HELLO")
 	init_menu();
-//	testTWI();
-//	delay_s(5);
-//	initMenu();
 	PORTC.DIR |= PIN4_bm;
 	PORTC.OUT &= ~PIN4_bm;
 	while(true)

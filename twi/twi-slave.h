@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-
+#include "../layout.h"
 
 /* Transaction status defines.*/
 #define TWIS_STATUS_READY                0x00

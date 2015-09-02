@@ -26,7 +26,7 @@ struct gfx_action_menu *menu;
 uint8_t gfx_action_menu_process_key(struct gfx_action_menu *actionMenu, uint8_t keycode){
 	if (keycode == GFX_MONO_MENU_KEYCODE_ENTER){
 		struct gfx_item_action selectedAction = actionMenu->actions[(actionMenu->menu)->current_selection];
-		enum gfx_item_action_type type = selectedAction.type;
+		enum action_type type = selectedAction.type;
 		if (type != ACTION_TYPE_NONE){
 			clear_menu();
 			actionMenu->visible = false;
@@ -38,6 +38,9 @@ uint8_t gfx_action_menu_process_key(struct gfx_action_menu *actionMenu, uint8_t 
 		case ACTION_TYPE_SHOW_MENU:
 			menu = selectedAction.menu;
 			show_menu(menu, true);
+			break;
+		case ACTION_TYPE_SET_BIOS_STATE:
+			eeprom_write_byte(BIOS_STATE_ADDRESS,selectedAction.frame->informations[0]->info_data);
 			break;
 		default:
 			break;

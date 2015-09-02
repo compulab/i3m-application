@@ -57,8 +57,8 @@
 
 void sysclk_init(void)
 {
-	uint8_t *reg = (uint8_t *)&PR.PRGEN;
-	uint8_t i;
+//	uint8_t *reg = (uint8_t *)&PR.PRGEN;
+//	uint8_t i;
 #ifdef CONFIG_OSC_RC32_CAL
 	uint16_t cal;
 	/* avoid Cppcheck Warning */

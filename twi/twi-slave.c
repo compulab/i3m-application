@@ -100,56 +100,107 @@ void twi_slave_init()
 				TWI_SLAVE_PIEN_bm;
 }
 
-void clear(){
+void clear()
+{
 	index = 0;
 }
 
-void clear_addresses(){
+void clear_addresses()
+{
 	 slave_address = UNSET_ADDRESS;
 	 reg_address = UNSET_ADDRESS;
 }
 
-void twi_ack(){
+void twi_ack()
+{
 	TWI_SLAVE_BASE.CTRLB = TWI_SLAVE_CMD_RESPONSE_gc;
 }
 
-void twi_nack(){
+void twi_nack()
+{
 	TWI_SLAVE_BASE.CTRLB = TWI_SLAVE_CMD_COMPTRANS_gc;
 }
 
-void twi_clear_status_bit (uint8_t bit){
+void twi_clear_status_bit (uint8_t bit)
+{
 	TWI_SLAVE_BASE.STATUS |= bit;
 }
-void twi_clear_apif(){
+void twi_clear_apif()
+{
 	twi_clear_status_bit(TWI_SLAVE_APIF_bm);
 }
 
-void twi_clear_dif(){
+void twi_clear_dif()
+{
 	twi_clear_status_bit(TWI_SLAVE_DIF_bm);
 }
 
-void twi_end_transmission(){
+void twi_end_transmission()
+{
 	clear();
 }
 
-void twi_handle_read(uint8_t address){
-	if (slave_address == TWI_READ_ADDRESS){
-		uint8_t data = eeprom_read_byte(address);
-			TWI_SLAVE_BASE.DATA = data;
+void twi_handle_read(uint8_t address)
+{
+	uint8_t data = 0xff;
+	if (slave_address == TWI_EEPROM_ADDRESS){
+		 data = eeprom_read_byte(address);
+	} else if (slave_address == TWI_REAL_TIME_ADDRESS){
+		switch (address){
+		case GPU_TEMP_ADDRESS:
+			data = computer_data.gpu_temp;
+			break;
+		case CPU_TEMP_ADDRESS:
+			data = computer_data.cpu_temp;
+			break;
+		case HARD_DISK1_TEMP_ADDRESS:
+			data = computer_data.hd_temp[0];
+			break;
+		case HARD_DISK2_TEMP_ADDRESS:
+			data = computer_data.hd_temp[1];
+			break;
+		case HARD_DISK3_TEMP_ADDRESS:
+			data = computer_data.hd_temp[2];
+			break;
+		case HARD_DISK4_TEMP_ADDRESS:
+			data = computer_data.hd_temp[3];
+			break;
+		}
 	}
-	else{
-		TWI_SLAVE_BASE.DATA = 0xff;
-	}
+	TWI_SLAVE_BASE.DATA = data;
 	++reg_address;
 }
 
-void twi_handle_write(uint8_t data){
-	if (slave_address == TWI_WRITE_ADDRESS)
+void twi_handle_write(uint8_t data)
+{
+	if (slave_address == TWI_EEPROM_ADDRESS)
 		eeprom_write_byte(reg_address,data);
+	else if (slave_address == TWI_REAL_TIME_ADDRESS)
+		switch (reg_address){
+		case GPU_TEMP_ADDRESS:
+			computer_data.gpu_temp = data;
+			break;
+		case CPU_TEMP_ADDRESS:
+			computer_data.cpu_temp = data;
+			break;
+		case HARD_DISK1_TEMP_ADDRESS:
+			computer_data.hd_temp[0] = data;
+			break;
+		case HARD_DISK2_TEMP_ADDRESS:
+			computer_data.hd_temp[1] = data;
+			break;
+		case HARD_DISK3_TEMP_ADDRESS:
+			computer_data.hd_temp[2] = data;
+			break;
+		case HARD_DISK4_TEMP_ADDRESS:
+			computer_data.hd_temp[3] = data;
+			break;
+		}
 	++reg_address;
 }
 
-void twi_slave_address_match_handler(){
+void twi_slave_address_match_handler()
+{
 	is_read_request = (TWI_SLAVE_BASE.STATUS & TWI_SLAVE_DIR_bm) == TWI_SLAVE_DIR_bm;
 	data_sent = false;
 	uint8_t address = (TWI_SLAVE_BASE.DATA >>1);
@@ -161,12 +212,14 @@ void twi_slave_address_match_handler(){
 	twi_clear_apif();
 }
 
-void twi_slave_stop_handler(){
+void twi_slave_stop_handler()
+{
 	clear();
 	twi_clear_apif();
 }
 
-void twi_slave_read_data_handler(){
+void twi_slave_read_data_handler()
+{
 	uint8_t status = TWI_SLAVE_BASE.STATUS;
 	if (((status & TWI_SLAVE_RXACK_bm) == TWI_SLAVE_RXACK_bm) &&
 		(data_sent == true)) {

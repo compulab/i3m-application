@@ -103,19 +103,24 @@ void action_types_init(){
 void loadAction(struct gfx_item_action *action, struct cnf_action *cnfAction){
 	struct cnf_action config_action;
 	memcpy_P(&config_action, cnfAction,sizeof(struct cnf_action));
-	if (config_action.is_frame){
+	action->type = config_action.type;
+	switch(config_action.type){
+	case ACTION_TYPE_SET_BIOS_STATE:
+	case ACTION_TYPE_SHOW_FRAME:
 #ifdef DEBUG_MODE
 		MSG("action is frame")
 #endif
-		action->type = ACTION_TYPE_SHOW_FRAME;
 		action->frame = malloc (sizeof(struct gfx_frame));
 		gfx_frame_init(action->frame, config_action.frame);
-	} else {
+	break;
+	case ACTION_TYPE_SHOW_MENU:
 #ifdef DEBUG_MODE
 		MSG("action is menu")
 #endif
-		action->type = ACTION_TYPE_SHOW_MENU;
 		action->menuId = config_action.menuId;
+		break;
+	default:
+		break;
 	}
 }
 

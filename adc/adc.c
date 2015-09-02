@@ -29,11 +29,11 @@ void adc_init()
 	adcch_set_input(&adcch_conf, ADCCH_POS_PIN1, ADCCH_NEG_PIN0, 0); // GAIN = 0.5
 	adc_write_configuration(&MY_ADC, &adc_conf);
 	adcch_write_configuration(&MY_ADC, MY_ADC_CH, &adcch_conf);
-
 	adc_enable(&MY_ADC);
 }
 
-float adc_avg(){
+float adc_avg()
+{
 	int i;
 	long power_avg =0;
 	for (i=0;i<5000;i++){
@@ -48,9 +48,8 @@ float adc_avg(){
 	return power_avg/(i);
 }
 
-void setPowerString(char **str){
-
-
+void set_voltage_data(char **str)
+{
     currentPower=round(adc_avg()*0.177); //*0.07731r
     if (currentPower < 0)
     	currentPower=0;
