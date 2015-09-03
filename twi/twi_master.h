@@ -12,7 +12,6 @@
 #include <stdbool.h>
 #include "../config/conf_twi.h"
 
-
 #define MAX_RETRY 2
 #define READ_REQUEST 0x01
 #define TWI_BAUD(F_SYS, F_TWI) ((F_SYS / (2 * F_TWI)) - 5)
@@ -28,7 +27,9 @@ struct twi_package{
 };
 
 void send_package(struct twi_package *package);
+
 void interrupt_handler();
+
 void twi_master_init();
 
 #endif /* TWI_TWI_MASTER_H_ */

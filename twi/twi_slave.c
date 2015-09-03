@@ -75,10 +75,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * http://www.atmel.com/dyn/products \n
  * Support mail: avr@atmel.com
  */
+#include "twi_slave.h"
+
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "eeprom.h"
-#include "twi-slave.h"
 #include "../config/conf_twi.h"
 #include "../debug.h"
 
@@ -89,6 +90,7 @@ static uint8_t slave_address = UNSET_ADDRESS;
 static uint8_t reg_address = UNSET_ADDRESS;
 static bool data_sent;
 static bool is_read_request;
+
 void twi_slave_init()
 {
 		TWI_SLAVE_BASE.ADDR = TWI_SLAVE_ADDRESS << 1;
@@ -232,13 +234,15 @@ void twi_slave_read_data_handler()
 	twi_clear_dif();
 }
 
-void twi_slave_write_data_handler(){
+void twi_slave_write_data_handler()
+{
 	twi_handle_write(TWI_SLAVE_BASE.DATA);
 	twi_ack();
 	twi_clear_dif();
 }
 
-void twi_save_address(){
+void twi_save_address()
+{
 	reg_address = TWI_SLAVE_BASE.DATA;
 	if (is_read_request)
 		twi_slave_read_data_handler();
@@ -247,7 +251,8 @@ void twi_save_address(){
 	twi_clear_dif();
 }
 
-void twi_slave_interrupt_handler(){
+void twi_slave_interrupt_handler()
+{
 	uint8_t current_status = TWI_SLAVE_BASE.STATUS;
 	if (current_status & TWI_SLAVE_BUSERR_bm)     		/* If bus error. */
 		twi_end_transmission();

@@ -10,25 +10,29 @@
 
 #define PAGE_ADDRESS(y) floor (y/8)
 
-void printHorizontalLine(uint8_t x, uint8_t y, uint8_t length){
-	gfx_mono_draw_line(x,y,x+length,y,GFX_PIXEL_SET);
+void printHorizontalLine(uint8_t x, uint8_t y, uint8_t length)
+{
+	gfx_mono_draw_line(x, y, x + length, y, GFX_PIXEL_SET);
 }
 
-void printVerticalLine(uint8_t x, uint8_t y, uint8_t length){
-	gfx_mono_draw_line(x,y,x,y+length,GFX_PIXEL_SET);
+void printVerticalLine(uint8_t x, uint8_t y, uint8_t length)
+{
+	gfx_mono_draw_line(x, y, x, y + length, GFX_PIXEL_SET);
 }
 
-void gfx_item_draw(struct gfx_item *item){
+void gfx_item_draw(struct gfx_item *item)
+{
 	if (item->visible && item->border_visible){
-		printHorizontalLine(item->x,item->y,item->width);
-		printVerticalLine(item->x,item->y,item->height);
-		printHorizontalLine(item->x,item->y+item->height,item->width);
-		printVerticalLine(item->x+item->width,item->y,item->height);
+		printHorizontalLine(item->x, item->y, item->width);
+		printVerticalLine(item->x, item->y, item->height);
+		printHorizontalLine(item->x, item->y+item->height, item->width);
+		printVerticalLine(item->x + item->width, item->y, item->height);
 	}
 }
 
 void gfx_item_init(struct gfx_item *item, uint8_t x, uint8_t y,
-		bool borderVisible, uint8_t width, uint8_t height){
+		bool borderVisible, uint8_t width, uint8_t height)
+{
 	item->x = x;
 	item->y = y;
 	item->width = width;
@@ -38,18 +42,20 @@ void gfx_item_init(struct gfx_item *item, uint8_t x, uint8_t y,
 }
 
 void gfx_label_init(struct gfx_label *label, char *text,
-		uint8_t x, uint8_t y, bool borderVisible){
+		uint8_t x, uint8_t y, bool borderVisible)
+{
 	struct font * font = &sysfont;
-	uint8_t width = strlen(text)*font->width +2,
-			height = font->height +4;
+	uint8_t width = strlen(text) * font->width + 2,
+			height = font->height + 4;
 //	if (width -x >= GFX_MONO_LCD_WIDTH){
-		gfx_item_init(&label->postion,x,y,borderVisible,width,height);
+		gfx_item_init(&label->postion, x, y, borderVisible, width, height);
 		label->text.text = text;
 		label->text.font = font;
 //	}
 }
 
-void set_size_by_text(char *text, struct font *font, struct gfx_item *item){
+void set_size_by_text(char *text, struct font *font, struct gfx_item *item)
+{
 	uint8_t width = strlen(text) * font->width + 2,
 			height = font->height + 4;
 	item->width = width;
@@ -57,7 +63,8 @@ void set_size_by_text(char *text, struct font *font, struct gfx_item *item){
 }
 
 void gfx_information_label_init(struct gfx_information *info,
-		enum information_type info_type, uint8_t info_data, uint8_t x, uint8_t y, bool borderVisible){
+		enum information_type info_type, uint8_t info_data, uint8_t x, uint8_t y, bool borderVisible)
+{
 	struct font *font = &sysfont;
 	info->info_type = info_type;
 	info->info_data = info_data;
@@ -66,12 +73,14 @@ void gfx_information_label_init(struct gfx_information *info,
 }
 
 void gfx_label_with_font_init(struct gfx_label *label, char *text, struct font *font,
-		uint8_t x, uint8_t y, bool borderVisible){
-	gfx_label_init(label,text,x,y,borderVisible);
+		uint8_t x, uint8_t y, bool borderVisible)
+{
+	gfx_label_init(label, text, x, y, borderVisible);
 	label->text.font = font;
 }
 
-void gfx_information_label_draw(struct gfx_information *info){
+void gfx_information_label_draw(struct gfx_information *info)
+{
 	update_data_by_type(info->info_type, &((info->text).text));
 	set_size_by_text(info->text.text, info->text.font, &info->postion);
 	gfx_item_draw(&info->postion);
@@ -81,7 +90,8 @@ void gfx_information_label_draw(struct gfx_information *info){
 	gfx_mono_draw_string(data.text, x, y, data.font);
 }
 
-void gfx_label_draw(struct gfx_label *label){
+void gfx_label_draw(struct gfx_label *label)
+{
 	gfx_item_draw(&label->postion);
 	int x = label->postion.x + 2,
 			y = label->postion.y + 2;
@@ -94,7 +104,8 @@ void gfx_label_draw(struct gfx_label *label){
 }
 
 void gfx_image_init(struct gfx_image *image, gfx_mono_color_t PROGMEM_T *bitmap_progmem,
-		uint8_t height, uint8_t width, uint8_t x, uint8_t y, bool border_visible){
+		uint8_t height, uint8_t width, uint8_t x, uint8_t y, bool border_visible)
+{
 	struct gfx_mono_bitmap *bitmap = malloc(sizeof(struct gfx_mono_bitmap));
 	bitmap->width = width;
 	bitmap->height = height;
@@ -105,12 +116,14 @@ void gfx_image_init(struct gfx_image *image, gfx_mono_color_t PROGMEM_T *bitmap_
 			(image->bitmap->height + 2));
 }
 
-void gfx_image_draw(struct gfx_image *image){
+void gfx_image_draw(struct gfx_image *image)
+{
 	gfx_item_draw(&image->postion);
 	gfx_mono_generic_put_bitmap(image->bitmap, image->postion.x, image->postion.y);
 }
 
-void set_frame_sizes(struct gfx_frame *frame, struct cnf_frame *cnf_frame){
+void set_frame_sizes(struct gfx_frame *frame, struct cnf_frame *cnf_frame)
+{
 	frame->image_size = cnf_frame->image_size;
 	frame->information_size = cnf_frame->information_size;
 	frame->label_size = cnf_frame->label_size;
@@ -122,7 +135,8 @@ void set_frame_sizes(struct gfx_frame *frame, struct cnf_frame *cnf_frame){
 	#endif
 }
 
-void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem){
+void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
+{
 	struct cnf_image cnf_image;
 	struct cnf_info cnf_information;
 	struct cnf_label cnf_label;
@@ -134,7 +148,7 @@ void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem){
 		frame->images[i] = malloc (sizeof(struct gfx_image));
 		memcpy_P(&cnf_image, (cnf_frame.images[i]), sizeof(struct cnf_image));
 		gfx_image_init(frame->images[i], cnf_image.bitmapProgmem, cnf_image.height,
-				cnf_image.width, cnf_image.x, cnf_image.y,cnf_image.border_visible);
+		cnf_image.width, cnf_image.x, cnf_image.y, cnf_image.border_visible);
 		#ifdef DEBUG_MODE
 			MSG_T_N("image height:",cnf_image.height)
 			MSG_T_N("image width:",cnf_image.width)
@@ -162,13 +176,14 @@ void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem){
 	}
 }
 
-void gfx_frame_draw(struct gfx_frame *frame){
-	gfx_mono_draw_filled_rect(
-				GFX_MONO_LCD_WIDTH, GFX_MONO_LCD_HEIGHT, 0, 0,GFX_PIXEL_CLR);
+void gfx_frame_draw(struct gfx_frame *frame)
+{
+	gfx_mono_draw_filled_rect(GFX_MONO_LCD_WIDTH, GFX_MONO_LCD_HEIGHT, 0,
+			0, GFX_PIXEL_CLR);
 	for (int i=0; i < frame->label_size; i++)
 		gfx_label_draw(frame->labels[i]);
 	for (int i=0; i < frame->information_size; i++)
-			gfx_information_label_draw(frame->informations[i]);
+		gfx_information_label_draw(frame->informations[i]);
 	for (int i=0; i < frame->image_size; i++)
-			gfx_image_draw(frame->images[i]);
+		gfx_image_draw(frame->images[i]);
 }

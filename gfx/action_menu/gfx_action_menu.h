@@ -18,14 +18,10 @@
 
 struct gfx_action_menu *present_menu;
 
-
-
-
 struct gfx_item_data {
 	PROGMEM_STRING_T title;
 	char *text;
 };
-
 
 struct gfx_item_action {
 	enum action_type type;
@@ -33,7 +29,6 @@ struct gfx_item_action {
 	struct gfx_action_menu *menu;
 	struct gfx_frame *frame;
 };
-
 
 struct gfx_action_menu {
 	struct gfx_mono_menu *menu;

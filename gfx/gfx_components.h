@@ -19,7 +19,7 @@ struct gfx_item {
 };
 
 struct gfx_text {
-	char * text;
+	char *text;
 	struct font *font;
 };
 
@@ -37,7 +37,7 @@ struct gfx_information {
 
 struct gfx_image {
 	struct gfx_item postion;
-	struct gfx_mono_bitmap * bitmap;
+	struct gfx_mono_bitmap *bitmap;
 };
 
 struct gfx_frame {

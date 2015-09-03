@@ -139,7 +139,7 @@ void sysclk_init(void)
 			break;
 #endif
 		default:
-			//unhandled_case(CONFIG_SYSCLK_SOURCE);
+//			unhandled_case(CONFIG_SYSCLK_SOURCE);
 			return;
 		}
 

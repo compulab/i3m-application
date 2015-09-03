@@ -5,7 +5,7 @@
  *      Author: arkadi
  */
 
-#include "testTwi.h"
+#include "test_twi.h"
 
 void send_write_package()
 {

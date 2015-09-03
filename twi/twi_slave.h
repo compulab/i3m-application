@@ -17,6 +17,7 @@
 #define TWIS_STATUS_BUSY                 0xff
 
 void twi_slave_init(void);
+
 void twi_slave_interrupt_handler(void);
 
 #endif /* TWI_SLAVE_H */

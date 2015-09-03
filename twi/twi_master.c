@@ -5,7 +5,7 @@
  *      Author: arkadi
  */
 
-#include "twi-master.h"
+#include "twi_master.h"
 
 #include "../debug.h"
 
@@ -42,34 +42,40 @@ void send_read_request(){
 	TWI_MASTER_BASE.CTRLC = TWI_MASTER_CMD_REPSTART_gc;
 }
 
-void send_package(struct twi_package *package){
+void send_package(struct twi_package *package)
+{
 	reset();
 	current_package = *package;
 	send_address();
 }
 
-void send_ack(){
+void send_ack()
+{
 	TWI_MASTER_BASE.CTRLC = TWI_MASTER_ACKACT_bm;
 }
 
-void send_stop(){
+void send_stop()
+{
 	TWI_MASTER_BASE.CTRLC = TWI_MASTER_CMD_gm;
 }
 
-void send_next_data(){
+void send_next_data()
+{
 	uint8_t data = current_package.buffer[send_index++];
 	TWI_MASTER_BASE.DATA = data;
 	send_ack();
 }
 
 
-void handle_get_data(){
+void handle_get_data()
+{
 	uint8_t data = TWI_MASTER_BASE.DATA;
 	current_package.handle_data_received(data);
 	send_stop();
 }
 
-void handle_send_data(){
+void handle_send_data()
+{
 	if (current_package.length > send_index){
 		send_next_data();
 	} else {
@@ -79,24 +85,28 @@ void handle_send_data(){
 	is_exacuting = true;
 }
 
-void handle_error(){
+void handle_error()
+{
 	if (retrying_count < MAX_RETRY){
 		retrying_count++;
 		send_address();
 	}
 }
 
-void handle_bus_error(){
+void handle_bus_error()
+{
 	handle_error();
 }
 
-void handle_arbitration_error(){
+void handle_arbitration_error()
+{
 	handle_error();
 }
 
 void handle_address_not_acknowledged(){}
 
-void interrupt_handler(){
+void interrupt_handler()
+{
 	uint8_t status = TWI_MASTER_BASE.STATUS;
 	if ((status & (TWI_MASTER_WIF_bm | TWI_MASTER_ARBLOST_bm)) == (TWI_MASTER_WIF_bm | TWI_MASTER_ARBLOST_bm))
 		if ((status & TWI_MASTER_BUSERR_bm) == TWI_MASTER_BUSERR_bm)

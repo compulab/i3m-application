@@ -8,7 +8,8 @@ enum key_Select selected_Key;
 #include "menu-handler.h"
 
 //TODO: enter bootloader threw SW
-void enter_bootloader_mode(){
+void enter_bootloader_mode()
+{
 //	udc_detach();
 //	udc_stop();
 //	asm ("ldi r30, 0xFE\n"  /* Low byte to ZL */
@@ -19,41 +20,46 @@ void enter_bootloader_mode(){
 }
 
 
-void menu_handler(){
+void menu_handler()
+{
 	getPressedKey(&selected_Key);
 	if (present_menu->visible){
 		if (selected_Key == KEY_NONE) return;
 		else if (selected_Key == KEY_HOLD)
-			gfx_action_menu_process_key(present_menu,GFX_MONO_MENU_KEYCODE_BACK);
-		else if (is_key_selected(selected_Key,KEY_SELECT))
-			gfx_action_menu_process_key(present_menu,GFX_MONO_MENU_KEYCODE_ENTER);
-		else if (is_key_selected(selected_Key,KEY_LEFT))
-			gfx_action_menu_process_key(present_menu,GFX_MONO_MENU_KEYCODE_UP);
+			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_BACK);
+		else if (is_key_selected(selected_Key, KEY_SELECT))
+			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_ENTER);
+		else if (is_key_selected(selected_Key, KEY_LEFT))
+			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP);
 		else
-			gfx_action_menu_process_key(present_menu,GFX_MONO_MENU_KEYCODE_DOWN);
+			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN);
 	} else {
-		if (is_key_selected(selected_Key,KEY_HOLD))
-			gfx_action_menu_process_key(present_menu,GFX_MONO_MENU_KEYCODE_BACK);
+		if (is_key_selected(selected_Key, KEY_HOLD))
+			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_BACK);
 	}
 }
 
-void delay(){
+void delay()
+{
 	delay_ms(100);
 }
 
-bool is_bootloader_state(){
+bool is_bootloader_state()
+{
 	delay();
 //	return ioport_get_value(FP_RIGHT_BUTTON) && ioport_get_value(FP_LEFT_BUTTON);
 	return false;
 }
 
-void right_button_pressed(){
+void right_button_pressed()
+{
 	if (is_bootloader_state()) enter_bootloader_mode();
 	else
-		gfx_action_menu_process_key(present_menu,GFX_MONO_MENU_KEYCODE_DOWN);
+		gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN);
 }
 
-void handle_bBack(){
+void handle_bBack()
+{
 	if (present_menu->visible){
 		if (present_menu->parent != NULL) gfx_action_menu_init(present_menu->parent);
 	} else {
@@ -61,14 +67,16 @@ void handle_bBack(){
 	}
 }
 
-void select_button_pressed(){
+void select_button_pressed()
+{
 	delay();
 	if (!ioport_get_value(FP_OK_BUTTON)) handle_bBack();
 	else
 		gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_ENTER);
 }
 
-void left_button_pressed(){
+void left_button_pressed()
+{
 	if (is_bootloader_state()) enter_bootloader_mode();
 	else
 		gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP);
@@ -76,7 +84,8 @@ void left_button_pressed(){
 
 uint8_t size;
 
-void action_types_init(){
+void action_types_init()
+{
 	struct gfx_action_menu *menu;
 	struct gfx_item_action *action;
 	for (int i=0; i < size; i++){
@@ -100,7 +109,8 @@ void action_types_init(){
 	}
 }
 
-void loadAction(struct gfx_item_action *action, struct cnf_action *cnfAction){
+void loadAction(struct gfx_item_action *action, struct cnf_action *cnfAction)
+{
 	struct cnf_action config_action;
 	memcpy_P(&config_action, cnfAction,sizeof(struct cnf_action));
 	action->type = config_action.type;
@@ -124,7 +134,8 @@ void loadAction(struct gfx_item_action *action, struct cnf_action *cnfAction){
 	}
 }
 
-void load_config_block(){
+void load_config_block()
+{
 	struct cnf_blk config_block;
 	struct cnf_menu config_menu;
 	struct gfx_mono_menu *mono_menu;
@@ -148,7 +159,8 @@ void load_config_block(){
 	action_types_init();
 }
 
-void set_menu_by_id(struct gfx_action_menu **menu, uint8_t index){
+void set_menu_by_id(struct gfx_action_menu **menu, uint8_t index)
+{
 	if (index < size){
 		*menu = action_menus[index];
 		#ifdef DEBUG_MODE

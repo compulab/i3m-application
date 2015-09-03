@@ -13,7 +13,8 @@ bool left_button_status = true,
 	select_button_status = true,
 	debug_button_status = true;
 
-enum button_state get_button_status(bool *last_status, uint8_t button_pos){
+enum button_state get_button_status(bool *last_status, uint8_t button_pos)
+{
 		bool current_status = ioport_get_value(button_pos);
 		enum button_state button_state;
 /*		delay_ms(300);
@@ -32,21 +33,24 @@ enum button_state get_button_status(bool *last_status, uint8_t button_pos){
 	}
 
 
-enum button_state get_left_button_status(){
-	return get_button_status(&left_button_status,FP_LEFT_BUTTON);
+enum button_state get_left_button_status()
+{
+	return get_button_status(&left_button_status, FP_LEFT_BUTTON);
 }
 
-enum button_state get_right_button_status(){
-	return get_button_status(&right_button_status,FP_RIGHT_BUTTON);
+enum button_state get_right_button_status()
+{
+	return get_button_status(&right_button_status, FP_RIGHT_BUTTON);
 }
 
-bool get_hold_button_status(){
-	return get_button_status(&debug_button_status,FP_DEBUG_BACK_BUTTON) == BUTTON_CLICK;
+bool get_hold_button_status()
+{
+	return get_button_status(&debug_button_status, FP_DEBUG_BACK_BUTTON) == BUTTON_CLICK;
 }
 
 enum button_state get_select_button_status(){
 	if (get_hold_button_status()) return BUTTON_HOLD; /* for debug only */
-	return get_button_status(&select_button_status,FP_OK_BUTTON);
+	return get_button_status(&select_button_status, FP_OK_BUTTON);
 }
 
 void getPressedKey(enum key_Select *selected_Key){
