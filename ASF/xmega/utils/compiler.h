@@ -133,7 +133,7 @@
  * \brief Set word-aligned boundary.
  */
 #if (defined __GNUC__)
-#define COMPILER_WORD_ALIGNED    __attribute__((__aligned__(2)))
+#define COMPILER_WORD_ALIGNED      __attribute__((__aligned__(2)))
 #elif (defined __ICCAVR__)
 #define COMPILER_WORD_ALIGNED    COMPILER_PRAGMA(data_alignment = 2)
 #endif
