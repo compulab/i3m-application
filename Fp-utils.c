@@ -8,6 +8,23 @@
 
 enum power_state current_power_state = POWER_ON;
 
+struct twi_package twi_temp_high_bit = {
+	.slave_address = AMBIENT_ADDRESS,
+	.buffer[0] = TEMPERATURE_HIGH_BYTE,
+	.length = 1,
+	.is_write_request = false,
+	.handle_data_received = update_ambient_high_bit
+};
+
+struct twi_package twi_temp_low_bit = {
+	.slave_address = AMBIENT_ADDRESS,
+	.buffer[0] =  TEMPERATURE_LOW_BYTE,
+	.length = 1,
+	.is_write_request = false,
+	.handle_data_received = update_ambient_low_bit
+};
+
+
 void update_power_state()
 {
 	if (gpio_pin_is_low(FP_S5))
@@ -40,6 +57,7 @@ void set_state(char **data)
 	*data = state;
 }
 
+
 void set_temp_string(char **str, uint8_t temp)
 {
 
@@ -55,6 +73,23 @@ void set_cpu_updated_temp(char **data)
 {
 	uint8_t temp = computer_data.cpu_temp;
 	set_temp_string(data,temp);
+}
+
+void update_ambient_high_bit(uint8_t high_bit)
+{
+	computer_data.ambient_temp = 0x00 | high_bit << 8;
+	send_package(&twi_temp_low_bit);
+}
+
+void update_ambient_low_bit(uint8_t low_bit)
+{
+	computer_data.ambient_temp |= low_bit;
+}
+
+
+void update_ambient_temp()
+{
+	send_package(&twi_temp_high_bit);
 }
 
 void update_data_by_type(enum information_type type, char **data)

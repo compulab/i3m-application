@@ -30,6 +30,7 @@ struct update_information {
 	uint8_t gpu_temp;
 	uint8_t cpu_temp;
 	uint8_t hd_temp[MAX_HARD_DISKS];
+	uint16_t ambient_temp;
 };
 
 struct update_information computer_data;

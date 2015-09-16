@@ -12,8 +12,20 @@
 #include "asf.h"
 #include "adc/adc.h"
 #include "layout.h"
+#include "twi/twi_master.h"
 
 typedef void (*func_ptr)(char **);
+
+#define AMBIENT_ADDRESS  0x4c
+#define TEMPERATURE_HIGH_BYTE 0x01
+#define TEMPERATURE_LOW_BYTE 0x10
+
+
+void update_ambient_low_bit(uint8_t low_bit);
+
+void update_ambient_high_bit(uint8_t high_bit);
+
+
 
 enum information_type{
 	SHOW_POWER_STATE,

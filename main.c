@@ -9,6 +9,7 @@
 #include "gfx/gfx_utils.h"
 #include "twi/test_twi.h"
 #include "twi/twi_slave.h"
+#include "asf.h"
 
 
 ISR(TWIE_TWIS_vect)
@@ -99,6 +100,8 @@ int main(void)
 	init();
 	MSG("HELLO")
 	init_menu();
+	udc_start();
+	udc_attach();
 	while(true)
 	{}
 }
