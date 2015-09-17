@@ -144,7 +144,7 @@ void ssd1306_init(void)
 	
 	ioport_set_pin_high(FP_VCC_EN); //FP_MSH: VCC enable for OLED
 
-	delay_us(10000); // 10msec
+	delay_us(100000); // 10msec
 
 	ssd1306_display_on();
 	

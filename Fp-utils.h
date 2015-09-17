@@ -16,15 +16,14 @@
 
 typedef void (*func_ptr)(char **);
 
-#define AMBIENT_ADDRESS  0x4c
-#define TEMPERATURE_HIGH_BYTE 0x01
-#define TEMPERATURE_LOW_BYTE 0x10
+#define AMBIENT_TWI_ADDRESS  0x4c
+#define TEMPERATURE_LT_ADDRESS 0x00
 
 
-void update_ambient_low_bit(uint8_t low_bit);
 
-void update_ambient_high_bit(uint8_t high_bit);
+void update_ambient_value(uint8_t high_bit);
 
+void update_ambient_temp();
 
 
 enum information_type{

@@ -77,11 +77,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  */
 #include "twi_slave.h"
 
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include "eeprom.h"
-#include "../config/conf_twi.h"
-#include "../debug.h"
 
 #define UNSET_ADDRESS 0x00
 
@@ -145,30 +140,10 @@ void twi_end_transmission()
 void twi_handle_read(uint8_t address)
 {
 	uint8_t data = 0xff;
-	if (slave_address == TWI_EEPROM_ADDRESS){
+	if (slave_address == TWI_EEPROM_ADDRESS)
 		 data = eeprom_read_byte(address);
-	} else if (slave_address == TWI_REAL_TIME_ADDRESS){
-		switch (address){
-		case GPU_TEMP_ADDRESS:
-			data = computer_data.gpu_temp;
-			break;
-		case CPU_TEMP_ADDRESS:
-			data = computer_data.cpu_temp;
-			break;
-		case HARD_DISK1_TEMP_ADDRESS:
-			data = computer_data.hd_temp[0];
-			break;
-		case HARD_DISK2_TEMP_ADDRESS:
-			data = computer_data.hd_temp[1];
-			break;
-		case HARD_DISK3_TEMP_ADDRESS:
-			data = computer_data.hd_temp[2];
-			break;
-		case HARD_DISK4_TEMP_ADDRESS:
-			data = computer_data.hd_temp[3];
-			break;
-		}
-	}
+	else if (slave_address == TWI_REAL_TIME_ADDRESS)
+		handle_sram_read_request(address, &data);
 	TWI_SLAVE_BASE.DATA = data;
 	++reg_address;
 }
@@ -178,27 +153,10 @@ void twi_handle_write(uint8_t data)
 	if (slave_address == TWI_EEPROM_ADDRESS)
 		eeprom_write_byte(reg_address,data);
 	else if (slave_address == TWI_REAL_TIME_ADDRESS)
-		switch (reg_address){
-		case GPU_TEMP_ADDRESS:
-			computer_data.gpu_temp = data;
-			break;
-		case CPU_TEMP_ADDRESS:
-			computer_data.cpu_temp = data;
-			break;
-		case HARD_DISK1_TEMP_ADDRESS:
-			computer_data.hd_temp[0] = data;
-			break;
-		case HARD_DISK2_TEMP_ADDRESS:
-			computer_data.hd_temp[1] = data;
-			break;
-		case HARD_DISK3_TEMP_ADDRESS:
-			computer_data.hd_temp[2] = data;
-			break;
-		case HARD_DISK4_TEMP_ADDRESS:
-			computer_data.hd_temp[3] = data;
-			break;
-		}
-	++reg_address;
+		handle_sram_write_request(reg_address,data);
+
+	if (reg_address != DIRECT_TYPE_ADDRESS && reg_address != DIRECT_CONTENT_ADDRESS)
+		++reg_address;
 }
 
 void twi_slave_address_match_handler()

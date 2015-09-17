@@ -10,7 +10,7 @@
 #define MY_ADC    ADCA
 #define MY_ADC_CH ADC_CH0
 
-long currentPower;
+long current_power;
 char resString[7];
 
 void adc_init()
@@ -50,11 +50,11 @@ float adc_avg()
 
 void set_voltage_data(char **str)
 {
-    currentPower=round(adc_avg()*0.177); //*0.07731r
-    if (currentPower < 0)
-    	currentPower=0;
-	itoa(currentPower, resString,10);//power_result
-	if (currentPower >0){
+    current_power=round(adc_avg()*0.177); //*0.07731r
+    if (current_power < 0)
+    	current_power=0;
+	itoa(current_power, resString,10);//power_result
+	if (current_power >0){
 		resString[2]=resString[1];
 		resString[3]=resString[2];
 		resString[1]='.';
