@@ -239,6 +239,78 @@ void read_pending_requests(uint8_t *data)
 	*data = req;
 }
 
+uint8_t direct_write_length;
+uint8_t direct_write_index;
+bool is_length_valid;
+
+void get_last_item(struct direct_string_item *item)
+{
+	item = computer_data.direct_string;
+	if (item == NULL)
+		return;
+	while (item->next != NULL) item = item->next;
+}
+
+void add_direct_write_item(struct direct_string_item *item)
+{
+	struct direct_string_item *new_item = malloc(sizeof(struct direct_string_item));
+	new_item->content = NULL;
+	new_item->next = NULL;
+	new_item->type = NULL;
+	item = computer_data.direct_string;
+	if (item == NULL){
+		computer_data.direct_string = new_item;
+	} else {
+		while (item->next != NULL) item = item->next;
+		item->next = new_item;
+	}
+	item= new_item;
+}
+
+void write_direct_byte(bool is_type_item, uint8_t data)
+{
+	struct direct_string_item *item = NULL;
+	if (is_length_valid){
+		get_last_item(item);
+		if (direct_write_length == 0 || direct_write_index == direct_write_length){
+			if(is_type_item)
+				item->type[direct_write_length]='\0';
+			else
+				item->content[direct_write_length]='\0';
+			is_length_valid = false;
+			direct_write_index = 0;
+			direct_write_length = 0;
+		} else {
+			if (is_type_item)
+				item->type[direct_write_index]=data;
+			else
+				item->content[direct_write_index]=data;
+			direct_write_index++;
+		}
+	} else {
+		direct_write_length = data;
+		is_length_valid = true;
+		if (is_type_item)
+			add_direct_write_item(item);
+		else
+			get_last_item(item);
+		item->type = malloc (sizeof(char *) * direct_write_length + 1);
+	}
+}
+
+void write_direct(uint8_t write_address, uint8_t data)
+{
+	switch (write_address){
+	case DIRECT_TYPE_ADDRESS:
+		write_direct_byte(true, data);
+		break;
+	case DIRECT_CONTENT_ADDRESS:
+		write_direct_byte(false,data);
+		break;
+	}
+
+}
+
 void handle_sram_read_request(uint8_t read_address, uint8_t *data)
 {
 	*data = DEFAULT_DATA;
@@ -366,7 +438,7 @@ void handle_sram_write_request(uint8_t write_address, uint8_t data)
 			break;
 		case DIRECT_CONTENT_ADDRESS:
 		case DIRECT_TYPE_ADDRESS:
-//			write_direct(write_address, data);  TODO
+			write_direct(write_address, data);
 			break;
 		case RESET_ADDRESS:
 			write_reset(data);

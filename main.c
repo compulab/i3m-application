@@ -67,20 +67,25 @@ void power_state_init()
 	SREG = sreg;
 }
 
+void updated_info_init()
+{
+	computer_data.valid_ambient = false;
+	computer_data.valid_gpu = false;
+	computer_data.req_cpu_fq = false;
+	computer_data.req_cpu_temp = false;
+	computer_data.req_gpu_temp = false;
+	computer_data.wen = false;
+	computer_data.direct_string = NULL;
+}
+
 void init()
 {
 	board_init();
 	sysclk_init();
 	gfx_mono_init();
-//#ifdef SPID_32MHZ
-//	uint8_t ctrl = SPI_PRESCALER_DIV16_gc;
-//	SPID.CTRL = (SPID.CTRL & ~(SPI_CLK2X_bm | SPI_PRESCALER_gm)) | ctrl;
-//#endif
+	updated_info_init();
 	adc_init();
 	pmic_init();
-#ifdef CONFIG_SYSCLK_SOURCE
-	MSG("YES")
-#endif
 	power_state_init();
 	tc_init();
 	sei();

@@ -82,7 +82,7 @@
 // Placeholder setup
 */
 #  define SSD1306_SPI_INTERFACE
-#  define SSD1306_SPI          &SPID
+#  define SSD1306_SPI          &SPIC
 
 #  define SSD1306_DC_PIN       FP_DC
 #  define SSD1306_CS_PIN       FP_CS

@@ -78,7 +78,7 @@
 //#define CONFIG_XOSC_RANGE XOSC_RANGE_12TO16
 
 /* DFLL autocalibration */
-#define CONFIG_OSC_AUTOCAL_RC2MHZ_REF_OSC  OSC_ID_RC32KHZ
+//#define CONFIG_OSC_AUTOCAL_RC2MHZ_REF_OSC  OSC_ID_RC32KHZ
 #define CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC OSC_ID_USBSOF
 
 /* The following example clock configuration definitions can be used in XMEGA

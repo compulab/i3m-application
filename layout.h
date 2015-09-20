@@ -119,7 +119,15 @@
 #define MAX_CPU			8
 #define MAX_MEMORY_SLOT	4
 
+
+struct direct_string_item {
+	char *type;
+	char *content;
+	struct direct_string_item *next;
+};
+
 struct update_information {
+	struct direct_string_item *direct_string;
 	bool wen;
 	bool valid_ambient;
 	bool valid_gpu;

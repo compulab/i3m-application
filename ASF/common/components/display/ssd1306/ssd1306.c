@@ -114,10 +114,10 @@ void ssd1306_init(void)
 	ssd1306_write_command(SSD1306_CMD_SET_START_LINE(0x00));
 
 	// Set Column Address 0 Mapped to SEG0
-	ssd1306_write_command(SSD1306_CMD_SET_SEGMENT_RE_MAP_COL127_SEG0);
+	ssd1306_write_command(SSD1306_CMD_SET_SEGMENT_RE_MAP_COL0_SEG0);
 
 	// Set COM/Row Scan Scan from COM63 to 0
-	ssd1306_write_command(SSD1306_CMD_SET_COM_OUTPUT_SCAN_DOWN);
+	ssd1306_write_command(SSD1306_CMD_SET_COM_OUTPUT_SCAN_UP);
 
 	// Set COM Pins hardware configuration
 	ssd1306_write_command(SSD1306_CMD_SET_COM_PINS);
