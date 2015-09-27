@@ -49,6 +49,7 @@ void gfx_label_init(struct gfx_label *label, char *text,
 			height = font->height + 4;
 //	if (width -x >= GFX_MONO_LCD_WIDTH){
 		gfx_item_init(&label->postion, x, y, borderVisible, width, height);
+		label->text.is_progmem = true;
 		label->text.text = text;
 		label->text.font = font;
 //	}
@@ -96,7 +97,10 @@ void gfx_label_draw(struct gfx_label *label)
 	int x = label->postion.x + 2,
 			y = label->postion.y + 2;
 	struct gfx_text data = label->text;
-	gfx_mono_draw_string(data.text, x, y, data.font);
+	if (data.is_progmem)
+		gfx_mono_draw_progmem_string(data.text, x, y, data.font);
+	else
+		gfx_mono_draw_string(data.text, x, y, data.font);
 	#ifdef DEBUG_MODE
 		MSG_T_T("string to print:",data.text)
 		MSG_T_N("first char of font", data.font->first_char)

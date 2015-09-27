@@ -20,6 +20,7 @@ struct gfx_item {
 
 struct gfx_text {
 	char *text;
+	bool is_progmem;
 	struct font *font;
 };
 
