@@ -28,26 +28,46 @@ ISR(PORTF_INT0_vect)
 	update_power_state();
 }
 
+ISR(PORTF_INT1_vect){
+	handle_button_pressed();
+}
+
 ISR(TCC0_OVF_vect)
 {
-	menu_handler();
+	tc_counter++;
+//	menu_handler();
 }
+
+
+void portf_init()
+{
+	uint8_t sreg = SREG;
+	uint8_t power_pin_cfg =(uint8_t)  PORT_ISC_BOTHEDGES_gc | PORT_OPC_PULLUP_gc;
+	uint8_t buttons_pin_cfg = PIN4_bm | PIN5_bm | PIN6_bm;
+	cli();
+	PORTF.PIN4CTRL = PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+	PORTF.PIN5CTRL = PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+	PORTF.PIN6CTRL = PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+	PORTF.PIN0CTRL = power_pin_cfg;
+	PORTF.PIN1CTRL = power_pin_cfg;
+	PORTF.PIN2CTRL = power_pin_cfg;
+	/* Restore status register. */
+	SREG = sreg;
+	PORTF.INTCTRL =  PORT_INT0LVL_MED_gc | PORT_INT1LVL_MED_gc;
+	PORTF.INT0MASK = PIN0_bm | PIN1_bm |PIN2_bm;
+	PORTF.INT1MASK = buttons_pin_cfg;
+}
+
 
 void init_menu()
 {
 	load_config_block();
 	set_menu_by_id(&present_menu, 0);
 	gfx_action_menu_init(present_menu);
+
+	tc_init();
+
 }
-
-void power_state_interrupts_init()
-{
-	PORTF.INTCTRL =  PORT_INT0LVL_MED_gc;
-	PORTF.INT0MASK = PIN0_bm | PIN1_bm |PIN2_bm;
-	update_power_state();
-}
-
-
 
 void update_data(uint8_t data)
 {
@@ -58,13 +78,7 @@ void update_data(uint8_t data)
 
 void power_state_init()
 {
-	power_state_interrupts_init();
-	uint8_t sreg = SREG;
-	uint8_t pin_cfg =(uint8_t)  PORT_ISC_BOTHEDGES_gc | PORT_OPC_PULLUP_gc;
-	cli();
-	PORTCFG.MPCMASK = PIN0_bm | PIN1_bm | PIN2_bm;
-	PORTF.PIN0CTRL = pin_cfg;
-	SREG = sreg;
+	update_power_state();
 }
 
 void updated_info_init()
@@ -83,11 +97,12 @@ void init()
 	board_init();
 	sysclk_init();
 	gfx_mono_init();
+	init_menu();
 	updated_info_init();
 	adc_init();
 	pmic_init();
+	portf_init();
 	power_state_init();
-	tc_init();
 	sei();
 	twi_slave_init();
 	twi_master_init();
@@ -103,8 +118,8 @@ void test_twi()
 int main(void)
 {
 	init();
-	MSG("HELLO")
-	init_menu();
+//	MSG("HELLO")
+
 	udc_start();
 	udc_attach();
 	while(true)

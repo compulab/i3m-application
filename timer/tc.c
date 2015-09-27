@@ -67,10 +67,10 @@
 
 #include "tc.h"
 
-int count;
+int tc_counter;
 
 void tc_init(){
-	count = 0;
+	tc_counter = 0;
 	TC_SetPeriod(&TCC0, 0xea60);
 	TC0_SetOverflowIntLevel( &TCC0, TC_OVFINTLVL_LO_gc );
 	TC0_ConfigClockSource(&TCC0, TC_CLKSEL_DIV1_gc);

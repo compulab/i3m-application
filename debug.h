@@ -12,7 +12,7 @@
 
 //#define DEBUG_MODE
 
-#define DELAY_TIME 0.01
+#define DELAY_TIME 0.02
 
 char debug[5];
 
@@ -22,10 +22,10 @@ char debug[5];
 #endif
 
 #define CLEAR	ssd1306_clear();
-#define MSG(str)	ssd1306_set_page_address(3); \
-					ssd1306_set_column_address(3); \
-					ssd1306_write_text(str); \
-					delay_s(DELAY_TIME);
+#define MSG(str)	//ssd1306_set_page_address(3);
+//					ssd1306_set_column_address(3); \
+//					ssd1306_write_text(str); \
+//					delay_s(DELAY_TIME);
 //					CLEAR
 
 #define MSG_hex(num)   ssd1306_set_page_address(4); \

@@ -60,7 +60,7 @@
 #define TC_DRIVER_H
 #include "../asf.h"
 
-extern int count;
+extern int tc_counter;
 
 void tc_init();
 /* Definition of macros. */
