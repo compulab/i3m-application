@@ -68,11 +68,8 @@ void right_button_pressed()
 
 void handle_bBack()
 {
-	if (present_menu->visible){
-		if (present_menu->parent != NULL) gfx_action_menu_init(present_menu->parent);
-	} else {
+	if (!present_menu->visible)
 		gfx_action_menu_init(present_menu);
-	}
 }
 
 void select_button_pressed()
@@ -213,14 +210,14 @@ void handle_button_pressed()
 	update_button_state(ok_pressed, &ok_time, &ok_button);
 		switch (ok_button){
 		case BUTTON_HOLD:
-			MSG("OK HOLD!")
 			handle_bBack();
 			return;
 			break;
 		case BUTTON_CLICK:
-			MSG ("OK CLICK!")
 			if (present_menu->visible)
 				gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_ENTER);
+			else
+				gfx_action_menu_init(present_menu);
 			return;
 			break;
 		default:
@@ -228,12 +225,7 @@ void handle_button_pressed()
 		}
 		switch (left_button){
 		case BUTTON_HOLD:
-			if (present_menu->visible)
-				gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP);
-			return;
-			break;
 		case BUTTON_CLICK:
-			MSG ("LEFT CLICK!")
 			if (present_menu->visible)
 				gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP);
 			return;
@@ -244,7 +236,6 @@ void handle_button_pressed()
 			switch (right_button){
 			case BUTTON_HOLD:
 			case BUTTON_CLICK:
-//				MSG ("RIGHT CLICK!")
 				if (present_menu->visible)
 					gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN);
 				return;

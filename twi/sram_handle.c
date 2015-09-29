@@ -46,7 +46,7 @@ void write_cpu_temp(uint8_t cpu_addr, uint8_t data)
 
 void write_hd_temp(uint8_t hd_addr, uint8_t data)
 {
-	write_temp(MAX_HARD_DISKS, HARD_DISK0_TEMP_ADDRESS, hd_addr, computer_data.hd_temp, data);
+	write_temp(MAX_HDD, HDD0_TEMP_ADDRESS, hd_addr, computer_data.hd_temp, data);
 }
 
 void write_cpu_fq_msb(uint8_t cpu_addr, uint8_t data)
@@ -75,16 +75,16 @@ void write_temp_control(uint8_t data)
 
 void write_hd_sz_lsb(uint8_t hd_addr, uint8_t data)
 {
-	int8_t index = hd_addr - HARD_DISK0_LSB_SZ_ADDRESS;
-	if (!is_valid_register(index, MAX_HARD_DISKS))
+	int8_t index = hd_addr - HDD0_LSB_SZ_ADDRESS;
+	if (!is_valid_register(index, MAX_HDD))
 		return ;
 	computer_data.hd_size[index] = (computer_data.hd_size[index] & ~ LSB_MSK) | data;
 }
 
 void write_hd_sz_msb(uint8_t hd_addr, uint8_t data)
 {
-	int8_t index = hd_addr - HARD_DISK0_LSB_SZ_ADDRESS;
-	if (!is_valid_register(index, MAX_HARD_DISKS))
+	int8_t index = hd_addr - HDD0_LSB_SZ_ADDRESS;
+	if (!is_valid_register(index, MAX_HDD))
 		return ;
 	computer_data.hd_size[index] = (computer_data.hd_size[index] & ~ MSB_MSK) | (data << 8);
 }
@@ -373,14 +373,14 @@ void handle_sram_write_request(uint8_t write_address, uint8_t data)
 		case CPU7_TEMP_ADDRESS:
 			write_cpu_temp(write_address, data);
 			break;
-		case HARD_DISK0_TEMP_ADDRESS:
-		case HARD_DISK1_TEMP_ADDRESS:
-		case HARD_DISK2_TEMP_ADDRESS:
-		case HARD_DISK3_TEMP_ADDRESS:
-		case HARD_DISK4_TEMP_ADDRESS:
-		case HARD_DISK5_TEMP_ADDRESS:
-		case HARD_DISK6_TEMP_ADDRESS:
-		case HARD_DISK7_TEMP_ADDRESS:
+		case HDD0_TEMP_ADDRESS:
+		case HDD1_TEMP_ADDRESS:
+		case HDD2_TEMP_ADDRESS:
+		case HDD3_TEMP_ADDRESS:
+		case HDD4_TEMP_ADDRESS:
+		case HDD5_TEMP_ADDRESS:
+		case HDD6_TEMP_ADDRESS:
+		case HDD7_TEMP_ADDRESS:
 			write_hd_temp(write_address, data);
 			break;
 		case CPU0F_MSB_ADDRESS:
@@ -416,24 +416,24 @@ void handle_sram_write_request(uint8_t write_address, uint8_t data)
 		case POST_CODE_MSB_ADDRESS:
 			write_post_code_msb(data);
 			break;
-		case HARD_DISK0_LSB_SZ_ADDRESS:
-		case HARD_DISK1_LSB_SZ_ADDRESS:
-		case HARD_DISK2_LSB_SZ_ADDRESS:
-		case HARD_DISK3_LSB_SZ_ADDRESS:
-		case HARD_DISK4_LSB_SZ_ADDRESS:
-		case HARD_DISK5_LSB_SZ_ADDRESS:
-		case HARD_DISK6_LSB_SZ_ADDRESS:
-		case HARD_DISK7_LSB_SZ_ADDRESS:
+		case HDD0_LSB_SZ_ADDRESS:
+		case HDD1_LSB_SZ_ADDRESS:
+		case HDD2_LSB_SZ_ADDRESS:
+		case HDD3_LSB_SZ_ADDRESS:
+		case HDD4_LSB_SZ_ADDRESS:
+		case HDD5_LSB_SZ_ADDRESS:
+		case HDD6_LSB_SZ_ADDRESS:
+		case HDD7_LSB_SZ_ADDRESS:
 			write_hd_sz_lsb(write_address, data);
 			break;
-		case HARD_DISK0_MSB_SZ_ADDRESS:
-		case HARD_DISK1_MSB_SZ_ADDRESS:
-		case HARD_DISK2_MSB_SZ_ADDRESS:
-		case HARD_DISK3_MSB_SZ_ADDRESS:
-		case HARD_DISK4_MSB_SZ_ADDRESS:
-		case HARD_DISK5_MSB_SZ_ADDRESS:
-		case HARD_DISK6_MSB_SZ_ADDRESS:
-		case HARD_DISK7_MSB_SZ_ADDRESS:
+		case HDD0_MSB_SZ_ADDRESS:
+		case HDD1_MSB_SZ_ADDRESS:
+		case HDD2_MSB_SZ_ADDRESS:
+		case HDD3_MSB_SZ_ADDRESS:
+		case HDD4_MSB_SZ_ADDRESS:
+		case HDD5_MSB_SZ_ADDRESS:
+		case HDD6_MSB_SZ_ADDRESS:
+		case HDD7_MSB_SZ_ADDRESS:
 			write_hd_sz_msb(write_address, data);
 			break;
 		case DIRECT_CONTENT_ADDRESS:

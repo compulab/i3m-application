@@ -14,8 +14,6 @@
 #include "layout.h"
 #include "twi/twi_master.h"
 
-typedef void (*func_ptr)(char **);
-
 #define AMBIENT_TWI_ADDRESS  0x4c
 #define TEMPERATURE_LT_ADDRESS 0x00
 
@@ -29,6 +27,7 @@ void update_ambient_temp();
 enum information_type{
 	SHOW_POWER_STATE,
 	SHOW_VOLTAGE,
+	SHOW_HDD_TEMPERTURE,
 	SHOW_CPU_TEMPERTURE,
 	SHOW_GPU_TEMPERTURE,
 	SET_BOIS_STATE
@@ -54,7 +53,7 @@ void update_power_state();
 
 void set_state(char **data);
 
-void update_data_by_type(enum information_type type, char **data);
+void update_data_by_type(enum information_type type, char **output_str, uint8_t info);
 
 
 #endif /* FP_UTILS_H_ */

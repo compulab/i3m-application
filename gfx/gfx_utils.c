@@ -63,7 +63,7 @@ void set_size_by_text(char *text, struct font *font, struct gfx_item *item)
 	item->height = height;
 }
 
-void gfx_information_label_init(struct gfx_information *info,
+void gfx_information_init(struct gfx_information *info,
 		enum information_type info_type, uint8_t info_data, uint8_t x, uint8_t y, bool borderVisible)
 {
 	struct font *font = &sysfont;
@@ -80,9 +80,9 @@ void gfx_label_with_font_init(struct gfx_label *label, char *text, struct font *
 	label->text.font = font;
 }
 
-void gfx_information_label_draw(struct gfx_information *info)
+void gfx_information_draw(struct gfx_information *info)
 {
-	update_data_by_type(info->info_type, &((info->text).text));
+	update_data_by_type(info->info_type, &((info->text).text), info->info_data);
 	set_size_by_text(info->text.text, info->text.font, &info->postion);
 	gfx_item_draw(&info->postion);
 	int x = info->postion.x + 2,
@@ -172,7 +172,7 @@ void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
 	for (int i=0; i < frame->information_size; i++) {
 		frame->informations[i] = malloc (sizeof(struct gfx_information));
 		memcpy_P(&cnf_information, (cnf_frame.informations[i]), sizeof(struct cnf_info));
-		gfx_information_label_init(frame->informations[i], cnf_information.info_type,cnf_information.information,
+		gfx_information_init(frame->informations[i], cnf_information.info_type,cnf_information.information,
 				cnf_information.x, cnf_information.y, cnf_information.border_visible);
 #		ifdef DEBUG_MODE
 			MSG_T_N("[0] powerState [1]voltage :",cnf_information.info_type)
@@ -187,7 +187,7 @@ void gfx_frame_draw(struct gfx_frame *frame)
 	for (int i=0; i < frame->label_size; i++)
 		gfx_label_draw(frame->labels[i]);
 	for (int i=0; i < frame->information_size; i++)
-		gfx_information_label_draw(frame->informations[i]);
+		gfx_information_draw(frame->informations[i]);
 	for (int i=0; i < frame->image_size; i++)
 		gfx_image_draw(frame->images[i]);
 }

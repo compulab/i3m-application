@@ -8,6 +8,7 @@ void clear_menu(){
 
 void gfx_action_menu_init(struct gfx_action_menu *actionMenu)
 {
+	present_menu->visible = false;
 	present_menu = actionMenu;
 	actionMenu->visible = true;
 	clear_menu();
@@ -16,7 +17,6 @@ void gfx_action_menu_init(struct gfx_action_menu *actionMenu)
 
 void show_menu(struct gfx_action_menu *menu, bool updateParent)
 {
-	if (updateParent) menu->parent = present_menu;
 	gfx_action_menu_init(menu);
 }
 
@@ -55,11 +55,8 @@ uint8_t gfx_action_menu_process_key(struct gfx_action_menu *actionMenu, uint8_t 
 			break;
 		}
 	} else if (keycode == GFX_MONO_MENU_KEYCODE_BACK) {
-		if (present_menu->visible){
-			if (actionMenu->parent != NULL) show_menu(actionMenu->parent, false);
-		}else{
-				show_current_menu();
-		}
+		if (!present_menu->visible)
+			show_current_menu();
 	}else {
 		return gfx_mono_menu_process_key(actionMenu->menu, keycode);
 	}

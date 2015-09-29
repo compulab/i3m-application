@@ -16,7 +16,9 @@ struct twi_package twi_ambient_temp = {
 	.handle_data_received = update_ambient_value
 };
 
-
+void set_invalid_string(char **str){
+	*str = "INVALID";
+}
 
 void update_power_state()
 {
@@ -53,19 +55,48 @@ void set_state(char **data)
 
 void set_temp_string(char **str, uint8_t temp)
 {
-
+	uint8_t length = roundf(log(temp));
+	if (temp < 0)
+		length += 2;
+	char *tempStr = malloc(sizeof(char) * length);
+	itoa(temp, tempStr, 10);
+	*str = malloc(sizeof(char) * (length + 3));
+	int i=0;
+	if (temp < 0){
+		(*str[i++]) = '-';
+		(*str[i++]) = ' ';
+	}
+	for (; i < length; i++)
+		(*str)[i] = tempStr[i];
+	(*str)[length] = ' ';
+	(*str)[length + 1] = 'C';
+	(*str)[length + 2] = '\0';
 }
 
 void set_gpu_updated_temp(char **data)
 {
-//	uint8_t temp = computer_data.gpu_temp;
-//	set_temp_string(data,temp);
+	uint8_t temp = computer_data.gpu_temp;
+	if (computer_data.valid_gpu)
+		set_temp_string(data,temp);
+	else
+		set_invalid_string(data);
 }
 
-void set_cpu_updated_temp(char **data)
+void set_cpu_updated_temp(char **data,uint8_t cpu_id)
 {
-//	uint8_t temp = computer_data.cpu_temp;
-//	set_temp_string(data,temp);
+	uint8_t temp = computer_data.cpu_temp[cpu_id];
+	if ((temp & CPU_TMP_VALID_BIT) != 0)
+		set_temp_string(data,temp);
+	else
+		set_invalid_string(data);
+}
+
+void set_update_hdd_temp(char **data, uint8_t hdd_id){
+	uint8_t temp = computer_data.hd_temp[hdd_id];
+	if ((temp & HDD_TMP_VALID_BIT) != 0)
+		set_temp_string(data,temp);
+	else
+		set_invalid_string(data);
 }
 
 void update_ambient_value(uint8_t high_bit)
@@ -80,25 +111,25 @@ void update_ambient_temp()
 	send_package(&twi_ambient_temp);
 }
 
-void update_data_by_type(enum information_type type, char **data)
+void update_data_by_type(enum information_type type, char **output_str, uint8_t info)
 {
-	func_ptr ptr= NULL;
 	switch (type){
+	case SHOW_HDD_TEMPERTURE:
+		set_update_hdd_temp(output_str,info);
+		break;
 	case SHOW_VOLTAGE:
-		ptr = set_voltage_data;
+		set_voltage_data(output_str);
 		break;
 	case SHOW_POWER_STATE:
-		ptr = set_state;
+		set_state(output_str);
 		break;
 	case SHOW_CPU_TEMPERTURE:
-		ptr = set_cpu_updated_temp;
+		set_cpu_updated_temp(output_str,info);
 		break;
 	case SHOW_GPU_TEMPERTURE:
-		ptr = set_gpu_updated_temp;
+		set_gpu_updated_temp(output_str);
 		break;
 	default:
 		break;
 	}
-	if (ptr != NULL)
-		ptr(data);
 }
