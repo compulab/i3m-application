@@ -146,8 +146,8 @@ void load_config_block()
 	struct gfx_mono_menu *mono_menu;
 	memcpy_P(&config_block,(void *) CONFIG_SECTION_ADDRESS, sizeof(struct cnf_blk));
 	size = config_block.size;
-	action_menus = malloc(sizeof (struct gfx_action_menu *) * config_block.size);
-	for (int i=0; i < config_block.size; i++){
+	action_menus = malloc(sizeof (struct gfx_action_menu *) * size);
+	for (int i=0; i < size; i++){
 #ifdef DEBUG_MODE
 		MSG_T_N("Config menu: " ,i)
 #endif

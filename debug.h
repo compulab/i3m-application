@@ -14,14 +14,14 @@
 
 #define DELAY_TIME 0.02
 
-char debug[5];
+char debug[7];
 
 
 #ifdef DEBUG_MODE
 
 #endif
 
-#define CLEAR ssd1306_clear();
+//#define CLEAR ssd1306_clear();
 
 #define MSG(str)	ssd1306_set_page_address(3); \
 					ssd1306_set_column_address(3); \
@@ -36,12 +36,12 @@ char debug[5];
 					delay_s(DELAY_TIME);
 //					CLEAR
 
-#define MSG_dec(num)   ssd1306_set_page_address(6); \
+#define MSG_dec(num)   ssd1306_set_page_address(4); \
 					ssd1306_set_column_address(3); \
 					itoa(num,debug,10); \
 					ssd1306_write_text(debug);  \
-					delay_s(DELAY_TIME); \
-					CLEAR
+					delay_s(DELAY_TIME);
+//					CLEAR
 
 #define MSG_T_N(str,num)	ssd1306_set_page_address(3); \
 					ssd1306_set_column_address(3); \
@@ -50,8 +50,8 @@ char debug[5];
 					ssd1306_set_column_address(3); \
 					itoa(num,debug,16); \
 					ssd1306_write_text(debug);  \
-					delay_s(DELAY_TIME); \
-					CLEAR
+					delay_s(DELAY_TIME);
+//					CLEAR
 
 #define MSG_T_T(title,str)	ssd1306_set_page_address(3); \
 					ssd1306_set_column_address(3); \
@@ -59,8 +59,8 @@ char debug[5];
 					ssd1306_set_page_address(5); \
 					ssd1306_set_column_address(3); \
 					ssd1306_write_text(str); \
-					delay_s(DELAY_TIME); \
-					CLEAR
+					delay_s(DELAY_TIME);
+//					CLEAR
 
 
 //

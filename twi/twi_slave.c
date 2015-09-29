@@ -168,8 +168,9 @@ void twi_slave_address_match_handler()
 		clear_addresses();
 		slave_address= address;
 	}
-	twi_ack();
 	twi_clear_apif();
+	twi_ack();
+
 }
 
 void twi_slave_stop_handler()
@@ -187,16 +188,17 @@ void twi_slave_read_data_handler()
 	} else {
 		twi_handle_read(reg_address);
 		data_sent = true;
+		twi_clear_dif();
 		twi_ack();
 	}
-	twi_clear_dif();
+
 }
 
 void twi_slave_write_data_handler()
 {
 	twi_handle_write(TWI_SLAVE_BASE.DATA);
-	twi_ack();
 	twi_clear_dif();
+	twi_ack();
 }
 
 void twi_save_address()

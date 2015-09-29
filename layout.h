@@ -33,17 +33,17 @@
 #define CPU7_TEMP_ADDRESS 			0x27
 #define GPU_TEMP_ADDRESS 			0x28
 #define AMBIENT_TEMP_ADDRESS 		0x29
-#define HDD0_TEMP_ADDRESS 	0x30
-#define HDD1_TEMP_ADDRESS 	0x31
-#define HDD2_TEMP_ADDRESS 	0x32
-#define HDD3_TEMP_ADDRESS 	0x33
-#define HDD4_TEMP_ADDRESS 	0x34
-#define HDD5_TEMP_ADDRESS 	0x35
-#define HDD6_TEMP_ADDRESS 	0x36
-#define HDD7_TEMP_ADDRESS 	0x37
+#define HDD0_TEMP_ADDRESS 			0x30
+#define HDD1_TEMP_ADDRESS 			0x31
+#define HDD2_TEMP_ADDRESS 			0x32
+#define HDD3_TEMP_ADDRESS 			0x33
+#define HDD4_TEMP_ADDRESS 			0x34
+#define HDD5_TEMP_ADDRESS 			0x35
+#define HDD6_TEMP_ADDRESS 			0x36
+#define HDD7_TEMP_ADDRESS 			0x37
 #define CPU_STATUS_ADDRESS 			0x38
 #define TEMPERTURE_CONTROL_ADDRESS	0x39
-#define HDD_STATUS_ADDRESS 	0x3a
+#define HDD_STATUS_ADDRESS 			0x3a
 
 #define ADC_LSB_ADDRESS 			0x40
 #define ADC_MSB_ADDRESS 			0x41
@@ -131,8 +131,11 @@ struct direct_string_item {
 struct update_information {
 	struct direct_string_item *direct_string;
 	bool wen;
-	bool valid_ambient;
-	bool valid_gpu;
+	bool valid_ambient_temp;
+	bool valid_gpu_temp;
+	bool valid_hdd_temp[MAX_HDD];
+	bool valid_cpu_temp[MAX_CPU];
+	bool valid_cpu_fq[MAX_CPU];
 	bool req_cpu_temp;
 	bool req_cpu_fq;
 	bool req_gpu_temp;
@@ -140,8 +143,8 @@ struct update_information {
 	uint8_t ambient_temp;
 	uint8_t mem_slot_sz[MAX_MEMORY_SLOT/2];
 	uint8_t cpu_temp[MAX_CPU];
-	uint8_t hd_temp[MAX_HDD];
-	uint16_t hd_size[MAX_HDD];
+	uint8_t hdd_temp[MAX_HDD];
+	uint16_t hdd_size[MAX_HDD];
 	uint16_t cpu_fq[MAX_CPU];
 	uint16_t bios_post_code;
 };
