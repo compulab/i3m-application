@@ -28,6 +28,9 @@ struct cnf_blk  {
 	struct cnf_menu *menus[MAX_MENUS];
 	uint8_t signature;
 	uint8_t size;
+	uint8_t *splash;
+	uint8_t splash_height;
+	uint8_t splash_width;
 	uint32_t reserved[24];
 };
 

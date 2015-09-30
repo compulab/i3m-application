@@ -139,6 +139,14 @@ void loadAction(struct gfx_item_action *action, struct cnf_action *cnfAction)
 	}
 }
 
+struct gfx_mono_bitmap splash_bitmap;
+
+void show_splash()
+{
+	gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 15);
+}
+
+
 void load_config_block()
 {
 	struct cnf_blk config_block;
@@ -146,6 +154,10 @@ void load_config_block()
 	struct gfx_mono_menu *mono_menu;
 	memcpy_P(&config_block,(void *) CONFIG_SECTION_ADDRESS, sizeof(struct cnf_blk));
 	size = config_block.size;
+	splash_bitmap.width = config_block.splash_width;
+	splash_bitmap.height = config_block.splash_height;
+	splash_bitmap.data.progmem = config_block.splash;
+	splash_bitmap.type = GFX_MONO_BITMAP_SECTION;
 	action_menus = malloc(sizeof (struct gfx_action_menu *) * size);
 	for (int i=0; i < size; i++){
 #ifdef DEBUG_MODE
@@ -168,6 +180,7 @@ void set_menu_by_id(struct gfx_action_menu **menu, uint8_t index)
 {
 	if (index < size){
 		*menu = action_menus[index];
+		(*menu)->visible = false;
 		#ifdef DEBUG_MODE
 			MSG_T_N("setting menu number: ", index)
 		#endif
@@ -208,39 +221,43 @@ void handle_button_pressed()
 	update_button_state(left_pressed, &left_time, &left_button);
 	update_button_state(right_pressed, &right_time, &right_button);
 	update_button_state(ok_pressed, &ok_time, &ok_button);
-		switch (ok_button){
-		case BUTTON_HOLD:
-			handle_bBack();
-			return;
-			break;
-		case BUTTON_CLICK:
-			if (present_menu->visible)
-				gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_ENTER);
-			else
-				gfx_action_menu_init(present_menu);
-			return;
-			break;
-		default:
-			break;
-		}
-		switch (left_button){
-		case BUTTON_HOLD:
-		case BUTTON_CLICK:
-			if (present_menu->visible)
-				gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP);
-			return;
-			break;
-		default:
-			break;
-		}
-			switch (right_button){
-			case BUTTON_HOLD:
-			case BUTTON_CLICK:
-				if (present_menu->visible)
-					gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN);
-				return;
-				break;
-			default:
-				break;
-			}
+	switch (ok_button){
+	case BUTTON_HOLD:
+		handle_bBack();
+		return;
+		break;
+	case BUTTON_CLICK:
+		if (present_menu->visible)
+			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_ENTER);
+		else
+			gfx_action_menu_init(present_menu);
+		return;
+		break;
+	default:
+		break;
+	}
+	switch (left_button){
+	case BUTTON_HOLD:
+	case BUTTON_CLICK:
+		if (present_menu->visible)
+			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP);
+		else
+			gfx_action_menu_init(present_menu);
+		return;
+		break;
+	default:
+		break;
+	}
+	switch (right_button){
+	case BUTTON_HOLD:
+	case BUTTON_CLICK:
+		if (present_menu->visible)
+			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN);
+		else
+			gfx_action_menu_init(present_menu);
+		return;
+		break;
+	default:
+		break;
+	}
 }
