@@ -10,33 +10,39 @@
 
 #include "sram_handle.h"
 
-#define CPU_FQ_MSK 			0x1f00
-#define CPU_FQ_MSB_MSK 		0x1f
-#define CPU_FQ_LSB_MSK 		0xff
-#define VALID_CPU_FQ_MSK	0x80
-#define VALID_AMBIENT_MASK 	0x02
-#define VALID_GPU_MASK 		0x01
-#define LSB_MSK 			0x00ff
-#define MSB_MSK 			0xff00
-#define RSTUSB_MSK 			0x02
-#define RST_MSK 			0x01
-#define RST_MSK 			0x01
-#define WEN_MSK 			0x80
-#define DEFAULT_DATA		0x00
-#define POWER_ON_BM			0x07
-#define POWER_STR_BM		0x03
-#define POWER_STD_BM		0x01
-#define POWER_OFF_BM		0x00
-#define REQUEST_ENABLE		0x01
-#define REQUEST_CPUF		0x02
-#define REQUEST_CPUT		0x04
-#define REQUEST_GPUT		0x08
+#define CPU_FQ_MSK 				0x1f00
+#define CPU_FQ_MSB_MSK 			0x1f
+#define CPU_FQ_LSB_MSK 			0xff
+#define VALID_CPU_FQ_MSK		0x80
+#define VALID_AMBIENT_MASK 		0x02
+#define VALID_GPU_MASK 			0x01
+#define LSB_MSK 				0x00ff
+#define MSB_MSK 				0x0300
+#define HDD_SZ_MSK				0x03
+#define HDD_SZ_UNIT_MSK			0x04
+#define HDD_SZ_STATUS_MSK		0x80
+#define MEM_SZ_STATUS_LSB_MSK	0x08
+#define MEM_SZ_STATUS_MSB_MSK	0x80
+#define MEM_SZ_LSB_MSK			0x07
+#define MEM_SZ_MSB_MSK			0x70
+#define RSTUSB_MSK 				0x02
+#define RST_MSK 				0x01
+#define RST_MSK 				0x01
+#define WEN_MSK 				0x80
+#define DEFAULT_DATA			0x00
+#define POWER_ON_BM				0x07
+#define POWER_STR_BM			0x03
+#define POWER_STD_BM			0x01
+#define POWER_OFF_BM			0x00
+#define REQUEST_ENABLE			0x01
+#define REQUEST_CPUF			0x02
+#define REQUEST_CPUT			0x04
+#define REQUEST_GPUT			0x08
 
 bool is_valid_register(int8_t index, uint8_t max_index)
 {
 	return index >= 0 && index < max_index;
 }
-
 
 void write_cpu_temp(uint8_t cpu_addr, uint8_t data)
 {
@@ -80,7 +86,7 @@ void write_temp_control(uint8_t data)
 
 void write_hd_sz_lsb(uint8_t hd_addr, uint8_t data)
 {
-	int8_t index = hd_addr - HDD0_LSB_SZ_ADDRESS;
+	int8_t index = (hd_addr - HDD0_LSB_SZ_ADDRESS) / 2;
 	if (!is_valid_register(index, MAX_HDD))
 		return ;
 	computer_data.hdd_size[index] = (computer_data.hdd_size[index] & ~ LSB_MSK) | data;
@@ -88,10 +94,12 @@ void write_hd_sz_lsb(uint8_t hd_addr, uint8_t data)
 
 void write_hd_sz_msb(uint8_t hd_addr, uint8_t data)
 {
-	int8_t index = hd_addr - HDD0_LSB_SZ_ADDRESS;
+	int8_t index = (hd_addr - HDD0_LSB_SZ_ADDRESS) / 2;
 	if (!is_valid_register(index, MAX_HDD))
 		return ;
-	computer_data.hdd_size[index] = (computer_data.hdd_size[index] & ~ MSB_MSK) | (data << 8);
+	computer_data.valid_hdd_size[index] = (data & HDD_SZ_STATUS_MSK);
+	computer_data.hdd_tera_units[index] = (data & HDD_SZ_UNIT_MSK);
+	computer_data.hdd_size[index] = (computer_data.hdd_size[index] & ~ MSB_MSK) | ((data & HDD_SZ_MSK) << 8);
 }
 
 void reset_to_usb()
@@ -104,41 +112,76 @@ void software_reset()
 //TODO
 }
 
+void write_cpu_status(uint8_t status)
+{
+	if (status & 0x01)
+		computer_data.valid_cpu_temp[0] = true;
+	else
+		computer_data.valid_cpu_temp[0] = false;
+	if (status & 0x02)
+		computer_data.valid_cpu_temp[1] = true;
+	else
+		computer_data.valid_cpu_temp[1] = false;
+	if (status & 0x04)
+		computer_data.valid_cpu_temp[2] = true;
+	else
+		computer_data.valid_cpu_temp[2] = false;
+	if (status & 0x08)
+		computer_data.valid_cpu_temp[3] = true;
+	else
+		computer_data.valid_cpu_temp[3] = false;
+	if (status & 0x10)
+		computer_data.valid_cpu_temp[4] = true;
+	else
+		computer_data.valid_cpu_temp[4] = false;
+	if (status & 0x20)
+		computer_data.valid_cpu_temp[5] = true;
+	else
+		computer_data.valid_cpu_temp[5] = false;
+	if (status & 0x40)
+		computer_data.valid_cpu_temp[6] = true;
+	else
+		computer_data.valid_cpu_temp[6] = false;
+	if (status & 0x80)
+		computer_data.valid_cpu_temp[7] = true;
+	else
+		computer_data.valid_cpu_temp[7] = false;
+}
+
 void write_hdd_status(uint8_t status)
 {
-	bool valid_index = true;
-	uint8_t index;
-	switch (status){
-	case 0x01:
-		index = 0;
-		break;
-	case 0x02:
-		index = 1;
-		break;
-	case 0x04:
-		index = 2;
-		break;
-	case 0x08:
-		index = 3;
-		break;
-	case 0x10:
-		index = 4;
-		break;
-	case 0x20:
-		index = 5;
-		break;
-	case 0x40:
-		index = 6;
-		break;
-	case 0x80:
-		index = 7;
-		break;
-	default:
-		valid_index = false;
-		break;
-	}
-	if (valid_index)
-		computer_data.valid_hdd_temp[index] = true;
+	if (status & 0x01)
+		computer_data.valid_hdd_temp[0] = true;
+	else
+		computer_data.valid_hdd_temp[0] = false;
+	if (status & 0x02)
+		computer_data.valid_hdd_temp[1] = true;
+	else
+		computer_data.valid_hdd_temp[1] = false;
+	if (status & 0x04)
+		computer_data.valid_hdd_temp[2] = true;
+	else
+		computer_data.valid_hdd_temp[2] = false;
+	if (status & 0x08)
+		computer_data.valid_hdd_temp[3] = true;
+	else
+		computer_data.valid_hdd_temp[3] = false;
+	if (status & 0x10)
+		computer_data.valid_hdd_temp[4] = true;
+	else
+		computer_data.valid_hdd_temp[4] = false;
+	if (status & 0x20)
+		computer_data.valid_hdd_temp[5] = true;
+	else
+		computer_data.valid_hdd_temp[5] = false;
+	if (status & 0x40)
+		computer_data.valid_hdd_temp[6] = true;
+	else
+		computer_data.valid_hdd_temp[6] = false;
+	if (status & 0x80)
+		computer_data.valid_hdd_temp[7] = true;
+	else
+		computer_data.valid_hdd_temp[7] = false;
 }
 
 void write_reset(uint8_t data)
@@ -162,8 +205,11 @@ void write_post_code_msb(uint8_t data)
 
 void write_memory(uint8_t mem_addr, uint8_t data)
 {
-	uint8_t index = mem_addr - MEM_SLOT01_ADDRESS;
-	computer_data.mem_slot_sz[index] = data;
+	uint8_t index = (mem_addr - MEM_SLOT01_ADDRESS) * 2;
+	computer_data.mem_slot_sz[index] = data & MEM_SZ_LSB_MSK;
+	computer_data.valid_mem[index] = data & MEM_SZ_STATUS_LSB_MSK;
+	computer_data.mem_slot_sz[index + 1] = (data & MEM_SZ_MSB_MSK) >> 4;
+	computer_data.valid_mem[index + 1] = data & MEM_SZ_STATUS_MSB_MSK;
 }
 
 void read_sig(uint8_t sig_address, uint8_t *data)
@@ -435,6 +481,9 @@ void handle_sram_write_request(uint8_t write_address, uint8_t data)
 		case CPU6_TEMP_ADDRESS:
 		case CPU7_TEMP_ADDRESS:
 			write_cpu_temp(write_address, data);
+			break;
+		case CPU_STATUS_ADDRESS:
+			write_cpu_status(data);
 			break;
 		case HDD0_TEMP_ADDRESS:
 		case HDD1_TEMP_ADDRESS:

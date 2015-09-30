@@ -62,7 +62,6 @@ void init_menu()
 	set_menu_by_id(&present_menu, 0);
 	gfx_action_menu_init(present_menu);
 	tc_init();
-
 }
 
 void power_state_init()
@@ -78,7 +77,10 @@ void updated_info_init()
 		computer_data.valid_cpu_temp[i] = false;
 		computer_data.valid_cpu_fq[i] = false;
 	}
-	for (int i=0; i < MAX_HDD; i++) computer_data.valid_hdd_temp[i] = false;
+	for (int i=0; i < MAX_HDD; i++){
+		computer_data.valid_hdd_temp[i] = false;
+		computer_data.valid_hdd_size[i] = false;
+	}
 	computer_data.req_cpu_fq = false;
 	computer_data.req_cpu_temp = false;
 	computer_data.req_gpu_temp = false;

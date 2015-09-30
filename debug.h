@@ -21,7 +21,7 @@ char debug[7];
 
 #endif
 
-//#define CLEAR ssd1306_clear();
+#define CLEAR ssd1306_clear();
 
 #define MSG(str)	ssd1306_set_page_address(3); \
 					ssd1306_set_column_address(3); \

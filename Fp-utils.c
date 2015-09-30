@@ -64,6 +64,54 @@ int num_of_digits(int x) {
   return 0;
 }
 
+
+
+void set_mem_size_str(char **str, uint8_t mem)
+{
+	uint8_t size;
+	switch (mem){
+	case 0x01:
+	case 0x02:
+		size = mem;
+		break;
+	case 0x03:
+		size = 4;
+		break;
+	case 0x04:
+		size = 8;
+		break;
+	case 0x05:
+		size = 16;
+		break;
+	default:
+		size = 0;
+		break;
+	}
+	if (size == 0){
+		*str = malloc(sizeof(char) * strlen(EMPTY_SLOT));
+		strcpy((*str), EMPTY_SLOT);
+	} else {
+		*str = malloc(sizeof(char) * num_of_digits(size) + 3);
+		itoa(size, *str, 10);
+		strcat(*str, " GB");
+	}
+}
+
+void set_hdd_size_str(char **str, uint16_t size, bool is_tera_units)
+{
+	uint8_t size_length = num_of_digits(size);
+	char temp_size_str[size_length];
+	char * units;
+	if (is_tera_units)
+			units = " TB";
+		else
+			units = " GB";
+	*str = malloc(sizeof(char) * (size_length + 3));
+	itoa(size, temp_size_str, 10);
+	strcpy((*str), temp_size_str);
+	strcat((*str), units);
+}
+
 void set_fq_string(char **str, uint16_t fq)
 {
 	*str = malloc(sizeof(char) * 10);
@@ -101,6 +149,22 @@ void set_cpu_updated_temp(char **data,uint8_t cpu_id)
 		set_invalid_string(data);
 }
 
+void set_updated_memory_size(char **output_str, uint8_t mem_id)
+{
+	if (computer_data.valid_mem[mem_id])
+		set_mem_size_str(output_str, computer_data.mem_slot_sz[mem_id]);
+	else
+		set_invalid_string(output_str);
+}
+
+void set_updated_hdd_size(char **output_str, uint8_t hdd_id)
+{
+	if (computer_data.valid_hdd_size[hdd_id])
+		set_hdd_size_str(output_str, computer_data.hdd_size[hdd_id], computer_data.hdd_tera_units[hdd_id]);
+	else
+		set_invalid_string(output_str);
+}
+
 void set_updated_cpu_frequency(char **output_str, uint8_t cpu_id)
 {
 	if (computer_data.valid_cpu_fq[cpu_id])
@@ -136,7 +200,6 @@ void set_update_hdd_temp(char **output_str, uint8_t hdd_id)
 
 void update_ambient_value(uint8_t ambient_temp)
 {
-	MSG("AMBIENT UPDATED")
 	computer_data.ambient_temp = ambient_temp;
 	computer_data.valid_ambient_temp = true;
 }
@@ -152,6 +215,12 @@ void update_ambient_temp()
 void update_data_by_type(enum information_type type, char **output_str, uint8_t info)
 {
 	switch (type){
+	case SHOW_MEMORY_SIZE:
+		set_updated_memory_size(output_str, info);
+		break;
+	case SHOW_HDD_SIZE:
+		set_updated_hdd_size(output_str, info);
+		break;
 	case SHOW_AMBIENT_TEMPERATURE:
 		set_updated_ambient_temp(output_str);
 		break;

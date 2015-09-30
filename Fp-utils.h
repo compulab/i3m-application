@@ -16,7 +16,7 @@
 
 #define AMBIENT_TWI_ADDRESS  0x4c
 #define TEMPERATURE_LT_ADDRESS 0x00
-
+#define EMPTY_SLOT "Empty Slot"
 
 
 void update_ambient_value(uint8_t high_bit);
@@ -28,6 +28,8 @@ enum information_type{
 	SHOW_POWER_STATE,
 	SHOW_VOLTAGE,
 	SHOW_CPU_FREQUENCY,
+	SHOW_HDD_SIZE,
+	SHOW_MEMORY_SIZE,
 	SHOW_HDD_TEMPERTURE,
 	SHOW_CPU_TEMPERTURE,
 	SHOW_GPU_TEMPERTURE,
