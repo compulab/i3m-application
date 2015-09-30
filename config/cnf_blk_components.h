@@ -13,28 +13,6 @@
 #include "../Fp-utils.h"
 typedef uint8_t gfx_mono_color_t;
 
-#define MAX_MENUS 15
-#define MAX_INFORMATION 3
-#define MAX_LABEL 7
-#define MAX_IMAGE 4
-#define MAX_ACTIONS 6
-#define MAX_TITLES 6
-
-struct cnf_menu_titles {
-	char * titles[MAX_TITLES];
-};
-
-struct cnf_blk  {
-	struct cnf_menu *menus[MAX_MENUS];
-	uint8_t signature;
-	uint8_t size;
-	uint8_t *splash;
-	uint8_t splash_height;
-	uint8_t splash_width;
-	uint32_t reserved[24];
-};
-
-
 struct cnf_label{
 	char *text;
 	uint8_t x, y;
@@ -55,22 +33,57 @@ struct cnf_info{
 	bool border_visible;
 };
 
+struct cnf_label_node{
+	struct cnf_label label;
+	struct cnf_label_node *next;
+};
+
+struct cnf_image_node{
+	struct cnf_image image;
+	struct cnf_image_node *next;
+};
+
+struct cnf_info_node{
+	struct cnf_info info;
+	struct cnf_info_node *next;
+};
+
 struct cnf_frame{
-	struct cnf_info *informations[MAX_INFORMATION];
-	struct cnf_label *labels[MAX_LABEL];
-	struct cnf_image *images[MAX_IMAGE];
-	uint8_t information_size,label_size,image_size;
+	struct cnf_label_node *labels_head;
+	struct cnf_info_node *infos_head;
+	struct cnf_image_node *images_head;
 };
 
 struct cnf_action{
 	struct cnf_frame *frame;
 	enum action_type type;
-	uint8_t menuId;
+	uint8_t menu_id;
+};
+
+struct cnf_action_node{
+	struct cnf_action action;
+	struct cnf_action_node *next;
 };
 
 struct cnf_menu{
 	struct gfx_mono_menu *menu;
-	struct cnf_action *actions[MAX_ACTIONS];
+	struct cnf_action_node *actions_head;
+	uint8_t id;
+};
+
+struct cnf_menu_node{
+	struct cnf_menu *menu;
+	struct cnf_menu_node *next;
+};
+
+struct cnf_blk  {
+	struct cnf_menu_node *menus_head;
+	uint8_t signature;
+	uint8_t size;
+	uint8_t *splash;
+	uint8_t splash_height;
+	uint8_t splash_width;
+	uint32_t reserved[24];
 };
 
 #endif /* CONFIG_CNF_BLK_COMPONENTS_H_ */

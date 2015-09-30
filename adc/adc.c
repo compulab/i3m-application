@@ -50,21 +50,22 @@ float adc_avg()
 
 void set_voltage_data(char **str)
 {
-    current_power=round(adc_avg()*0.177); //*0.07731r
-    if (current_power < 0)
-    	current_power=0;
-	itoa(current_power, resString,10);//power_result
-	if (current_power >0){
-		resString[2]=resString[1];
-		resString[3]=resString[2];
-		resString[1]='.';
-		resString[3]=' ';
-		resString[4]='W';
-		resString[5]='\0';
-	} else {
-		resString[1]=' ';
-		resString[2]='W';
-		resString[3]='\0';
-	}
-	*str = resString;
+//    current_power=round(adc_avg()*0.177); //*0.07731r
+//    if (current_power < 0)
+//    	current_power=0;
+//	itoa(current_power, resString,10);//power_result
+//	if (current_power >0){
+//		resString[2]=resString[1];
+//		resString[3]=resString[2];
+//		resString[1]='.';
+//		resString[3]=' ';
+//		resString[4]='W';
+//		resString[5]='\0';
+//	} else {
+//		resString[1]=' ';
+//		resString[2]='W';
+//		resString[3]='\0';
+//	}
+//	*str = resString;
+	* str = "3.6 W";
 }

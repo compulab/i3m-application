@@ -62,6 +62,10 @@
 
 extern int tc_counter;
 
+extern int standby_counter;
+
+//void clear_standby();
+
 void tc_init();
 /* Definition of macros. */
 

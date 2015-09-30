@@ -41,11 +41,25 @@ struct gfx_image {
 	struct gfx_mono_bitmap *bitmap;
 };
 
+struct gfx_image_node {
+	struct gfx_image image;
+	struct gfx_image_node *next;
+};
+
+struct gfx_label_node {
+	struct gfx_label label;
+	struct gfx_label_node *next;
+};
+
+struct gfx_information_node {
+	struct gfx_information information;
+	struct gfx_information_node *next;
+};
+
 struct gfx_frame {
-	struct gfx_image **images;
-	struct gfx_information  **informations;
-	struct gfx_label  **labels;
-	uint8_t image_size, information_size, label_size;
+	struct gfx_image_node *image_head;
+	struct gfx_label_node *label_head;
+	struct gfx_information_node *information_head;
 };
 
 #endif /* GFX_GFX_COMPONENTS_H_ */

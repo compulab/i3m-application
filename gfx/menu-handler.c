@@ -1,6 +1,5 @@
-
-
 #include "menu-handler.h"
+#include "../timer/tc.h"
 
 #define is_key_selected(var,key) (var & key) == key
 enum key_Select selected_Key;
@@ -102,9 +101,9 @@ void action_types_init()
 			action = &menu->actions[j];
 			switch (action->type){
 			case ACTION_TYPE_SHOW_MENU:
-				set_menu_by_id(&(action->menu), action->menuId);
+				set_menu_by_id(&(action->menu), action->menu_id);
 #ifdef DEBUG_MODE
-				MSG_T_N("Menu id",action->menuId)
+				MSG_T_N("Menu id",action->menu_id)
 #endif
 				break;
 			default:
@@ -114,35 +113,41 @@ void action_types_init()
 	}
 }
 
-void loadAction(struct gfx_item_action *action, struct cnf_action *cnfAction)
+
+void load_action(struct gfx_item_action *action, struct cnf_action config_action)
 {
-	struct cnf_action config_action;
-	memcpy_P(&config_action, cnfAction,sizeof(struct cnf_action));
 	action->type = config_action.type;
 	switch(config_action.type){
 	case ACTION_TYPE_SET_BIOS_STATE:
 	case ACTION_TYPE_SHOW_FRAME:
-#ifdef DEBUG_MODE
+#ifdef DEBUG_MODE_ACTION
 		MSG("action is frame")
 #endif
 		action->frame = malloc (sizeof(struct gfx_frame));
 		gfx_frame_init(action->frame, config_action.frame);
 	break;
 	case ACTION_TYPE_SHOW_MENU:
-#ifdef DEBUG_MODE
+#ifdef DEBUG_MODE_ACTION
 		MSG("action is menu")
 #endif
-		action->menuId = config_action.menuId;
+		action->menu_id = config_action.menu_id;
 		break;
 	default:
 		break;
 	}
 }
 
+void clear_counter()
+{
+	tc_counter = 0;
+}
+
 struct gfx_mono_bitmap splash_bitmap;
 
 void show_splash()
 {
+	present_menu->visible = false;
+	ssd1306_clear();
 	gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 15);
 }
 
@@ -159,18 +164,34 @@ void load_config_block()
 	splash_bitmap.data.progmem = config_block.splash;
 	splash_bitmap.type = GFX_MONO_BITMAP_SECTION;
 	action_menus = malloc(sizeof (struct gfx_action_menu *) * size);
+	struct cnf_menu_node *cnf_menu_node = config_block.menus_head;
+	struct cnf_menu_node cnf_menu;
 	for (int i=0; i < size; i++){
 #ifdef DEBUG_MODE
 		MSG_T_N("Config menu: " ,i)
 #endif
 		action_menus[i] = malloc(sizeof(struct gfx_action_menu));
-		memcpy_P(&config_menu, config_block.menus[i], sizeof(struct cnf_menu));
-		mono_menu = malloc(sizeof(struct gfx_mono_menu));
-		memcpy_P(mono_menu, config_menu.menu, sizeof(struct gfx_mono_menu));
-		action_menus[i]->menu= mono_menu;
-		action_menus[i]->actions = malloc (sizeof(struct gfx_item_action) * mono_menu->num_elements);
-		for (uint8_t j=0; j < mono_menu->num_elements; j++){
-			loadAction(&(action_menus[i]->actions[j]), config_menu.actions[j]);
+		if (cnf_menu_node != 0){
+			memcpy_P(&cnf_menu, cnf_menu_node, sizeof(struct cnf_menu_node));
+			memcpy_P(&config_menu, cnf_menu.menu, sizeof(struct cnf_menu));
+			mono_menu = malloc(sizeof(struct gfx_mono_menu));
+			memcpy_P(mono_menu, config_menu.menu, sizeof(struct gfx_mono_menu));
+			delay_s(1);
+			action_menus[i]->menu= mono_menu;
+			action_menus[i]->actions = malloc (sizeof(struct gfx_item_action) * mono_menu->num_elements);
+			struct cnf_action_node *cnf_action_node = config_menu.actions_head;
+			struct cnf_action_node action_node;
+			memcpy_P(&action_node, cnf_action_node, sizeof(struct cnf_action_node));
+			uint8_t action_index = 0;
+			while (cnf_action_node != 0){
+				memcpy_P(&action_node, cnf_action_node, sizeof(struct cnf_action_node));
+				load_action(&(action_menus[i]->actions[action_index]), action_node.action);
+				action_index++;
+				cnf_action_node = action_node.next;
+			}
+			cnf_menu_node = cnf_menu_node->next;
+		} else {
+			break;
 		}
 	}
 	action_types_init();
@@ -224,9 +245,11 @@ void handle_button_pressed()
 	switch (ok_button){
 	case BUTTON_HOLD:
 		handle_bBack();
+		clear_counter();
 		return;
 		break;
 	case BUTTON_CLICK:
+		clear_counter();
 		if (present_menu->visible)
 			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_ENTER);
 		else
@@ -239,6 +262,7 @@ void handle_button_pressed()
 	switch (left_button){
 	case BUTTON_HOLD:
 	case BUTTON_CLICK:
+		clear_counter();
 		if (present_menu->visible)
 			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP);
 		else
@@ -251,6 +275,7 @@ void handle_button_pressed()
 	switch (right_button){
 	case BUTTON_HOLD:
 	case BUTTON_CLICK:
+		clear_counter();
 		if (present_menu->visible)
 			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN);
 		else

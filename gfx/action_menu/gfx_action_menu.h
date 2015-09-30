@@ -25,7 +25,7 @@ struct gfx_item_data {
 
 struct gfx_item_action {
 	enum action_type type;
-	uint8_t menuId;
+	uint8_t menu_id;
 	struct gfx_action_menu *menu;
 	struct gfx_frame *frame;
 };

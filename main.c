@@ -11,6 +11,10 @@
 #include "twi/twi_slave.h"
 #include "asf.h"
 
+#define MENU_SHOW_TIME		150
+#define SLEEP_TIME			500
+#define DEMO_SHOW
+
 ISR(TWIE_TWIS_vect)
 {
 	twi_slave_interrupt_handler();
@@ -34,7 +38,10 @@ ISR(PORTF_INT1_vect){
 ISR(TCC0_OVF_vect)
 {
 	tc_counter++;
-//	menu_handler();
+	if (tc_counter == MENU_SHOW_TIME && !present_menu->visible)
+		gfx_action_menu_init(present_menu);
+	else if (tc_counter == SLEEP_TIME)
+		show_splash();
 }
 
 void portf_init()
@@ -71,6 +78,69 @@ void power_state_init()
 
 void updated_info_init()
 {
+#ifdef DEMO_SHOW
+	computer_data.valid_ambient_temp = true;
+	computer_data.ambient_temp = 65;
+	computer_data.valid_gpu_temp = true;
+	computer_data.gpu_temp = 55;
+
+	computer_data.valid_cpu_temp[0] = true;
+	computer_data.cpu_temp[0] = 45;
+	computer_data.valid_cpu_fq[0] = true;
+	computer_data.cpu_fq[0] = 4470;
+
+	computer_data.valid_cpu_temp[1] = true;
+	computer_data.cpu_temp[1] = 65;
+	computer_data.valid_cpu_fq[1] = true;
+	computer_data.cpu_fq[1] = 4300;
+
+	computer_data.valid_cpu_temp[2] = true;
+	computer_data.cpu_temp[2] = 35;
+	computer_data.valid_cpu_fq[2] = true;
+	computer_data.cpu_fq[2] = 4100;
+
+	computer_data.valid_cpu_temp[3] = true;
+	computer_data.cpu_temp[3] = 75;
+	computer_data.valid_cpu_fq[3] = true;
+	computer_data.cpu_fq[3] = 4800;
+
+	computer_data.valid_hdd_temp[0] = true;
+	computer_data.hdd_temp[0] = 65;
+	computer_data.valid_hdd_size[0] = true;
+	computer_data.hdd_size[0] = 550;
+	computer_data.hdd_tera_units[0] = false;
+
+	computer_data.valid_hdd_temp[1] = true;
+	computer_data.hdd_temp[1] = 65;
+	computer_data.valid_hdd_size[1] = true;
+	computer_data.hdd_size[1] = 550;
+	computer_data.hdd_tera_units[1] = false;
+
+	computer_data.valid_hdd_temp[2] = true;
+	computer_data.hdd_temp[2] = 85;
+	computer_data.valid_hdd_size[2] = true;
+	computer_data.hdd_size[2] = 2;
+	computer_data.hdd_tera_units[2] = true;
+
+	computer_data.valid_hdd_temp[3] = true;
+	computer_data.hdd_temp[3] = 45;
+	computer_data.valid_hdd_size[3] = true;
+	computer_data.hdd_size[3] = 150;
+	computer_data.hdd_tera_units[3] = false;
+
+	computer_data.valid_mem[0] = true;
+	computer_data.mem_slot_sz[0] = 3;
+
+	computer_data.valid_mem[1] = true;
+	computer_data.mem_slot_sz[1] = 2;
+
+	computer_data.valid_mem[2] = true;
+	computer_data.mem_slot_sz[2] = 5;
+
+	computer_data.valid_mem[3] = true;
+	computer_data.mem_slot_sz[3] = 0;
+
+#else
 	computer_data.valid_ambient_temp = false;
 	computer_data.valid_gpu_temp = false;
 	for (int i=0; i < MAX_CPU; i++){
@@ -81,6 +151,7 @@ void updated_info_init()
 		computer_data.valid_hdd_temp[i] = false;
 		computer_data.valid_hdd_size[i] = false;
 	}
+#endif
 	computer_data.req_cpu_fq = false;
 	computer_data.req_cpu_temp = false;
 	computer_data.req_gpu_temp = false;

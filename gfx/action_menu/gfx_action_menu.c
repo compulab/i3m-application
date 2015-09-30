@@ -48,9 +48,9 @@ uint8_t gfx_action_menu_process_key(struct gfx_action_menu *actionMenu, uint8_t 
 			menu = selectedAction.menu;
 			show_menu(menu, true);
 			break;
-		case ACTION_TYPE_SET_BIOS_STATE:
-			eeprom_write_byte(BIOS_STATE_ADDRESS,selectedAction.frame->informations[0]->info_data);
-			break;
+//		case ACTION_TYPE_SET_BIOS_STATE:
+//			eeprom_write_byte(BIOS_STATE_ADDRESS,selectedAction.frame->informations[0]->info_data);
+//			break;
 		default:
 			break;
 		}
