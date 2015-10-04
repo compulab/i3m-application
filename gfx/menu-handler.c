@@ -151,6 +151,14 @@ void show_splash()
 	gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 15);
 }
 
+void splash_init(struct cnf_blk config_block)
+{
+	splash_bitmap.width = config_block.splash_width;
+	splash_bitmap.height = config_block.splash_height;
+	splash_bitmap.data.progmem = config_block.splash;
+	splash_bitmap.type = GFX_MONO_BITMAP_SECTION;
+	show_splash();
+}
 
 void load_config_block()
 {
@@ -159,24 +167,17 @@ void load_config_block()
 	struct gfx_mono_menu *mono_menu;
 	memcpy_P(&config_block,(void *) CONFIG_SECTION_ADDRESS, sizeof(struct cnf_blk));
 	size = config_block.size;
-	splash_bitmap.width = config_block.splash_width;
-	splash_bitmap.height = config_block.splash_height;
-	splash_bitmap.data.progmem = config_block.splash;
-	splash_bitmap.type = GFX_MONO_BITMAP_SECTION;
+	splash_init(config_block);
 	action_menus = malloc(sizeof (struct gfx_action_menu *) * size);
 	struct cnf_menu_node *cnf_menu_node = config_block.menus_head;
 	struct cnf_menu_node cnf_menu;
 	for (int i=0; i < size; i++){
-#ifdef DEBUG_MODE
-		MSG_T_N("Config menu: " ,i)
-#endif
 		action_menus[i] = malloc(sizeof(struct gfx_action_menu));
 		if (cnf_menu_node != 0){
 			memcpy_P(&cnf_menu, cnf_menu_node, sizeof(struct cnf_menu_node));
 			memcpy_P(&config_menu, cnf_menu.menu, sizeof(struct cnf_menu));
 			mono_menu = malloc(sizeof(struct gfx_mono_menu));
 			memcpy_P(mono_menu, config_menu.menu, sizeof(struct gfx_mono_menu));
-			delay_s(1);
 			action_menus[i]->menu= mono_menu;
 			action_menus[i]->actions = malloc (sizeof(struct gfx_item_action) * mono_menu->num_elements);
 			struct cnf_action_node *cnf_action_node = config_menu.actions_head;
@@ -189,7 +190,7 @@ void load_config_block()
 				action_index++;
 				cnf_action_node = action_node.next;
 			}
-			cnf_menu_node = cnf_menu_node->next;
+			cnf_menu_node = cnf_menu.next;
 		} else {
 			break;
 		}

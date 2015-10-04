@@ -112,7 +112,6 @@ void gfx_image_init(struct gfx_image *image, gfx_mono_color_t PROGMEM_T *bitmap_
 {
 	struct gfx_mono_bitmap *bitmap = malloc(sizeof(struct gfx_mono_bitmap));
 	bitmap->width = width;
-	MSG_T_N("width", width)
 	bitmap->height = height;
 	bitmap->data.progmem = bitmap_progmem;
 	bitmap->type = GFX_MONO_BITMAP_SECTION;
@@ -139,7 +138,6 @@ void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
 	struct cnf_frame cnf_frame;
 	memcpy_P(&cnf_frame, cnf_frame_pgmem, sizeof(cnf_frame));
 	init_frame(frame);
-	struct cnf_image cnf_image;
 	struct cnf_image_node *cnf_image_pgmem = cnf_frame.images_head;
 	struct gfx_image_node *frame_image_last =0;
 	while (cnf_image_pgmem != 0){
@@ -147,10 +145,8 @@ void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
 		struct gfx_image_node *gfx_image_node = malloc(sizeof(struct gfx_image_node));
 		memcpy_P(&cnf_image_node, cnf_image_pgmem, sizeof(struct cnf_image_node));
 	//		memcpy_P(&cnf_image, &cnf_image_node.image,sizeof(struct cnf_image));
-		MSG("start image init")
 		gfx_image_init(&gfx_image_node->image, cnf_image_node.image.bitmapProgmem, cnf_image_node.image.height,
 				cnf_image_node.image.width, cnf_image_node.image.x, cnf_image_node.image.y, cnf_image_node.image.border_visible);
-		MSG("finish image init")
 		gfx_image_node->next = 0;
 		if (frame->image_head == 0)
 			frame->image_head = gfx_image_node;
@@ -158,20 +154,16 @@ void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
 			frame_image_last->next = gfx_image_node;
 		frame_image_last = gfx_image_node;
 		cnf_image_pgmem = cnf_image_node.next;
-		MSG_dec(cnf_image_pgmem)
-		delay_s(1);
 	}
 
-	struct cnf_label cnf_label;
 	struct cnf_label_node *cnf_label_pgmem = cnf_frame.labels_head;
 	struct gfx_label_node *frame_label_last = 0;
 	while (cnf_label_pgmem != 0){
 		struct cnf_label_node cnf_label_node;
 		struct gfx_label_node *gfx_label_node = malloc(sizeof(struct gfx_label_node));
 		memcpy_P(&cnf_label_node, cnf_label_pgmem, sizeof(struct cnf_label_node));
-		memcpy_P(&cnf_label, &cnf_label_node.label,sizeof(struct cnf_label));
-		gfx_label_init(&gfx_label_node->label, cnf_label.text, cnf_label.x, cnf_label.y,
-						cnf_label.border_visible);
+		gfx_label_init(&gfx_label_node->label, cnf_label_node.label.text, cnf_label_node.label.x, cnf_label_node.label.y,
+						cnf_label_node.label.border_visible);
 		gfx_label_node->next = 0;
 		if (frame->label_head == 0)
 			frame->label_head = gfx_label_node;
@@ -181,16 +173,14 @@ void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
 		cnf_label_pgmem = cnf_label_node.next;
 	}
 
-	struct cnf_info cnf_info;
 	struct cnf_info_node *cnf_info_pgmem = cnf_frame.infos_head;
 	struct gfx_information_node *frame_information_last = 0;
 	while (cnf_info_pgmem != 0){
 		struct cnf_info_node cnf_info_node;
 		struct gfx_information_node *gfx_information_node = malloc(sizeof(struct gfx_information_node));
 		memcpy_P(&cnf_info_node, cnf_info_pgmem, sizeof(struct cnf_info_node));
-		memcpy_P(&cnf_info, &cnf_info_node.info, sizeof(struct cnf_info));
-		gfx_information_init(&gfx_information_node->information, cnf_info.info_type,cnf_info.information,
-						cnf_info.x, cnf_info.y, cnf_info.border_visible);
+		gfx_information_init(&gfx_information_node->information, cnf_info_node.info.info_type,cnf_info_node.info.information,
+						cnf_info_node.info.x, cnf_info_node.info.y, cnf_info_node.info.border_visible);
 		gfx_information_node->next = 0;
 		if (frame->information_head == 0)
 			frame->information_head = gfx_information_node;

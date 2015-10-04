@@ -67,7 +67,6 @@ void init_menu()
 {
 	load_config_block();
 	set_menu_by_id(&present_menu, 0);
-	show_splash();
 	tc_init();
 }
 
@@ -178,7 +177,6 @@ void init()
 int main(void)
 {
 	init();
-//	MSG("HELLO")
 
 	udc_start();
 	udc_attach();
