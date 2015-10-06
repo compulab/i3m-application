@@ -11,8 +11,8 @@
 #include "twi/twi_slave.h"
 #include "asf.h"
 
-#define MENU_SHOW_TIME		150
-#define SLEEP_TIME			500
+#define MENU_SHOW_TIME		1500
+#define SLEEP_TIME			5000
 #define DEMO_SHOW
 
 ISR(TWIE_TWIS_vect)

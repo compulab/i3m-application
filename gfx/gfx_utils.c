@@ -80,8 +80,26 @@ void gfx_label_with_font_init(struct gfx_label *label, char *text, struct font *
 	label->text.font = font;
 }
 
+void update_information_present(struct gfx_information *info)
+{
+	switch(info->info_type){
+	case SHOW_CPU_FREQUENCY:
+	case SHOW_HDD_SIZE:
+	case SHOW_MEMORY_SIZE:
+	case SHOW_HDD_TEMPERTURE:
+	case SHOW_CPU_TEMPERTURE:
+	case SHOW_GPU_TEMPERTURE:
+	case SET_BOIS_STATE:
+		information_present = info;
+		break;
+	default:
+		break;
+	}
+}
+
 void gfx_information_draw(struct gfx_information *info)
 {
+	update_information_present(info);
 	update_data_by_type(info->info_type, &((info->text).text), info->info_data);
 	set_size_by_text(info->text.text, info->text.font, &info->postion);
 	gfx_item_draw(&info->postion);
@@ -144,7 +162,6 @@ void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
 		struct cnf_image_node cnf_image_node;
 		struct gfx_image_node *gfx_image_node = malloc(sizeof(struct gfx_image_node));
 		memcpy_P(&cnf_image_node, cnf_image_pgmem, sizeof(struct cnf_image_node));
-	//		memcpy_P(&cnf_image, &cnf_image_node.image,sizeof(struct cnf_image));
 		gfx_image_init(&gfx_image_node->image, cnf_image_node.image.bitmapProgmem, cnf_image_node.image.height,
 				cnf_image_node.image.width, cnf_image_node.image.x, cnf_image_node.image.y, cnf_image_node.image.border_visible);
 		gfx_image_node->next = 0;
@@ -193,6 +210,7 @@ void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
 
 void gfx_frame_draw(struct gfx_frame *frame)
 {
+	frame_present = frame;
 	gfx_mono_draw_filled_rect(GFX_MONO_LCD_WIDTH, GFX_MONO_LCD_HEIGHT, 0,
 			0, GFX_PIXEL_CLR);
 	struct gfx_label_node *label = frame->label_head;
