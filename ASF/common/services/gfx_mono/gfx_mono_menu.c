@@ -133,7 +133,7 @@ void gfx_mono_menu_init(struct gfx_mono_menu *menu)
 //	gfx_mono_draw_filled_rect(0, 0,
 //			GFX_MONO_LCD_WIDTH, GFX_MONO_LCD_HEIGHT, GFX_PIXEL_CLR);
 
-	ssd1306_clear();
+//	ssd1306_clear();
 
 	/* Draw the menu title on the top of the screen */
 	gfx_mono_draw_progmem_string((char PROGMEM_PTR_T)menu->title,
@@ -141,6 +141,7 @@ void gfx_mono_menu_init(struct gfx_mono_menu *menu)
 
 	/* Draw menu options below */
 	menu_draw(menu, true);
+	gfx_mono_put_framebuffer();
 }
 
 /**

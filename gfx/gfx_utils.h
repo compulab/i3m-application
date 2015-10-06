@@ -18,7 +18,7 @@
 struct gfx_frame *frame_present;
 struct gfx_information *information_present;
 
-void gfx_information_draw(struct gfx_information *info);
+void update_information();
 
 void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame);
 

@@ -51,7 +51,7 @@
 #include "../../../services/ioport/ioport.h"
 #include "../../../../xmega/utils/status_codes.h"
 #include "../../../services/delay/delay.h"
-
+#include "../../../services/gfx_mono/gfx_mono_framebuffer.h"
 // controller and OLED configuration file
 #include "../../../../../config/conf_ssd1306.h"
 

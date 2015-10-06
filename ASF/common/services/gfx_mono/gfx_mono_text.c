@@ -50,6 +50,7 @@
 #include "gfx_mono_text.h"
 #include "../../../../asf.h"
 
+
 #ifndef CONFIG_FONT_PIXELS_PER_BYTE
 # define CONFIG_FONT_PIXELS_PER_BYTE    8
 #endif

@@ -10,12 +10,12 @@
 
 #define PAGE_ADDRESS(y) floor (y/8)
 
-void printHorizontalLine(uint8_t x, uint8_t y, uint8_t length)
+void print_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
 {
 	gfx_mono_draw_line(x, y, x + length, y, GFX_PIXEL_SET);
 }
 
-void printVerticalLine(uint8_t x, uint8_t y, uint8_t length)
+void print_vertical_line(uint8_t x, uint8_t y, uint8_t length)
 {
 	gfx_mono_draw_line(x, y, x, y + length, GFX_PIXEL_SET);
 }
@@ -23,10 +23,10 @@ void printVerticalLine(uint8_t x, uint8_t y, uint8_t length)
 void gfx_item_draw(struct gfx_item *item)
 {
 	if (item->visible && item->border_visible){
-		printHorizontalLine(item->x, item->y, item->width);
-		printVerticalLine(item->x, item->y, item->height);
-		printHorizontalLine(item->x, item->y+item->height, item->width);
-		printVerticalLine(item->x + item->width, item->y, item->height);
+		print_horizontal_line(item->x, item->y, item->width);
+		print_vertical_line(item->x, item->y, item->height);
+		print_horizontal_line(item->x, item->y+item->height, item->width);
+		print_vertical_line(item->x + item->width, item->y, item->height);
 	}
 }
 
@@ -64,11 +64,12 @@ void set_size_by_text(char *text, struct font *font, struct gfx_item *item)
 }
 
 void gfx_information_init(struct gfx_information *info,
-		enum information_type info_type, uint8_t info_data, uint8_t x, uint8_t y, bool borderVisible)
+		enum information_type info_type, uint8_t info_data, uint8_t max_length, uint8_t x, uint8_t y, bool borderVisible)
 {
 	struct font *font = &sysfont;
 	info->info_type = info_type;
 	info->info_data = info_data;
+	info->text.text = malloc (sizeof(char) * max_length);
 	gfx_item_init(&info->postion, x, y, borderVisible, 0, 0);
 	info->text.font = font;
 }
@@ -100,13 +101,20 @@ void update_information_present(struct gfx_information *info)
 void gfx_information_draw(struct gfx_information *info)
 {
 	update_information_present(info);
-	update_data_by_type(info->info_type, &((info->text).text), info->info_data);
+	update_data_by_type(info->info_type, (info->text).text, info->info_data);
 	set_size_by_text(info->text.text, info->text.font, &info->postion);
 	gfx_item_draw(&info->postion);
 	int x = info->postion.x + 2,
 			y = info->postion.y + 2;
 	struct gfx_text data = info->text;
 	gfx_mono_draw_string(data.text, x, y, data.font);
+	gfx_mono_put_framebuffer();
+}
+
+void update_information()
+{
+	gfx_information_draw(information_present);
+	gfx_mono_put_framebuffer();
 }
 
 void gfx_label_draw(struct gfx_label *label)
@@ -123,6 +131,7 @@ void gfx_label_draw(struct gfx_label *label)
 		MSG_T_T("string to print:",data.text)
 		MSG_T_N("first char of font", data.font->first_char)
 	#endif
+		gfx_mono_put_framebuffer();
 }
 
 void gfx_image_init(struct gfx_image *image, gfx_mono_color_t PROGMEM_T *bitmap_progmem,
@@ -142,6 +151,7 @@ void gfx_image_draw(struct gfx_image *image)
 {
 	gfx_item_draw(&image->postion);
 	gfx_mono_generic_put_bitmap(image->bitmap, image->postion.x, image->postion.y);
+	gfx_mono_put_framebuffer();
 }
 
 void init_frame(struct gfx_frame *frame)
@@ -196,8 +206,8 @@ void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
 		struct cnf_info_node cnf_info_node;
 		struct gfx_information_node *gfx_information_node = malloc(sizeof(struct gfx_information_node));
 		memcpy_P(&cnf_info_node, cnf_info_pgmem, sizeof(struct cnf_info_node));
-		gfx_information_init(&gfx_information_node->information, cnf_info_node.info.info_type,cnf_info_node.info.information,
-						cnf_info_node.info.x, cnf_info_node.info.y, cnf_info_node.info.border_visible);
+		gfx_information_init(&gfx_information_node->information, cnf_info_node.info.info_type, cnf_info_node.info.information,
+						cnf_info_node.info.max_length, cnf_info_node.info.x, cnf_info_node.info.y, cnf_info_node.info.border_visible);
 		gfx_information_node->next = 0;
 		if (frame->information_head == 0)
 			frame->information_head = gfx_information_node;
@@ -227,5 +237,6 @@ void gfx_frame_draw(struct gfx_frame *frame)
 	while (image != 0){
 		gfx_image_draw(&image->image);
 		image = image->next;
+	gfx_mono_put_framebuffer();
 	}
 }

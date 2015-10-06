@@ -29,6 +29,7 @@ struct cnf_image{
 struct cnf_info{
 	enum information_type info_type;
 	uint8_t information;
+	uint8_t max_length;
 	uint8_t x, y;
 	bool border_visible;
 };

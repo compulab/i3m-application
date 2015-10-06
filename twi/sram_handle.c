@@ -42,7 +42,7 @@ void update_information_frame(enum information_type type, bool need_to_update)
 {
 	if (!present_menu->visible)
 		if (information_present->info_type == type && need_to_update)
-			gfx_information_draw(information_present);
+			update_information();
 }
 
 bool is_valid_register(int8_t index, uint8_t max_index)

@@ -6,6 +6,7 @@
  */
 #include "Fp-utils.h"
 #include "debug.h"
+#include <stdio.h>
 #include <string.h>
 
 #define MAX_DIGITS 5
@@ -19,8 +20,8 @@ struct twi_package twi_ambient_temp = {
 	.handle_data_received = update_ambient_value
 };
 
-void set_invalid_string(char **str){
-	*str = "INVALID";
+void set_invalid_string(char *str){
+	strcpy(str, "INVALID");
 }
 
 void update_power_state()
@@ -35,24 +36,25 @@ void update_power_state()
 		current_power_state = POWER_ON;
 }
 
-void set_state(char **data)
+void set_state(char *state)
 {
-	char *state = "";
 	switch (current_power_state){
 	case POWER_ON:
-		state = "Computer is on";
+		strcpy(state, "Computer is on");
 		break;
 	case POWER_STR:
-		state = "Sleep mode";
+		strcpy(state, "Sleep mode");
 		break;
 	case POWER_STD:
-		state = "Hibernate mode";
+		strcpy(state, "Hibernate mode");
 		break;
 	case POWER_OFF:
-		state = "Computer off";
+		strcpy(state, "Computer off");
+		break;
+	default:
+		strcpy(state, "");
 		break;
 	}
-	*data = state;
 }
 
 int num_of_digits(int x) {
@@ -66,7 +68,7 @@ int num_of_digits(int x) {
 
 
 
-void set_mem_size_str(char **str, uint8_t mem)
+void set_mem_size_str(char *str, uint8_t mem)
 {
 	uint8_t size;
 	switch (mem){
@@ -88,59 +90,33 @@ void set_mem_size_str(char **str, uint8_t mem)
 		break;
 	}
 	if (size == 0){
-		*str = malloc(sizeof(char) * strlen(EMPTY_SLOT));
-		strcpy((*str), EMPTY_SLOT);
+		str = EMPTY_SLOT;
 	} else {
-		*str = malloc(sizeof(char) * num_of_digits(size) + 3);
-		itoa(size, *str, 10);
-		strcat(*str, " GB");
+		sprintf(str,"%d GB",size);
 	}
 }
 
-void set_hdd_size_str(char **str, uint16_t size, bool is_tera_units)
+void set_hdd_size_str(char *str, uint16_t size, bool is_tera_units)
 {
-	uint8_t size_length = num_of_digits(size);
-	char temp_size_str[size_length];
 	char * units;
 	if (is_tera_units)
 			units = " TB";
 		else
 			units = " GB";
-	*str = malloc(sizeof(char) * (size_length + 3));
-	itoa(size, temp_size_str, 10);
-	strcpy((*str), temp_size_str);
-	strcat((*str), units);
+	sprintf(str, "%d %s", size, units);
 }
 
-void set_fq_string(char **str, uint16_t fq)
+void set_fq_string(char *str, uint16_t fq)
 {
-	*str = malloc(sizeof(char) * 10);
-	char fq_str[5];
-	itoa(fq,fq_str,10);
-	strcpy((*str), fq_str);
-	strcat((*str), " MHZ");
+	sprintf(str, "%d MHZ", fq);
 }
 
-void set_temp_string(char **str, int8_t temperature)
+void set_temp_string(char *str, int8_t temperature)
 {
-	uint8_t length = num_of_digits(temperature);
-	bool is_neg = temperature < 0;
-	if (is_neg)
-		length += 2;
-	char *tempStr = malloc(sizeof(char) * length);
-	itoa(temperature, tempStr, 10);
-	*str = malloc(sizeof(char) * (length + 3));
-	int i = 0;
-	if (is_neg){
-		strcpy((*str), "- ");
-		i = 2;
-	}
-	for (; i < length; i++)
-		(*str)[i] = tempStr[i];
-	strcat((*str), " C");
+	sprintf(str,"%d C",temperature);
 }
 
-void set_cpu_updated_temp(char **data,uint8_t cpu_id)
+void set_cpu_updated_temp(char *data,uint8_t cpu_id)
 {
 	uint8_t temp = computer_data.cpu_temp[cpu_id];
 	if (computer_data.valid_cpu_temp[cpu_id])
@@ -149,7 +125,7 @@ void set_cpu_updated_temp(char **data,uint8_t cpu_id)
 		set_invalid_string(data);
 }
 
-void set_updated_memory_size(char **output_str, uint8_t mem_id)
+void set_updated_memory_size(char *output_str, uint8_t mem_id)
 {
 	if (computer_data.valid_mem[mem_id])
 		set_mem_size_str(output_str, computer_data.mem_slot_sz[mem_id]);
@@ -157,7 +133,7 @@ void set_updated_memory_size(char **output_str, uint8_t mem_id)
 		set_invalid_string(output_str);
 }
 
-void set_updated_hdd_size(char **output_str, uint8_t hdd_id)
+void set_updated_hdd_size(char *output_str, uint8_t hdd_id)
 {
 	if (computer_data.valid_hdd_size[hdd_id])
 		set_hdd_size_str(output_str, computer_data.hdd_size[hdd_id], computer_data.hdd_tera_units[hdd_id]);
@@ -165,7 +141,7 @@ void set_updated_hdd_size(char **output_str, uint8_t hdd_id)
 		set_invalid_string(output_str);
 }
 
-void set_updated_cpu_frequency(char **output_str, uint8_t cpu_id)
+void set_updated_cpu_frequency(char *output_str, uint8_t cpu_id)
 {
 	if (computer_data.valid_cpu_fq[cpu_id])
 		set_fq_string(output_str, computer_data.cpu_fq[cpu_id]);
@@ -173,7 +149,7 @@ void set_updated_cpu_frequency(char **output_str, uint8_t cpu_id)
 		set_invalid_string(output_str);
 }
 
-void set_updated_ambient_temp(char **output_str)
+void set_updated_ambient_temp(char *output_str)
 {
 	update_ambient_temp();
 	if (computer_data.valid_ambient_temp)
@@ -181,7 +157,7 @@ void set_updated_ambient_temp(char **output_str)
 	else
 		set_invalid_string(output_str);
 }
-void set_updated_gpu_temp(char **output_str)
+void set_updated_gpu_temp(char *output_str)
 {
 	if (computer_data.valid_gpu_temp)
 		set_temp_string(output_str, computer_data.gpu_temp);
@@ -189,7 +165,7 @@ void set_updated_gpu_temp(char **output_str)
 		set_invalid_string(output_str);
 }
 
-void set_update_hdd_temp(char **output_str, uint8_t hdd_id)
+void set_update_hdd_temp(char *output_str, uint8_t hdd_id)
 {
 	uint8_t temp = computer_data.hdd_temp[hdd_id];
 	if (computer_data.valid_hdd_temp[hdd_id])
@@ -212,7 +188,7 @@ void update_ambient_temp()
 	delay_s(2);
 }
 
-void update_data_by_type(enum information_type type, char **output_str, uint8_t info)
+void update_data_by_type(enum information_type type, char *output_str, uint8_t info)
 {
 	switch (type){
 	case SHOW_MEMORY_SIZE:
@@ -233,8 +209,8 @@ void update_data_by_type(enum information_type type, char **output_str, uint8_t 
 	case SHOW_HDD_TEMPERTURE:
 		set_update_hdd_temp(output_str, info);
 		break;
-	case SHOW_VOLTAGE:
-		set_voltage_data(output_str);
+	case SHOW_COMPUTER_POWER:
+		set_power_data(output_str);
 		break;
 	case SHOW_POWER_STATE:
 		set_state(output_str);

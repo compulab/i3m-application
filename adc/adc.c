@@ -5,6 +5,8 @@
  *      Author: arkadi
  */
 #include "adc.h"
+#include <string.h>
+
 
 //***ADC configuration
 #define MY_ADC    ADCA
@@ -48,7 +50,7 @@ float adc_avg()
 	return power_avg/(i);
 }
 
-void set_voltage_data(char **str)
+void set_power_data(char *str)
 {
 //    current_power=round(adc_avg()*0.177); //*0.07731r
 //    if (current_power < 0)
@@ -67,5 +69,5 @@ void set_voltage_data(char **str)
 //		resString[3]='\0';
 //	}
 //	*str = resString;
-	* str = "3.6 W";
+	strcpy(str, "3.6 W");
 }

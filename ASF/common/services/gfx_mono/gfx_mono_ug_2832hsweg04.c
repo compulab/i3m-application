@@ -284,17 +284,17 @@ void gfx_mono_ssd1306_get_page(gfx_mono_color_t *data, gfx_coord_t page,
 void gfx_mono_ssd1306_put_byte(gfx_coord_t page, gfx_coord_t column,
 		uint8_t data, bool force)
 {
-#ifdef CONFIG_SSD1306_FRAMEBUFFER
-	if (!force && data == gfx_mono_framebuffer_get_byte(page, column)) {
-		return;
-	}
+//#ifdef CONFIG_SSD1306_FRAMEBUFFER
+//	if (!force && data == gfx_mono_framebuffer_get_byte(page, column)) {
+//		return;
+//	}
+//#endif
 	gfx_mono_framebuffer_put_byte(page, column, data);
-#endif
 
-	ssd1306_set_page_address(page);
-	ssd1306_set_column_address(column);
-
-	ssd1306_write_data(data);
+//	ssd1306_set_page_address(page);
+//	ssd1306_set_column_address(column);
+//
+//	ssd1306_write_data(data);
 }
 
 /**

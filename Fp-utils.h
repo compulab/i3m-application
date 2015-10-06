@@ -26,7 +26,7 @@ void update_ambient_temp();
 
 enum information_type{
 	SHOW_POWER_STATE,
-	SHOW_VOLTAGE,
+	SHOW_COMPUTER_POWER,
 	SHOW_CPU_FREQUENCY,
 	SHOW_HDD_SIZE,
 	SHOW_MEMORY_SIZE,
@@ -55,9 +55,9 @@ extern enum power_state current_power_state;
 
 void update_power_state();
 
-void set_state(char **data);
+void set_state(char *state);
 
-void update_data_by_type(enum information_type type, char **output_str, uint8_t info);
+void update_data_by_type(enum information_type type, char *output_str, uint8_t info);
 
 
 #endif /* FP_UTILS_H_ */

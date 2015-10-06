@@ -148,7 +148,7 @@ void clear_screen_framebuffer()
 {
 	for (int i=0 ; i < GFX_MONO_LCD_FRAMEBUFFER_SIZE; i++)
 		framebuffer[i] = 0x00;
-	gfx_mono_ssd1306_put_framebuffer();
+//	gfx_mono_ssd1306_put_framebuffer();
 }
 
 void show_splash()
@@ -178,15 +178,15 @@ void load_config_block()
 	action_menus = malloc(sizeof (struct gfx_action_menu *) * size);
 	struct cnf_menu_node *cnf_menu_node = config_block.menus_head;
 	struct cnf_menu_node cnf_menu;
+	for (int i=0; i < size; i++) 	action_menus[i] = malloc(sizeof(struct gfx_action_menu));
 	for (int i=0; i < size; i++){
-		action_menus[i] = malloc(sizeof(struct gfx_action_menu));
 		if (cnf_menu_node != 0){
 			memcpy_P(&cnf_menu, cnf_menu_node, sizeof(struct cnf_menu_node));
 			memcpy_P(&config_menu, cnf_menu.menu, sizeof(struct cnf_menu));
 			mono_menu = malloc(sizeof(struct gfx_mono_menu));
 			memcpy_P(mono_menu, config_menu.menu, sizeof(struct gfx_mono_menu));
-			action_menus[i]->menu= mono_menu;
-			action_menus[i]->actions = malloc (sizeof(struct gfx_item_action) * mono_menu->num_elements);
+			action_menus[config_menu.id]->menu= mono_menu;
+			action_menus[config_menu.id]->actions = malloc (sizeof(struct gfx_item_action) * mono_menu->num_elements);
 			struct cnf_action_node *cnf_action_node = config_menu.actions_head;
 			struct cnf_action_node action_node;
 			memcpy_P(&action_node, cnf_action_node, sizeof(struct cnf_action_node));
