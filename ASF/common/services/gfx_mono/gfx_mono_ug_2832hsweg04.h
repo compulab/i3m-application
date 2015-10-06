@@ -76,6 +76,8 @@
 #define GFX_MONO_LCD_FRAMEBUFFER_SIZE   ((GFX_MONO_LCD_WIDTH * \
 	GFX_MONO_LCD_HEIGHT) / GFX_MONO_LCD_PIXELS_PER_BYTE)
 
+static uint8_t framebuffer[GFX_MONO_LCD_FRAMEBUFFER_SIZE];
+
 #define gfx_mono_draw_horizontal_line(x, y, length, color) \
 	gfx_mono_generic_draw_horizontal_line(x, y, length, color)
 

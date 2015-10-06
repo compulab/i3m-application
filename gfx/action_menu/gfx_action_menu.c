@@ -2,8 +2,12 @@
 #include "../../debug.h"
 #include "../../twi/eeprom.h"
 
-void clear_menu(){
-	gfx_mono_generic_draw_filled_rect(0, 0, 128, 64, GFX_PIXEL_CLR);
+void clear_menu()
+{
+	for (int i=0 ; i < GFX_MONO_LCD_FRAMEBUFFER_SIZE; i++)
+		framebuffer[i] = 0x00;
+	gfx_mono_ssd1306_put_framebuffer();
+
 }
 
 void gfx_action_menu_init(struct gfx_action_menu *actionMenu)

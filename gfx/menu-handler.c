@@ -144,10 +144,17 @@ void clear_counter()
 
 struct gfx_mono_bitmap splash_bitmap;
 
+void clear_screen_framebuffer()
+{
+	for (int i=0 ; i < GFX_MONO_LCD_FRAMEBUFFER_SIZE; i++)
+		framebuffer[i] = 0x00;
+	gfx_mono_ssd1306_put_framebuffer();
+}
+
 void show_splash()
 {
 	present_menu->visible = false;
-	ssd1306_clear();
+	clear_screen_framebuffer();
 	gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 15);
 }
 

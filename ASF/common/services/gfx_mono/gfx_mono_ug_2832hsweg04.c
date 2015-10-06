@@ -51,7 +51,7 @@
 #endif
 
 #ifdef CONFIG_SSD1306_FRAMEBUFFER
-static uint8_t framebuffer[GFX_MONO_LCD_FRAMEBUFFER_SIZE];
+
 #endif
 
 /**

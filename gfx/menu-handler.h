@@ -11,11 +11,14 @@
 #include <avr/pgmspace.h>
 #include <string.h>
 #include "../asf.h"
+#include "../ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.h"
 #include "../timer/tc.h"
 #include "action_menu/gfx_action_menu.h"
 #include "../config/cnf_blk_components.h"
 #include "gfx_utils.h"
 #include "key-handle.h"
+
+
 
 #define CONFIG_SECTION_ADDRESS 0x8000
 
