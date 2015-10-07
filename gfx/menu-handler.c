@@ -1,5 +1,6 @@
 #include "menu-handler.h"
 #include "../timer/tc.h"
+#include "../u8glib/menu.h"
 
 #define is_key_selected(var,key) (var & key) == key
 enum key_Select selected_Key;
@@ -258,10 +259,11 @@ void handle_button_pressed()
 		break;
 	case BUTTON_CLICK:
 		clear_counter();
-		if (present_menu->visible)
-			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_ENTER);
-		else
-			gfx_action_menu_init(present_menu);
+
+//		if (present_menu->visible)
+//			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_ENTER);
+//		else
+//			gfx_action_menu_init(present_menu);
 		return;
 		break;
 	default:
@@ -271,10 +273,11 @@ void handle_button_pressed()
 	case BUTTON_HOLD:
 	case BUTTON_CLICK:
 		clear_counter();
-		if (present_menu->visible)
-			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP);
-		else
-			gfx_action_menu_init(present_menu);
+		handle_up_pressed(testing_menu);
+//		if (present_menu->visible)
+//			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP);
+//		else
+//			gfx_action_menu_init(present_menu);
 		return;
 		break;
 	default:
@@ -284,10 +287,11 @@ void handle_button_pressed()
 	case BUTTON_HOLD:
 	case BUTTON_CLICK:
 		clear_counter();
-		if (present_menu->visible)
-			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN);
-		else
-			gfx_action_menu_init(present_menu);
+		handle_up_pressed(testing_menu);
+//		if (present_menu->visible)
+//			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN);
+//		else
+//			gfx_action_menu_init(present_menu);
 		return;
 		break;
 	default:

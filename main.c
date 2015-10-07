@@ -10,6 +10,8 @@
 #include "twi/test_twi.h"
 #include "twi/twi_slave.h"
 #include "asf.h"
+#include "u8glib/menu.h"
+
 
 #define MENU_SHOW_TIME		1500
 #define SLEEP_TIME			5000
@@ -65,8 +67,8 @@ void portf_init()
 
 void init_menu()
 {
-	load_config_block();
-	set_menu_by_id(&present_menu, 0);
+//	load_config_block();
+//	set_menu_by_id(&present_menu, 0);
 	tc_init();
 }
 
@@ -162,9 +164,10 @@ void init()
 {
 	board_init();
 	sysclk_init();
-	gfx_mono_init();
+	u8g_init();
+//	gfx_mono_init();
 	init_menu();
-	updated_info_init();
+//	updated_info_init();
 	adc_init();
 	pmic_init();
 	portf_init();
@@ -174,12 +177,44 @@ void init()
 	twi_master_init();
 }
 
+
+
+const u8g_pgm_uint8_t temp_title[] = "New Menu Title";
+const u8g_pgm_uint8_t temp_item1[] = "Item 1";
+const u8g_pgm_uint8_t __attribute__((section (".configData"))) temp_item2[] = "Item 2";
+
+struct menu_item_node second_item = {
+		.text = temp_item2,
+		.prev = 0,
+		.next = 0,
+		.visible = true
+};
+
+
+struct menu_item_node first_item = {
+		.text = temp_item1,
+		.next = &second_item,
+		.prev = 0,
+		.visible = true
+};
+
+struct menu temp_menu = {
+		.title = temp_title,
+		.first_item = &first_item,
+		.last_item = &second_item,
+		.curr_selected_item = &first_item
+};
+
 int main(void)
 {
 	init();
 
 	udc_start();
 	udc_attach();
+
+
+	draw_menu(&temp_menu);
+
 	while(true)
 	{}
 }
