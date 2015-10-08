@@ -209,8 +209,11 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 	case SHOW_HDD_TEMPERTURE:
 		set_update_hdd_temp(output_str, info);
 		break;
-	case SHOW_COMPUTER_POWER:
+	case SHOW_POWER:
 		set_power_data(output_str);
+		break;
+	case SHOW_SERIAL_NUMBER:
+		strcpy(output_str, "TEST12TEST");
 		break;
 	case SHOW_POWER_STATE:
 		set_state(output_str);

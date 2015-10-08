@@ -17,14 +17,14 @@
 #include "../config/cnf_blk_components.h"
 #include "gfx_utils.h"
 #include "key-handle.h"
-
+#include "../u8glib/u8g_components.h"
 
 
 #define CONFIG_SECTION_ADDRESS 0x8000
 
 struct gfx_action_menu **action_menus;
 
-void load_config_block();
+void load_config_block_u8g();
 
 void set_menu_by_id(struct gfx_action_menu **menu, uint8_t index);
 

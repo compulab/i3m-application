@@ -11,10 +11,10 @@
 #include "twi/twi_slave.h"
 #include "asf.h"
 #include "u8glib/menu.h"
+#include "u8glib/menu_utils.h"
 
-
-#define MENU_SHOW_TIME		1500
-#define SLEEP_TIME			5000
+#define MENU_SHOW_TIME		150
+#define SLEEP_TIME			500
 #define DEMO_SHOW
 
 ISR(TWIE_TWIS_vect)
@@ -37,13 +37,18 @@ ISR(PORTF_INT1_vect){
 	handle_button_pressed();
 }
 
+void show_menu_u8g()
+{
+	show_menu(u8g_menus[0]);
+}
+
 ISR(TCC0_OVF_vect)
 {
 	tc_counter++;
-	if (tc_counter == MENU_SHOW_TIME && !present_menu->visible)
-		gfx_action_menu_init(present_menu);
-	else if (tc_counter == SLEEP_TIME)
-		show_splash();
+//	if (tc_counter == MENU_SHOW_TIME && !present_menu->visible)
+//		show_menu_u8g();
+//	else if (tc_counter == SLEEP_TIME)
+//		show_splash();
 }
 
 void portf_init()
@@ -67,6 +72,8 @@ void portf_init()
 
 void init_menu()
 {
+	load_config_block_u8g();
+	show_menu_u8g();
 //	load_config_block();
 //	set_menu_by_id(&present_menu, 0);
 	tc_init();
@@ -212,8 +219,6 @@ int main(void)
 	udc_start();
 	udc_attach();
 
-
-	draw_menu(&temp_menu);
 
 	while(true)
 	{}

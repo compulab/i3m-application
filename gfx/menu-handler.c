@@ -167,44 +167,44 @@ void splash_init(struct cnf_blk config_block)
 	splash_bitmap.type = GFX_MONO_BITMAP_SECTION;
 	show_splash();
 }
-
-void load_config_block()
-{
-	struct cnf_blk config_block;
-	struct cnf_menu config_menu;
-	struct gfx_mono_menu *mono_menu;
-	memcpy_P(&config_block,(void *) CONFIG_SECTION_ADDRESS, sizeof(struct cnf_blk));
-	size = config_block.size;
-	splash_init(config_block);
-	action_menus = malloc(sizeof (struct gfx_action_menu *) * size);
-	struct cnf_menu_node *cnf_menu_node = config_block.menus_head;
-	struct cnf_menu_node cnf_menu;
-	for (int i=0; i < size; i++) 	action_menus[i] = malloc(sizeof(struct gfx_action_menu));
-	for (int i=0; i < size; i++){
-		if (cnf_menu_node != 0){
-			memcpy_P(&cnf_menu, cnf_menu_node, sizeof(struct cnf_menu_node));
-			memcpy_P(&config_menu, cnf_menu.menu, sizeof(struct cnf_menu));
-			mono_menu = malloc(sizeof(struct gfx_mono_menu));
-			memcpy_P(mono_menu, config_menu.menu, sizeof(struct gfx_mono_menu));
-			action_menus[config_menu.id]->menu= mono_menu;
-			action_menus[config_menu.id]->actions = malloc (sizeof(struct gfx_item_action) * mono_menu->num_elements);
-			struct cnf_action_node *cnf_action_node = config_menu.actions_head;
-			struct cnf_action_node action_node;
-			memcpy_P(&action_node, cnf_action_node, sizeof(struct cnf_action_node));
-			uint8_t action_index = 0;
-			while (cnf_action_node != 0){
-				memcpy_P(&action_node, cnf_action_node, sizeof(struct cnf_action_node));
-				load_action(&(action_menus[i]->actions[action_index]), action_node.action);
-				action_index++;
-				cnf_action_node = action_node.next;
-			}
-			cnf_menu_node = cnf_menu.next;
-		} else {
-			break;
-		}
-	}
-	action_types_init();
-}
+//
+//void load_config_block_u8g()
+//{
+//	struct cnf_blk config_block;
+//	struct cnf_menu config_menu;
+//	struct gfx_mono_menu *mono_menu;
+//	memcpy_P(&config_block,(void *) CONFIG_SECTION_ADDRESS, sizeof(struct cnf_blk));
+//	size = config_block.size;
+//	splash_init(config_block);
+//	action_menus = malloc(sizeof (struct gfx_action_menu *) * size);
+//	struct cnf_menu_node *cnf_menu_node = config_block.menus_head;
+//	struct cnf_menu_node cnf_menu;
+//	for (int i=0; i < size; i++) 	action_menus[i] = malloc(sizeof(struct gfx_action_menu));
+//	for (int i=0; i < size; i++){
+//		if (cnf_menu_node != 0){
+//			memcpy_P(&cnf_menu, cnf_menu_node, sizeof(struct cnf_menu_node));
+//			memcpy_P(&config_menu, cnf_menu.menu, sizeof(struct cnf_menu));
+//			mono_menu = malloc(sizeof(struct gfx_mono_menu));
+////			memcpy_P(mono_menu, config_menu.menu, sizeof(struct gfx_mono_menu));
+//			action_menus[config_menu.id]->menu= mono_menu;
+//			action_menus[config_menu.id]->actions = malloc (sizeof(struct gfx_item_action) * mono_menu->num_elements);
+//			struct cnf_action_node *cnf_action_node = config_menu.actions_head;
+//			struct cnf_action_node action_node;
+//			memcpy_P(&action_node, cnf_action_node, sizeof(struct cnf_action_node));
+//			uint8_t action_index = 0;
+//			while (cnf_action_node != 0){
+//				memcpy_P(&action_node, cnf_action_node, sizeof(struct cnf_action_node));
+//				load_action(&(action_menus[i]->actions[action_index]), action_node.action);
+//				action_index++;
+//				cnf_action_node = action_node.next;
+//			}
+//			cnf_menu_node = cnf_menu.next;
+//		} else {
+//			break;
+//		}
+//	}
+//	action_types_init();
+//}
 
 void set_menu_by_id(struct gfx_action_menu **menu, uint8_t index)
 {
