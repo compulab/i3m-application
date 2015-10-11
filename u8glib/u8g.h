@@ -15,6 +15,8 @@ extern u8g_t u8g;
 
 void u8g_init();
 
+void u8g_clear_screen();
+
 void u8g_draw_menu(struct menu *menu);
 
 void u8g_draw_frame(struct gfx_frame *frame);

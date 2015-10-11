@@ -30,8 +30,8 @@ void _u8g_set_font()
 
 void u8g_clear_screen()
 {
-//	u8g_FirstPage(&u8g);
-//	while (u8g_NextPage(&u8g)) {};
+	u8g_FirstPage(&u8g);
+	while (u8g_NextPage(&u8g)) {};
 }
 
 void u8g_draw_menu(struct menu *menu)

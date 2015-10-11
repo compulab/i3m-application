@@ -5,14 +5,14 @@
  *      Author: arkadi
  */
 #include "adc.h"
-#include <string.h>
+#include <stdio.h>
 
 
 //***ADC configuration
 #define MY_ADC    ADCA
 #define MY_ADC_CH ADC_CH0
 
-long current_power;
+float current_power;
 char resString[7];
 
 void adc_init()
@@ -52,22 +52,12 @@ float adc_avg()
 
 void set_power_data(char *str)
 {
-//    current_power=round(adc_avg()*0.177); //*0.07731r
-//    if (current_power < 0)
-//    	current_power=0;
-//	itoa(current_power, resString,10);//power_result
-//	if (current_power >0){
-//		resString[2]=resString[1];
-//		resString[3]=resString[2];
-//		resString[1]='.';
-//		resString[3]=' ';
-//		resString[4]='W';
-//		resString[5]='\0';
-//	} else {
-//		resString[1]=' ';
-//		resString[2]='W';
-//		resString[3]='\0';
-//	}
-//	*str = resString;
-	strcpy(str, "3.6 W");
+
+    current_power=  adc_avg() * 0.177; //*0.07731r
+    if (current_power < 0)
+    	current_power=0;
+//    current_power = 3;
+
+    uint8_t d = (current_power * 100);
+    sprintf(str, "%d.%d W", (d/100), (d % 100));
 }

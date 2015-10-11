@@ -12,10 +12,14 @@
 #include "asf.h"
 #include "u8glib/menu.h"
 #include "u8glib/menu_utils.h"
+#include "adc/adc.h"
 
 #define MENU_SHOW_TIME		150
 #define SLEEP_TIME			500
 #define DEMO_SHOW
+
+
+char power[10];
 
 ISR(TWIE_TWIS_vect)
 {
@@ -42,9 +46,19 @@ void show_menu_u8g()
 	show_menu(u8g_menus[0]);
 }
 
+void update_adc()
+{
+	set_power_data(power);
+	u8g_draw_string(10,power);
+}
+
 ISR(TCC0_OVF_vect)
 {
 	tc_counter++;
+	if (tc_counter % 400 == 0)
+		update_adc();
+	else if (tc_counter % 300 == 0)
+		u8g_clear_screen();
 //	if (tc_counter == MENU_SHOW_TIME && !present_menu->visible)
 //		show_menu_u8g();
 //	else if (tc_counter == SLEEP_TIME)
@@ -72,12 +86,13 @@ void portf_init()
 
 void init_menu()
 {
-	load_config_block_u8g();
-	show_menu_u8g();
+//	load_config_block_u8g();
+//	show_menu_u8g();
 //	load_config_block();
 //	set_menu_by_id(&present_menu, 0);
 	tc_init();
 }
+
 
 void power_state_init()
 {
@@ -219,6 +234,7 @@ int main(void)
 	udc_start();
 	udc_attach();
 
+	update_adc();
 
 	while(true)
 	{}
