@@ -40,9 +40,9 @@
 
 void update_information_frame(enum information_type type, bool need_to_update)
 {
-	if (!present_menu->visible)
-		if (information_present->info_type == type && need_to_update)
-			update_information();
+//	if (!present_menu->visible)
+//		if (information_present->info_type == type && need_to_update)
+//			update_information();
 }
 
 bool is_valid_register(int8_t index, uint8_t max_index)
@@ -164,10 +164,10 @@ void write_hdd_status(uint8_t status)
 			computer_data.valid_hdd_temp[4] = true;
 		if (status & 0x20)
 			computer_data.valid_hdd_temp[5] = true;
-		if (status & 0x40)
-			computer_data.valid_hdd_temp[6] = true;
-		if (status & 0x80)
-			computer_data.valid_hdd_temp[7] = true;
+//		if (status & 0x40)
+//			computer_data.valid_hdd_temp[6] = true;
+//		if (status & 0x80)
+//			computer_data.valid_hdd_temp[7] = true;
 		update_information_frame(SHOW_HDD_TEMPERTURE, information_present->info_data < MAX_HDD && computer_data.valid_hdd_temp[information_present->info_data]);
 		}
 }

@@ -11,7 +11,7 @@
 #include <avr/pgmspace.h>
 #include "../Fp-utils.h"
 #include "u8g.h"
-//typedef uint8_t PROGMEM u8g_pgm_uint8_t;
+
 
 struct cnf_label{
 	u8g_pgm_uint8_t *text;

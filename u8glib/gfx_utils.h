@@ -15,6 +15,7 @@
 #include <string.h>
 #include "../debug.h"
 #include "../asf.h"
+#include "u8g.h"
 
 struct gfx_frame *frame_present;
 struct gfx_information *information_present;

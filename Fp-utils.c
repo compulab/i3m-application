@@ -215,6 +215,9 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 	case SHOW_SERIAL_NUMBER:
 		strcpy(output_str, "TEST12TEST");
 		break;
+	case SHOW_PROVISION_NUMBER:
+		strcpy(output_str, "1.0");
+		break;
 	case SHOW_POWER_STATE:
 		set_state(output_str);
 		break;

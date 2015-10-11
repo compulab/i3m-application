@@ -19,11 +19,11 @@ struct gfx_item {
 	bool border_visible;
 };
 
-struct gfx_text {
-	char *text;
-	bool is_progmem;
-	struct font *font;
-};
+//struct gfx_text {
+//	char *text;
+//	bool is_progmem;
+//	struct font *font;
+//};
 
 struct gfx_label {
 	struct gfx_item postion;

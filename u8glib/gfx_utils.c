@@ -42,15 +42,10 @@ void gfx_item_init(struct gfx_item *item, uint8_t x, uint8_t y, uint8_t width, u
 void gfx_label_init(struct gfx_label *label, u8g_pgm_uint8_t *text,
 		uint8_t x, uint8_t y)
 {
-	struct font * font = &sysfont;
-	uint8_t width = strlen_P((char *) text) * font->width + 2,
-			height = font->height + 4;
-//	if (width -x >= GFX_MONO_LCD_WIDTH){
+	uint8_t width = strlen_P((char *) text),
+			height = 8;
 		gfx_item_init(&label->postion, x, y, width, height);
-//		label->text.is_progmem = true;
 		label->text = text;
-//		label->text.font = font;
-//	}
 }
 
 void set_size_by_text(char *text, struct font *font, struct gfx_item *item)
@@ -68,12 +63,6 @@ void gfx_information_init(struct gfx_information *info,
 	info->info_data = info_data;
 	info->text = malloc (sizeof(char) * max_length);
 	gfx_item_init(&info->postion, x, y, 0, 0);
-}
-
-void gfx_label_with_font_init(struct gfx_label *label, u8g_pgm_uint8_t *text, struct font *font,
-		uint8_t x, uint8_t y)
-{
-	gfx_label_init(label, text, x, y);
 }
 
 void update_information_present(struct gfx_information *info)
@@ -184,6 +173,7 @@ void labels_init(struct gfx_frame *frame, struct cnf_label_node *cnf_label_pgmem
 		struct gfx_label_node *gfx_label_node = malloc(sizeof(struct gfx_label_node));
 		memcpy_P(&cnf_label_node, cnf_label_pgmem, sizeof(struct cnf_label_node));
 		gfx_label_init(&gfx_label_node->label, cnf_label_node.label.text, cnf_label_node.label.x, cnf_label_node.label.y);
+
 		gfx_label_node->next = 0;
 		if (frame->label_head == 0)
 			frame->label_head = gfx_label_node;
@@ -192,6 +182,8 @@ void labels_init(struct gfx_frame *frame, struct cnf_label_node *cnf_label_pgmem
 		frame_label_last = gfx_label_node;
 		cnf_label_pgmem = cnf_label_node.next;
 	}
+//	u8g_draw_string(10,"no");
+
 }
 
 void infos_init(struct gfx_frame *frame, struct cnf_info_node *cnf_info_pgmem)

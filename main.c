@@ -1,12 +1,12 @@
 #include <string.h>
 #include <math.h>
-#include "gfx/gfx_components.h"
+#include "u8glib/gfx_components.h"
 #include "debug.h"
-#include "gfx/menu-handler.h"
+#include "u8glib/menu-handler.h"
 #include "timer/tc.h"
 #include "adc/adc.h"
 #include "config/cnf_blk_components.h"
-#include "gfx/gfx_utils.h"
+#include "u8glib/gfx_utils.h"
 #include "twi/test_twi.h"
 #include "twi/twi_slave.h"
 #include "asf.h"

@@ -31,7 +31,6 @@ void show_action(struct item_action *action)
 	default:
 		break;
 	}
-
 }
 
 void handle_select_pressed()

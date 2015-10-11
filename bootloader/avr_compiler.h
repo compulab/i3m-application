@@ -132,7 +132,7 @@
 #include <util/delay.h>
 
 /*! \brief Define the delay_us macro for GCC. */
-#define delay_us( us )   (_delay_us( us ))
+//#define delay_us( us )   (_delay_us( us ))
 
 #define INLINE static inline
 

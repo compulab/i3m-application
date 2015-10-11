@@ -39,7 +39,7 @@ void u8g_draw_menu(struct menu *menu)
 	u8g_FirstPage(&u8g);
 	do {
 		u8g_set_menu_font();
-		uint8_t i = 2, h = u8g_GetFontAscent(&u8g)-u8g_GetFontDescent(&u8g);
+		uint8_t i = 2, h = u8g_GetFontAscent(&u8g) - u8g_GetFontDescent(&u8g);
 		u8g_uint_t d, w = u8g_GetWidth(&u8g);
 
 		d = (w-u8g_GetStrWidthP(&u8g, menu->title))/2;
@@ -82,19 +82,18 @@ void _u8g_draw_stringP(uint8_t y, const u8g_pgm_uint8_t *text)
 
 void u8g_draw_frame(struct gfx_frame *frame)
 {
-//	u8g_clear_screen();
 	u8g_FirstPage(&u8g);
 	_u8g_set_font();
 	do {
-		struct gfx_label_node *label = frame->label_head;
-		while (label != 0){
-			_u8g_draw_stringP(label->label.postion.y, label->label.text);
-			label = label->next;
-		}
+//		struct gfx_label_node *label = frame->label_head;
+//		while (label != 0){
+//			_u8g_draw_stringP(15, label->label.text);
+//			label = label->next;
+//		}
 		struct gfx_information_node *info = frame->information_head;
 		while (info != 0){
 			update_data_by_type(info->information.info_type, info->information.text, info->information.info_data);
-			_u8g_draw_string(info->information.postion.y, info->information.text);
+			_u8g_draw_string(19, info->information.text);
 			info = info->next;
 		}
 //		struct gfx_image_node *image = frame->image_head;
