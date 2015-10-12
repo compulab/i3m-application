@@ -55,11 +55,11 @@ void update_adc()
 ISR(TCC0_OVF_vect)
 {
 	tc_counter++;
-	if (tc_counter % 400 == 0)
+	if (tc_counter % 10)
 		update_adc();
-	else if (tc_counter % 300 == 0)
+	 if (tc_counter % 90 == 0)
 		u8g_clear_screen();
-//	if (tc_counter == MENU_SHOW_TIME && !present_menu->visible)
+//	if (tc_counter == MENU_SHOW_TIME && !current_menu->visible)
 //		show_menu_u8g();
 //	else if (tc_counter == SLEEP_TIME)
 //		show_splash();
@@ -88,8 +88,6 @@ void init_menu()
 {
 //	load_config_block_u8g();
 //	show_menu_u8g();
-//	load_config_block();
-//	set_menu_by_id(&present_menu, 0);
 	tc_init();
 }
 
