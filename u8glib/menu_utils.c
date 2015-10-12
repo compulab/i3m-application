@@ -121,6 +121,7 @@ void load_config_block_u8g()
 			u8g_menus[index]->first_item = 0;
 			u8g_menus[index]->last_item = 0;
 			u8g_menus[index]->curr_selected_item = 0;
+			u8g_menus[index]->size = 0;
 			set_menu_items(u8g_menus[index], config_menu.first_item);
 			cnf_menu_node = cnf_menu.next;
 		} else {

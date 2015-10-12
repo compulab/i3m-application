@@ -43,22 +43,18 @@ void handle_select_pressed()
 
 void handle_down_pressed()
 {
-	struct menu_item_node *next_selection;
-	if (current_menu->curr_selected_item != current_menu->last_item)
-		next_selection = current_menu->curr_selected_item->next;
+	if (current_menu->curr_selected_index == current_menu->size - 1)
+		current_menu->curr_selected_index = 0;
 	else
-		next_selection = current_menu->first_item;
-	current_menu->curr_selected_item = next_selection;
+		current_menu->curr_selected_index++;
 	show_menu(current_menu);
 }
 
 void handle_up_pressed()
 {
-	struct menu_item_node *next_selection;
-	if (current_menu->curr_selected_item->prev != current_menu->first_item)
-		next_selection = current_menu->curr_selected_item->prev;
+	if (current_menu->curr_selected_index == 0)
+		current_menu->curr_selected_index = current_menu->size - 1;
 	else
-		next_selection = current_menu->last_item;
-	current_menu->curr_selected_item = next_selection;
+		current_menu->curr_selected_index--;
 	show_menu(current_menu);
 }

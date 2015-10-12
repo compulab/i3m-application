@@ -34,7 +34,9 @@ struct menu_item_node {
 
 struct menu {
 	bool visible;
-	const u8g_pgm_uint8_t *title;
+	uint8_t size;
+	uint8_t curr_selected_index;
+	u8g_pgm_uint8_t *title;
 	struct menu_item_node *first_item;
 	struct menu_item_node *last_item;
 	struct menu_item_node * curr_selected_item;

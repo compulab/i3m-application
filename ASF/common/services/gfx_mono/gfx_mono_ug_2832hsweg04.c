@@ -62,8 +62,8 @@
  */
 void gfx_mono_ssd1306_init(void)
 {
-	uint8_t page;
-	uint8_t column;
+//	uint8_t page;
+//	uint8_t column;
 
 #ifdef CONFIG_SSD1306_FRAMEBUFFER
 	gfx_mono_set_framebuffer(framebuffer);
@@ -79,11 +79,11 @@ void gfx_mono_ssd1306_init(void)
 	 * If using a framebuffer (SPI interface) it will both clear the
 	 * controller memory and the framebuffer.
 	 */
-	for (page = 0; page < GFX_MONO_LCD_PAGES; page++) {
-		for (column = 0; column < GFX_MONO_LCD_WIDTH; column++) {
-			gfx_mono_ssd1306_put_byte(page, column, 0x00, true);
-		}
-	}
+//	for (page = 0; page < GFX_MONO_LCD_PAGES; page++) {
+//		for (column = 0; column < GFX_MONO_LCD_WIDTH; column++) {
+//			gfx_mono_ssd1306_put_byte(page, column, 0x00, true);
+//		}
+//	}
 }
 
 /**
