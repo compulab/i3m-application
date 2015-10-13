@@ -74,7 +74,7 @@ void write_cpu_fq_msb(uint8_t cpu_addr, uint8_t data)
 	uint8_t msb = (data & CPU_FQ_MSB_MSK);
 	computer_data.cpu_fq[index] =  (computer_data.cpu_fq[index] & ~CPU_FQ_MSK) | (msb << 8);
 	computer_data.valid_cpu_fq[index] = data & VALID_CPU_FQ_MSK;
-	update_information_frame(SHOW_CPU_FREQUENCY,information_present->info_data == index && computer_data.valid_cpu_fq[index]);
+	update_information_frame(SHOW_CPU_FREQUENCY, information_present->info_data == index && computer_data.valid_cpu_fq[index]);
 }
 
 void write_cpu_fq_lsb(uint8_t cpu_addr, uint8_t data)

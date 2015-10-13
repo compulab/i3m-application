@@ -2,16 +2,16 @@
 #include <math.h>
 #include "u8glib/gfx_components.h"
 #include "debug.h"
-#include "u8glib/menu-handler.h"
+#include "gfx/menu-handler.h"
 #include "timer/tc.h"
 #include "adc/adc.h"
 #include "config/cnf_blk_components.h"
-#include "u8glib/gfx_utils.h"
+#include "gfx/gfx_utils.h"
 #include "twi/test_twi.h"
 #include "twi/twi_slave.h"
 #include "asf.h"
-#include "u8glib/menu.h"
-#include "u8glib/menu_utils.h"
+#include "gfx/menu-handler.h"
+#include "gfx/action_menu/gfx_action_menu.h"
 #include "adc/adc.h"
 
 #define MENU_SHOW_TIME		150
@@ -41,15 +41,15 @@ ISR(PORTF_INT1_vect){
 	handle_button_pressed();
 }
 
-void show_menu_u8g()
-{
-	show_menu(u8g_menus[0]);
-}
+//void show_menu()
+//{
+//	gfx_action_menu_init(present_menu);
+//}
 
 void update_adc()
 {
 	set_power_data(power);
-	u8g_draw_string(10,power);
+//	u8g_draw_string(10,power);
 }
 
 ISR(TCC0_OVF_vect)
@@ -59,8 +59,8 @@ ISR(TCC0_OVF_vect)
 //		update_adc();
 //	if (tc_counter % 90 == 0)
 //		u8g_clear_screen();
-	if (tc_counter == MENU_SHOW_TIME && !current_menu->visible)
-		show_menu_u8g();
+	if (tc_counter == MENU_SHOW_TIME && !present_menu->visible)
+		gfx_action_menu_init(present_menu);
 //	else if (tc_counter == SLEEP_TIME)
 //		show_splash();
 }
@@ -86,8 +86,9 @@ void portf_init()
 
 void init_menu()
 {
-	load_config_block_u8g();
-	show_menu_u8g();
+	load_config_block();
+	set_menu_by_id(&present_menu,0);
+	gfx_action_menu_init(present_menu);
 	tc_init();
 }
 
@@ -184,7 +185,7 @@ void init()
 {
 	board_init();
 	sysclk_init();
-	u8g_init();
+//	u8g_init();
 	gfx_mono_init();
 	init_menu();
 //	updated_info_init();
@@ -196,34 +197,6 @@ void init()
 	twi_slave_init();
 	twi_master_init();
 }
-
-
-//
-//const u8g_pgm_uint8_t temp_title[] = "New Menu Title";
-//const u8g_pgm_uint8_t temp_item1[] = "Item 1";
-//const u8g_pgm_uint8_t __attribute__((section (".configData"))) temp_item2[] = "Item 2";
-//
-//struct menu_item_node second_item = {
-//		.text = temp_item2,
-//		.prev = 0,
-//		.next = 0,
-//		.visible = true
-//};
-//
-//
-//struct menu_item_node first_item = {
-//		.text = temp_item1,
-//		.next = &second_item,
-//		.prev = 0,
-//		.visible = true
-//};
-//
-//struct menu temp_menu = {
-//		.title = temp_title,
-//		.first_item = &first_item,
-//		.last_item = &second_item,
-//		.curr_selected_item = &first_item
-//};
 
 int main(void)
 {

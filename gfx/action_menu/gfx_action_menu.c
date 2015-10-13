@@ -6,7 +6,7 @@ void clear_menu()
 {
 	for (int i=0 ; i < GFX_MONO_LCD_FRAMEBUFFER_SIZE; i++)
 		framebuffer[i] = 0x00;
-//	gfx_mono_ssd1306_put_framebuffer();
+	gfx_mono_ssd1306_put_framebuffer();
 
 }
 
