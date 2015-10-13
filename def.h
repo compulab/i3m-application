@@ -1,0 +1,42 @@
+/*
+ * def.h
+ *
+ *  Created on: Oct 13, 2015
+ *      Author: arkadi
+ */
+
+#ifndef DEF_H_
+#define DEF_H_
+
+enum information_type{
+	SET_BRIGHTNESS,
+	SHOW_SERIAL_NUMBER,
+	SHOW_PROVISION_NUMBER,
+	SHOW_MAC_ADDRESS,
+	SHOW_POWER_STATE,
+	SHOW_POWER,
+	SHOW_CPU_FREQUENCY,
+	SHOW_HDD_SIZE,
+	SHOW_MEMORY_SIZE,
+	SHOW_HDD_TEMPERTURE,
+	SHOW_CPU_TEMPERTURE,
+	SHOW_GPU_TEMPERTURE,
+	SHOW_AMBIENT_TEMPERATURE,
+};
+
+enum action_type {
+	ACTION_TYPE_NONE,
+	ACTION_TYPE_SHOW_MENU,
+	ACTION_TYPE_SHOW_FRAME,
+	ACTION_TYPE_SET_BIOS_STATE
+};
+
+enum power_state{
+	POWER_ON,
+	POWER_STR,
+	POWER_STD,
+	POWER_OFF
+};
+
+
+#endif /* DEF_H_ */
