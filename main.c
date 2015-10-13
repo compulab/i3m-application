@@ -13,13 +13,9 @@
 #include "gfx/menu-handler.h"
 #include "gfx/action_menu/gfx_action_menu.h"
 #include "adc/adc.h"
-
-#define MENU_SHOW_TIME		150
-#define SLEEP_TIME			500
+#include "timer/tc-handler.h"
 //#define DEMO_SHOW
 
-
-char power[10];
 
 ISR(TWIE_TWIS_vect)
 {
@@ -41,28 +37,10 @@ ISR(PORTF_INT1_vect){
 	handle_button_pressed();
 }
 
-//void show_menu()
-//{
-//	gfx_action_menu_init(present_menu);
-//}
-
-void update_adc()
-{
-	set_power_data(power);
-//	u8g_draw_string(10,power);
-}
-
 ISR(TCC0_OVF_vect)
 {
 	tc_counter++;
-//	if (tc_counter % 50 == 0)
-//		update_adc();
-//	if (tc_counter % 90 == 0)
-//		u8g_clear_screen();
-	if (tc_counter == MENU_SHOW_TIME && !present_menu->visible)
-		gfx_action_menu_init(present_menu);
-//	else if (tc_counter == SLEEP_TIME)
-//		show_splash();
+	tc_handle();
 }
 
 void portf_init()

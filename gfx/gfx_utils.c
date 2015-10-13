@@ -81,16 +81,14 @@ void gfx_label_with_font_init(struct gfx_label *label, char *text, struct font *
 void update_information_present(struct gfx_information *info)
 {
 	switch(info->info_type){
-	case SHOW_CPU_FREQUENCY:
+	case SHOW_SERIAL_NUMBER:
+	case SHOW_PROVISION_NUMBER:
+	case SET_BRIGHTNESS:
 	case SHOW_HDD_SIZE:
 	case SHOW_MEMORY_SIZE:
-	case SHOW_HDD_TEMPERTURE:
-	case SHOW_CPU_TEMPERTURE:
-	case SHOW_GPU_TEMPERTURE:
-	case SET_BOIS_STATE:
-		information_present = info;
-		break;
+			break;
 	default:
+		information_present = info;
 		break;
 	}
 }
@@ -99,8 +97,6 @@ void gfx_information_draw(struct gfx_information *info)
 {
 	update_information_present(info);
 	update_data_by_type(info->info_type, (info->text).text, info->info_data);
-	set_size_by_text(info->text.text, info->text.font, &info->postion);
-	gfx_item_draw(&info->postion);
 	int x = info->postion.x + 2,
 			y = info->postion.y + 2;
 	struct gfx_text data = info->text;
@@ -111,7 +107,6 @@ void gfx_information_draw(struct gfx_information *info)
 void update_information()
 {
 	gfx_information_draw(information_present);
-	gfx_mono_put_framebuffer();
 }
 
 void gfx_label_draw(struct gfx_label *label)

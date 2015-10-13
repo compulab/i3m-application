@@ -11,6 +11,7 @@
 #include <stdbool.h>
 #include <avr/pgmspace.h>
 #include "../Fp-utils.h"
+#include "../def.h"
 
 typedef uint8_t gfx_mono_color_t;
 

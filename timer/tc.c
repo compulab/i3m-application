@@ -71,6 +71,7 @@ int tc_counter;
 
 int standby_counter;
 
+
 void tc_init(){
 	tc_counter = 0;
 	standby_counter = 0;

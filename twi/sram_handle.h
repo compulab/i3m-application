@@ -12,6 +12,7 @@
 #include "eeprom.h"
 #include "../Fp-utils.h"
 #include "../gfx/gfx_utils.h"
+#include "../gfx/action_menu/gfx_action_menu.h"
 
 void handle_sram_read_request(uint8_t read_address, uint8_t *data);
 

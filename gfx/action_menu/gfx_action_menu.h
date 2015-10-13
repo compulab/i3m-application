@@ -12,6 +12,7 @@
 #include "../gfx_utils.h"
 #include "../../asf.h"
 #include "../../Fp-utils.h"
+#include "../../def.h"
 #include "../../adc/adc.h"
 #include "../../ASF/common/services/gfx_mono/sysfont.h"
 #include "../../config/cnf_blk_components.h"

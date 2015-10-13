@@ -11,6 +11,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "../Fp-utils.h"
+#include "../def.h"
 
 struct gfx_item {
 	uint8_t x, y;

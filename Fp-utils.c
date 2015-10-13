@@ -6,11 +6,19 @@
  */
 #include "Fp-utils.h"
 #include "debug.h"
-#include <stdio.h>
-#include <string.h>
+
 
 #define MAX_DIGITS 5
 enum power_state current_power_state = POWER_ON;
+
+char power_value[10];
+
+void update_information_frame(enum information_type type, bool need_to_update)
+{
+	if (!present_menu->visible)
+		if (information_present->info_type == type && need_to_update)
+			update_information();
+}
 
 struct twi_package twi_ambient_temp = {
 	.slave_address = AMBIENT_TWI_ADDRESS,
@@ -26,6 +34,7 @@ void set_invalid_string(char *str){
 
 void update_power_state()
 {
+	enum power_state  last_power_state = current_power_state;
 	if (gpio_pin_is_low(FP_S5))
 		current_power_state = POWER_OFF;
 	else if (gpio_pin_is_low(FP_S4))
@@ -34,6 +43,8 @@ void update_power_state()
 		current_power_state = POWER_STR;
 	else
 		current_power_state = POWER_ON;
+	if (current_power_state != last_power_state)
+		update_information_frame(SHOW_POWER_STATE,true);
 }
 
 void set_state(char *state)
@@ -65,8 +76,6 @@ int num_of_digits(int x) {
 		  return i;
   return 0;
 }
-
-
 
 void set_mem_size_str(char *str, uint8_t mem)
 {
@@ -157,6 +166,17 @@ void set_updated_ambient_temp(char *output_str)
 	else
 		set_invalid_string(output_str);
 }
+
+void update_adc()
+{
+	char last_value[10];
+	strcpy(last_value,power_value);
+	set_power_data(power_value);
+	if (strcmp(power_value,last_value) != 0)
+		update_information_frame(SHOW_POWER, true);
+}
+
+
 void set_updated_gpu_temp(char *output_str)
 {
 	if (computer_data.valid_gpu_temp)
@@ -213,13 +233,19 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 		set_power_data(output_str);
 		break;
 	case SHOW_SERIAL_NUMBER:
-		strcpy(output_str, "TEST12TEST");
+		strcpy(output_str, "TEST12TEST"); //TODO
 		break;
 	case SHOW_PROVISION_NUMBER:
-		strcpy(output_str, "1.0");
+		strcpy(output_str, "1.0"); //TODO
+		break;
+	case SHOW_MAC_ADDRESS:
+		strcpy(output_str, "0t:3e:4s:5t"); //TODO
 		break;
 	case SHOW_POWER_STATE:
 		set_state(output_str);
+		break;
+	case SET_BRIGHTNESS:
+		strcpy(output_str, "test"); //TODO
 		break;
 	case SHOW_CPU_TEMPERTURE:
 		set_cpu_updated_temp(output_str,info);
