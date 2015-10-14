@@ -14,76 +14,18 @@ uint8_t left_time = 0,
 		right_time = 0,
 		ok_time = 0;
 
+
+
 //TODO: enter bootloader threw SW
 void enter_bootloader_mode()
 {
 //	udc_detach();
 //	udc_stop();
-//	asm ("ldi r30, 0xFE\n"  /* Low byte to ZL */
-//		  "ldi r31, 0x40\n" /* mid byte to ZH */
-//		  "ldi r24, 0x00\n" /* high byte to EIND which lives */
-//		  "out 0x3c, r24\n" /* at addr 0x3c in I/O space Extended Indirect register */
-//		  "eijmp":  :: "r24", "r30", "r31");
-}
-
-
-void menu_handler()
-{
-	getPressedKey(&selected_Key);
-	if (present_menu->visible){
-		if (selected_Key == KEY_NONE) return;
-		else if (selected_Key == KEY_HOLD)
-			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_BACK);
-		else if (is_key_selected(selected_Key, KEY_SELECT))
-			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_ENTER);
-		else if (is_key_selected(selected_Key, KEY_LEFT))
-			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP);
-		else
-			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN);
-	} else {
-		if (is_key_selected(selected_Key, KEY_HOLD))
-			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_BACK);
-	}
-}
-
-void delay()
-{
-	delay_ms(100);
-}
-
-bool is_bootloader_state()
-{
-	delay();
-//	return ioport_get_value(FP_RIGHT_BUTTON) && ioport_get_value(FP_LEFT_BUTTON);
-	return false;
-}
-
-void right_button_pressed()
-{
-	if (is_bootloader_state()) enter_bootloader_mode();
-	else
-		gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN);
-}
-
-void handle_bBack()
-{
-	if (!present_menu->visible)
-		gfx_action_menu_init(present_menu);
-}
-
-void select_button_pressed()
-{
-	delay();
-	if (!ioport_get_value(FP_OK_BUTTON)) handle_bBack();
-	else
-		gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_ENTER);
-}
-
-void left_button_pressed()
-{
-	if (is_bootloader_state()) enter_bootloader_mode();
-	else
-		gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP);
+//   asm ("ldi r30, 0xFE\n"  /* Low byte to ZL */
+//		 "ldi r31, 0x00\n" /* mid byte to ZH */
+//		 "ldi r24, 0x01\n" /* high byte to EIND which lives */
+//		 "out 0x3c, r24\n" /* at addr 0x3c in I/O space */
+//		 "eijmp":  :: "r24", "r30", "r31");
 }
 
 uint8_t size;
@@ -254,10 +196,6 @@ void handle_button_pressed()
 	update_button_state(ok_pressed, &ok_time, &ok_button);
 	switch (ok_button){
 	case BUTTON_HOLD:
-		handle_bBack();
-		clear_counter();
-		return;
-		break;
 	case BUTTON_CLICK:
 		clear_counter();
 		if (present_menu->visible)

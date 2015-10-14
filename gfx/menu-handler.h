@@ -30,8 +30,6 @@ void set_menu_by_id(struct gfx_action_menu **menu, uint8_t index);
 
 void show_splash();
 
-void menu_handler();
-
 void handle_button_pressed();
 
 #endif /* GFX_MENU_HANDLER_H_ */

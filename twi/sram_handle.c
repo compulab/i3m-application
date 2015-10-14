@@ -329,7 +329,7 @@ void read_pending_requests(uint8_t *data)
 
 uint8_t direct_write_length;
 uint8_t direct_write_index;
-bool is_length_valid;
+bool is_length_set;
 
 void get_last_item(struct direct_string_item *item)
 {
@@ -352,37 +352,63 @@ void add_direct_write_item(struct direct_string_item *item)
 		while (item->next != NULL) item = item->next;
 		item->next = new_item;
 	}
-	item= new_item;
+	item = new_item;
 }
 
-void write_direct_byte(bool is_type_item, uint8_t data)
+void init_start_direct_string(struct direct_string_item * item, bool is_written_type)
+{
+	if(is_written_type)
+		item->type[direct_write_length]='\0';
+	else
+		item->content[direct_write_length]='\0';
+	is_length_set = false;
+	direct_write_index = 0;
+	direct_write_length = 0;
+}
+
+void write_byte_direct_string(struct direct_string_item * item, bool is_written_type, uint8_t data)
+{
+	if (is_written_type)
+		item->type[direct_write_index]=data;
+	else
+		item->content[direct_write_index]=data;
+	direct_write_index++;
+}
+
+void set_written_length(struct direct_string_item * item, bool is_written_type, uint8_t data)
+{
+	char **direct_write;
+	direct_write_length = data;
+	is_length_set = true;
+	if (is_written_type){
+		add_direct_write_item(item);
+		direct_write = &(item->type);
+	}
+	else {
+		get_last_item(item);
+		direct_write = &(item->content);
+	}
+	*direct_write = malloc (sizeof(char *) * direct_write_length + 1);
+}
+
+void debug_item(struct direct_string_item * item)
+{
+	MSG_T_T(item->type, item->content);
+	delay_s(3);
+}
+
+void write_direct_byte(bool is_written_type, uint8_t data)
 {
 	struct direct_string_item *item = NULL;
-	if (is_length_valid){
+	if (is_length_set){
 		get_last_item(item);
-		if (direct_write_length == 0 || direct_write_index == direct_write_length){
-			if(is_type_item)
-				item->type[direct_write_length]='\0';
-			else
-				item->content[direct_write_length]='\0';
-			is_length_valid = false;
-			direct_write_index = 0;
-			direct_write_length = 0;
-		} else {
-			if (is_type_item)
-				item->type[direct_write_index]=data;
-			else
-				item->content[direct_write_index]=data;
-			direct_write_index++;
-		}
-	} else {
-		direct_write_length = data;
-		is_length_valid = true;
-		if (is_type_item)
-			add_direct_write_item(item);
+		if (direct_write_length == 0 || direct_write_index == direct_write_length)
+			init_start_direct_string(item, is_written_type);
 		else
-			get_last_item(item);
-		item->type = malloc (sizeof(char *) * direct_write_length + 1);
+			write_byte_direct_string(item, is_written_type, data);
+		if (direct_write_length == direct_write_index && !is_written_type)		debug_item(item);
+	} else {
+		set_written_length(item, is_written_type, data);
 	}
 }
 

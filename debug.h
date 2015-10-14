@@ -62,6 +62,4 @@ char debug[7];
 					delay_s(DELAY_TIME);
 //					CLEAR
 
-
-//
 #endif /* DEBUG_H_ */
