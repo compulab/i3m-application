@@ -216,9 +216,9 @@ void set_dmi_content(char *output_str, uint8_t string_id)
 		string_item = string_item->next;
 		count++;
 	}
-	if (count == string_id && string_item != 0){
+	if (count == string_id)
 		output_str = strdup(string_item->content);
-	}else
+	else
 		set_invalid_string(output_str);
 }
 
@@ -259,7 +259,8 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 		set_state(output_str);
 		break;
 	case SHOW_DMI_CONTENT:
-		set_dmi_content(output_str, info);
+		strcpy(output_str, "test"); //TODO
+//		set_dmi_content(output_str, info);
 		break;
 	case SET_BRIGHTNESS:
 		strcpy(output_str, "test"); //TODO

@@ -31,8 +31,10 @@ void show_current_menu()
 }
 
 struct gfx_action_menu *menu;
+
 struct gfx_action_menu dmi_menu = {.is_progmem = false };
 
+bool is_dmi_set;
 
 void clear_screen(struct gfx_action_menu *actionMenu)
 {
@@ -42,10 +44,12 @@ void clear_screen(struct gfx_action_menu *actionMenu)
 
 void set_dmi_mono_menu()
 {
+	is_dmi_set = false;
 	uint8_t count = 0;
 	struct direct_string_item * direct_item = computer_data.direct_string;
 	while (direct_item != 0){
 		count++;
+		MSG_dec(count)
 		direct_item = direct_item->next;
 	}
 	if (count > 0){
@@ -57,7 +61,7 @@ void set_dmi_mono_menu()
 		for (uint8_t i = 0; i < count  && i < 5; i++){
 			if (direct_item == 0)
 				break;
-			dmi_menu.menu->strings[i] = strdup(direct_item->type);
+			dmi_menu.menu->strings[i] = direct_item->type;
 			direct_item = direct_item->next;
 		}
 		if (dmi_menu.menu->num_elements > 4){
@@ -67,6 +71,7 @@ void set_dmi_mono_menu()
 			dmi_menu.menu->strings[count] = "Back To Main Menu";
 			dmi_menu.menu->num_elements++;
 		}
+		is_dmi_set = true;
 	} else {
 		free(dmi_menu.menu);
 		dmi_menu.menu = 0;
@@ -81,7 +86,7 @@ void set_dmi_information(struct gfx_information_node *info_node, uint8_t i)
 	info_node->information.info_type = SHOW_DMI_CONTENT;
 	info_node->information.postion = default_position;
 	info_node->information.text.font = &sysfont;
-	info_node->information.text.text = malloc(sizeof(char *) * 8);
+	info_node->information.text.text = malloc(sizeof(char *));
 }
 
 void set_dmi_frame(struct gfx_frame *frame, uint8_t i)
@@ -95,14 +100,16 @@ void set_dmi_frame(struct gfx_frame *frame, uint8_t i)
 
 void set_dmi_actions()
 {
-	dmi_menu.actions = malloc(sizeof(struct gfx_item_action) * dmi_menu.menu->num_elements);
-	for (int i = 0; i < dmi_menu.menu->num_elements -1; i++){
-		dmi_menu.actions[i].type =  ACTION_TYPE_SHOW_FRAME;
-		dmi_menu.actions[i].frame = malloc(sizeof(struct gfx_frame));
-		set_dmi_frame(dmi_menu.actions[i].frame, i);
+	if (is_dmi_set){
+		dmi_menu.actions = malloc(sizeof(struct gfx_item_action) * dmi_menu.menu->num_elements);
+		for (int i = 0; i < dmi_menu.menu->num_elements -1; i++){
+			dmi_menu.actions[i].type =  ACTION_TYPE_SHOW_FRAME;
+			dmi_menu.actions[i].frame = malloc(sizeof(struct gfx_frame));
+			set_dmi_frame(dmi_menu.actions[i].frame, i);
+		}
+		dmi_menu.actions[dmi_menu.menu->num_elements -1].type = ACTION_TYPE_SHOW_MENU;
+		dmi_menu.actions[dmi_menu.menu->num_elements -1].menu = action_menus[0];
 	}
-	dmi_menu.actions[dmi_menu.menu->num_elements -1].type = ACTION_TYPE_SHOW_MENU;
-	dmi_menu.actions[dmi_menu.menu->num_elements -1].menu = action_menus[0];
 }
 
 void set_dmi_menu()
@@ -126,9 +133,14 @@ uint8_t gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t
 			show_menu(menu);
 			break;
 		case ACTION_TYPE_SHOW_DMI_MENU:
-			set_dmi_menu();
-			if (dmi_menu.menu != 0)
-				show_menu(&dmi_menu);
+			if (computer_data.direct_string != 0){
+				set_dmi_menu();
+				if (is_dmi_set){
+					show_menu(&dmi_menu);
+				}
+			} else {
+				show_current_menu();
+			}
 			break;
 //		case ACTION_TYPE_SET_BIOS_STATE:
 //			eeprom_write_byte(BIOS_STATE_ADDRESS,selectedAction.frame->informations[0]->info_data);

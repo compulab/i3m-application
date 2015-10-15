@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "../config/conf_twi.h"
+#include <avr/io.h>
 
 #define MAX_RETRY 2
 #define READ_REQUEST 0x01

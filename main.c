@@ -157,10 +157,10 @@ void updated_info_init()
 	computer_data.req_cpu_temp = false;
 	computer_data.req_gpu_temp = false;
 	computer_data.wen = false;
-	computer_data.direct_string = malloc(sizeof(struct direct_string_item));
-	computer_data.direct_string->content = "testing";
-	computer_data.direct_string->type = "type";
-	computer_data.direct_string->next = 0;
+	computer_data.direct_string = 0;// malloc(sizeof(struct direct_string_item));
+//	computer_data.direct_string->content = "testing";
+//	computer_data.direct_string->type = "type";
+//	computer_data.direct_string->next = 0;
 }
 
 void init()
