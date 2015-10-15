@@ -364,14 +364,9 @@ void set_direct_string()
 
 void add_direct_string()
 {
-	MSG_dec(2)
 	direct_string_to_add->next = computer_data.direct_string;
 	computer_data.direct_string = direct_string_to_add;
 	direct_string_to_add = 0;
-	MSG(computer_data.direct_string->type)
-	if (computer_data.direct_string == 0 ){
-		MSG_dec(5555)
-	}
 	init_direct_write_vars();
 }
 
@@ -379,15 +374,12 @@ void add_direct_string()
 void end_direct_string(bool is_written_type)
 {
 	if(is_written_type && !is_last_type){
-		MSG_dec(0)
 		direct_string_to_add->type[direct_write_length]='\0';
 		clear_direct_help_vars();
 	} else if (is_last_type){
-		MSG_dec(1)
 		direct_string_to_add->content[direct_write_length]='\0';
 		add_direct_string();
 	} else{
-		MSG_dec(3)
 		init_direct_write_vars();
 		is_last_type = false;
 		return;
@@ -414,7 +406,6 @@ void set_written_length(bool is_written_type, uint8_t data)
 			set_direct_string();
 			direct_string_to_add->type = malloc (sizeof(char *) * direct_write_length + 1);
 		} else {
-			MSG_dec(33)
 			clear_direct_help_vars();
 			return;
 		}

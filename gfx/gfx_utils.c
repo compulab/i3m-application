@@ -82,7 +82,7 @@ void update_information_present(struct gfx_information *info)
 {
 	switch(info->info_type){
 	case SHOW_SERIAL_NUMBER:
-	case SHOW_PROVISION_NUMBER:
+	case SHOW_PRODUCT_NAME:
 	case SET_BRIGHTNESS:
 	case SHOW_HDD_SIZE:
 	case SHOW_MEMORY_SIZE:

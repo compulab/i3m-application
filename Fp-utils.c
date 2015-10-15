@@ -29,7 +29,7 @@ struct twi_package twi_ambient_temp = {
 };
 
 void set_invalid_string(char *str){
-	str = strdup("INVALID");
+	sprintf(str, "INVALID");
 }
 
 void update_power_state()
@@ -125,13 +125,14 @@ void set_temp_string(char *str, int8_t temperature)
 	sprintf(str,"%d C",temperature);
 }
 
-void set_cpu_updated_temp(char *data,uint8_t cpu_id)
+void set_cpu_updated_temp(char *data, uint8_t cpu_id)
 {
+	if (computer_data.valid_cpu_temp[cpu_id]){
 	uint8_t temp = computer_data.cpu_temp[cpu_id];
-	if (computer_data.valid_cpu_temp[cpu_id])
-		set_temp_string(data,temp);
-	else
+		set_temp_string(data, temp);
+	} else {
 		set_invalid_string(data);
+	}
 }
 
 void set_updated_memory_size(char *output_str, uint8_t mem_id)
@@ -183,6 +184,30 @@ void set_updated_gpu_temp(char *output_str)
 		set_temp_string(output_str, computer_data.gpu_temp);
 	else
 		set_invalid_string(output_str);
+}
+
+void set_serial_number(char *output_str)
+{
+	char serial[SERIAL_NUMBER_LENGTH];
+	for (int i=0; i < SERIAL_NUMBER_LENGTH; i++)
+		serial[i] = eeprom_read_byte(SERIAL_NUMBER_EEPROM_ADDRESS + i);
+	strcpy(output_str, serial);
+}
+
+void set_product_name(char *output_str)
+{
+	char product_name[PRODUCT_NAME_LENGTH];
+	for (int i = 0; i < PRODUCT_NAME_LENGTH; i++)
+		product_name[i] = eeprom_read_byte(PRODUCT_NAME_EEPROM_ADDRESS + i);
+	strcpy(output_str, product_name);
+}
+
+void set_mac_address(char *output_str)
+{
+	char mac_address[MAC_ADDRESS_LENGTH];
+	for (int i = 0; i < MAC_ADDRESS_LENGTH; i++)
+		mac_address[i] = eeprom_read_byte(MAC_ADDRESS_EEPROM_ADDRESS + i);
+	strcpy(output_str, mac_address);
 }
 
 void set_update_hdd_temp(char *output_str, uint8_t hdd_id)
@@ -247,26 +272,25 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 		set_power_data(output_str);
 		break;
 	case SHOW_SERIAL_NUMBER:
+//		set_serial_number(output_str);
 		strcpy(output_str, "TEST12TEST"); //TODO
 		break;
-	case SHOW_PROVISION_NUMBER:
+	case SHOW_PRODUCT_NAME:
+//		set_product_name(output_str);
 		strcpy(output_str, "1.0"); //TODO
 		break;
 	case SHOW_MAC_ADDRESS:
+//		set_mac_address(output_str);
 		strcpy(output_str, "0t:3e:4s:5t"); //TODO
 		break;
 	case SHOW_POWER_STATE:
 		set_state(output_str);
 		break;
-	case SHOW_DMI_CONTENT:
-		strcpy(output_str, "test"); //TODO
-//		set_dmi_content(output_str, info);
-		break;
 	case SET_BRIGHTNESS:
 		strcpy(output_str, "test"); //TODO
 		break;
 	case SHOW_CPU_TEMPERTURE:
-		set_cpu_updated_temp(output_str,info);
+		set_cpu_updated_temp(output_str, info);
 		break;
 	default:
 		break;

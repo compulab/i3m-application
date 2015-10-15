@@ -10,6 +10,7 @@
 
 #include "../gfx_components.h"
 #include "../gfx_utils.h"
+#include "../menu-handler.h"
 #include "../../asf.h"
 #include "../../Fp-utils.h"
 #include "../../def.h"

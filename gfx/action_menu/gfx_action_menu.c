@@ -1,7 +1,5 @@
 #include "gfx_action_menu.h"
-#include "../../debug.h"
-#include "../../twi/eeprom.h"
-#include "../menu-handler.h"
+
 
 void clear_menu()
 {
@@ -49,7 +47,6 @@ void set_dmi_mono_menu()
 	struct direct_string_item * direct_item = computer_data.direct_string;
 	while (direct_item != 0){
 		count++;
-		MSG_dec(count)
 		direct_item = direct_item->next;
 	}
 	if (count > 0){
@@ -80,23 +77,38 @@ void set_dmi_mono_menu()
 
 struct gfx_item default_position = { .x =0, .y = 32, .height = 8, .visible = true };
 
-void set_dmi_information(struct gfx_information_node *info_node, uint8_t i)
+struct direct_string_item * curr_item = 0;
+
+void set_dmi_label(struct gfx_label_node *label_node, uint8_t index)
 {
-	info_node->information.info_data = i;
-	info_node->information.info_type = SHOW_DMI_CONTENT;
-	info_node->information.postion = default_position;
-	info_node->information.text.font = &sysfont;
-	info_node->information.text.text = malloc(sizeof(char *));
+	struct direct_string_item * direct_item = computer_data.direct_string;
+	while (direct_item != 0){
+		index++;
+		direct_item = direct_item->next;
+	}
+	label_node->label.postion = default_position;
+	label_node->label.text.font = &sysfont;
+	label_node->label.text.is_progmem = false;
+//	label_node->label.text.text = direct_item->type;
+	label_node->next = 0;
 }
 
-void set_dmi_frame(struct gfx_frame *frame, uint8_t i)
+void set_dmi_frame(struct gfx_frame *frame, uint8_t index)
 {
-	frame->information_head =  malloc(sizeof(struct gfx_information_node));
+	frame->information_head = 0;
 	frame->image_head = 0;
-	frame->label_head = 0;
-	set_dmi_information(frame->information_head, i);
+	frame->label_head =  malloc(sizeof(struct gfx_label_node));;
+	set_dmi_label(frame->label_head, index);
 }
 
+void set_dmi_label_text()
+{
+	struct direct_string_item * direct_item = computer_data.direct_string;
+	for (int i = 0; i < dmi_menu.menu->num_elements -1; i++){
+		dmi_menu.actions[i].frame->label_head->label.text.text = direct_item->content;
+		direct_item = direct_item->next;
+	}
+}
 
 void set_dmi_actions()
 {
@@ -107,6 +119,7 @@ void set_dmi_actions()
 			dmi_menu.actions[i].frame = malloc(sizeof(struct gfx_frame));
 			set_dmi_frame(dmi_menu.actions[i].frame, i);
 		}
+		set_dmi_label_text();
 		dmi_menu.actions[dmi_menu.menu->num_elements -1].type = ACTION_TYPE_SHOW_MENU;
 		dmi_menu.actions[dmi_menu.menu->num_elements -1].menu = action_menus[0];
 	}
@@ -142,6 +155,10 @@ uint8_t gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t
 				show_current_menu();
 			}
 			break;
+//		case ACTION_TYPE_SHOW_MENU_AFTER_DMI:
+//			computer_data.direct_string = 0;
+//			show_menu(action_menus[0]);
+//			break;
 //		case ACTION_TYPE_SET_BIOS_STATE:
 //			eeprom_write_byte(BIOS_STATE_ADDRESS,selectedAction.frame->informations[0]->info_data);
 //			break;

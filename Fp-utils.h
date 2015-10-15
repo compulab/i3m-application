@@ -12,6 +12,7 @@
 #include "adc/adc.h"
 #include "layout.h"
 #include "twi/twi_master.h"
+#include "twi/eeprom.h"
 #include "gfx/action_menu/gfx_action_menu.h"
 #include "def.h"
 
