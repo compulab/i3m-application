@@ -124,8 +124,8 @@ struct gfx_mono_menu {
 	uint8_t current_page;
 };
 
-void gfx_mono_menu_init(struct gfx_mono_menu *menu);
-uint8_t gfx_mono_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode);
+void gfx_mono_menu_init(struct gfx_mono_menu *menu, bool is_progmem);
+uint8_t gfx_mono_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode, bool is_progmem);
 
 /** @} */
 

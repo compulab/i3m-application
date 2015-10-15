@@ -129,6 +129,7 @@ void load_config_block()
 			MSG_dec(config_menu.id)
 			delay_s(0.4);
 			memcpy_P(mono_menu, config_menu.menu, sizeof(struct gfx_mono_menu));
+			action_menus[config_menu.id]->is_progmem = true;
 			action_menus[config_menu.id]->menu= mono_menu;
 			action_menus[config_menu.id]->actions = malloc (sizeof(struct gfx_item_action) * mono_menu->num_elements);
 			struct cnf_action_node *cnf_action_node = config_menu.actions_head;

@@ -70,7 +70,7 @@ struct gfx_mono_bitmap menu_bitmap_indicator = {
  * \param[in] menu     a menu struct with menu settings
  * \param[in] redraw   clear screen before drawing menu
  */
-static void menu_draw(struct gfx_mono_menu *menu, bool redraw)
+static void menu_draw(struct gfx_mono_menu *menu, bool redraw, bool is_progmem)
 {
 	static bool redraw_state;
 	uint8_t i;
@@ -104,10 +104,15 @@ static void menu_draw(struct gfx_mono_menu *menu, bool redraw)
 					GFX_MONO_MENU_ELEMENTS_PER_SCREEN +
 					GFX_MONO_MENU_ELEMENTS_PER_SCREEN &&
 					i < menu->num_elements; i++) {
-				gfx_mono_draw_progmem_string(
-						(char PROGMEM_PTR_T)menu->strings[i],
-						GFX_MONO_MENU_INDICATOR_WIDTH + 1,
-						line * SYSFONT_LINESPACING, &sysfont);
+				if (is_progmem)
+					gfx_mono_draw_progmem_string(
+							(char PROGMEM_PTR_T)menu->strings[i],
+							GFX_MONO_MENU_INDICATOR_WIDTH + 1,
+							line * SYSFONT_LINESPACING, &sysfont);
+				else
+					gfx_mono_draw_string(menu->strings[i],
+												GFX_MONO_MENU_INDICATOR_WIDTH + 1,
+												line * SYSFONT_LINESPACING, &sysfont);
 				line++;
 			}
 			redraw_state = false;
@@ -127,7 +132,7 @@ static void menu_draw(struct gfx_mono_menu *menu, bool redraw)
  * \param[in] menu  menu struct with menu options
  *
  */
-void gfx_mono_menu_init(struct gfx_mono_menu *menu)
+void gfx_mono_menu_init(struct gfx_mono_menu *menu, bool is_progmem)
 {
 	/* Clear screen */
 //	gfx_mono_draw_filled_rect(0, 0,
@@ -136,11 +141,15 @@ void gfx_mono_menu_init(struct gfx_mono_menu *menu)
 //	ssd1306_clear();
 
 	/* Draw the menu title on the top of the screen */
-	gfx_mono_draw_progmem_string((char PROGMEM_PTR_T)menu->title,
-			0, 0, &sysfont);
+	if (is_progmem)
+		gfx_mono_draw_progmem_string((char PROGMEM_PTR_T)menu->title,
+				0, 0, &sysfont);
+	else
+		gfx_mono_draw_string(menu->title,
+					0, 0, &sysfont);
 
 	/* Draw menu options below */
-	menu_draw(menu, true);
+	menu_draw(menu, true, is_progmem);
 	gfx_mono_put_framebuffer();
 }
 
@@ -152,7 +161,7 @@ void gfx_mono_menu_init(struct gfx_mono_menu *menu)
  *
  * \retval selected menu option or status code
  */
-uint8_t gfx_mono_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode)
+uint8_t gfx_mono_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode, bool is_progmem)
 {
 	switch (keycode) {
 	case GFX_MONO_MENU_KEYCODE_DOWN:
@@ -163,7 +172,7 @@ uint8_t gfx_mono_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode)
 		}
 
 		/* Update menu on display */
-		menu_draw(menu, false);
+		menu_draw(menu, false, is_progmem);
 		/* Nothing selected yet */
 		return GFX_MONO_MENU_EVENT_IDLE;
 
@@ -175,7 +184,7 @@ uint8_t gfx_mono_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode)
 		}
 
 		/* Update menu on display */
-		menu_draw(menu, false);
+		menu_draw(menu, false, is_progmem);
 		/* Nothing selected yet */
 		return GFX_MONO_MENU_EVENT_IDLE;
 

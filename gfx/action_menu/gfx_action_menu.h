@@ -35,6 +35,7 @@ struct gfx_action_menu {
 	struct gfx_mono_menu *menu;
 	struct gfx_item_action *actions;
 	uint8_t id;
+	bool is_progmem;
 	bool visible;
 };
 

@@ -25,8 +25,8 @@ char debug[7];
 
 #define MSG(str)	ssd1306_set_page_address(3); \
 					ssd1306_set_column_address(3); \
-					ssd1306_write_text(str); \
-					delay_s(DELAY_TIME);
+					ssd1306_write_text(str);
+//					delay_s(DELAY_TIME);
 //					CLEAR
 
 #define MSG_hex(num)   ssd1306_set_page_address(4); \
@@ -58,8 +58,8 @@ char debug[7];
 					ssd1306_write_text(title); \
 					ssd1306_set_page_address(5); \
 					ssd1306_set_column_address(3); \
-					ssd1306_write_text(str); \
-					delay_s(DELAY_TIME);
+					ssd1306_write_text(str);
+//					delay_s(DELAY_TIME);
 //					CLEAR
 
 #endif /* DEBUG_H_ */

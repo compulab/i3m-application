@@ -14,6 +14,7 @@
 #include "gfx/action_menu/gfx_action_menu.h"
 #include "adc/adc.h"
 #include "timer/tc-handler.h"
+#include "twi/sram_handle.h"
 //#define DEMO_SHOW
 
 
@@ -156,7 +157,10 @@ void updated_info_init()
 	computer_data.req_cpu_temp = false;
 	computer_data.req_gpu_temp = false;
 	computer_data.wen = false;
-	computer_data.direct_string = NULL;
+	computer_data.direct_string = malloc(sizeof(struct direct_string_item));
+	computer_data.direct_string->content = "testing";
+	computer_data.direct_string->type = "type";
+	computer_data.direct_string->next = 0;
 }
 
 void init()
@@ -164,9 +168,10 @@ void init()
 	board_init();
 	sysclk_init();
 //	u8g_init();
+	sram_handle_init();
 	gfx_mono_init();
 	init_menu();
-//	updated_info_init();
+	updated_info_init();
 	adc_init();
 	pmic_init();
 	portf_init();

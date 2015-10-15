@@ -29,7 +29,7 @@ struct twi_package twi_ambient_temp = {
 };
 
 void set_invalid_string(char *str){
-	strcpy(str, "INVALID");
+	str = strdup("INVALID");
 }
 
 void update_power_state()
@@ -208,6 +208,20 @@ void update_ambient_temp()
 	delay_s(2);
 }
 
+void set_dmi_content(char *output_str, uint8_t string_id)
+{
+	uint8_t count = 0;
+	struct direct_string_item * string_item = computer_data.direct_string;
+	while (string_item != 0 && count < string_id){
+		string_item = string_item->next;
+		count++;
+	}
+	if (count == string_id && string_item != 0){
+		output_str = strdup(string_item->content);
+	}else
+		set_invalid_string(output_str);
+}
+
 void update_data_by_type(enum information_type type, char *output_str, uint8_t info)
 {
 	switch (type){
@@ -243,6 +257,9 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 		break;
 	case SHOW_POWER_STATE:
 		set_state(output_str);
+		break;
+	case SHOW_DMI_CONTENT:
+		set_dmi_content(output_str, info);
 		break;
 	case SET_BRIGHTNESS:
 		strcpy(output_str, "test"); //TODO

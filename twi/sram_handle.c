@@ -38,6 +38,25 @@
 #define REQUEST_CPUT			0x04
 #define REQUEST_GPUT			0x08
 
+
+
+uint8_t direct_write_length;
+uint8_t direct_write_index;
+bool is_length_set;
+bool is_last_type;
+
+void init_direct_write_vars()
+{
+	direct_write_index = 0;
+	direct_write_length = 0;
+	is_last_type = false;
+	is_length_set = false;
+}
+
+void sram_handle_init()
+{
+	init_direct_write_vars();
+}
 bool is_valid_register(int8_t index, uint8_t max_index)
 {
 	return index >= 0 && index < max_index;
@@ -267,10 +286,10 @@ void read_power_state(uint8_t *data)
 
 void read_ambient(uint8_t *data)
 {
-	if (!computer_data.valid_ambient_temp){
-		update_ambient_temp();
-		delay_us(4000);
-	}
+//	if (!computer_data.valid_ambient_temp){
+//		update_ambient_temp();
+//		delay_us(4);
+//	}
 	if (computer_data.valid_ambient_temp)
 		*data = computer_data.ambient_temp;
 	else
@@ -327,68 +346,75 @@ void read_pending_requests(uint8_t *data)
 	*data = req;
 }
 
-uint8_t direct_write_length;
-uint8_t direct_write_index;
-bool is_length_set;
-
-void get_last_item(struct direct_string_item *item)
-{
-	item = computer_data.direct_string;
-	if (item == NULL)
-		return;
-	while (item->next != NULL) item = item->next;
-}
-
 void add_direct_write_item(struct direct_string_item *item)
 {
 	struct direct_string_item *new_item = malloc(sizeof(struct direct_string_item));
-	new_item->content = NULL;
-	new_item->next = NULL;
-	new_item->type = NULL;
-	item = computer_data.direct_string;
-	if (item == NULL){
+	new_item->content = 0;
+	new_item->next = 0;
+	new_item->type = 0;
+	if (computer_data.direct_string == 0){
 		computer_data.direct_string = new_item;
 	} else {
-		while (item->next != NULL) item = item->next;
-		item->next = new_item;
+		new_item->next = computer_data.direct_string;
+		computer_data.direct_string = item;
 	}
 	item = new_item;
 }
 
-void init_start_direct_string(struct direct_string_item * item, bool is_written_type)
+
+void clear_item()
 {
-	if(is_written_type)
-		item->type[direct_write_length]='\0';
-	else
-		item->content[direct_write_length]='\0';
-	is_length_set = false;
-	direct_write_index = 0;
-	direct_write_length = 0;
+	struct direct_string_item *item_to_clear = computer_data.direct_string;
+	computer_data.direct_string = item_to_clear->next;
+	free(item_to_clear->content);
+	free(item_to_clear->type);
+	init_direct_write_vars();
 }
+
+void end_direct_string(struct direct_string_item * item, bool is_written_type)
+{
+	if(is_written_type && !is_last_type){
+		item->type[direct_write_length]='\0';
+	} else if (is_last_type){
+		item->content[direct_write_length]='\0';
+	} else
+		clear_item();
+	init_direct_write_vars();
+}
+
 
 void write_byte_direct_string(struct direct_string_item * item, bool is_written_type, uint8_t data)
 {
 	if (is_written_type)
-		item->type[direct_write_index]=data;
+		item->type[direct_write_index] = data;
 	else
-		item->content[direct_write_index]=data;
+		item->content[direct_write_index] = data;
 	direct_write_index++;
 }
 
 void set_written_length(struct direct_string_item * item, bool is_written_type, uint8_t data)
 {
-	char **direct_write;
+	char **direct_write = 0;
+	item = computer_data.direct_string;
 	direct_write_length = data;
 	is_length_set = true;
 	if (is_written_type){
-		add_direct_write_item(item);
-		direct_write = &(item->type);
+		if (item == 0 || item->content != 0){
+			add_direct_write_item(item);
+			direct_write = &(item->type);
+		} else {
+			clear_item();
+			return;
+		}
 	}
-	else {
-		get_last_item(item);
+	else if (is_last_type){
+		MSG_dec(direct_write_length)
 		direct_write = &(item->content);
+	} else {
+		clear_item();
+		return;
 	}
-	*direct_write = malloc (sizeof(char *) * direct_write_length + 1);
+	(*direct_write) = malloc (sizeof(char *) * direct_write_length + 1);
 }
 
 void debug_item(struct direct_string_item * item)
@@ -399,17 +425,26 @@ void debug_item(struct direct_string_item * item)
 
 void write_direct_byte(bool is_written_type, uint8_t data)
 {
-	struct direct_string_item *item = NULL;
+	struct direct_string_item *item = computer_data.direct_string;
 	if (is_length_set){
-		get_last_item(item);
-		if (direct_write_length == 0 || direct_write_index == direct_write_length)
-			init_start_direct_string(item, is_written_type);
-		else
-			write_byte_direct_string(item, is_written_type, data);
-		if (direct_write_length == direct_write_index && !is_written_type)		debug_item(item);
+		write_byte_direct_string(item, is_written_type, data);
+		if (direct_write_length == direct_write_index)
+			end_direct_string(item, is_written_type);
 	} else {
 		set_written_length(item, is_written_type, data);
 	}
+	if (direct_write_index == direct_write_length){
+		init_direct_write_vars();
+		if (is_written_type){
+			is_last_type = true;
+			MSG(item->type)
+		} else {
+			is_last_type = false;
+			MSG(item->content)
+		}
+	}
+
+
 }
 
 void write_direct(uint8_t write_address, uint8_t data)
