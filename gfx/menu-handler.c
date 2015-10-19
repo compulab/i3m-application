@@ -97,7 +97,17 @@ void show_splash()
 {
 	present_menu->visible = false;
 	clear_screen_framebuffer();
-	gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 15);
+	gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 0);
+	gfx_mono_put_framebuffer();
+}
+
+void graphic_item_init(struct gfx_image *menu_image, struct cnf_image * image_node)
+{
+	menu_image->bitmap = malloc(sizeof(struct gfx_mono_bitmap));
+	menu_image->bitmap->height = image_node->height;
+	menu_image->bitmap->width = image_node->width;
+	menu_image->bitmap->data.progmem = image_node->bitmap_progmem;
+	menu_image->bitmap->type = GFX_MONO_BITMAP_SECTION;
 }
 
 void splash_init(struct cnf_blk config_block)
@@ -107,6 +117,7 @@ void splash_init(struct cnf_blk config_block)
 	splash_bitmap.data.progmem = config_block.splash;
 	splash_bitmap.type = GFX_MONO_BITMAP_SECTION;
 	show_splash();
+	delay_s(1);
 }
 
 void load_config_block()
@@ -120,6 +131,9 @@ void load_config_block()
 	action_menus = malloc(sizeof (struct gfx_action_menu *) * size);
 	struct cnf_menu_node *cnf_menu_node = config_block.menus_head;
 	struct cnf_menu_node cnf_menu;
+	struct cnf_image_node *cnf_graphic_item_node;
+	struct cnf_image_node cnf_image;
+	struct gfx_image_node *image_node;
 	for (int i=0; i < size; i++) 	action_menus[i] = malloc(sizeof(struct gfx_action_menu));
 	for (int i=0; i < size; i++){
 		if (cnf_menu_node != 0){
@@ -130,6 +144,27 @@ void load_config_block()
 			action_menus[config_menu.id]->is_progmem = true;
 			action_menus[config_menu.id]->menu= mono_menu;
 			action_menus[config_menu.id]->actions = malloc (sizeof(struct gfx_item_action) * mono_menu->num_elements);
+			cnf_graphic_item_node = config_menu.images_items_head;
+			action_menus[config_menu.id]->is_graphic_view =  cnf_graphic_item_node != 0;
+			if (action_menus[config_menu.id]->is_graphic_view){
+				action_menus[config_menu.id]->graphic_items_head = malloc(sizeof(struct gfx_image_node));
+				image_node = action_menus[config_menu.id]->graphic_items_head;
+				for (uint8_t i = 0; i < mono_menu->num_elements; i++){
+					if (cnf_graphic_item_node == 0)
+						break;
+					memcpy_P(&cnf_image, cnf_graphic_item_node, sizeof(struct cnf_image_node));
+					graphic_item_init(&image_node->image, &cnf_image.image);
+					cnf_graphic_item_node = cnf_image.next;
+					if (i < mono_menu->num_elements - 1){
+						image_node->next = malloc(sizeof(struct gfx_image_node));
+						image_node = image_node->next;
+					} else {
+						image_node->next = 0;
+					}
+				}
+			} else {
+				action_menus[config_menu.id]->graphic_items_head = 0;
+			}
 			struct cnf_action_node *cnf_action_node = config_menu.actions_head;
 			struct cnf_action_node action_node;
 			memcpy_P(&action_node, cnf_action_node, sizeof(struct cnf_action_node));
@@ -200,7 +235,7 @@ void handle_button_pressed()
 		if (present_menu->visible)
 			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_ENTER);
 		else
-			gfx_action_menu_init(present_menu);
+			gfx_action_menu_init(present_menu, false);
 		return;
 		break;
 	default:
@@ -213,7 +248,7 @@ void handle_button_pressed()
 		if (present_menu->visible)
 			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP);
 		else
-			gfx_action_menu_init(present_menu);
+			gfx_action_menu_init(present_menu, false);
 		return;
 		break;
 	default:
@@ -226,7 +261,7 @@ void handle_button_pressed()
 		if (present_menu->visible)
 			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN);
 		else
-			gfx_action_menu_init(present_menu);
+			gfx_action_menu_init(present_menu, false);
 		return;
 		break;
 	default:

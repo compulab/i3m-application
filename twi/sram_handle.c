@@ -6,7 +6,7 @@
  */
 
 #include "../debug.h"
-//#define SRAM_DEBUG
+#define SRAM_DEBUG
 #include "sram_handle.h"
 
 #define CPU_FQ_MSK 				0x1f00

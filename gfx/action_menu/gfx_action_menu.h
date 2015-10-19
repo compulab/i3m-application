@@ -8,6 +8,7 @@
 #ifndef GFX_GFX_ACTION_MENU_H_
 #define GFX_GFX_ACTION_MENU_H_
 
+
 #include "../gfx_components.h"
 #include "../gfx_utils.h"
 #include "../menu-handler.h"
@@ -20,28 +21,9 @@
 
 struct gfx_action_menu *present_menu;
 
-struct gfx_item_data {
-	PROGMEM_STRING_T title;
-	char *text;
-};
 
-struct gfx_item_action {
-	enum action_type type;
-	uint8_t menu_id;
-	struct gfx_action_menu *menu;
-	struct gfx_frame *frame;
-};
+void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw);
 
-struct gfx_action_menu {
-	struct gfx_mono_menu *menu;
-	struct gfx_item_action *actions;
-	uint8_t id;
-	bool is_progmem;
-	bool visible;
-};
-
-void gfx_action_menu_init(struct gfx_action_menu *actionMenu);
-
-uint8_t gfx_action_menu_process_key(struct gfx_action_menu *actionMenu, uint8_t keycode);
+void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t keycode);
 
 #endif /* GFX_GFX_ACTION_MENU_H_ */

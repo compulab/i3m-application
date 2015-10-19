@@ -1,31 +1,33 @@
 #include "gfx_action_menu.h"
-
+#include "graphic_menu.h"
 
 void clear_menu()
 {
 	for (int i=0 ; i < GFX_MONO_LCD_FRAMEBUFFER_SIZE; i++)
 		framebuffer[i] = 0x00;
-	gfx_mono_ssd1306_put_framebuffer();
-
+//	gfx_mono_ssd1306_put_framebuffer();
 }
 
-void gfx_action_menu_init(struct gfx_action_menu *action_menu)
+void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 {
 	present_menu->visible = false;
 	present_menu = action_menu;
 	action_menu->visible = true;
-	clear_menu();
-	gfx_mono_menu_init(action_menu->menu, action_menu->is_progmem);
+//	clear_menu();
+	if (present_menu->is_graphic_view)
+		graphic_menu_init(action_menu, redraw);
+	else
+		gfx_mono_menu_init(action_menu->menu, redraw, action_menu->is_progmem);
 }
 
-void show_menu(struct gfx_action_menu *menu)
+void show_menu(struct gfx_action_menu *menu, bool redraw)
 {
-	gfx_action_menu_init(menu);
+	gfx_action_menu_init(menu, redraw);
 }
 
-void show_current_menu()
+void show_current_menu(bool redraw)
 {
-	gfx_action_menu_init(present_menu);
+	gfx_action_menu_init(present_menu, redraw);
 }
 
 struct gfx_action_menu *menu;
@@ -131,7 +133,7 @@ void set_dmi_menu()
 	set_dmi_actions();
 }
 
-uint8_t gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t keycode)
+void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t keycode)
 {
 	if (keycode == GFX_MONO_MENU_KEYCODE_ENTER){
 		struct gfx_item_action selected_action = action_menu->actions[(action_menu->menu)->current_selection];
@@ -143,16 +145,16 @@ uint8_t gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t
 			break;
 		case ACTION_TYPE_SHOW_MENU:
 			menu = selected_action.menu;
-			show_menu(menu);
+			show_menu(menu, true);
 			break;
 		case ACTION_TYPE_SHOW_DMI_MENU:
 			if (computer_data.direct_string != 0){
 				set_dmi_menu();
 				if (is_dmi_set){
-					show_menu(&dmi_menu);
+					show_menu(&dmi_menu, true);
 				}
 			} else {
-				show_current_menu();
+				show_current_menu(true);
 			}
 			break;
 //		case ACTION_TYPE_SHOW_MENU_AFTER_DMI:
@@ -167,9 +169,9 @@ uint8_t gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t
 		}
 	} else if (keycode == GFX_MONO_MENU_KEYCODE_BACK) {
 		if (!present_menu->visible)
-			show_current_menu();
+			show_current_menu(true);
 	}else {
-		return gfx_mono_menu_process_key(action_menu->menu, keycode, action_menu->is_progmem);
+		 gfx_mono_menu_process_key(action_menu->menu, keycode, action_menu->is_progmem);
+		 show_current_menu(false);
 	}
-	return 0;
 }

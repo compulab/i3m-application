@@ -120,11 +120,12 @@ struct gfx_mono_menu {
 	char * title;
 	char *strings[6];
 	uint8_t num_elements;
+	uint8_t last_selection;
 	uint8_t current_selection;
 	uint8_t current_page;
 };
 
-void gfx_mono_menu_init(struct gfx_mono_menu *menu, bool is_progmem);
+void gfx_mono_menu_init(struct gfx_mono_menu *menu, bool redraw, bool is_progmem);
 uint8_t gfx_mono_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode, bool is_progmem);
 
 /** @} */

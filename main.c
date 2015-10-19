@@ -66,8 +66,8 @@ void portf_init()
 void init_menu()
 {
 	load_config_block();
-	set_menu_by_id(&present_menu,0);
-	gfx_action_menu_init(present_menu);
+	set_menu_by_id(&present_menu, 0);
+	gfx_action_menu_init(present_menu, true);
 	tc_init();
 }
 
@@ -141,7 +141,13 @@ void updated_info_init()
 	computer_data.valid_mem[3] = true;
 	computer_data.mem_slot_sz[3] = 0;
 
+	computer_data.direct_string =  malloc(sizeof(struct direct_string_item));
+	computer_data.direct_string->content = "testing";
+	computer_data.direct_string->type = "type";
+	computer_data.direct_string->next = 0;
+
 #else
+	computer_data.direct_string = 0;
 	computer_data.valid_ambient_temp = false;
 	computer_data.valid_gpu_temp = false;
 	for (int i=0; i < MAX_CPU; i++){
@@ -157,10 +163,6 @@ void updated_info_init()
 	computer_data.req_cpu_temp = false;
 	computer_data.req_gpu_temp = false;
 	computer_data.wen = false;
-	computer_data.direct_string = 0;// malloc(sizeof(struct direct_string_item));
-//	computer_data.direct_string->content = "testing";
-//	computer_data.direct_string->type = "type";
-//	computer_data.direct_string->next = 0;
 }
 
 void init()
@@ -188,7 +190,7 @@ int main(void)
 	udc_start();
 	udc_attach();
 
-//	update_adc();
+	update_adc();
 
 	while(true)
 	{}

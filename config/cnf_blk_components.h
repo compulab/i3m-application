@@ -21,7 +21,7 @@ struct cnf_label{
 };
 
 struct cnf_image{
-	gfx_mono_color_t *bitmapProgmem;
+	gfx_mono_color_t *bitmap_progmem;
 	uint8_t height, width;
 	uint8_t x, y;
 };
@@ -69,6 +69,7 @@ struct cnf_menu{
 	struct gfx_mono_menu *menu;
 	struct cnf_action_node *actions_head;
 	uint8_t id;
+	struct cnf_image_node *images_items_head;
 };
 
 struct cnf_menu_node{

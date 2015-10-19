@@ -132,7 +132,7 @@ static void menu_draw(struct gfx_mono_menu *menu, bool redraw, bool is_progmem)
  * \param[in] menu  menu struct with menu options
  *
  */
-void gfx_mono_menu_init(struct gfx_mono_menu *menu, bool is_progmem)
+void gfx_mono_menu_init(struct gfx_mono_menu *menu, bool redraw, bool is_progmem)
 {
 	/* Clear screen */
 //	gfx_mono_draw_filled_rect(0, 0,
@@ -149,7 +149,7 @@ void gfx_mono_menu_init(struct gfx_mono_menu *menu, bool is_progmem)
 					0, 0, &sysfont);
 
 	/* Draw menu options below */
-	menu_draw(menu, true, is_progmem);
+	menu_draw(menu, redraw, is_progmem);
 	gfx_mono_put_framebuffer();
 }
 
@@ -163,6 +163,7 @@ void gfx_mono_menu_init(struct gfx_mono_menu *menu, bool is_progmem)
  */
 uint8_t gfx_mono_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode, bool is_progmem)
 {
+	menu->last_selection = menu->current_selection;
 	switch (keycode) {
 	case GFX_MONO_MENU_KEYCODE_DOWN:
 		if (menu->current_selection == menu->num_elements - 1) {
@@ -172,7 +173,7 @@ uint8_t gfx_mono_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode, b
 		}
 
 		/* Update menu on display */
-		menu_draw(menu, false, is_progmem);
+//		menu_draw(menu, false, is_progmem);
 		/* Nothing selected yet */
 		return GFX_MONO_MENU_EVENT_IDLE;
 
@@ -184,7 +185,7 @@ uint8_t gfx_mono_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode, b
 		}
 
 		/* Update menu on display */
-		menu_draw(menu, false, is_progmem);
+//		menu_draw(menu, false, is_progmem);
 		/* Nothing selected yet */
 		return GFX_MONO_MENU_EVENT_IDLE;
 

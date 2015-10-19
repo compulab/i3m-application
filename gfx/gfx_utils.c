@@ -101,7 +101,7 @@ void gfx_information_draw(struct gfx_information *info)
 			y = info->postion.y + 2;
 	struct gfx_text data = info->text;
 	gfx_mono_draw_string(data.text, x, y, data.font);
-	gfx_mono_put_framebuffer();
+//	gfx_mono_put_framebuffer();
 }
 
 void update_information()
@@ -143,7 +143,7 @@ void gfx_image_draw(struct gfx_image *image)
 {
 	gfx_item_draw(&image->postion);
 	gfx_mono_generic_put_bitmap(image->bitmap, image->postion.x, image->postion.y);
-	gfx_mono_put_framebuffer();
+//	gfx_mono_put_framebuffer();
 }
 
 void init_frame(struct gfx_frame *frame)
@@ -164,7 +164,7 @@ void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
 		struct cnf_image_node cnf_image_node;
 		struct gfx_image_node *gfx_image_node = malloc(sizeof(struct gfx_image_node));
 		memcpy_P(&cnf_image_node, cnf_image_pgmem, sizeof(struct cnf_image_node));
-		gfx_image_init(&gfx_image_node->image, cnf_image_node.image.bitmapProgmem, cnf_image_node.image.height,
+		gfx_image_init(&gfx_image_node->image, cnf_image_node.image.bitmap_progmem, cnf_image_node.image.height,
 				cnf_image_node.image.width, cnf_image_node.image.x, cnf_image_node.image.y);
 		gfx_image_node->next = 0;
 		if (frame->image_head == 0)

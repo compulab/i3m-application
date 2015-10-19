@@ -19,6 +19,29 @@ struct gfx_item {
 	bool visible;
 };
 
+struct gfx_item_data {
+	PROGMEM_STRING_T title;
+	char *text;
+};
+
+struct gfx_item_action {
+	enum action_type type;
+	uint8_t menu_id;
+	struct gfx_action_menu *menu;
+	struct gfx_frame *frame;
+};
+
+struct gfx_action_menu {
+	struct gfx_mono_menu *menu;
+	struct gfx_item_action *actions;
+	struct gfx_image_node *graphic_items_head;
+	uint8_t id;
+	bool is_progmem;
+	bool is_graphic_view;
+	bool visible;
+};
+
+
 struct gfx_text {
 	char *text;
 	bool is_progmem;
