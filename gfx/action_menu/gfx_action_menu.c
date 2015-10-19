@@ -1,19 +1,11 @@
 #include "gfx_action_menu.h"
 #include "graphic_menu.h"
 
-void clear_menu()
-{
-	for (int i=0 ; i < GFX_MONO_LCD_FRAMEBUFFER_SIZE; i++)
-		framebuffer[i] = 0x00;
-//	gfx_mono_ssd1306_put_framebuffer();
-}
-
 void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 {
 	present_menu->visible = false;
 	present_menu = action_menu;
 	action_menu->visible = true;
-//	clear_menu();
 	if (present_menu->is_graphic_view)
 		graphic_menu_init(action_menu, redraw);
 	else
@@ -36,10 +28,10 @@ struct gfx_action_menu dmi_menu = {.is_progmem = false };
 
 bool is_dmi_set;
 
-void clear_screen(struct gfx_action_menu *actionMenu)
+void clear_screen()
 {
-	clear_menu();
-	actionMenu->visible = false;
+	for (int i=0 ; i < GFX_MONO_LCD_FRAMEBUFFER_SIZE; i++)
+		framebuffer[i] = 0x00;
 }
 
 void set_dmi_mono_menu()
@@ -138,7 +130,8 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 	if (keycode == GFX_MONO_MENU_KEYCODE_ENTER){
 		struct gfx_item_action selected_action = action_menu->actions[(action_menu->menu)->current_selection];
 		enum action_type type = selected_action.type;
-		clear_screen(action_menu);
+		present_menu->visible = false;
+		clear_screen();
 		switch (type){
 		case ACTION_TYPE_SHOW_FRAME:
 			gfx_frame_draw(selected_action.frame);

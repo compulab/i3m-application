@@ -82,7 +82,7 @@ static void menu_draw(struct gfx_mono_menu *menu, bool redraw, bool is_progmem)
 	if (menu->current_page != menu_page || redraw == true) {
 		/* clear screen if we have changed the page or menu and prepare
 		 * redraw */
-		ssd1306_clear_body();
+//		ssd1306_clear_body();
 //		gfx_mono_draw_filled_rect(0, SYSFONT_LINESPACING,
 //				GFX_MONO_LCD_WIDTH,
 //				GFX_MONO_LCD_HEIGHT - SYSFONT_LINESPACING,

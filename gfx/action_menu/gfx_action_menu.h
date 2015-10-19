@@ -21,6 +21,9 @@
 
 struct gfx_action_menu *present_menu;
 
+void show_current_menu(bool redraw);
+
+void clear_screen();
 
 void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw);
 

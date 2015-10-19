@@ -86,17 +86,17 @@ void clear_counter()
 
 struct gfx_mono_bitmap splash_bitmap;
 
-void clear_screen_framebuffer()
-{
-	for (int i=0 ; i < GFX_MONO_LCD_FRAMEBUFFER_SIZE; i++)
-		framebuffer[i] = 0x00;
-//	gfx_mono_ssd1306_put_framebuffer();
-}
+//void clear_screen_framebuffer()
+//{
+//	for (int i=0 ; i < GFX_MONO_LCD_FRAMEBUFFER_SIZE; i++)
+//		framebuffer[i] = 0x00;
+////	gfx_mono_ssd1306_put_framebuffer();
+//}
 
 void show_splash()
 {
+	clear_screen();
 	present_menu->visible = false;
-	clear_screen_framebuffer();
 	gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 0);
 	gfx_mono_put_framebuffer();
 }
@@ -219,6 +219,12 @@ void update_button_pressed(bool *pressed, uint8_t *time, port_pin_t pin)
 	}
 }
 
+void hadle_back_to_menu()
+{
+	clear_screen();
+	gfx_action_menu_init(present_menu, true);
+}
+
 void handle_button_pressed()
 {
 	update_button_pressed(&left_pressed, &left_time, FP_LEFT_BUTTON);
@@ -235,7 +241,7 @@ void handle_button_pressed()
 		if (present_menu->visible)
 			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_ENTER);
 		else
-			gfx_action_menu_init(present_menu, false);
+			hadle_back_to_menu();
 		return;
 		break;
 	default:
@@ -248,7 +254,7 @@ void handle_button_pressed()
 		if (present_menu->visible)
 			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP);
 		else
-			gfx_action_menu_init(present_menu, false);
+			hadle_back_to_menu();
 		return;
 		break;
 	default:
@@ -261,7 +267,7 @@ void handle_button_pressed()
 		if (present_menu->visible)
 			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN);
 		else
-			gfx_action_menu_init(present_menu, false);
+			hadle_back_to_menu();
 		return;
 		break;
 	default:

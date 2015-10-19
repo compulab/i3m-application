@@ -123,7 +123,6 @@ void gfx_label_draw(struct gfx_label *label)
 		MSG_T_T("string to print:",data.text)
 		MSG_T_N("first char of font", data.font->first_char)
 	#endif
-		gfx_mono_put_framebuffer();
 }
 
 void gfx_image_init(struct gfx_image *image, gfx_mono_color_t PROGMEM_T *bitmap_progmem,
@@ -212,8 +211,8 @@ void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
 void gfx_frame_draw(struct gfx_frame *frame)
 {
 	frame_present = frame;
-	gfx_mono_draw_filled_rect(GFX_MONO_LCD_WIDTH, GFX_MONO_LCD_HEIGHT, 0,
-			0, GFX_PIXEL_CLR);
+//	gfx_mono_draw_filled_rect(GFX_MONO_LCD_WIDTH, GFX_MONO_LCD_HEIGHT, 0,
+//			0, GFX_PIXEL_CLR);
 	struct gfx_label_node *label = frame->label_head;
 	while (label != 0){
 		gfx_label_draw(&label->label);
@@ -228,6 +227,6 @@ void gfx_frame_draw(struct gfx_frame *frame)
 	while (image != 0){
 		gfx_image_draw(&image->image);
 		image = image->next;
-	gfx_mono_put_framebuffer();
 	}
+	gfx_mono_put_framebuffer();
 }
