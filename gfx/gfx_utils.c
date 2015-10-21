@@ -43,12 +43,14 @@ void gfx_label_init(struct gfx_label *label, char *text,
 		uint8_t x, uint8_t y)
 {
 	struct font * font = &sysfont;
+	uint8_t length = strlen_P(text);
 	uint8_t width = strlen(text) * font->width + 2,
 			height = font->height + 4;
-//	if (width -x >= GFX_MONO_LCD_WIDTH){
+
 		gfx_item_init(&label->postion, x, y, width, height);
-		label->text.is_progmem = true;
-		label->text.text = text;
+		label->text.is_progmem = false;
+		label->text.text = malloc(sizeof(char) * length);
+		memcpy_P(label->text.text, text, sizeof(char) * length);
 		label->text.font = font;
 }
 

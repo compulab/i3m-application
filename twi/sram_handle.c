@@ -137,7 +137,13 @@ void reset_to_usb()
 
 void software_reset()
 {
-//TODO
+  uint8_t oldInterruptState = SREG;  // no real need to store the interrupt context as the reset will pre-empt its restoration
+  cli();
+
+  CCP = 0xD8;                        // Configuration change protection: allow protected IO regiser write
+  RST.CTRL = RST_SWRST_bm;           // Request software reset by writing to protected IO register
+
+  SREG=oldInterruptState;            // Restore interrupts enabled/disabled state (out of common decency - this line will never be reached because the reset will pre-empt it)
 }
 
 void write_cpu_status(uint8_t status)

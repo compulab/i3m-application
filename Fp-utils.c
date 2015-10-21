@@ -170,11 +170,13 @@ void set_updated_ambient_temp(char *output_str)
 
 void update_adc()
 {
-	char last_value[10];
-	strcpy(last_value,power_value);
+	char last_value[10] = "0 W";
+	strcpy(last_value, power_value);
 	set_power_data(power_value);
-	if (strcmp(power_value,last_value) != 0)
+	if (strcmp(power_value, last_value) != 0){
+//		MSG("true")
 		update_information_frame(SHOW_POWER, true);
+	}
 }
 
 
@@ -225,12 +227,16 @@ void update_ambient_value(uint8_t ambient_temp)
 	computer_data.valid_ambient_temp = true;
 }
 
+//void send_twi_ambient()
 
 void update_ambient_temp()
 {
 	computer_data.valid_ambient_temp = false;
 	send_package(&twi_ambient_temp);
-	delay_s(2);
+	delay_s(5);
+//	if (!computer_data.valid_ambient){
+//
+//	}
 }
 
 void set_dmi_content(char *output_str, uint8_t string_id)

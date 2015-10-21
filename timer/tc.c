@@ -71,10 +71,10 @@ int tc_counter;
 
 int standby_counter;
 
-
 void tc_init(){
 	tc_counter = 0;
 	standby_counter = 0;
+	enable_sleep_mode();
 	TC_SetPeriod(&TCC0, 0xea60);
 	TC0_SetOverflowIntLevel( &TCC0, TC_OVFINTLVL_LO_gc );
 	TC0_ConfigClockSource(&TCC0, TC_CLKSEL_DIV1_gc);

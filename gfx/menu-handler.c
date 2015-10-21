@@ -1,8 +1,10 @@
 #include "menu-handler.h"
-#include "../timer/tc.h"
+#include "../timer/tc-handler.h"
+#include "../u8glib/u8g.h"
 
 #define is_key_selected(var,key) (var & key) == key
 enum key_Select selected_Key;
+
 
 enum button_state left_button, right_button, ok_button;
 
@@ -16,16 +18,14 @@ uint8_t left_time = 0,
 
 
 
-//TODO: enter bootloader threw SW
-void enter_bootloader_mode()
-{
-//	udc_detach();
-//	udc_stop();
-//   asm ("ldi r30, 0xFE\n"  /* Low byte to ZL */
-//		 "ldi r31, 0x00\n" /* mid byte to ZH */
-//		 "ldi r24, 0x01\n" /* high byte to EIND which lives */
-//		 "out 0x3c, r24\n" /* at addr 0x3c in I/O space */
-//		 "eijmp":  :: "r24", "r30", "r31");
+//TODO: enter bootloader through SW
+
+void enter_to_bootloader(){
+    asm ("ldi r30, 0xFE\n"  /* Low byte to ZL */
+            "ldi r31, 0x00\n" /* mid byte to ZH */
+            "ldi r24, 0x01\n" /* high byte to EIND which lives */
+            "out 0x3c, r24\n" /* at addr 0x3c in I/O space */
+            "eijmp":  :: "r24", "r30", "r31");
 }
 
 uint8_t size;
@@ -77,11 +77,6 @@ void load_action(struct gfx_item_action *action, struct cnf_action config_action
 	default:
 		break;
 	}
-}
-
-void clear_counter()
-{
-	tc_counter = 0;
 }
 
 struct gfx_mono_bitmap splash_bitmap;
@@ -196,6 +191,13 @@ void set_menu_by_id(struct gfx_action_menu **menu, uint8_t index)
 
 void update_button_state(bool pressed, uint8_t *time, enum button_state *state)
 {
+#ifndef SUPPORT_HOLD_BUTTON
+	if (pressed)
+		*state = BUTTON_CLICK;
+	else
+		*state = BUTTON_NOT_PRESSED;
+
+#else
 	if (!pressed && *time > 0){
 		if (*time < 10)
 			*state = BUTTON_CLICK;
@@ -205,15 +207,18 @@ void update_button_state(bool pressed, uint8_t *time, enum button_state *state)
 	} else {
 		*state = BUTTON_NOT_PRESSED;
 	}
+#endif
 }
 
 void update_button_pressed(bool *pressed, uint8_t *time, port_pin_t pin)
 {
+
+
 	bool is_high = gpio_pin_is_high(pin);
 	if (!(*pressed) && is_high){
 		(*time) = tc_counter;
 		(*pressed) = true;
-	} else if (*pressed && !is_high){
+	} else if (*pressed && (!is_high || tc_counter - (*time) > MAX_CLICK_TIME)) {
 		(*time) = tc_counter - (*time);
 		(*pressed) = false;
 	}
@@ -225,6 +230,7 @@ void hadle_back_to_menu()
 	gfx_action_menu_init(present_menu, true);
 }
 
+
 void handle_button_pressed()
 {
 	update_button_pressed(&left_pressed, &left_time, FP_LEFT_BUTTON);
@@ -234,15 +240,16 @@ void handle_button_pressed()
 	update_button_state(left_pressed, &left_time, &left_button);
 	update_button_state(right_pressed, &right_time, &right_button);
 	update_button_state(ok_pressed, &ok_time, &ok_button);
+	
 	switch (ok_button){
 	case BUTTON_HOLD:
 	case BUTTON_CLICK:
-		clear_counter();
+		tc_button_pressed();
 		if (present_menu->visible)
 			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_ENTER);
 		else
 			hadle_back_to_menu();
-		return;
+		return ;
 		break;
 	default:
 		break;
@@ -250,7 +257,7 @@ void handle_button_pressed()
 	switch (left_button){
 	case BUTTON_HOLD:
 	case BUTTON_CLICK:
-		clear_counter();
+		tc_button_pressed();
 		if (present_menu->visible)
 			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP);
 		else
@@ -263,7 +270,7 @@ void handle_button_pressed()
 	switch (right_button){
 	case BUTTON_HOLD:
 	case BUTTON_CLICK:
-		clear_counter();
+		tc_button_pressed();
 		if (present_menu->visible)
 			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN);
 		else
@@ -273,4 +280,5 @@ void handle_button_pressed()
 	default:
 		break;
 	}
+	tc_no_button_pressed();
 }

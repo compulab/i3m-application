@@ -13,7 +13,7 @@
 #define MY_ADC_CH ADC_CH0
 
 long current_power;
-char resString[7];
+char current_power_str[7];
 float gain = 0.5;
 float vcc = 3.3;
 
@@ -53,7 +53,7 @@ long adc_avg()
 
 void set_power_data(char *str)
 {
-
-    current_power= adc_avg() * 0.127 ; /// (gain * gain);// * 158.34);//* 0.177; //*0.07731r P =79.17 * V_adc , P/GAIN = 158.34
-    sprintf(str, "%ld W" ,current_power);
+    current_power = adc_avg() * 0.127 ; /// (gain * gain);// * 158.34);//* 0.177; //*0.07731r P =79.17 * V_adc , P/GAIN = 158.34
+    sprintf(str, "%ld W", current_power);
+    strcpy(current_power_str, str);
 }

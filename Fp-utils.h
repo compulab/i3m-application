@@ -19,8 +19,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#define AMBIENT_TWI_ADDRESS  0x4c
-#define TEMPERATURE_LT_ADDRESS 0x00
+#define AMBIENT_TWI_ADDRESS  	0x26
+#define AMBIENT2_TWI_ADDRESS	0x4C
+#define TEMPERATURE_LT_ADDRESS 	0x00
 #define EMPTY_SLOT "Empty Slot"
 
 void update_information_frame(enum information_type type, bool need_to_update);

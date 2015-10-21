@@ -1,6 +1,5 @@
 #include <string.h>
 #include <math.h>
-#include "u8glib/gfx_components.h"
 #include "debug.h"
 #include "gfx/menu-handler.h"
 #include "timer/tc.h"
@@ -169,7 +168,7 @@ void init()
 {
 	board_init();
 	sysclk_init();
-//	u8g_init();
+	u8g_init();
 	sram_handle_init();
 	gfx_mono_init();
 	init_menu();
@@ -187,8 +186,8 @@ int main(void)
 {
 	init();
 
-	udc_start();
-	udc_attach();
+//	udc_start();
+//	udc_attach();
 
 	update_adc();
 

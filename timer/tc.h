@@ -59,6 +59,7 @@
 #ifndef TC_DRIVER_H
 #define TC_DRIVER_H
 #include "../asf.h"
+#include "tc-handler.h"
 
 extern int tc_counter;
 

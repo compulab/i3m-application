@@ -29,17 +29,22 @@ void reset(){
 	is_exacuting = false;
 }
 
-void send_address(){
-	uint8_t address =  current_package.slave_address << 1;
-	TWI_MASTER_BASE.ADDR = address;
-	TWI_MASTER_BASE.CTRLC = TWI_MASTER_CMD_REPSTART_gc;
-}
 
 void send_read_request(){
 	uint8_t address =  current_package.slave_address << 1;
 	address = address | READ_REQUEST;
 	TWI_MASTER_BASE.ADDR = address;
 	TWI_MASTER_BASE.CTRLC = TWI_MASTER_CMD_REPSTART_gc;
+}
+
+void send_address(){
+	if (!current_package.is_write_request) {
+		send_read_package();
+	} else {
+		uint8_t address =  current_package.slave_address << 1;
+		TWI_MASTER_BASE.ADDR = address;
+		TWI_MASTER_BASE.CTRLC = TWI_MASTER_CMD_REPSTART_gc;
+	}
 }
 
 void send_package(struct twi_package *package)

@@ -18,6 +18,7 @@
 #include "../../adc/adc.h"
 #include "../../ASF/common/services/gfx_mono/sysfont.h"
 #include "../../config/cnf_blk_components.h"
+#include "../../u8glib/u8g.h"
 
 struct gfx_action_menu *present_menu;
 
