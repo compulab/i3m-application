@@ -9,24 +9,19 @@
 
 
 #define MAX_DIGITS 5
+
 enum power_state current_power_state = POWER_ON;
 
 char power_value[10];
 
 void update_information_frame(enum information_type type, bool need_to_update)
 {
-	if (!present_menu->visible)
-		if (information_present->info_type == type && need_to_update)
+	if (!present_menu->visible) {
+		if (information_present->info_type == type && need_to_update) {
 			update_information();
+		}
+	}
 }
-
-struct twi_package twi_ambient_temp = {
-	.slave_address = AMBIENT_TWI_ADDRESS,
-	.buffer[0] = TEMPERATURE_LT_ADDRESS,
-	.length = 1,
-	.is_write_request = false,
-	.handle_data_received = update_ambient_value
-};
 
 void set_invalid_string(char *str){
 	sprintf(str, "INVALID");
@@ -161,9 +156,8 @@ void set_updated_cpu_frequency(char *output_str, uint8_t cpu_id)
 
 void set_updated_ambient_temp(char *output_str)
 {
-	update_ambient_temp();
 	if (computer_data.valid_ambient_temp)
-		set_temp_string(output_str, computer_data.gpu_temp);
+		set_temp_string(output_str, computer_data.ambient_temp);
 	else
 		set_invalid_string(output_str);
 }
@@ -174,7 +168,6 @@ void update_adc()
 	strcpy(last_value, power_value);
 	set_power_data(power_value);
 	if (strcmp(power_value, last_value) != 0){
-//		MSG("true")
 		update_information_frame(SHOW_POWER, true);
 	}
 }
@@ -219,24 +212,6 @@ void set_update_hdd_temp(char *output_str, uint8_t hdd_id)
 		set_temp_string(output_str,temp);
 	else
 		set_invalid_string(output_str);
-}
-
-void update_ambient_value(uint8_t ambient_temp)
-{
-	computer_data.ambient_temp = ambient_temp;
-	computer_data.valid_ambient_temp = true;
-}
-
-//void send_twi_ambient()
-
-void update_ambient_temp()
-{
-	computer_data.valid_ambient_temp = false;
-	send_package(&twi_ambient_temp);
-	delay_s(5);
-//	if (!computer_data.valid_ambient){
-//
-//	}
 }
 
 void set_dmi_content(char *output_str, uint8_t string_id)

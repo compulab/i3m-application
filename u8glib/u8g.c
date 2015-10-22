@@ -54,31 +54,60 @@ uint8_t get_string_start(char * text)
 
 void u8g_draw_frame(struct gfx_frame *frame)
 {
-	u8g_FirstPage(&u8g);
+	if (frame != 0) {
+		u8g_FirstPage(&u8g);
 		do {
 			_u8g_set_font(u8g_font_6x10);
 			y = 20;
-		struct gfx_label_node *label = frame->label_head;
-		while (label != 0){
-			_u8g_draw_string(label->label.text.text);
-			label = label->next;
-		}
+			struct gfx_label_node *label = frame->label_head;
+			while (label != 0){
+				_u8g_draw_string(label->label.text.text);
+				label = label->next;
+			}
 
-		y = 45;
-		_u8g_set_font(u8g_font_9x18);
-		struct gfx_information_node *info = frame->information_head;
-		while (info != 0){
-			update_data_by_type(info->information.info_type, info->information.text.text, info->information.info_data);
-//			info->information.text.text = "testing";
-			_u8g_draw_string(info->information.text.text);
-			info = info->next;
-		}
-		struct gfx_image_node *image = frame->image_head;
-		while (image != 0){
-//			gfx_image_draw(image->image.bitmap);
-			image = image->next;
-		}
-	} while (u8g_NextPage(&u8g));
+			y = 45;
+			_u8g_set_font(u8g_font_9x18);
+			struct gfx_information_node *info = frame->information_head;
+			while (info != 0){
+				update_data_by_type(info->information.info_type, info->information.text.text, info->information.info_data);
+				_u8g_draw_string(info->information.text.text);
+				info = info->next;
+			}
+			struct gfx_image_node *image = frame->image_head;
+			while (image != 0){
+	//			gfx_image_draw(image->image.bitmap);
+				image = image->next;
+			}
+
+		} while (u8g_NextPage(&u8g));
+
+		u8g_FirstPage(&u8g);
+			do {
+//				_u8g_set_font(u8g_font_6x10);
+//				y = 20;
+//				struct gfx_label_node *label = frame->label_head;
+//				while (label != 0){
+//					_u8g_draw_string(label->label.text.text);
+//					label = label->next;
+//				}
+
+				y = 45;
+				_u8g_set_font(u8g_font_9x18);
+				struct gfx_information_node *info = frame->information_head;
+				while (info != 0){
+					update_data_by_type(info->information.info_type, info->information.text.text, info->information.info_data);
+					_u8g_draw_string("hello");
+					info = info->next;
+				}
+				struct gfx_image_node *image = frame->image_head;
+				while (image != 0){
+		//			gfx_image_draw(image->image.bitmap);
+					image = image->next;
+				}
+
+			} while (u8g_NextPage(&u8g));
+
+	}
 }
 
 void u8g_draw_string(uint8_t y, char *text)

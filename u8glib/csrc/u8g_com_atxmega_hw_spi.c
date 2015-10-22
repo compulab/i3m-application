@@ -82,27 +82,27 @@ uint8_t u8g_com_atxmega_hw_spi_fn(u8g_t *u8g, uint8_t msg, uint8_t arg_val, void
     break;
     
     case U8G_COM_MSG_INIT:
-
-    u8g_SetPIOutput(u8g, U8G_PI_CS);
-    u8g_SetPIOutput(u8g, U8G_PI_A0);
-    u8g_SetPIOutput(u8g, U8G_PI_RESET);
-    
-    //U8G_ATOMIC_START();
-    
-    PORTC.DIR |= PIN4_bm | PIN5_bm | PIN7_bm;
-    PORTC.DIR &= ~PIN6_bm;
-
-    //U8G_ATOMIC_END();
-    
-    u8g_SetPILevel(u8g, U8G_PI_CS, 1);
-
-    SPIC.CTRL = 0;
-    SPIC.CTRL     = SPI_PRESCALER_DIV4_gc |		// SPI prescaler.
-    //SPI_CLK2X_bm |			 //SPI Clock double.
-    SPI_ENABLE_bm |			 //Enable SPI module.
-    //SPI_DORD_bm |			 //Data order.
-    SPI_MASTER_bm |			 //SPI master.
-    SPI_MODE_0_gc;			// SPI mode.
+//
+//    u8g_SetPIOutput(u8g, U8G_PI_CS);
+//    u8g_SetPIOutput(u8g, U8G_PI_A0);
+//    u8g_SetPIOutput(u8g, U8G_PI_RESET);
+//
+//    //U8G_ATOMIC_START();
+//
+//    PORTC.DIR |= PIN4_bm | PIN5_bm | PIN7_bm;
+//    PORTC.DIR &= ~PIN6_bm;
+//
+//    //U8G_ATOMIC_END();
+//
+//    u8g_SetPILevel(u8g, U8G_PI_CS, 1);
+//
+//    SPIC.CTRL = 0;
+//    SPIC.CTRL     = SPI_PRESCALER_DIV4_gc |		// SPI prescaler.
+//    //SPI_CLK2X_bm |			 //SPI Clock double.
+//    SPI_ENABLE_bm |			 //Enable SPI module.
+//    //SPI_DORD_bm |			 //Data order.
+//    SPI_MASTER_bm |			 //SPI master.
+//    SPI_MODE_0_gc;			// SPI mode.
     
 #ifdef U8G_HW_SPI_2X
     SPIC.CTRL |= SPI_CLK2X_bm;  /* double speed, issue 89 */

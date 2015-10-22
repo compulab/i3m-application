@@ -131,13 +131,14 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 		struct gfx_item_action selected_action = action_menu->actions[(action_menu->menu)->current_selection];
 		enum action_type type = selected_action.type;
 		present_menu->visible = false;
+		frame_present = 0;
 		clear_screen();
 		switch (type){
 		case ACTION_TYPE_SHOW_FRAME:
 			tc_no_button_pressed();
 			disable_sleep_mode();
-//			u8g_draw_frame(selected_action.frame);
-			gfx_frame_draw(selected_action.frame);
+			frame_present = selected_action.frame;
+			gfx_frame_draw(frame_present);
 			break;
 		case ACTION_TYPE_SHOW_MENU:
 			enable_sleep_mode();

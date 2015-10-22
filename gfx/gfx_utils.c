@@ -103,14 +103,14 @@ void gfx_information_draw(struct gfx_information *info)
 			y = info->postion.y + 2;
 	struct gfx_text data = info->text;
 	gfx_mono_draw_string(data.text, x, y, data.font);
-//	gfx_mono_put_framebuffer();
+	gfx_mono_put_framebuffer();
 }
 
 void update_information()
 {
-	gfx_information_draw(information_present);
+//	u8g_draw_frame(frame_present);
+	gfx_frame_draw(frame_present);
 }
-
 void gfx_label_draw(struct gfx_label *label)
 {
 	gfx_item_draw(&label->postion);
@@ -212,23 +212,25 @@ void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
 
 void gfx_frame_draw(struct gfx_frame *frame)
 {
-	frame_present = frame;
-//	gfx_mono_draw_filled_rect(GFX_MONO_LCD_WIDTH, GFX_MONO_LCD_HEIGHT, 0,
-//			0, GFX_PIXEL_CLR);
-	struct gfx_label_node *label = frame->label_head;
-	while (label != 0){
-		gfx_label_draw(&label->label);
-		label = label->next;
+	if (frame != 0){
+		frame_present = frame;
+		//	gfx_mono_draw_filled_rect(GFX_MONO_LCD_WIDTH, GFX_MONO_LCD_HEIGHT, 0,
+		//			0, GFX_PIXEL_CLR);
+		struct gfx_label_node *label = frame->label_head;
+		while (label != 0){
+			gfx_label_draw(&label->label);
+			label = label->next;
+		}
+		struct gfx_information_node *info = frame->information_head;
+		while (info != 0){
+			gfx_information_draw(&info->information);
+			info = info->next;
+		}
+		struct gfx_image_node *image = frame->image_head;
+		while (image != 0){
+			gfx_image_draw(&image->image);
+			image = image->next;
+		}
+		gfx_mono_put_framebuffer();
 	}
-	struct gfx_information_node *info = frame->information_head;
-	while (info != 0){
-		gfx_information_draw(&info->information);
-		info = info->next;
-	}
-	struct gfx_image_node *image = frame->image_head;
-	while (image != 0){
-		gfx_image_draw(&image->image);
-		image = image->next;
-	}
-	gfx_mono_put_framebuffer();
 }

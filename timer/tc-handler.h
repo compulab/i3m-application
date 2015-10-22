@@ -20,6 +20,8 @@
 #define UPDATE_ADC_TIME		15
 #define MAX_CLICK_TIME		MOVE_BUTTON_TIME
 
+void tc_handle_init();
+
 void tc_handle();
 
 void tc_button_pressed();

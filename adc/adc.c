@@ -54,6 +54,6 @@ long adc_avg()
 void set_power_data(char *str)
 {
     current_power = adc_avg() * 0.127 ; /// (gain * gain);// * 158.34);//* 0.177; //*0.07731r P =79.17 * V_adc , P/GAIN = 158.34
-    sprintf(str, "%ld W", current_power);
+    sprintf(str, "%ld W  ", current_power);
     strcpy(current_power_str, str);
 }

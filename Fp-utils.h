@@ -11,7 +11,7 @@
 #include "asf.h"
 #include "adc/adc.h"
 #include "layout.h"
-#include "twi/twi_master.h"
+#include "twi/master/twi.h"
 #include "twi/eeprom.h"
 #include "gfx/action_menu/gfx_action_menu.h"
 #include "def.h"
@@ -19,9 +19,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#define AMBIENT_TWI_ADDRESS  	0x26
-#define AMBIENT2_TWI_ADDRESS	0x4C
-#define TEMPERATURE_LT_ADDRESS 	0x00
+#define AMBIENT_TWI_ADDRESS  		0x4C
+#define AMBIENT_TEMPERATURE_ADDRESS 0x00
 #define EMPTY_SLOT "Empty Slot"
 
 void update_information_frame(enum information_type type, bool need_to_update);

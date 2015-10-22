@@ -14,6 +14,7 @@
 #include "adc/adc.h"
 #include "timer/tc-handler.h"
 #include "twi/sram_handle.h"
+#include "twi/master/twi.h"
 //#define DEMO_SHOW
 
 
@@ -22,10 +23,10 @@ ISR(TWIE_TWIS_vect)
 	twi_slave_interrupt_handler();
 }
 
-ISR(TWIC_TWIM_vect)
-{
-	interrupt_handler();
-}
+//ISR(TWIC_TWIM_vect)
+//{
+//	interrupt_handler();
+//}
 
 
 ISR(PORTF_INT0_vect)
@@ -168,10 +169,11 @@ void init()
 {
 	board_init();
 	sysclk_init();
-	u8g_init();
+//	u8g_init();
 	sram_handle_init();
 	gfx_mono_init();
 	init_menu();
+	tc_handle_init();
 	updated_info_init();
 	adc_init();
 	pmic_init();
@@ -179,17 +181,61 @@ void init()
 	power_state_init();
 	sei();
 	twi_slave_init();
-	twi_master_init();
+	TWI_init();
 }
 
+//uint8_t d;
+//
+//void update_d(uint8_t data)
+//{
+//	d = data;
+//}
+//
+//uint8_t addr = 0x00;
+//int main(void)
+//{
+//	bool second_twi = false;
+//	init();
+//	d = 0xff;
+//	while(true){
+////		MSG("Start")
+////		delay_s(2);
+//		if (!second_twi) {
+//			if (TWI_read_reg(AMBIENT_TWI_ADDRESS, AMBIENT_TEMPERATURE_ADDRESS, &d, 2)){
+//				MSG("1 YEss")
+//				second_twi = true;
+//	//				addr ++;
+//			} else {
+//				MSG("1 No")
+//	//			addr = 0x00;
+//			}
+//		} else {
+//			if (TWI_read(AMBIENT_TWI_ADDRESS, &d, 2)){
+//				MSG("2 YEss")
+////				second_twi = true;
+//	//				addr ++;
+//			} else {
+//				MSG("2 No")
+//				delay_s(2);
+//				if (TWI_read_reg(AMBIENT_TWI_ADDRESS, AMBIENT_TEMPERATURE_ADDRESS, &d, 2)){
+//							MSG("2 YEss")
+//				}
+//	//			addr = 0x00;
+//			}
+//		}
+//
+////		send_read_package(update_d, real);
+//		MSG_dec(d);
+////		MSG("done")
+//		delay_s(5);
+//		ssd1306_clear();
+//	}
+//}
+
+//
 int main(void)
 {
 	init();
-
-//	udc_start();
-//	udc_attach();
-
-	update_adc();
 
 	while(true)
 	{}

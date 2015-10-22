@@ -10,6 +10,7 @@
 
 #include "../asf.h"
 #include "math.h"
+#include <string.h>
 
 extern char current_power_str[7];
 
