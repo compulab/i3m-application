@@ -61,7 +61,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="twi|ASF/common/services/usb|ASF/xmega/drivers/usb|bootloader|u8glib/csrc/u8g_rot.c|gfx/sampleMenus|twi/sp_driver.s" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="u8glib|ASF/common/services/twi/xmega_twi|twi|ASF/common/services/usb|ASF/xmega/drivers/usb|bootloader|u8glib/csrc/u8g_rot.c|gfx/sampleMenus|twi/sp_driver.s" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="twi"/>
 					</sourceEntries>
 				</configuration>

@@ -14,6 +14,7 @@
 #include "../asf.h"
 #include "../config/cnf_blk_components.h"
 #include "gfx_components.h"
+#include "../display/display_render.h"
 
 struct gfx_frame *frame_present;
 struct gfx_information *information_present;

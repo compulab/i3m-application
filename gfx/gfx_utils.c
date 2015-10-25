@@ -102,7 +102,9 @@ void gfx_information_draw(struct gfx_information *info)
 	int x = info->postion.x + 2,
 			y = info->postion.y + 2;
 	struct gfx_text data = info->text;
-	gfx_mono_draw_string(data.text, x, y, data.font);
+	draw_string_in_buffer(data.text, x, y);
+
+//	gfx_mono_draw_string(data.text, x, y, data.font);
 	gfx_mono_put_framebuffer();
 }
 
@@ -120,7 +122,9 @@ void gfx_label_draw(struct gfx_label *label)
 	if (data.is_progmem)
 		gfx_mono_draw_progmem_string(data.text, x, y, data.font);
 	else
-		gfx_mono_draw_string(data.text, x, y, data.font);
+		draw_string_in_buffer(data.text, x, y);
+
+//		gfx_mono_draw_string(data.text, x, y, data.font);
 	#ifdef DEBUG_MODE
 		MSG_T_T("string to print:",data.text)
 		MSG_T_N("first char of font", data.font->first_char)
