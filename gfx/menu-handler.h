@@ -20,7 +20,7 @@
 #include "../u8glib/u8g_components.h"
 #include "action_menu/graphic_menu.h"
 
-#define CONFIG_SECTION_ADDRESS 0xd000
+#define CONFIG_SECTION_ADDRESS 0x8000
 
 struct gfx_action_menu **action_menus;
 

@@ -24,6 +24,13 @@ struct gfx_item_data {
 	char *text;
 };
 
+
+struct gfx_font {
+		const uint8_t  * PROGMEM source;
+		uint8_t width;
+		uint8_t height;
+};
+
 struct gfx_item_action {
 	enum action_type type;
 	uint8_t menu_id;

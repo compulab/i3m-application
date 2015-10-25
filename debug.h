@@ -32,8 +32,8 @@ char debug[7];
 #define MSG_hex(num)   ssd1306_set_page_address(4); \
 					ssd1306_set_column_address(3); \
 					itoa(num,debug,16); \
-					ssd1306_write_text(debug); \
-					delay_s(DELAY_TIME);
+					ssd1306_write_text(debug);
+//					delay_s(DELAY_TIME);
 //					CLEAR
 
 #define MSG_dec(num)   ssd1306_set_page_address(4); \
