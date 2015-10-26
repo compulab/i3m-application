@@ -6,10 +6,14 @@
  */
 
 
-#ifndef TWI_H_
-#define TWI_H_
+#ifndef TWI_MASTER_H_
+#define TWI_MASTER_H_
 #include <stdbool.h>
+
+#ifndef DEBUG_H_
 #include "../../debug.h"
+#endif
+
 #define TWI						TWIC
 #define TWI_MASTER_vect			TWIC_TWIM_vect
 //#define TWI_SLAVE_vect			TWIC_TWIS_vect
@@ -23,9 +27,13 @@
 
 
 extern void TWI_init(void);
+
 extern bool TWI_write_reg(uint8_t address, uint8_t reg, const uint8_t *buffer, uint8_t buffer_size);
+
 extern bool TWI_read_reg(uint8_t address, uint8_t reg, uint8_t *buffer, uint8_t buffer_size);
+
 extern bool TWI_read(uint8_t address, uint8_t *buffer, uint8_t buffer_size);
+
 extern void TWI_scan(void);
 
 

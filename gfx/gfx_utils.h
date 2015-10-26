@@ -8,15 +8,16 @@
 #ifndef GFX_GFX_UTILS_H_
 #define GFX_GFX_UTILS_H_
 
-#include <math.h>
-#include <string.h>
-#include "../debug.h"
-#include "../asf.h"
+#ifndef CONFIG_CNF_BLK_COMPONENTS_H_
 #include "../config/cnf_blk_components.h"
+#endif
+
+#ifndef GFX_GFX_COMPONENTS_H_
 #include "gfx_components.h"
-#include "../display/display_render.h"
+#endif
 
 struct gfx_frame *frame_present;
+
 struct gfx_information *information_present;
 
 void update_information();

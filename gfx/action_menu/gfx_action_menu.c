@@ -1,5 +1,5 @@
 #include "gfx_action_menu.h"
-#include "graphic_menu.h"
+
 
 void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 {
@@ -81,7 +81,7 @@ void set_dmi_label(struct gfx_label_node *label_node, uint8_t index)
 		direct_item = direct_item->next;
 	}
 	label_node->label.postion = default_position;
-	label_node->label.text.font = &sysfont;
+	label_node->label.text.font = fonts[0];
 	label_node->label.text.is_progmem = false;
 //	label_node->label.text.text = direct_item->type;
 	label_node->next = 0;

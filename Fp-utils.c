@@ -5,8 +5,6 @@
  *      Author: arkadi
  */
 #include "Fp-utils.h"
-#include "debug.h"
-
 
 #define MAX_DIGITS 5
 

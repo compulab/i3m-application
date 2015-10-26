@@ -58,8 +58,14 @@
  *****************************************************************************/
 #ifndef TC_DRIVER_H
 #define TC_DRIVER_H
+
+#ifndef ASF_H
 #include "../asf.h"
+#endif
+
+#ifndef TIMER_TC_HANDLER_H_
 #include "tc-handler.h"
+#endif
 
 extern int tc_counter;
 

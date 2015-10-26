@@ -7,7 +7,9 @@
 
 #ifndef LAYOUT_H_
 #define LAYOUT_H_
-#include "asf.h"
+
+#include <stdbool.h>
+#include <stdint.h>
 
 #define SIG_FIRST_BYTE_ADDRESS 		0X00
 #define SIG_SECOND_BYTE_ADDRESS 	0X01

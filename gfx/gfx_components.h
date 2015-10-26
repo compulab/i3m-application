@@ -8,10 +8,15 @@
 
 #ifndef GFX_GFX_COMPONENTS_H_
 #define GFX_GFX_COMPONENTS_H_
-#include <stdbool.h>
-#include <stdint.h>
+
+
+#ifndef FP_UTILS_H_
 #include "../Fp-utils.h"
+#endif
+
+#ifndef DEF_H
 #include "../def.h"
+#endif
 
 struct gfx_item {
 	uint8_t x, y;
@@ -25,11 +30,6 @@ struct gfx_item_data {
 };
 
 
-struct gfx_font {
-		const uint8_t  * PROGMEM source;
-		uint8_t width;
-		uint8_t height;
-};
 
 struct gfx_item_action {
 	enum action_type type;
@@ -52,7 +52,7 @@ struct gfx_action_menu {
 struct gfx_text {
 	char *text;
 	bool is_progmem;
-	struct font *font;
+	struct gfx_font *font;
 };
 
 struct gfx_label {

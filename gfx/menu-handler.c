@@ -1,6 +1,6 @@
 #include "menu-handler.h"
-#include "../timer/tc-handler.h"
-#include "../u8glib/u8g.h"
+
+
 
 #define is_key_selected(var,key) (var & key) == key
 enum key_Select selected_Key;
@@ -115,6 +115,21 @@ void splash_init(struct cnf_blk config_block)
 	delay_s(1);
 }
 
+void load_fonts(struct cnf_font_node *cnf_font_node)
+{
+	struct cnf_font_node font_node;
+	struct gfx_font *font;
+	while (cnf_font_node != 0) {
+		memcpy_P(&font_node, cnf_font_node, sizeof(struct cnf_font_node));
+		font = malloc(sizeof(struct gfx_font));
+		font->source = font_node.font.source;
+		font->width = font_node.font.width;
+		font->height = font_node.font.height;
+		fonts[font_node.id] = font;
+		cnf_font_node = font_node.next;
+	}
+}
+
 void load_config_block()
 {
 	struct cnf_blk config_block;
@@ -122,6 +137,10 @@ void load_config_block()
 	struct gfx_mono_menu *mono_menu;
 	memcpy_P(&config_block,(void *) CONFIG_SECTION_ADDRESS, sizeof(struct cnf_blk));
 	size = config_block.size;
+	if (config_block.fonts_head != 0) {
+		fonts = malloc(sizeof(struct gfx_font *) * config_block.font_size);
+		load_fonts(config_block.fonts_head);
+	}
 	splash_init(config_block);
 	action_menus = malloc(sizeof (struct gfx_action_menu *) * size);
 	struct cnf_menu_node *cnf_menu_node = config_block.menus_head;

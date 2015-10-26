@@ -40,18 +40,17 @@ void gfx_item_init(struct gfx_item *item, uint8_t x, uint8_t y, uint8_t width, u
 }
 
 void gfx_label_init(struct gfx_label *label, char *text,
-		uint8_t x, uint8_t y)
+		uint8_t x, uint8_t y, uint8_t font_id)
 {
-	struct font * font = &sysfont;
 	uint8_t length = strlen_P(text);
-	uint8_t width = strlen(text) * font->width + 2,
-			height = font->height + 4;
+//	uint8_t width = strlen(text) * font->width + 2,
+//			height = font->height + 4;
 
-		gfx_item_init(&label->postion, x, y, width, height);
+//		gfx_item_init(&label->postion, x, y, width, height);
 		label->text.is_progmem = false;
 		label->text.text = malloc(sizeof(char) * length);
 		memcpy_P(label->text.text, text, sizeof(char) * length);
-		label->text.font = font;
+		label->text.font = fonts[font_id];
 }
 
 void set_size_by_text(char *text, struct font *font, struct gfx_item *item)
@@ -63,22 +62,21 @@ void set_size_by_text(char *text, struct font *font, struct gfx_item *item)
 }
 
 void gfx_information_init(struct gfx_information *info,
-		enum information_type info_type, uint8_t info_data, uint8_t max_length, uint8_t x, uint8_t y)
+		enum information_type info_type, uint8_t info_data, uint8_t max_length, uint8_t x, uint8_t y, uint8_t font_id)
 {
-	struct font *font = &sysfont;
 	info->info_type = info_type;
 	info->info_data = info_data;
 	info->text.text = malloc (sizeof(char) * max_length);
 	gfx_item_init(&info->postion, x, y, 0, 0);
-	info->text.font = font;
+	info->text.font = fonts[font_id];
 }
 
-void gfx_label_with_font_init(struct gfx_label *label, char *text, struct font *font,
-		uint8_t x, uint8_t y)
-{
-	gfx_label_init(label, text, x, y);
-	label->text.font = font;
-}
+//void gfx_label_with_font_init(struct gfx_label *label, char *text, struct font *font,
+//		uint8_t x, uint8_t y)
+//{
+//	gfx_label_init(label, text, x, y);
+//	label->text.font = font;
+//}
 
 void update_information_present(struct gfx_information *info)
 {
@@ -103,13 +101,15 @@ void gfx_information_draw(struct gfx_information *info)
 			y = info->postion.y + 2;
 	struct gfx_text data = info->text;
 //	gfx_mono_draw_string(data.text, x, y, data.font);
-	draw_string_in_buffer(data.text, x, y);
+	if (data.is_progmem)
+		draw_string_in_buffer_P(data.text, x, y, data.font);
+	else
+		draw_string_in_buffer(data.text, x, y, data.font);
 	gfx_mono_put_framebuffer();
 }
 
 void update_information()
 {
-//	u8g_draw_frame(frame_present);
 	gfx_frame_draw(frame_present);
 }
 void gfx_label_draw(struct gfx_label *label)
@@ -119,9 +119,13 @@ void gfx_label_draw(struct gfx_label *label)
 			y = label->postion.y + 2;
 	struct gfx_text data = label->text;
 	if (data.is_progmem)
-		gfx_mono_draw_progmem_string(data.text, x, y, data.font);
+		draw_string_in_buffer_P(data.text, x, y, data.font);
 	else
-		gfx_mono_draw_string(data.text, x, y, data.font);
+		draw_string_in_buffer(data.text, x, y, data.font);
+
+//		gfx_mono_draw_progmem_string(data.text, x, y, data.font);
+//	else
+//		gfx_mono_draw_string(data.text, x, y, data.font);
 	#ifdef DEBUG_MODE
 		MSG_T_T("string to print:",data.text)
 		MSG_T_N("first char of font", data.font->first_char)
@@ -183,7 +187,7 @@ void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
 		struct cnf_label_node cnf_label_node;
 		struct gfx_label_node *gfx_label_node = malloc(sizeof(struct gfx_label_node));
 		memcpy_P(&cnf_label_node, cnf_label_pgmem, sizeof(struct cnf_label_node));
-		gfx_label_init(&gfx_label_node->label, cnf_label_node.label.text, cnf_label_node.label.x, cnf_label_node.label.y);
+		gfx_label_init(&gfx_label_node->label, cnf_label_node.label.text, cnf_label_node.label.x, cnf_label_node.label.y, cnf_label_node.font_id);
 		gfx_label_node->next = 0;
 		if (frame->label_head == 0)
 			frame->label_head = gfx_label_node;
@@ -200,7 +204,7 @@ void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
 		struct gfx_information_node *gfx_information_node = malloc(sizeof(struct gfx_information_node));
 		memcpy_P(&cnf_info_node, cnf_info_pgmem, sizeof(struct cnf_info_node));
 		gfx_information_init(&gfx_information_node->information, cnf_info_node.info.info_type, cnf_info_node.info.information,
-						cnf_info_node.info.max_length, cnf_info_node.info.x, cnf_info_node.info.y);
+						cnf_info_node.info.max_length, cnf_info_node.info.x, cnf_info_node.info.y, cnf_info_node.font_id);
 		gfx_information_node->next = 0;
 		if (frame->information_head == 0)
 			frame->information_head = gfx_information_node;

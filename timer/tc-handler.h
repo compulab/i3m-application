@@ -7,10 +7,14 @@
 
 #ifndef TIMER_TC_HANDLER_H_
 #define TIMER_TC_HANDLER_H_
-#include "tc.h"
-#include "../gfx/action_menu/gfx_action_menu.h"
-#include "../Fp-utils.h"
 
+#ifndef GFX_GFX_ACTION_MENU_H_
+#include "../gfx/action_menu/gfx_action_menu.h"
+#endif
+
+#ifndef TWI_MASTER_H_
+#include "../twi/master/twi.h"
+#endif
 
 //#define SUPPORT_HOLD_BUTTON
 

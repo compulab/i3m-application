@@ -14,6 +14,7 @@
 
 
 uint8_t eeprom_read_byte(uint8_t regAddr);
+
 void eeprom_write_byte(uint8_t regAddr, uint8_t value);
 
 #endif /* EEPROM_H */

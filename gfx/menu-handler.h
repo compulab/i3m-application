@@ -7,22 +7,26 @@
 
 #ifndef GFX_MENU_HANDLER_H_
 #define GFX_MENU_HANDLER_H_
-#include <stdint.h>
-#include <avr/pgmspace.h>
-#include <string.h>
-#include "../asf.h"
-#include "../ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.h"
+
+#ifndef TC_DRIVER_H
 #include "../timer/tc.h"
-#include "action_menu/gfx_action_menu.h"
-#include "../config/cnf_blk_components.h"
+#endif
+
+#ifndef GFX_GFX_UTILS_H_
 #include "gfx_utils.h"
+#endif
+
+#ifndef GFX_KEYPAD_H_
 #include "key-handle.h"
-#include "../u8glib/u8g_components.h"
-#include "action_menu/graphic_menu.h"
+#endif
+
+#include "../display/display_render.h"
 
 #define CONFIG_SECTION_ADDRESS 0x8000
 
 struct gfx_action_menu **action_menus;
+
+struct gfx_font** fonts;
 
 void load_config_block();
 

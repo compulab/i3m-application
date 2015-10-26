@@ -8,17 +8,13 @@
 #ifndef GFX_GFX_ACTION_MENU_H_
 #define GFX_GFX_ACTION_MENU_H_
 
-
-#include "../gfx_components.h"
-#include "../gfx_utils.h"
+#ifndef GFX_MENU_HANDLER_H_
 #include "../menu-handler.h"
-#include "../../asf.h"
-#include "../../Fp-utils.h"
-#include "../../def.h"
-#include "../../adc/adc.h"
-#include "../../ASF/common/services/gfx_mono/sysfont.h"
-#include "../../config/cnf_blk_components.h"
-#include "../../u8glib/u8g.h"
+#endif
+
+#ifndef GFX_ACTION_MENU_GRAPHIC_MENU_H_
+#include "graphic_menu.h"
+#endif
 
 struct gfx_action_menu *present_menu;
 

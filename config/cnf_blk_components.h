@@ -8,10 +8,14 @@
 #ifndef CONFIG_CNF_BLK_COMPONENTS_H_
 #define CONFIG_CNF_BLK_COMPONENTS_H_
 
-#include <stdbool.h>
+
 #include <avr/pgmspace.h>
-#include "../Fp-utils.h"
+
+#ifndef DEF_H_
 #include "../def.h"
+#endif
+
+# define PROGMEM_BYTE_ARRAY_T uint8_t*
 
 typedef uint8_t gfx_mono_color_t;
 
@@ -35,6 +39,7 @@ struct cnf_info{
 
 struct cnf_label_node{
 	struct cnf_label label;
+	uint8_t font_id;
 	struct cnf_label_node *next;
 };
 
@@ -45,6 +50,7 @@ struct cnf_image_node{
 
 struct cnf_info_node{
 	struct cnf_info info;
+	uint8_t font_id;
 	struct cnf_info_node *next;
 };
 
@@ -77,8 +83,23 @@ struct cnf_menu_node{
 	struct cnf_menu_node *next;
 };
 
+struct cnf_font {
+	PROGMEM_BYTE_ARRAY_T source;
+	uint8_t width;
+	uint8_t height;
+};
+
+struct cnf_font_node {
+	struct cnf_font font;
+	uint8_t id;
+	struct cnf_font_node *next;
+};
+
+
 struct cnf_blk  {
 	struct cnf_menu_node *menus_head;
+	struct cnf_font_node *fonts_head;
+	uint8_t font_size;
 	uint8_t signature;
 	uint8_t size;
 	uint8_t *splash;
