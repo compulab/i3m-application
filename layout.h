@@ -119,6 +119,8 @@
 #define REVISION_ADDRESS 0x00
 
 
+#define BRIGHTNESS_EEPROM_ADDRESS   0x0100
+
 #define SERIAL_NUMBER_LENGTH	12
 #define PRODUCT_NAME_LENGTH		16
 #define MAC_ADDRESS_LENGTH 		6
@@ -134,6 +136,13 @@ struct direct_string_item {
 	char *type;
 	char *content;
 	struct direct_string_item *next;
+};
+
+struct updated_temperatures {
+	uint8_t cpu_temp[MAX_CPU];
+	uint8_t hdd_temp[MAX_HDD];
+	uint16_t cpu_fq[MAX_CPU];
+	uint8_t gpu_temp;
 };
 
 struct update_information {
@@ -161,5 +170,7 @@ struct update_information {
 };
 
 struct update_information computer_data;
+
+struct updated_temperatures computer_temperature_registers;
 
 #endif /* LAYOUT_H_ */

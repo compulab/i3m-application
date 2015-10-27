@@ -44,16 +44,16 @@ void set_state(char *state)
 {
 	switch (current_power_state){
 	case POWER_ON:
-		strcpy(state, "Computer is on");
+		strcpy(state, "Airtop on");
 		break;
 	case POWER_STR:
-		strcpy(state, "Sleep mode");
+		strcpy(state, "Sleep");
 		break;
 	case POWER_STD:
-		strcpy(state, "Hibernate mode");
+		strcpy(state, "Hibernate");
 		break;
 	case POWER_OFF:
-		strcpy(state, "Computer off");
+		strcpy(state, "Airtop off");
 		break;
 	default:
 		strcpy(state, "");
@@ -181,25 +181,28 @@ void set_updated_gpu_temp(char *output_str)
 
 void set_serial_number(char *output_str)
 {
-	char serial[SERIAL_NUMBER_LENGTH];
+	char serial[SERIAL_NUMBER_LENGTH + 1];
 	for (int i=0; i < SERIAL_NUMBER_LENGTH; i++)
 		serial[i] = eeprom_read_byte(SERIAL_NUMBER_EEPROM_ADDRESS + i);
+	serial[SERIAL_NUMBER_LENGTH] = '\0';
 	strcpy(output_str, serial);
 }
 
 void set_product_name(char *output_str)
 {
-	char product_name[PRODUCT_NAME_LENGTH];
+	char product_name[PRODUCT_NAME_LENGTH + 1];
 	for (int i = 0; i < PRODUCT_NAME_LENGTH; i++)
 		product_name[i] = eeprom_read_byte(PRODUCT_NAME_EEPROM_ADDRESS + i);
+	product_name[PRODUCT_NAME_LENGTH] = '\0';
 	strcpy(output_str, product_name);
 }
 
 void set_mac_address(char *output_str)
 {
-	char mac_address[MAC_ADDRESS_LENGTH];
+	char mac_address[MAC_ADDRESS_LENGTH + 1];
 	for (int i = 0; i < MAC_ADDRESS_LENGTH; i++)
 		mac_address[i] = eeprom_read_byte(MAC_ADDRESS_EEPROM_ADDRESS + i);
+	mac_address[MAC_ADDRESS_LENGTH] = '\0';
 	strcpy(output_str, mac_address);
 }
 
@@ -210,6 +213,34 @@ void set_update_hdd_temp(char *output_str, uint8_t hdd_id)
 		set_temp_string(output_str,temp);
 	else
 		set_invalid_string(output_str);
+}
+
+
+void update_brightness()
+{
+	ssd1306_set_contrast(eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS));
+	update_information_frame(SET_BRIGHTNESS, true);
+}
+
+void handle_brightness_buttons(uint8_t key)
+{
+	uint8_t brightness = eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS);
+	switch (key) {
+	case GFX_MONO_MENU_KEYCODE_DOWN:
+		if (brightness > BRIHTNESS_STEP)
+			brightness -= BRIHTNESS_STEP;
+		else
+			brightness = 0;
+		break;
+	case GFX_MONO_MENU_KEYCODE_UP:
+		if (brightness < (0xff - BRIHTNESS_STEP))
+			brightness += BRIHTNESS_STEP;
+		else
+			brightness = 0xff;
+		break;
+	}
+	eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, brightness);
+	update_brightness();
 }
 
 void set_dmi_content(char *output_str, uint8_t string_id)
@@ -224,6 +255,12 @@ void set_dmi_content(char *output_str, uint8_t string_id)
 		output_str = strdup(string_item->content);
 	else
 		set_invalid_string(output_str);
+}
+
+void set_brightness(char *str)
+{
+	frame_present->handle_buttons = handle_brightness_buttons;
+	sprintf(str,"%d ", (eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS) / BRIHTNESS_STEP));
 }
 
 void update_data_by_type(enum information_type type, char *output_str, uint8_t info)
@@ -251,22 +288,22 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 		set_power_data(output_str);
 		break;
 	case SHOW_SERIAL_NUMBER:
-//		set_serial_number(output_str);
-		strcpy(output_str, "TEST12TEST"); //TODO
+		set_serial_number(output_str);
+//		strcpy(output_str, "TEST12TEST"); //TODO
 		break;
 	case SHOW_PRODUCT_NAME:
-//		set_product_name(output_str);
-		strcpy(output_str, "1.0"); //TODO
+		set_product_name(output_str);
+//		strcpy(output_str, "1.0"); //TODO
 		break;
 	case SHOW_MAC_ADDRESS:
-//		set_mac_address(output_str);
-		strcpy(output_str, "0t:3e:4s:5t"); //TODO
+		set_mac_address(output_str);
+//		strcpy(output_str, "0t:3e:4s:5t"); //TODO
 		break;
 	case SHOW_POWER_STATE:
 		set_state(output_str);
 		break;
 	case SET_BRIGHTNESS:
-		strcpy(output_str, "test"); //TODO
+		set_brightness(output_str);
 		break;
 	case SHOW_CPU_TEMPERTURE:
 		set_cpu_updated_temp(output_str, info);
@@ -274,4 +311,5 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 	default:
 		break;
 	}
+	present_menu->is_active_frame = type == SET_BRIGHTNESS;
 }

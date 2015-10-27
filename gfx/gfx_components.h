@@ -29,8 +29,6 @@ struct gfx_item_data {
 	char *text;
 };
 
-
-
 struct gfx_item_action {
 	enum action_type type;
 	uint8_t menu_id;
@@ -43,6 +41,7 @@ struct gfx_action_menu {
 	struct gfx_item_action *actions;
 	struct gfx_image_node *graphic_items_head;
 	uint8_t id;
+	bool is_active_frame;
 	bool is_progmem;
 	bool is_graphic_view;
 	bool visible;
@@ -88,6 +87,7 @@ struct gfx_information_node {
 };
 
 struct gfx_frame {
+	void (*handle_buttons)(uint8_t);
 	struct gfx_image_node *image_head;
 	struct gfx_label_node *label_head;
 	struct gfx_information_node *information_head;

@@ -40,7 +40,7 @@ long adc_avg()
 {
 	int i;
 	long power_avg =0;
-	for (i=0; i < 100 ;i++){
+	for (i=0; i < 1000 ;i++){
 		adc_start_conversion(&MY_ADC, MY_ADC_CH);  //one conversion begins
 	//	LED_On(LED3_GPIO);
 //		adc_wait_for_interrupt_flag(&MY_ADC, MY_ADC_CH);

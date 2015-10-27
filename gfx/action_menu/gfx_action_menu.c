@@ -5,6 +5,7 @@ void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 {
 	present_menu->visible = false;
 	present_menu = action_menu;
+	present_menu->is_active_frame = false;
 	action_menu->visible = true;
 	if (present_menu->is_graphic_view)
 		graphic_menu_init(action_menu, redraw);
@@ -125,7 +126,7 @@ void set_dmi_menu()
 	set_dmi_actions();
 }
 
-void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t keycode)
+void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
 {
 	if (keycode == GFX_MONO_MENU_KEYCODE_ENTER){
 		struct gfx_item_action selected_action = action_menu->actions[(action_menu->menu)->current_selection];
@@ -141,6 +142,8 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 			gfx_frame_draw(frame_present);
 			break;
 		case ACTION_TYPE_SHOW_MENU:
+			if (from_frame && selected_action.menu_id == MAIN_MENU_ID)
+				break;
 			enable_sleep_mode();
 			menu = selected_action.menu;
 			show_menu(menu, true);
@@ -171,6 +174,9 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 			show_current_menu(true);
 	}else {
 		 gfx_mono_menu_process_key(action_menu->menu, keycode, action_menu->is_progmem);
-		 show_current_menu(false);
+		 if (from_frame)
+			 gfx_action_menu_process_key(action_menu, GFX_MONO_MENU_KEYCODE_ENTER, true);
+		 else
+			 show_current_menu(false);
 	}
 }

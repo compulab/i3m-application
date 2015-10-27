@@ -34,6 +34,7 @@
 #define AMBIENT_TWI_ADDRESS  		0x4C
 #define AMBIENT_TEMPERATURE_ADDRESS 0x00
 #define EMPTY_SLOT "Empty Slot"
+#define BRIHTNESS_STEP				25
 
 void update_information_frame(enum information_type type, bool need_to_update);
 
@@ -44,6 +45,8 @@ void update_ambient_temp();
 void update_adc();
 
 extern enum power_state current_power_state;
+
+void update_brightness();
 
 void update_power_state();
 

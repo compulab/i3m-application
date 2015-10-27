@@ -42,14 +42,12 @@ void gfx_item_init(struct gfx_item *item, uint8_t x, uint8_t y, uint8_t width, u
 void gfx_label_init(struct gfx_label *label, char *text,
 		uint8_t x, uint8_t y, uint8_t font_id)
 {
-	uint8_t length = strlen_P(text);
-//	uint8_t width = strlen(text) * font->width + 2,
-//			height = font->height + 4;
+//	uint8_t length = strlen_P(text);
 
-//		gfx_item_init(&label->postion, x, y, width, height);
-		label->text.is_progmem = false;
-		label->text.text = malloc(sizeof(char) * length);
-		memcpy_P(label->text.text, text, sizeof(char) * length);
+		label->text.is_progmem = true; //false;
+		label->text.text = text; // malloc(sizeof(char) * length);
+
+//		memcpy_P(label->text.text, text, sizeof(char) * length);
 		label->text.font = fonts[font_id];
 }
 

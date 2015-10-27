@@ -54,6 +54,8 @@
 #include "../../../services/gfx_mono/gfx_mono_framebuffer.h"
 // controller and OLED configuration file
 #include "../../../../../config/conf_ssd1306.h"
+//#include "../../../../../twi/eeprom.h"
+//#include "../../../../../layout.h"
 
 #ifdef __cplusplus
 extern "C" {

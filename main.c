@@ -170,7 +170,6 @@ void init()
 {
 	board_init();
 	sysclk_init();
-//	u8g_init();
 	sram_handle_init();
 	gfx_mono_init();
 	init_menu();

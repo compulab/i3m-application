@@ -16,6 +16,8 @@
 #include "graphic_menu.h"
 #endif
 
+#define MAIN_MENU_ID 	0
+
 struct gfx_action_menu *present_menu;
 
 void show_current_menu(bool redraw);
@@ -24,6 +26,6 @@ void clear_screen();
 
 void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw);
 
-void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t keycode);
+void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame);
 
 #endif /* GFX_GFX_ACTION_MENU_H_ */

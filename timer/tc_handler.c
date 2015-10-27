@@ -68,9 +68,11 @@ void tc_handle_init()
 
 void tc_handle()
 {
-	update_adc();
+
 	if (tc_counter % 10 == 0)
 		update_ambient_temp();
+	if (tc_counter % 35 == 0)
+		update_adc();
 	if (update_buttons && (tc_counter % MOVE_BUTTON_TIME == 0))
 		handle_button_pressed();
 	if (tc_counter == SLEEP_TIME) {

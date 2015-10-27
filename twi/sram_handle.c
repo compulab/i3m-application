@@ -74,14 +74,14 @@ void write_cpu_temp(uint8_t cpu_addr, uint8_t data)
 {
 	int8_t index = cpu_addr - CPU0_TEMP_ADDRESS;
 	if (is_valid_register(index,MAX_CPU))
-		computer_data.cpu_temp[index] = data;
+		computer_temperature_registers.cpu_temp[index] = data;
 }
 
 void write_hdd_temp(uint8_t hdd_addr, uint8_t data)
 {
 	int8_t index = hdd_addr - HDD0_TEMP_ADDRESS;
 	if (is_valid_register(index,MAX_HDD)){
-		computer_data.hdd_temp[index] = data;
+		computer_temperature_registers.hdd_temp[index] = data;
 		computer_data.valid_hdd_temp[index] = false;
 	}
 }
@@ -92,9 +92,12 @@ void write_cpu_fq_msb(uint8_t cpu_addr, uint8_t data)
 	if (!is_valid_register(index,MAX_CPU))
 		return ;
 	uint8_t msb = (data & CPU_FQ_MSB_MSK);
-	computer_data.cpu_fq[index] =  (computer_data.cpu_fq[index] & ~CPU_FQ_MSK) | (msb << 8);
 	computer_data.valid_cpu_fq[index] = data & VALID_CPU_FQ_MSK;
-	update_information_frame(SHOW_CPU_FREQUENCY, information_present->info_data == index && computer_data.valid_cpu_fq[index]);
+	computer_temperature_registers.cpu_fq[index] =  (computer_temperature_registers.cpu_fq[index] & ~CPU_FQ_MSK) | (msb << 8);
+	if (computer_data.valid_cpu_fq[index]) {
+		computer_data.cpu_fq[index] =  computer_temperature_registers.cpu_fq[index];
+		update_information_frame(SHOW_CPU_FREQUENCY, information_present->info_data == index && computer_data.valid_cpu_fq[index]);
+	}
 }
 
 void write_cpu_fq_lsb(uint8_t cpu_addr, uint8_t data)
@@ -102,13 +105,19 @@ void write_cpu_fq_lsb(uint8_t cpu_addr, uint8_t data)
 	int8_t index = (cpu_addr - CPU0F_LSB_ADDRESS) / 2;
 	if (!is_valid_register(index,MAX_CPU))
 		return ;
-	computer_data.cpu_fq[index] = 0x0000 | data;
+	computer_temperature_registers.cpu_fq[index] = 0x0000 | data;
 }
 
 
 void write_temp_control(uint8_t data)
 {
 	computer_data.valid_gpu_temp = (data & VALID_GPU_MASK) != 0;
+	if (computer_data.valid_gpu_temp) {
+		if (computer_data.gpu_temp != computer_temperature_registers.gpu_temp){
+			computer_data.gpu_temp = computer_temperature_registers.gpu_temp;
+			update_information_frame(SHOW_GPU_TEMPERTURE,true);
+		}
+	}
 }
 
 void write_hd_sz_lsb(uint8_t hd_addr, uint8_t data)
@@ -146,28 +155,25 @@ void software_reset()
   SREG=oldInterruptState;            // Restore interrupts enabled/disabled state (out of common decency - this line will never be reached because the reset will pre-empt it)
 }
 
+
+void validate_temperate(bool *valid_bit, uint8_t *dest, uint8_t src)
+{
+	*valid_bit = true;
+	*dest = src;
+}
+
 void write_cpu_status(uint8_t status)
 {
 	if (status == 0){
 		for (int i = 0; i < MAX_CPU; i++)
 			computer_data.valid_cpu_temp[i] = false;
 	} else {
-		if (status & 0x01)
-			computer_data.valid_cpu_temp[0] = true;
-		if (status & 0x02)
-			computer_data.valid_cpu_temp[1] = true;
-		if (status & 0x04)
-			computer_data.valid_cpu_temp[2] = true;
-		if (status & 0x08)
-			computer_data.valid_cpu_temp[3] = true;
-		if (status & 0x10)
-			computer_data.valid_cpu_temp[4] = true;
-		if (status & 0x20)
-			computer_data.valid_cpu_temp[5] = true;
-		if (status & 0x40)
-			computer_data.valid_cpu_temp[6] = true;
-		if (status & 0x80)
-			computer_data.valid_cpu_temp[7] = true;
+		uint8_t bit = 0x01;
+		for (uint8_t i = 0 ; i < MAX_CPU; i++){
+			if (status & bit)
+				validate_temperate(&computer_data.valid_cpu_temp[i], &computer_data.cpu_temp[i], computer_temperature_registers.cpu_temp[i]);
+			bit = bit << 1;
+		}
 		update_information_frame(SHOW_CPU_TEMPERTURE, information_present->info_data < MAX_CPU && computer_data.valid_cpu_temp[information_present->info_data]);
 	}
 }
@@ -178,24 +184,14 @@ void write_hdd_status(uint8_t status)
 		for (int i = 0; i < MAX_HDD; i++)
 			computer_data.valid_hdd_temp[i] = false;
 	} else {
-		if (status & 0x01)
-			computer_data.valid_hdd_temp[0] = true;
-		if (status & 0x02)
-			computer_data.valid_hdd_temp[1] = true;
-		if (status & 0x04)
-			computer_data.valid_hdd_temp[2] = true;
-		if (status & 0x08)
-			computer_data.valid_hdd_temp[3] = true;
-		if (status & 0x10)
-			computer_data.valid_hdd_temp[4] = true;
-		if (status & 0x20)
-			computer_data.valid_hdd_temp[5] = true;
-//		if (status & 0x40)
-//			computer_data.valid_hdd_temp[6] = true;
-//		if (status & 0x80)
-//			computer_data.valid_hdd_temp[7] = true;
-		update_information_frame(SHOW_HDD_TEMPERTURE, information_present->info_data < MAX_HDD && computer_data.valid_hdd_temp[information_present->info_data]);
+		uint8_t bit = 0x01;
+		for (uint8_t i = 0 ; i < MAX_HDD; i++){
+			if (status & bit)
+				validate_temperate(&computer_data.valid_hdd_temp[i], &computer_data.hdd_temp[i], computer_temperature_registers.hdd_temp[i]);
+			bit = bit << 1;
 		}
+			update_information_frame(SHOW_HDD_TEMPERTURE, information_present->info_data < MAX_HDD && computer_data.valid_hdd_temp[information_present->info_data]);
+	}
 }
 
 void write_reset(uint8_t data)
@@ -331,8 +327,8 @@ void read_cpu_temp(uint8_t cpu_address, uint8_t *data)
 {
 	uint8_t temp = 0x00;
 	uint8_t index = cpu_address - CPU0_TEMP_ADDRESS;
-	if (is_valid_register(index, MAX_CPU) && computer_data.valid_cpu_temp[index])
-		temp = computer_data.cpu_temp[index];
+	if (is_valid_register(index, MAX_CPU))
+		temp = computer_temperature_registers.cpu_temp[index];
 	*data = temp;
 }
 
@@ -340,8 +336,8 @@ void read_hdd_temp(uint8_t hdd_address, uint8_t *data)
 {
 	uint8_t temp = 0x00;
 	uint8_t index = hdd_address - HDD0_TEMP_ADDRESS;
-	if (is_valid_register(index, MAX_HDD) && computer_data.valid_hdd_temp[index])
-		temp = computer_data.hdd_temp[index];
+	if (is_valid_register(index, MAX_HDD))
+		temp = computer_temperature_registers.hdd_temp[index];
 	*data = temp;
 }
 
@@ -518,11 +514,7 @@ void handle_sram_read_request(uint8_t read_address, uint8_t *data)
 
 void write_gpu_temp(uint8_t temp)
 {
-	uint8_t old_temp = computer_data.gpu_temp;
-	if (old_temp != temp){
-		computer_data.gpu_temp = temp;
-		update_information_frame(SHOW_GPU_TEMPERTURE,true);
-	}
+	computer_temperature_registers.gpu_temp = temp;
 }
 
 void handle_sram_write_request(uint8_t write_address, uint8_t data)
