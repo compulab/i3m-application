@@ -288,16 +288,16 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 		set_power_data(output_str);
 		break;
 	case SHOW_SERIAL_NUMBER:
-		set_serial_number(output_str);
-//		strcpy(output_str, "TEST12TEST"); //TODO
+//		set_serial_number(output_str);
+		strcpy(output_str, "TEST12TEST"); //TODO
 		break;
 	case SHOW_PRODUCT_NAME:
-		set_product_name(output_str);
-//		strcpy(output_str, "1.0"); //TODO
+//		set_product_name(output_str);
+		strcpy(output_str, "1.0"); //TODO
 		break;
 	case SHOW_MAC_ADDRESS:
-		set_mac_address(output_str);
-//		strcpy(output_str, "0t:3e:4s:5t"); //TODO
+//		set_mac_address(output_str);
+		strcpy(output_str, "0t:3e:4s:5t"); //TODO
 		break;
 	case SHOW_POWER_STATE:
 		set_state(output_str);
