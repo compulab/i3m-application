@@ -23,7 +23,7 @@ char debug[7];
 
 #define CLEAR ssd1306_clear();
 
-#define MSG(str, y)	gfx_mono_draw_string(str, 20, y, &sysfont); \
+#define MSG(str, y)	gfx_mono_draw_string(str, 0, y, &sysfont); \
 					gfx_mono_put_framebuffer(); \
 					delay_s(DELAY_TIME);
 //					CLEAR
@@ -42,13 +42,9 @@ char debug[7];
 //					delay_s(DELAY_TIME);
 //					CLEAR
 
-#define MSG_T_N(str,num)	ssd1306_set_page_address(3); \
-					ssd1306_set_column_address(3); \
-					ssd1306_write_text(str); \
-		   			ssd1306_set_page_address(6); \
-					ssd1306_set_column_address(3); \
+#define MSG_T_N(str,num,y)	gfx_mono_draw_string(str, 0, y, &sysfont); \
 					itoa(num,debug,16); \
-					ssd1306_write_text(debug);  \
+					gfx_mono_draw_string(debug, 10, y, &sysfont); \
 					delay_s(DELAY_TIME);
 //					CLEAR
 

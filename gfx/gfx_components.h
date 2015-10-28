@@ -50,6 +50,7 @@ struct gfx_action_menu {
 
 struct gfx_text {
 	char *text;
+	const char *textP;
 	bool is_progmem;
 	struct gfx_font *font;
 };

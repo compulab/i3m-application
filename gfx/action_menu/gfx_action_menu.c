@@ -70,7 +70,14 @@ void set_dmi_mono_menu()
 	}
 }
 
-struct gfx_item default_position = { .x =0, .y = 32, .height = 8, .visible = true };
+void set_dmi_position(struct gfx_item *pos)
+{
+	pos->x = 0;
+	pos->y = 32;
+	pos->height = 8;
+	pos->width = 0;
+	pos->visible = true;
+}
 
 struct direct_string_item * curr_item = 0;
 
@@ -81,7 +88,7 @@ void set_dmi_label(struct gfx_label_node *label_node, uint8_t index)
 		index++;
 		direct_item = direct_item->next;
 	}
-	label_node->label.postion = default_position;
+	set_dmi_position(&label_node->label.postion);
 	label_node->label.text.font = fonts[0];
 	label_node->label.text.is_progmem = false;
 //	label_node->label.text.text = direct_item->type;
@@ -136,7 +143,7 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 		clear_screen();
 		switch (type){
 		case ACTION_TYPE_SHOW_FRAME:
-			MSG("Show frame", 10)
+//			MSG("Show frame", 10)
 			tc_no_button_pressed();
 			disable_sleep_mode();
 			gfx_frame_draw(selected_action.frame);

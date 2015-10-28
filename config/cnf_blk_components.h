@@ -20,7 +20,7 @@
 typedef uint8_t gfx_mono_color_t;
 
 struct cnf_label{
-	char *text;
+	const char *text;
 	uint8_t x, y;
 };
 

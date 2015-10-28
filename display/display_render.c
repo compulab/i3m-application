@@ -60,7 +60,7 @@ void draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct gfx_font *f
 	uint8_t length = length_P(str);
 //	if (x == 0)
 		x = (GFX_MONO_LCD_WIDTH - length) / 16;
-	clear_string_background(length, x, y, font);
+	clear_string_background(GFX_MONO_LCD_WIDTH, 0, y, font);
 	uint8_t temp_char = PROGMEM_READ_BYTE((uint8_t PROGMEM_PTR_T)(str++));
 
 	while (temp_char){
@@ -85,7 +85,7 @@ void draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct gfx_font *fon
 	uint8_t length = strlen(str);
 	if (x == 0)
 		x = (GFX_MONO_LCD_WIDTH - length) / 4;
-	clear_string_background(length, x, y, font);
+	clear_string_background(GFX_MONO_LCD_WIDTH, 0, y, font);
 	while (str[j] != '\0')
 	{
 		if (x > 120)

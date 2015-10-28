@@ -68,10 +68,7 @@ void init_menu()
 	load_config_block();
 	set_menu_by_id(&present_menu, 0);
 	gfx_action_menu_init(present_menu, true);
-//
-//	tc_init();
-//	gfx_mono_draw_string("hello world", 0, 0, &sysfont);
-//	gfx_mono_put_framebuffer();
+	tc_init();
 }
 
 

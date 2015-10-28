@@ -42,12 +42,14 @@ void gfx_item_init(struct gfx_item *item, uint8_t x, uint8_t y, uint8_t width, u
 void gfx_label_init(struct gfx_label *label, char *text,
 		uint8_t x, uint8_t y, uint8_t font_id)
 {
-//	uint8_t length = strlen_P(text);
-
-		label->text.is_progmem = true; //false;
-		label->text.text = text; // malloc(sizeof(char) * length);
+//		uint8_t length = strlen_P(text);
+		gfx_item_init(&label ->postion, x, y, 0, 0);
+		label->text.is_progmem = true;
+		label->text.textP = text;
+//		label->text.text = malloc(sizeof(char) * (length + 1));
 
 //		memcpy_P(label->text.text, text, sizeof(char) * length);
+//		label->text.text[length] = '\0';
 		label->text.font = fonts[font_id];
 }
 
@@ -64,17 +66,11 @@ void gfx_information_init(struct gfx_information *info,
 {
 	info->info_type = info_type;
 	info->info_data = info_data;
+	info->text.is_progmem = false;
 	info->text.text = malloc (sizeof(char) * max_length);
 	gfx_item_init(&info->postion, x, y, 0, 0);
 	info->text.font = fonts[font_id];
 }
-
-//void gfx_label_with_font_init(struct gfx_label *label, char *text, struct font *font,
-//		uint8_t x, uint8_t y)
-//{
-//	gfx_label_init(label, text, x, y);
-//	label->text.font = font;
-//}
 
 void update_information_present(struct gfx_information *info)
 {
@@ -92,34 +88,30 @@ void update_information_present(struct gfx_information *info)
 }
 
 
-void print_data(struct gfx_text *text, uint8_t x, uint8_t y)
+void print_data(struct gfx_text *data, uint8_t x, uint8_t y)
 {
-	MSG("print data", 10)
-//	if (text->is_progmem)
-//		draw_string_in_buffer_P(text->text, x, y, text->font);
+	if (data->is_progmem)
+		draw_string_in_buffer_P(data->textP, x, y, data->font);
+	else
+		draw_string_in_buffer(data->text, x, y, data->font);
+
+
+
+////	gfx_mono_generic_draw_filled_rect(0, y, GFX_MONO_LCD_WIDTH, 8, GFX_PIXEL_CLR);
+//	if (data->is_progmem)
+//		gfx_mono_draw_progmem_string((char PROGMEM_PTR_T)data->textP, x, y, &sysfont);
 //	else
-//		draw_string_in_buffer(text->text, x, y, text->font);
-
-
-	if (!text->is_progmem) {
-//			gfx_mono_draw_progmem_string((char PROGMEM_PTR_T)text->text, x, y, &sysfont);
-//		else
-		MSG(text->text, 40)
-			gfx_mono_draw_string(text->text, x, y, &sysfont);
-
-	}
+//		gfx_mono_draw_string(data->text, x, y, &sysfont);
 //	gfx_mono_put_framebuffer();
+//	delay_s(1);
+
 }
 
 void gfx_information_draw(struct gfx_information *info)
 {
 	update_information_present(info);
 	update_data_by_type(info->info_type, (info->text).text, info->info_data);
-	int x = info->postion.x + 2,
-			y = info->postion.y + 2;
-	struct gfx_text data = info->text;
-//	gfx_mono_draw_string(data.text, x, y, data.font);
-	print_data(&data, x, y);
+	print_data(&info->text, info->postion.x, info->postion.y);
 }
 
 void update_information()
@@ -129,17 +121,7 @@ void update_information()
 void gfx_label_draw(struct gfx_label *label)
 {
 	gfx_item_draw(&label->postion);
-	MSG("Start writing label" ,50)
-	int x = label->postion.x,
-			y = label->postion.y;
-	struct gfx_text data = label->text;
-	print_data(&data, x, y);
-	MSG("End" ,50)
-
-	#ifdef DEBUG_MODE
-		MSG_T_T("string to print:",data.text)
-		MSG_T_N("first char of font", data.font->first_char)
-	#endif
+	print_data(&label->text, label->postion.x, label->postion.y);
 }
 
 void gfx_image_init(struct gfx_image *image, gfx_mono_color_t PROGMEM_T *bitmap_progmem,
@@ -169,13 +151,9 @@ void init_frame(struct gfx_frame *frame)
 	frame->label_head = 0;
 }
 
-void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
+void set_images(struct gfx_frame *frame, struct cnf_image_node *cnf_image_pgmem)
 {
-	struct cnf_frame cnf_frame;
-	memcpy_P(&cnf_frame, cnf_frame_pgmem, sizeof(cnf_frame));
-	init_frame(frame);
-	struct cnf_image_node *cnf_image_pgmem = cnf_frame.images_head;
-	struct gfx_image_node *frame_image_last =0;
+	struct gfx_image_node *frame_image_last = 0;
 	while (cnf_image_pgmem != 0){
 		struct cnf_image_node cnf_image_node;
 		struct gfx_image_node *gfx_image_node = malloc(sizeof(struct gfx_image_node));
@@ -190,8 +168,10 @@ void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
 		frame_image_last = gfx_image_node;
 		cnf_image_pgmem = cnf_image_node.next;
 	}
+}
 
-	struct cnf_label_node *cnf_label_pgmem = cnf_frame.labels_head;
+void set_labels(struct gfx_frame *frame, struct cnf_label_node *cnf_label_pgmem)
+{
 	struct gfx_label_node *frame_label_last = 0;
 	while (cnf_label_pgmem != 0){
 		struct cnf_label_node cnf_label_node;
@@ -206,8 +186,10 @@ void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
 		frame_label_last = gfx_label_node;
 		cnf_label_pgmem = cnf_label_node.next;
 	}
+}
 
-	struct cnf_info_node *cnf_info_pgmem = cnf_frame.infos_head;
+void set_infos(struct gfx_frame *frame,	struct cnf_info_node *cnf_info_pgmem)
+{
 	struct gfx_information_node *frame_information_last = 0;
 	while (cnf_info_pgmem != 0){
 		struct cnf_info_node cnf_info_node;
@@ -225,28 +207,47 @@ void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
 	}
 }
 
+void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
+{
+	struct cnf_frame cnf_frame;
+	memcpy_P(&cnf_frame, cnf_frame_pgmem, sizeof(cnf_frame));
+	init_frame(frame);
+	set_images(frame, cnf_frame.images_head);
+	set_labels(frame, cnf_frame.labels_head);
+	set_infos(frame, cnf_frame.infos_head);
+}
+
+void gfx_labels_draw(struct gfx_label_node *curr_label_node)
+{
+	while (curr_label_node != 0){
+		gfx_label_draw(&curr_label_node->label);
+		curr_label_node = curr_label_node->next;
+	}
+}
+
+void gfx_infos_draw(struct gfx_information_node *curr_info_node)
+{
+	while (curr_info_node != 0){
+		gfx_information_draw(&curr_info_node->information);
+		curr_info_node = curr_info_node->next;
+	}
+}
+
+void gfx_images_draw(struct gfx_image_node *curr_image_node)
+{
+	while (curr_image_node != 0){
+		gfx_image_draw(&curr_image_node->image);
+		curr_image_node = curr_image_node->next;
+	}
+}
+
 void gfx_frame_draw(struct gfx_frame *frame)
 {
 	if (frame != 0){
-		MSG("Draw frame", 20)
 		frame_present = frame;
-		//	gfx_mono_draw_filled_rect(GFX_MONO_LCD_WIDTH, GFX_MONO_LCD_HEIGHT, 0,
-		//			0, GFX_PIXEL_CLR);
-//		struct gfx_label_node *label = frame->label_head;
-//		while (label != 0){
-//			gfx_label_draw(&label->label);
-//			label = label->next;
-//		}
-		struct gfx_information_node *info = frame->information_head;
-		while (info != 0){
-			gfx_information_draw(&info->information);
-			info = info->next;
-		}
-		struct gfx_image_node *image = frame->image_head;
-		while (image != 0){
-			gfx_image_draw(&image->image);
-			image = image->next;
-		}
+		gfx_infos_draw(frame->information_head);
+		gfx_labels_draw(frame->label_head);
+		gfx_images_draw(frame->image_head);
 		gfx_mono_put_framebuffer();
 	}
 }
