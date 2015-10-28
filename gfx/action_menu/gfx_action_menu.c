@@ -1,6 +1,5 @@
 #include "gfx_action_menu.h"
 
-
 void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 {
 	present_menu->visible = false;
@@ -22,8 +21,6 @@ void show_current_menu(bool redraw)
 {
 	gfx_action_menu_init(present_menu, redraw);
 }
-
-struct gfx_action_menu *menu;
 
 struct gfx_action_menu dmi_menu = {.is_progmem = false };
 
@@ -143,7 +140,6 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 		clear_screen();
 		switch (type){
 		case ACTION_TYPE_SHOW_FRAME:
-//			MSG("Show frame", 10)
 			tc_no_button_pressed();
 			disable_sleep_mode();
 			gfx_frame_draw(selected_action.frame);
@@ -152,8 +148,7 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 			if (from_frame && selected_action.menu_id == MAIN_MENU_ID)
 				break;
 			enable_sleep_mode();
-			menu = selected_action.menu;
-			show_menu(menu, true);
+			show_menu(selected_action.menu, true);
 			break;
 		case ACTION_TYPE_SHOW_DMI_MENU:
 			disable_sleep_mode();

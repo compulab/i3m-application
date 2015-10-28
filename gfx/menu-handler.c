@@ -277,13 +277,10 @@ void handle_button_pressed()
 	case BUTTON_HOLD:
 	case BUTTON_CLICK:
 		tc_button_pressed();
-		if (frame_present == 0 || frame_present->information_head->information.info_type != SHOW_CPU_TEMPERTURE){
 		if (present_menu->is_active_frame)
 			frame_present->handle_buttons(GFX_MONO_MENU_KEYCODE_UP);
 		else
 			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP, !present_menu->visible);
-		return;
-		}
 		break;
 	default:
 		break;
@@ -292,13 +289,10 @@ void handle_button_pressed()
 	case BUTTON_HOLD:
 	case BUTTON_CLICK:
 		tc_button_pressed();
-		if (frame_present == 0 || frame_present->information_head->information.info_type != SHOW_CPU_TEMPERTURE){
 		if (present_menu->is_active_frame)
 			frame_present->handle_buttons(GFX_MONO_MENU_KEYCODE_DOWN);
 		else
 			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN, !present_menu->visible);
-		return;
-		}
 		break;
 	default:
 		break;
