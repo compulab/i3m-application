@@ -86,6 +86,27 @@ void write_hdd_temp(uint8_t hdd_addr, uint8_t data)
 	}
 }
 
+void read_cpu_fq_msb(uint8_t cpu_addr, uint8_t *data)
+{
+	int8_t index = (cpu_addr - CPU0F_MSB_ADDRESS)/2;
+	if (!is_valid_register(index,MAX_CPU)) {
+		*data = 0x00;
+		return ;
+	}
+	*data = computer_temperature_registers.cpu_fq[index] << 8;
+}
+
+void read_cpu_fq_lsb(uint8_t cpu_addr, uint8_t *data)
+{
+	int8_t index = (cpu_addr - CPU0F_MSB_ADDRESS)/2;
+	if (!is_valid_register(index,MAX_CPU)) {
+		*data = 0x00;
+		return ;
+	}
+	*data = computer_temperature_registers.cpu_fq[index];
+}
+
+
 void write_cpu_fq_msb(uint8_t cpu_addr, uint8_t data)
 {
 	int8_t index = (cpu_addr - CPU0F_MSB_ADDRESS)/2;
@@ -108,6 +129,16 @@ void write_cpu_fq_lsb(uint8_t cpu_addr, uint8_t data)
 	computer_temperature_registers.cpu_fq[index] = 0x0000 | data;
 }
 
+
+void read_temp_control(uint8_t *data)
+{
+	uint8_t valid = 0x00;
+	if (computer_data.valid_gpu_temp)
+		valid |= VALID_GPU_MASK;
+	if (computer_data.valid_ambient_temp)
+		valid |= VALID_AMBIENT_MASK;
+	*data = valid;
+}
 
 void write_temp_control(uint8_t data)
 {
@@ -296,10 +327,6 @@ void read_power_state(uint8_t *data)
 
 void read_ambient(uint8_t *data)
 {
-//	if (!computer_data.valid_ambient_temp){
-//		update_ambient_temp();
-//		delay_us(4);
-//	}
 	if (computer_data.valid_ambient_temp)
 		*data = computer_data.ambient_temp;
 	else
@@ -339,6 +366,30 @@ void read_hdd_temp(uint8_t hdd_address, uint8_t *data)
 	if (is_valid_register(index, MAX_HDD))
 		temp = computer_temperature_registers.hdd_temp[index];
 	*data = temp;
+}
+
+void read_hdd_status(uint8_t *data)
+{
+	uint8_t valid_bits = 0x00;
+	uint8_t curr_bit = 0x01;
+	for (int i = 0; i < MAX_HDD; i++){
+		if (computer_data.valid_hdd_temp[i])
+			valid_bits |= curr_bit;
+		curr_bit = curr_bit << 1;
+	}
+	*data = curr_bit;
+}
+
+void read_cpu_stauts(uint8_t *data)
+{
+	uint8_t valid_bits = 0x00;
+	uint8_t curr_bit = 0x01;
+	for (int i = 0; i < MAX_CPU; i++){
+		if (computer_data.valid_cpu_temp[i])
+			valid_bits |= curr_bit;
+		curr_bit = curr_bit << 1;
+	}
+	*data = valid_bits;
 }
 
 void read_pending_requests(uint8_t *data)
@@ -487,7 +538,6 @@ void handle_sram_read_request(uint8_t read_address, uint8_t *data)
 	case RTC_DATE_ADDRESS:
 //		read_rtc(read_address, data); TODO
 		break;
-#ifdef SRAM_DEBUG
 	case CPU0_TEMP_ADDRESS:
 	case CPU1_TEMP_ADDRESS:
 	case CPU2_TEMP_ADDRESS:
@@ -497,6 +547,9 @@ void handle_sram_read_request(uint8_t read_address, uint8_t *data)
 	case CPU6_TEMP_ADDRESS:
 	case CPU7_TEMP_ADDRESS:
 		read_cpu_temp(read_address, data);
+		break;
+	case CPU_STATUS_ADDRESS:
+		read_cpu_stauts(data);
 		break;
 	case HDD0_TEMP_ADDRESS:
 	case HDD1_TEMP_ADDRESS:
@@ -508,7 +561,32 @@ void handle_sram_read_request(uint8_t read_address, uint8_t *data)
 	case HDD7_TEMP_ADDRESS:
 		read_hdd_temp(read_address, data);
 		break;
-#endif
+	case HDD_STATUS_ADDRESS:
+		read_hdd_status(data);
+		break;
+	case CPU0F_MSB_ADDRESS:
+	case CPU1F_MSB_ADDRESS:
+	case CPU2F_MSB_ADDRESS:
+	case CPU3F_MSB_ADDRESS:
+	case CPU4F_MSB_ADDRESS:
+	case CPU5F_MSB_ADDRESS:
+	case CPU6F_MSB_ADDRESS:
+	case CPU7F_MSB_ADDRESS:
+		read_cpu_fq_msb(read_address, data);
+		break;
+	case CPU0F_LSB_ADDRESS:
+	case CPU1F_LSB_ADDRESS:
+	case CPU2F_LSB_ADDRESS:
+	case CPU3F_LSB_ADDRESS:
+	case CPU4F_LSB_ADDRESS:
+	case CPU5F_LSB_ADDRESS:
+	case CPU6F_LSB_ADDRESS:
+	case CPU7F_LSB_ADDRESS:
+		read_cpu_fq_lsb(read_address, data);
+		break;
+	case TEMPERTURE_CONTROL_ADDRESS:
+		read_temp_control(data);
+		break;
 	}
 }
 

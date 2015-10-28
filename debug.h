@@ -23,10 +23,9 @@ char debug[7];
 
 #define CLEAR ssd1306_clear();
 
-#define MSG(str)	ssd1306_set_page_address(3); \
-					ssd1306_set_column_address(3); \
-					ssd1306_write_text(str);
-//					delay_s(DELAY_TIME);
+#define MSG(str, y)	gfx_mono_draw_string(str, 20, y, &sysfont); \
+					gfx_mono_put_framebuffer(); \
+					delay_s(DELAY_TIME);
 //					CLEAR
 
 #define MSG_hex(num)   ssd1306_set_page_address(4); \

@@ -136,10 +136,10 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 		clear_screen();
 		switch (type){
 		case ACTION_TYPE_SHOW_FRAME:
+			MSG("Show frame", 10)
 			tc_no_button_pressed();
 			disable_sleep_mode();
-			frame_present = selected_action.frame;
-			gfx_frame_draw(frame_present);
+			gfx_frame_draw(selected_action.frame);
 			break;
 		case ACTION_TYPE_SHOW_MENU:
 			if (from_frame && selected_action.menu_id == MAIN_MENU_ID)
@@ -159,13 +159,6 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 				show_current_menu(true);
 			}
 			break;
-//		case ACTION_TYPE_SHOW_MENU_AFTER_DMI:
-//			computer_data.direct_string = 0;
-//			show_menu(action_menus[0]);
-//			break;
-//		case ACTION_TYPE_SET_BIOS_STATE:
-//			eeprom_write_byte(BIOS_STATE_ADDRESS,selectedAction.frame->informations[0]->info_data);
-//			break;
 		default:
 			break;
 		}
