@@ -155,7 +155,8 @@ void twi_handle_write(uint8_t data)
 	else if (slave_address == TWI_REAL_TIME_ADDRESS)
 		handle_sram_write_request(reg_address,data);
 
-	if (reg_address != DIRECT_TYPE_ADDRESS && reg_address != DIRECT_CONTENT_ADDRESS)
+	enum i2c_addr_space i2c_addr = reg_address;
+	if (i2c_addr != DMI_NAME && i2c_addr != DMI_VALUE)
 		++reg_address;
 }
 

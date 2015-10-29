@@ -22,6 +22,7 @@ enum information_type{
 	SHOW_CPU_TEMPERTURE,
 	SHOW_GPU_TEMPERTURE,
 	SHOW_AMBIENT_TEMPERATURE,
+	SHOW_POST_CODE
 };
 
 enum action_type {

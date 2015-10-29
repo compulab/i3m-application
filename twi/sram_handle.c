@@ -70,104 +70,97 @@ bool is_valid_register(int8_t index, uint8_t max_index)
 	return index >= 0 && index < max_index;
 }
 
-void write_cpu_temp(uint8_t cpu_addr, uint8_t data)
-{
-	int8_t index = cpu_addr - CPU0_TEMP_ADDRESS;
-	if (is_valid_register(index,MAX_CPU))
-		computer_temperature_registers.cpu_temp[index] = data;
-}
+//void write_cpu_temp(uint8_t cpu_addr, uint8_t data)
+//{
+//	int8_t index = cpu_addr - CPU0_TEMP_ADDRESS;
+//	if (is_valid_register(index,MAX_CPU))
+//		computer_temperature_registers.cpu_temp[index] = data;
+//}
 
-void write_hdd_temp(uint8_t hdd_addr, uint8_t data)
-{
-	int8_t index = hdd_addr - HDD0_TEMP_ADDRESS;
-	if (is_valid_register(index,MAX_HDD)){
-		computer_temperature_registers.hdd_temp[index] = data;
-		computer_data.valid_hdd_temp[index] = false;
-	}
-}
+//void write_hdd_temp(uint8_t hdd_addr, uint8_t data)
+//{
+//	int8_t index = hdd_addr - HDD0_TEMP_ADDRESS;
+//	if (is_valid_register(index,MAX_HDD)){
+//		computer_temperature_registers.hdd_temp[index] = data;
+//		computer_data.valid_hdd_temp[index] = false;
+//	}
+//}
 
-void read_cpu_fq_msb(uint8_t cpu_addr, uint8_t *data)
-{
-	int8_t index = (cpu_addr - CPU0F_MSB_ADDRESS)/2;
-	if (!is_valid_register(index,MAX_CPU)) {
-		*data = 0x00;
-		return ;
-	}
-	*data = computer_temperature_registers.cpu_fq[index] << 8;
-}
+//void read_cpu_fq_msb(uint8_t cpu_addr, uint8_t *data)
+//{
+//	int8_t index = (cpu_addr - CPU0F_MSB_ADDRESS)/2;
+//	if (!is_valid_register(index,MAX_CPU)) {
+//		*data = 0x00;
+//		return ;
+//	}
+//	*data = computer_temperature_registers.cpu_fq[index] << 8;
+//}
 
-void read_cpu_fq_lsb(uint8_t cpu_addr, uint8_t *data)
-{
-	int8_t index = (cpu_addr - CPU0F_MSB_ADDRESS)/2;
-	if (!is_valid_register(index,MAX_CPU)) {
-		*data = 0x00;
-		return ;
-	}
-	*data = computer_temperature_registers.cpu_fq[index];
-}
+//void read_cpu_fq_lsb(uint8_t cpu_addr, uint8_t *data)
+//{
+//	int8_t index = (cpu_addr - CPU0F_MSB_ADDRESS)/2;
+//	if (!is_valid_register(index,MAX_CPU)) {
+//		*data = 0x00;
+//		return ;
+//	}
+//	*data = computer_temperature_registers.cpu_fq[index];
+//}
 
 
-void write_cpu_fq_msb(uint8_t cpu_addr, uint8_t data)
+void write_cpu_fq_msb(uint8_t cpu_addr)
 {
-	int8_t index = (cpu_addr - CPU0F_MSB_ADDRESS)/2;
+	int8_t index = (cpu_addr - CPU0F_MSB)/2;
 	if (!is_valid_register(index,MAX_CPU))
 		return ;
-	uint8_t msb = (data & CPU_FQ_MSB_MSK);
-	computer_data.valid_cpu_fq[index] = data & VALID_CPU_FQ_MSK;
-	computer_temperature_registers.cpu_fq[index] =  (computer_temperature_registers.cpu_fq[index] & ~CPU_FQ_MSK) | (msb << 8);
-	if (computer_data.valid_cpu_fq[index]) {
-		computer_data.cpu_fq[index] =  computer_temperature_registers.cpu_fq[index];
-		update_information_frame(SHOW_CPU_FREQUENCY, information_present->info_data == index && computer_data.valid_cpu_fq[index]);
+	if (layout.direct.i2c[cpu_addr] & CPU_FQ_MSB_MSK) {
+		computer_data.packed.cpuf[index] = (layout.direct.i2c[cpu_addr] & ~CPU_FQ_MSK) | (layout.direct.i2c[cpu_addr - 1] << 8);
+		update_information_frame(SHOW_CPU_FREQUENCY, information_present->info_data == index);
 	}
 }
 
-void write_cpu_fq_lsb(uint8_t cpu_addr, uint8_t data)
-{
-	int8_t index = (cpu_addr - CPU0F_LSB_ADDRESS) / 2;
-	if (!is_valid_register(index,MAX_CPU))
-		return ;
-	computer_temperature_registers.cpu_fq[index] = 0x0000 | data;
-}
+//void write_cpu_fq_lsb(uint8_t cpu_addr, uint8_t data)
+//{
+//	int8_t index = (cpu_addr - CPU0F_LSB_ADDRESS) / 2;
+//	if (!is_valid_register(index,MAX_CPU))
+//		return ;
+//	computer_temperature_registers.cpu_fq[index] = 0x0000 | data;
+//}
 
 
 void read_temp_control(uint8_t *data)
 {
-	uint8_t valid = 0x00;
-	if (computer_data.valid_gpu_temp)
-		valid |= VALID_GPU_MASK;
-	if (computer_data.valid_ambient_temp)
-		valid |= VALID_AMBIENT_MASK;
-	*data = valid;
+	*data = 0x02 & computer_data.packed.other_temp_status;
 }
 
-void write_temp_control(uint8_t data)
+void write_temp_control()
 {
-	computer_data.valid_gpu_temp = (data & VALID_GPU_MASK) != 0;
-	if (computer_data.valid_gpu_temp) {
-		if (computer_data.gpu_temp != computer_temperature_registers.gpu_temp){
-			computer_data.gpu_temp = computer_temperature_registers.gpu_temp;
-			update_information_frame(SHOW_GPU_TEMPERTURE,true);
-		}
+	computer_data.details.gput = layout.l.gpus;
+	if (computer_data.details.gput && (layout.l.gput != computer_data.details.gput)) {
+		computer_data.details.gput = layout.l.gput;
+		update_information_frame(SHOW_GPU_TEMPERTURE,true);
 	}
 }
 
-void write_hd_sz_lsb(uint8_t hd_addr, uint8_t data)
-{
-	int8_t index = (hd_addr - HDD0_LSB_SZ_ADDRESS) / 2;
-	if (!is_valid_register(index, MAX_HDD))
-		return ;
-	computer_data.hdd_size[index] = (computer_data.hdd_size[index] & ~ LSB_MSK) | data;
-}
+//void write_hd_sz_lsb(uint8_t hd_addr, uint8_t data)
+//{
+//	int8_t index = (hd_addr - HDD0_LSB_SZ_ADDRESS) / 2;
+//	if (!is_valid_register(index, MAX_HDD))
+//		return ;
+//	computer_data.hdd_size[index] = (computer_data.hdd_size[index] & ~ LSB_MSK) | data;
+//}
 
-void write_hd_sz_msb(uint8_t hd_addr, uint8_t data)
+void write_hd_sz_msb(uint8_t hdd_addr)
 {
-	int8_t index = (hd_addr - HDD0_LSB_SZ_ADDRESS) / 2;
+	int8_t index = (hdd_addr - HDD0_SZ_MSB) / 2;
 	if (!is_valid_register(index, MAX_HDD))
-		return ;
-	computer_data.valid_hdd_size[index] = (data & HDD_SZ_STATUS_MSK);
-	computer_data.hdd_tera_units[index] = (data & HDD_SZ_UNIT_MSK);
-	computer_data.hdd_size[index] = (computer_data.hdd_size[index] & ~ MSB_MSK) | ((data & HDD_SZ_MSK) << 8);
-	update_information_frame(SHOW_HDD_SIZE,information_present->info_data == index && computer_data.valid_hdd_size[information_present->info_data]);
+		return ;//////////
+	if (layout.direct.i2c[hdd_addr] & HDD_SZ_STATUS_MSK) {
+		computer_data.packed.hddsz[index] = (layout.direct.i2c[hdd_addr - 1] & ~ MSB_MSK) | ((layout.direct.i2c[hdd_addr] & HDD_SZ_MSK) << 8);
+		computer_data.packed.hdds |= (0x01 << index);
+		uint8_t factor = (layout.direct.i2c[hdd_addr] & HDD_SZ_UNIT_MSK) != 0 ? 1 : 0;
+		computer_data.packed.hddf |= (0x01 << index) & factor;
+		update_information_frame(SHOW_HDD_SIZE,information_present->info_data == index);
+	}
 }
 
 void reset_to_usb()
@@ -193,111 +186,123 @@ void validate_temperate(bool *valid_bit, uint8_t *dest, uint8_t src)
 	*dest = src;
 }
 
-void write_cpu_status(uint8_t status)
+void write_cpu_status()
 {
-	if (status == 0){
-		for (int i = 0; i < MAX_CPU; i++)
-			computer_data.valid_cpu_temp[i] = false;
+	if (layout.direct.i2c[CPUTS] == 0){
+		computer_data.packed.cputs = 0;
 	} else {
+		computer_data.packed.cputs |= layout.direct.i2c[CPUTS];
+		uint8_t *cpu_temp = &layout.l.cpu0t;
 		uint8_t bit = 0x01;
 		for (uint8_t i = 0 ; i < MAX_CPU; i++){
-			if (status & bit)
-				validate_temperate(&computer_data.valid_cpu_temp[i], &computer_data.cpu_temp[i], computer_temperature_registers.cpu_temp[i]);
+			if (layout.direct.i2c[CPUTS] & bit)
+				computer_data.packed.cput[i] = *cpu_temp;
+			cpu_temp++;
 			bit = bit << 1;
 		}
-		update_information_frame(SHOW_CPU_TEMPERTURE, information_present->info_data < MAX_CPU && computer_data.valid_cpu_temp[information_present->info_data]);
+		update_information_frame(SHOW_CPU_TEMPERTURE, information_present->info_data < MAX_CPU && (computer_data.packed.cputs &(0x01 << information_present->info_data)));
 	}
 }
 
-void write_hdd_status(uint8_t status)
+void write_hdd_status()
 {
-	if (status == 0){
-		for (int i = 0; i < MAX_HDD; i++)
-			computer_data.valid_hdd_temp[i] = false;
+	if (layout.direct.i2c[HDDTS]  == 0){
+		computer_data.packed.hddts = 0;
 	} else {
+		uint8_t *hdd_temp = &layout.l.hdd0t;
 		uint8_t bit = 0x01;
-		for (uint8_t i = 0 ; i < MAX_HDD; i++){
-			if (status & bit)
-				validate_temperate(&computer_data.valid_hdd_temp[i], &computer_data.hdd_temp[i], computer_temperature_registers.hdd_temp[i]);
+		for (uint8_t i = 0 ; i < MAX_CPU; i++){
+			if (layout.direct.i2c[CPUTS] & bit)
+				computer_data.packed.hddt[i] = *hdd_temp;
+			hdd_temp++;
 			bit = bit << 1;
 		}
-			update_information_frame(SHOW_HDD_TEMPERTURE, information_present->info_data < MAX_HDD && computer_data.valid_hdd_temp[information_present->info_data]);
+			update_information_frame(SHOW_HDD_TEMPERTURE, information_present->info_data < MAX_HDD &&(computer_data.packed.hddts &(0x01 << information_present->info_data)));
 	}
 }
 
-void write_reset(uint8_t data)
+void write_reset()
 {
-	computer_data.wen = (data & WEN_MSK) != 0;
-	if (data & RSTUSB_MSK)
+	if (layout.l.rst)
 		reset_to_usb();
-	else if (data & RST_MSK)
+	else if (layout.l.rstusb)
 		software_reset();
 }
-
-void write_post_code_lsb(uint8_t data)
+//
+void write_post_code_lsb()
 {
-	computer_data.bios_post_code = (computer_data.bios_post_code & ~LSB_MSK) | data;
+	computer_data.packed.post_code = layout.l.bios_post_code;
+	update_information_frame(SHOW_POST_CODE,true);
+}
+//
+//void write_post_code_msb(uint8_t data)
+//{
+//	computer_data.bios_post_code = (computer_data.bios_post_code & ~MSB_MSK) | (data << 8);
+//}
+
+void write_memory(uint8_t mem_addr)
+{
+	uint8_t index = (mem_addr - MEM01SZ) * 2;
+	uint8_t data = layout.direct.i2c[mem_addr];
+	computer_data.packed.memsz[index] = data & MEM_SZ_LSB_MSK;
+	if (data & MEM_SZ_STATUS_LSB_MSK)
+		computer_data.packed.mems |= 0x01 << index;
+	computer_data.packed.memsz[index + 1] = (data & MEM_SZ_MSB_MSK) >> 4;
+	if (data & MEM_SZ_STATUS_MSB_MSK)
+		computer_data.packed.mems |= 0x01 << (index + 1);
+	update_information_frame(SHOW_MEMORY_SIZE, information_present->info_data < MAX_MEMORY_SLOT && (computer_data.packed.mems & (0x01 <<information_present->info_data)));
 }
 
-void write_post_code_msb(uint8_t data)
-{
-	computer_data.bios_post_code = (computer_data.bios_post_code & ~MSB_MSK) | (data << 8);
-}
-
-void write_memory(uint8_t mem_addr, uint8_t data)
-{
-	uint8_t index = (mem_addr - MEM_SLOT01_ADDRESS) * 2;
-	computer_data.mem_slot_sz[index] = data & MEM_SZ_LSB_MSK;
-	computer_data.valid_mem[index] = data & MEM_SZ_STATUS_LSB_MSK;
-	computer_data.mem_slot_sz[index + 1] = (data & MEM_SZ_MSB_MSK) >> 4;
-	computer_data.valid_mem[index + 1] = data & MEM_SZ_STATUS_MSB_MSK;
-	update_information_frame(SHOW_MEMORY_SIZE, information_present->info_data < MAX_MEMORY_SLOT && computer_data.valid_mem[information_present->info_data]);
-}
-
-void read_sig(uint8_t sig_address, uint8_t *data)
+void read_sig(enum i2c_addr_space sig_address, uint8_t *data)
 {
 	switch(sig_address){
-	case SIG_FIRST_BYTE_ADDRESS:
+	case SIG0ADDR:
 		*data = eeprom_read_byte(SIG_FIRST_BYTE_EEPROM_ADDRESS);
 		break;
-	case SIG_SECOND_BYTE_ADDRESS:
+	case SIG1ADDR:
 		*data = eeprom_read_byte(SIG_SECOND_BYTE_EEPROM_ADDRESS);
 		break;
-	case SIG_THIRD_BYTE_ADDRESS:
+	case SIG2ADDR:
 		*data = eeprom_read_byte(SIG_THIRD_BYTE_EEPROM_ADDRESS);
 		break;
-	case SIG_FOURTH_BYTE_ADDRESS:
+	case SIG3ADDR:
 		*data = eeprom_read_byte(SIG_FOURTH_BYTE_EEPROM_ADDRESS);
 		break;
+	default:
+		break;
 	}
 }
 
-void read_revision(uint8_t rev_address, uint8_t *data)
+void read_revision(enum i2c_addr_space rev_address, uint8_t *data)
 {
 	switch (rev_address){
-	case MAJOR_REVISION_LSB_ADDRESS:
+	case MAJOR_REV_LSB:
 		*data = eeprom_read_byte(MAJOR_REVISION_LSB_EEPROM_ADDRESS);
 		break;
-	case MAJOR_REVISION_MSB_ADDRESS:
+	case MAJOR_REV_MSB:
 		*data = eeprom_read_byte(MAJOR_REVISION_MSB_EEPROM_ADDRESS);
 		break;
-	case MINOR_REVISION_LSB_ADDRESS:
+	case MINOR_REV_LSB:
 		*data = eeprom_read_byte(MINOR_REVISION_LSB_EEPROM_ADDRESS);
 		break;
-	case MINOR_REVISION_MSB_ADDRESS:
+	case MINOR_REV_MSB:
 		*data = eeprom_read_byte(MINOR_REVISION_MSB_EEPROM_ADDRESS);
+		break;
+	default:
 		break;
 	}
 }
 
-void read_bios_post_code(uint8_t post_code_address, uint8_t *data)
+void read_bios_post_code(enum i2c_addr_space post_code_address, uint8_t *data)
 {
 	switch(post_code_address){
-	case POST_CODE_LSB_ADDRESS:
-		*data = computer_data.bios_post_code & LSB_MSK;
+	case BIOS_POST_CODE_LSB:
+		*data = computer_data.details.post_code_lsb;
 		break;
-	case POST_CODE_MSB_ADDRESS:
-		*data = computer_data.bios_post_code >> 8;
+	case BIOS_POST_CODE_MSB:
+		*data = computer_data.details.post_code_msb;
+		break;
+	default:
 		break;
 	}
 }
@@ -327,84 +332,62 @@ void read_power_state(uint8_t *data)
 
 void read_ambient(uint8_t *data)
 {
-	if (computer_data.valid_ambient_temp)
-		*data = computer_data.ambient_temp;
+	if (layout.l.ambs != 0)
+		*data = layout.l.ambt;
 	else
 		*data = DEFAULT_DATA;
 }
 
-void read_adc(uint8_t adc_address, uint8_t *data)
+void read_adc(enum i2c_addr_space adc_address, uint8_t *data)
 {
 	switch (adc_address){
-	case ADC_LSB_ADDRESS:
+	case ADC_LSB:
 		//TODO
 		break;
-	case ADC_MSB_ADDRESS:
+	case ADC_MSB:
 		//TODO
+		break;
+	default:
 		break;
 	}
 }
 
 void read_wen(uint8_t *data)
 {
-	*data = computer_data.wen;
+	*data = layout.l.iwen;
 }
 
-void read_cpu_temp(uint8_t cpu_address, uint8_t *data)
-{
-	uint8_t temp = 0x00;
-	uint8_t index = cpu_address - CPU0_TEMP_ADDRESS;
-	if (is_valid_register(index, MAX_CPU))
-		temp = computer_temperature_registers.cpu_temp[index];
-	*data = temp;
-}
+//void read_cpu_temp(uint8_t cpu_address, uint8_t *data)
+//{
+//	uint8_t temp = 0x00;
+//	uint8_t index = cpu_address - CPU0_TEMP_ADDRESS;
+//	if (is_valid_register(index, MAX_CPU))
+//		temp = computer_temperature_registers.cpu_temp[index];
+//	*data = temp;
+//}
 
-void read_hdd_temp(uint8_t hdd_address, uint8_t *data)
-{
-	uint8_t temp = 0x00;
-	uint8_t index = hdd_address - HDD0_TEMP_ADDRESS;
-	if (is_valid_register(index, MAX_HDD))
-		temp = computer_temperature_registers.hdd_temp[index];
-	*data = temp;
-}
+//void read_hdd_temp(uint8_t hdd_address, uint8_t *data)
+//{
+//	uint8_t temp = 0x00;
+//	uint8_t index = hdd_address - HDD0_TEMP_ADDRESS;
+//	if (is_valid_register(index, MAX_HDD))
+//		temp = computer_temperature_registers.hdd_temp[index];
+//	*data = temp;
+//}
 
 void read_hdd_status(uint8_t *data)
 {
-	uint8_t valid_bits = 0x00;
-	uint8_t curr_bit = 0x01;
-	for (int i = 0; i < MAX_HDD; i++){
-		if (computer_data.valid_hdd_temp[i])
-			valid_bits |= curr_bit;
-		curr_bit = curr_bit << 1;
-	}
-	*data = curr_bit;
+	*data = computer_data.packed.hddts;
 }
 
 void read_cpu_stauts(uint8_t *data)
 {
-	uint8_t valid_bits = 0x00;
-	uint8_t curr_bit = 0x01;
-	for (int i = 0; i < MAX_CPU; i++){
-		if (computer_data.valid_cpu_temp[i])
-			valid_bits |= curr_bit;
-		curr_bit = curr_bit << 1;
-	}
-	*data = valid_bits;
+	*data = computer_data.packed.cputs;
 }
 
 void read_pending_requests(uint8_t *data)
 {
-	uint8_t req = 0x00;
-	if (computer_data.req_cpu_temp || computer_data.req_cpu_fq || computer_data.req_gpu_temp){
-		req &= REQUEST_ENABLE;
-		if (computer_data.req_cpu_temp)
-			req &= REQUEST_CPUT;
-		if (computer_data.req_cpu_fq)
-			req &= REQUEST_CPUF;
-		if (computer_data.req_gpu_temp)
-			req &= REQUEST_GPUT;
-	}
-	*data = req;
+	*data = 0x0f & computer_data.packed.pending_req;
 }
 
 void set_direct_string()
@@ -417,10 +400,10 @@ void set_direct_string()
 
 void add_direct_string()
 {
-	direct_string_to_add->next = computer_data.direct_string;
-	computer_data.direct_string = direct_string_to_add;
-	direct_string_to_add = 0;
-	init_direct_write_vars();
+//	direct_string_to_add->next = computer_data.direct_string;
+//	computer_data.direct_string = direct_string_to_add;
+//	direct_string_to_add = 0;
+//	init_direct_write_vars();
 }
 
 
@@ -440,6 +423,12 @@ void end_direct_string(bool is_written_type)
 	is_last_type = !is_last_type;
 }
 
+bool is_iwren_mode()
+{
+	bool res = layout.l.iwen != 0;
+	layout.l.iwen = 0;
+	return res;
+}
 
 void write_byte_direct_string(bool is_written_type, uint8_t data)
 {
@@ -482,210 +471,355 @@ void write_direct_byte(bool is_written_type, uint8_t data)
 	}
 }
 
-void write_direct(uint8_t write_address, uint8_t data)
+void write_direct(enum i2c_addr_space write_address)
 {
 	switch (write_address){
-	case DIRECT_TYPE_ADDRESS:
-		write_direct_byte(true, data);
+	case DMI_NAME:
+		write_direct_byte(true, layout.l.dmi_name);
 		break;
-	case DIRECT_CONTENT_ADDRESS:
-		write_direct_byte(false,data);
+	case DMI_VALUE:
+		write_direct_byte(false,layout.l.dmi_value);
 		break;
-	}
-
-}
-
-void handle_sram_read_request(uint8_t read_address, uint8_t *data)
-{
-	*data = DEFAULT_DATA;
-	switch(read_address){
-	case SIG_FIRST_BYTE_ADDRESS:
-	case SIG_SECOND_BYTE_ADDRESS:
-	case SIG_THIRD_BYTE_ADDRESS:
-	case SIG_FOURTH_BYTE_ADDRESS:
-		read_sig(read_address, data);
-		break;
-	case MAJOR_REVISION_LSB_ADDRESS:
-	case MAJOR_REVISION_MSB_ADDRESS:
-	case MINOR_REVISION_LSB_ADDRESS:
-	case MINOR_REVISION_MSB_ADDRESS:
-		read_revision(read_address, data);
-		break;
-	case LAYOUT_VERSION_ADDRESS:
-		read_layout(data);
-		break;
-	case POST_CODE_LSB_ADDRESS:
-	case POST_CODE_MSB_ADDRESS:
-		read_bios_post_code(read_address, data);
-		break;
-	case POWER_STATE_ADDRESS:
-		read_power_state(data);
-		break;
-	case AMBIENT_TEMP_ADDRESS:
-		read_ambient(data);
-		break;
-	case ADC_LSB_ADDRESS:
-	case ADC_MSB_ADDRESS:
-		read_adc(read_address, data);
-		break;
-	case RESET_ADDRESS:
-		read_wen(data);
-		break;
-	case REQUEST_ADDRESS:
-		read_pending_requests(data);
-		break;
-	case RTC_TIME_ADDRESS:
-	case RTC_DATE_ADDRESS:
-//		read_rtc(read_address, data); TODO
-		break;
-	case CPU0_TEMP_ADDRESS:
-	case CPU1_TEMP_ADDRESS:
-	case CPU2_TEMP_ADDRESS:
-	case CPU3_TEMP_ADDRESS:
-	case CPU4_TEMP_ADDRESS:
-	case CPU5_TEMP_ADDRESS:
-	case CPU6_TEMP_ADDRESS:
-	case CPU7_TEMP_ADDRESS:
-		read_cpu_temp(read_address, data);
-		break;
-	case CPU_STATUS_ADDRESS:
-		read_cpu_stauts(data);
-		break;
-	case HDD0_TEMP_ADDRESS:
-	case HDD1_TEMP_ADDRESS:
-	case HDD2_TEMP_ADDRESS:
-	case HDD3_TEMP_ADDRESS:
-	case HDD4_TEMP_ADDRESS:
-	case HDD5_TEMP_ADDRESS:
-	case HDD6_TEMP_ADDRESS:
-	case HDD7_TEMP_ADDRESS:
-		read_hdd_temp(read_address, data);
-		break;
-	case HDD_STATUS_ADDRESS:
-		read_hdd_status(data);
-		break;
-	case CPU0F_MSB_ADDRESS:
-	case CPU1F_MSB_ADDRESS:
-	case CPU2F_MSB_ADDRESS:
-	case CPU3F_MSB_ADDRESS:
-	case CPU4F_MSB_ADDRESS:
-	case CPU5F_MSB_ADDRESS:
-	case CPU6F_MSB_ADDRESS:
-	case CPU7F_MSB_ADDRESS:
-		read_cpu_fq_msb(read_address, data);
-		break;
-	case CPU0F_LSB_ADDRESS:
-	case CPU1F_LSB_ADDRESS:
-	case CPU2F_LSB_ADDRESS:
-	case CPU3F_LSB_ADDRESS:
-	case CPU4F_LSB_ADDRESS:
-	case CPU5F_LSB_ADDRESS:
-	case CPU6F_LSB_ADDRESS:
-	case CPU7F_LSB_ADDRESS:
-		read_cpu_fq_lsb(read_address, data);
-		break;
-	case TEMPERTURE_CONTROL_ADDRESS:
-		read_temp_control(data);
+	default:
 		break;
 	}
 }
 
-void write_gpu_temp(uint8_t temp)
+void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 {
-	computer_temperature_registers.gpu_temp = temp;
+	switch (addr) {
+	case SIG0ADDR:
+	case SIG1ADDR:
+	case SIG2ADDR:
+	case SIG3ADDR:
+	case LAYOUT_VER:
+	case MAJOR_REV_LSB:
+	case MAJOR_REV_MSB:
+	case MINOR_REV_LSB:
+	case MINOR_REV_MSB:
+	case RTC_TIME:
+	case RTC_DATE:
+	case ADC_LSB:
+	case ADC_MSB:
+	case AMBT:
+	case OTHER_TEMPERATURE_REGISTERS:
+	case BIOS_POST_CODE_LSB:
+	case BIOS_POST_CODE_MSB:
+	case RESET:
+	case PENDING_CONTROL:
+	case PENDING_DESC0:
+	case POWER_STATE:
+		*data = layout.direct.i2c[addr];
+		break;
+	case HDD0T:
+	case HDD1T:
+	case HDD2T:
+	case HDD3T:
+	case HDD4T:
+	case HDD5T:
+	case HDD6T:
+	case HDD7T:
+	case HDDTS:
+	case HDD0_SZ_LSB:
+	case HDD1_SZ_LSB:
+	case HDD2_SZ_LSB:
+	case HDD3_SZ_LSB:
+	case HDD4_SZ_LSB:
+	case HDD5_SZ_LSB:
+	case HDD6_SZ_LSB:
+	case HDD7_SZ_LSB:
+	case HDD0_SZ_MSB:
+	case HDD1_SZ_MSB:
+	case HDD2_SZ_MSB:
+	case HDD3_SZ_MSB:
+	case HDD4_SZ_MSB:
+	case HDD5_SZ_MSB:
+	case HDD6_SZ_MSB:
+	case HDD7_SZ_MSB:
+	case MEM01SZ:
+	case MEM23SZ:
+	case CPU0T:
+	case CPU1T:
+	case CPU2T:
+	case CPU3T:
+	case CPU4T:
+	case CPU5T:
+	case CPU6T:
+	case CPU7T:
+	case CPUTS:
+	case CPU0F_MSB:
+	case CPU1F_MSB:
+	case CPU2F_MSB:
+	case CPU3F_MSB:
+	case CPU4F_MSB:
+	case CPU5F_MSB:
+	case CPU6F_MSB:
+	case CPU7F_MSB:
+	case CPU0F_LSB:
+	case CPU1F_LSB:
+	case CPU2F_LSB:
+	case CPU3F_LSB:
+	case CPU4F_LSB:
+	case CPU5F_LSB:
+	case CPU6F_LSB:
+	case CPU7F_LSB:
+	case GPUT:
+	case DMI_NAME:
+	case DMI_VALUE:
+	default:
+		if (is_iwren_mode())
+			*data = layout.direct.i2c[addr];
+		break;
+	}
+}
+//
+//void handle_sram_read_request(enum i2c_addr_space i2c_addr, uint8_t *data)
+//{
+//	*data = DEFAULT_DATA;
+//	switch(i2c_addr){
+//	case SIG0ADDR:
+//	case SIG1ADDR:
+//	case SIG2ADDR:
+//	case SIG3ADDR:
+//		read_sig(i2c_addr, data);
+//		break;
+//	case MAJOR_REV_LSB:
+//	case MAJOR_REV_MSB:
+//	case MINOR_REV_LSB:
+//	case MINOR_REV_MSB:
+//		read_revision(i2c_addr, data);
+//		break;
+//	case LAYOUT_VER:
+//		read_layout(data);
+//		break;
+//	case BIOS_POST_CODE_LSB:
+//	case BIOS_POST_CODE_MSB:
+//		read_bios_post_code(i2c_addr, data);
+//		break;
+//	case POWER_STATE:
+//		read_power_state(data);
+//		break;
+//	case AMBT:
+//		read_ambient(data);
+//		break;
+//	case ADC_LSB:
+//	case ADC_MSB:
+//		read_adc(i2c_addr, data);
+//		break;
+//	case RESET:
+//		read_wen(data);
+//		break;
+//	case PENDING_CONTROL:
+//		read_pending_requests(data);
+//		break;
+//	case RTC_TIME:
+//	case RTC_DATE:
+////		read_rtc(i2c_addr, data); TODO
+//		break;
+//	case CPU0T:
+//	case CPU1T:
+//	case CPU2T:
+//	case CPU3T:
+//	case CPU4T:
+//	case CPU5T:
+//	case CPU6T:
+//	case CPU7T:
+////		read_cpu_temp(i2c_addr, data);
+//		break;
+//	case CPUTS:
+//		read_cpu_stauts(data);
+//		break;
+//	case HDD0T:
+//	case HDD1T:
+//	case HDD2T:
+//	case HDD3T:
+//	case HDD4T:
+//	case HDD5T:
+//	case HDD6T:
+//	case HDD7T:
+////		read_hdd_temp(i2c_addr, data);
+//		break;
+//	case HDDTS:
+//		read_hdd_status(data);
+//		break;
+//	case CPU0F_MSB:
+//	case CPU1F_MSB:
+//	case CPU2F_MSB:
+//	case CPU3F_MSB:
+//	case CPU4F_MSB:
+//	case CPU5F_MSB:
+//	case CPU6F_MSB:
+//	case CPU7F_MSB:
+////		read_cpu_fq_msb(i2c_addr, data);
+//		break;
+//	case CPU0F_LSB:
+//	case CPU1F_LSB:
+//	case CPU2F_LSB:
+//	case CPU3F_LSB:
+//	case CPU4F_LSB:
+//	case CPU5F_LSB:
+//	case CPU6F_LSB:
+//	case CPU7F_LSB:
+////		read_cpu_fq_lsb(i2c_addr, data);
+//		break;
+//	case OTHER_TEMPERATURE_REGISTERS:
+//		read_temp_control(data);
+//		break;
+//	default:
+//		break;
+//	}
+//}
+
+void write_gpu_temp()
+{
+	if (layout.l.gput != computer_data.details.gput) {
+		computer_data.details.gput = layout.l.gput;
+		update_information_frame(SHOW_GPU_TEMPERTURE, true);
+	}
+}
+
+void update_data(uint8_t write_address)
+{
+	switch (write_address){
+		case GPUT:
+			write_gpu_temp();
+			break;
+		case CPUTS:
+			write_cpu_status();
+			break;
+		case HDDTS:
+			write_hdd_status();
+			break;
+		case CPU0F_MSB:
+		case CPU1F_MSB:
+		case CPU2F_MSB:
+		case CPU3F_MSB:
+		case CPU4F_MSB:
+		case CPU5F_MSB:
+		case CPU6F_MSB:
+		case CPU7F_MSB:
+			write_cpu_fq_msb(write_address);
+			break;
+		case MEM01SZ:
+		case MEM23SZ:
+			write_memory(write_address);
+			break;
+		case OTHER_TEMPERATURE_REGISTERS:
+			write_temp_control();
+			break;
+		case BIOS_POST_CODE_LSB:
+		write_post_code_lsb();
+			break;
+		case HDD0_SZ_MSB:
+		case HDD1_SZ_MSB:
+		case HDD2_SZ_MSB:
+		case HDD3_SZ_MSB:
+		case HDD4_SZ_MSB:
+		case HDD5_SZ_MSB:
+		case HDD6_SZ_MSB:
+		case HDD7_SZ_MSB:
+			write_hd_sz_msb(write_address);
+			break;
+		case DMI_NAME:
+		case DMI_VALUE:
+			write_direct(write_address);
+			break;
+		case RESET:
+			write_reset();
+			break;
+	}
+}
+
+void write_data(enum i2c_addr_space addr, uint8_t data)
+{
+	switch (addr) {
+	case RTC_TIME:
+	case RTC_DATE:
+	case ADC_LSB:
+	case ADC_MSB:
+	case AMBT:
+	case GPUT:
+	case CPU0T:
+	case CPU1T:
+	case CPU2T:
+	case CPU3T:
+	case CPU4T:
+	case CPU5T:
+	case CPU6T:
+	case CPU7T:
+	case CPUTS:
+	case HDD0T:
+	case HDD1T:
+	case HDD2T:
+	case HDD3T:
+	case HDD4T:
+	case HDD5T:
+	case HDD6T:
+	case HDD7T:
+	case HDDTS:
+	case CPU0F_MSB:
+	case CPU1F_MSB:
+	case CPU2F_MSB:
+	case CPU3F_MSB:
+	case CPU4F_MSB:
+	case CPU5F_MSB:
+	case CPU6F_MSB:
+	case CPU7F_MSB:
+	case CPU0F_LSB:
+	case CPU1F_LSB:
+	case CPU2F_LSB:
+	case CPU3F_LSB:
+	case CPU4F_LSB:
+	case CPU5F_LSB:
+	case CPU6F_LSB:
+	case CPU7F_LSB:
+	case MEM01SZ:
+	case MEM23SZ:
+	case OTHER_TEMPERATURE_REGISTERS:
+	case BIOS_POST_CODE_LSB:
+	case BIOS_POST_CODE_MSB:
+	case HDD0_SZ_LSB:
+	case HDD1_SZ_LSB:
+	case HDD2_SZ_LSB:
+	case HDD3_SZ_LSB:
+	case HDD4_SZ_LSB:
+	case HDD5_SZ_LSB:
+	case HDD6_SZ_LSB:
+	case HDD7_SZ_LSB:
+	case HDD0_SZ_MSB:
+	case HDD1_SZ_MSB:
+	case HDD2_SZ_MSB:
+	case HDD3_SZ_MSB:
+	case HDD4_SZ_MSB:
+	case HDD5_SZ_MSB:
+	case HDD6_SZ_MSB:
+	case HDD7_SZ_MSB:
+	case DMI_NAME:
+	case DMI_VALUE:
+	case RESET:
+	case PENDING_CONTROL:
+	case PENDING_DESC0:
+	case POWER_STATE:
+		layout.direct.i2c[addr] = data;
+		break;
+	case SIG0ADDR:
+	case SIG1ADDR:
+	case SIG2ADDR:
+	case SIG3ADDR:
+	case LAYOUT_VER:
+	case MAJOR_REV_LSB:
+	case MAJOR_REV_MSB:
+	case MINOR_REV_LSB:
+	case MINOR_REV_MSB:
+	default:
+		if (is_iwren_mode())
+			layout.direct.i2c[addr] = data;
+		break;
+	}
 }
 
 void handle_sram_write_request(uint8_t write_address, uint8_t data)
 {
-	switch (write_address){
-		case GPU_TEMP_ADDRESS:
-			write_gpu_temp(data);
-			break;
-		case CPU0_TEMP_ADDRESS:
-		case CPU1_TEMP_ADDRESS:
-		case CPU2_TEMP_ADDRESS:
-		case CPU3_TEMP_ADDRESS:
-		case CPU4_TEMP_ADDRESS:
-		case CPU5_TEMP_ADDRESS:
-		case CPU6_TEMP_ADDRESS:
-		case CPU7_TEMP_ADDRESS:
-			write_cpu_temp(write_address, data);
-			break;
-		case CPU_STATUS_ADDRESS:
-			write_cpu_status(data);
-			break;
-		case HDD0_TEMP_ADDRESS:
-		case HDD1_TEMP_ADDRESS:
-		case HDD2_TEMP_ADDRESS:
-		case HDD3_TEMP_ADDRESS:
-		case HDD4_TEMP_ADDRESS:
-		case HDD5_TEMP_ADDRESS:
-		case HDD6_TEMP_ADDRESS:
-		case HDD7_TEMP_ADDRESS:
-			write_hdd_temp(write_address, data);
-			break;
-		case HDD_STATUS_ADDRESS:
-			write_hdd_status(data);
-			break;
-		case CPU0F_MSB_ADDRESS:
-		case CPU1F_MSB_ADDRESS:
-		case CPU2F_MSB_ADDRESS:
-		case CPU3F_MSB_ADDRESS:
-		case CPU4F_MSB_ADDRESS:
-		case CPU5F_MSB_ADDRESS:
-		case CPU6F_MSB_ADDRESS:
-		case CPU7F_MSB_ADDRESS:
-			write_cpu_fq_msb(write_address, data);
-			break;
-		case CPU0F_LSB_ADDRESS:
-		case CPU1F_LSB_ADDRESS:
-		case CPU2F_LSB_ADDRESS:
-		case CPU3F_LSB_ADDRESS:
-		case CPU4F_LSB_ADDRESS:
-		case CPU5F_LSB_ADDRESS:
-		case CPU6F_LSB_ADDRESS:
-		case CPU7F_LSB_ADDRESS:
-			write_cpu_fq_lsb(write_address, data);
-			break;
-		case MEM_SLOT01_ADDRESS:
-		case MEM_SLOT23_ADDRESS:
-			write_memory(write_address, data);
-			break;
-		case TEMPERTURE_CONTROL_ADDRESS:
-			write_temp_control(data);
-			break;
-		case POST_CODE_LSB_ADDRESS:
-			write_post_code_lsb(data);
-			break;
-		case POST_CODE_MSB_ADDRESS:
-			write_post_code_msb(data);
-			break;
-		case HDD0_LSB_SZ_ADDRESS:
-		case HDD1_LSB_SZ_ADDRESS:
-		case HDD2_LSB_SZ_ADDRESS:
-		case HDD3_LSB_SZ_ADDRESS:
-		case HDD4_LSB_SZ_ADDRESS:
-		case HDD5_LSB_SZ_ADDRESS:
-		case HDD6_LSB_SZ_ADDRESS:
-		case HDD7_LSB_SZ_ADDRESS:
-			write_hd_sz_lsb(write_address, data);
-			break;
-		case HDD0_MSB_SZ_ADDRESS:
-		case HDD1_MSB_SZ_ADDRESS:
-		case HDD2_MSB_SZ_ADDRESS:
-		case HDD3_MSB_SZ_ADDRESS:
-		case HDD4_MSB_SZ_ADDRESS:
-		case HDD5_MSB_SZ_ADDRESS:
-		case HDD6_MSB_SZ_ADDRESS:
-		case HDD7_MSB_SZ_ADDRESS:
-			write_hd_sz_msb(write_address, data);
-			break;
-		case DIRECT_CONTENT_ADDRESS:
-		case DIRECT_TYPE_ADDRESS:
-			write_direct(write_address, data);
-			break;
-		case RESET_ADDRESS:
-			write_reset(data);
-			break;
-	}
+	write_data(write_address, data);
+	update_data(write_address);
 }

@@ -98,10 +98,10 @@ void set_mem_size_str(char *str, uint8_t mem)
 	}
 }
 
-void set_hdd_size_str(char *str, uint16_t size, bool is_tera_units)
+void set_hdd_size_str(char *str, uint16_t size, bool is_tera)
 {
 	char * units;
-	if (is_tera_units)
+	if (is_tera)
 			units = " TB";
 		else
 			units = " GB";
@@ -120,42 +120,238 @@ void set_temp_string(char *str, int8_t temperature)
 
 void set_cpu_updated_temp(char *data, uint8_t cpu_id)
 {
-	if (computer_data.valid_cpu_temp[cpu_id]){
-	uint8_t temp = computer_data.cpu_temp[cpu_id];
+	if ((computer_data.packed.cputs & (0x01 << cpu_id)) != 0){
+	uint8_t temp = computer_data.details.cput[cpu_id];
 		set_temp_string(data, temp);
 	} else {
 		set_invalid_string(data);
 	}
 }
 
+//bool is_valid_mem(uint8_t id)
+//{
+//	bool res = false;
+//	switch (id) {
+//	case 0:
+//		res = computer_data.details.mem0s == 1;
+//		break;
+//	case 1:
+//		res = computer_data.details.mem1s == 1;
+//		break;
+//	case 2:
+//		res = computer_data.details.mem2s == 1;
+//		break;
+//	case 3:
+//		res = computer_data.details.mem3s == 1;
+//		break;
+//	default:
+//		break;
+//	}
+//	return res;
+//}
+//
+//bool is_valid_hdd(uint8_t id)
+//{
+//	bool res = false;
+//	switch (id) {
+//	case 0:
+//		res = computer_data.details.hdd0s == 1;
+//		break;
+//	case 1:
+//		res = computer_data.details.hdd1s == 1;
+//		break;
+//	case 2:
+//		res = computer_data.details.hdd2s == 1;
+//		break;
+//	case 3:
+//		res = computer_data.details.hdd3s == 1;
+//		break;
+//	case 4:
+//		res = computer_data.details.hdd4s == 1;
+//		break;
+//	case 5:
+//		res = computer_data.details.hdd5s == 1;
+//		break;
+//	case 6:
+//		res = computer_data.details.hdd6s == 1;
+//		break;
+//	case 7:
+//		res = computer_data.details.hdd7s == 1;
+//		break;
+//	default:
+//		break;
+//	}
+//	return res;
+//}
+//
+//bool is_valid_cpu_fq(uint8_t id)
+//{
+//	bool res = false;
+//	switch (id) {
+//	case 0:
+//		res = computer_data.details.cpu0fs == 1;
+//		break;
+//	case 1:
+//		res = computer_data.details.cpu1fs == 1;
+//		break;
+//	case 2:
+//		res = computer_data.details.cpu2fs == 1;
+//		break;
+//	case 3:
+//		res = computer_data.details.cpu3fs == 1;
+//		break;
+//	case 4:
+//		res = computer_data.details.cpu4fs == 1;
+//		break;
+//	case 5:
+//		res = computer_data.details.cpu5fs == 1;
+//		break;
+//	case 6:
+//		res = computer_data.details.cpu6fs == 1;
+//		break;
+//	case 7:
+//		res = computer_data.details.cpu7fs == 1;
+//		break;
+//	default:
+//		break;
+//	}
+//	return res;
+//}
+//
+//uint8_t get_mem_sz(uint8_t id)
+//{
+//	uint8_t size = 0;
+//	switch (id) {
+//	case 0:
+//		size = computer_data.details.mem0sz;
+//		break;
+//	case 1:
+//		size = computer_data.details.mem1sz;
+//		break;
+//	case 2:
+//		size = computer_data.details.mem2sz;
+//		break;
+//	case 3:
+//		size = computer_data.details.mem3sz;
+//		break;
+//	default:
+//		break;
+//	}
+//	return size;
+//}
+//
+//uint16_t get_hdd_sz_with_factor(uint8_t id)
+//{
+//	uint16_t size = 0;
+//	switch (id) {
+//	case 0:
+//		size = computer_data.details.hdd0sz;
+//		if (computer_data.details.hdd0f == 1)
+//			size |= 0x0400;
+//		break;
+//	case 1:
+//		size = computer_data.details.hdd1sz;
+//		if (computer_data.details.hdd1f == 1)
+//			size |= 0x0400;
+//		break;
+//	case 2:
+//		size = computer_data.details.hdd2sz;
+//			if (computer_data.details.hdd2f == 1)
+//				size |= 0x0400;
+//			break;
+//	case 3:
+//		size = computer_data.details.hdd3sz;
+//			if (computer_data.details.hdd3f == 1)
+//				size |= 0x0400;
+//			break;
+//	case 4:
+//			size = computer_data.details.hdd4sz;
+//			if (computer_data.details.hdd4f == 1)
+//				size |= 0x0400;
+//			break;
+//	case 5:
+//		size = computer_data.details.hdd5sz;
+//		if (computer_data.details.hdd5f == 1)
+//			size |= 0x0400;
+//		break;
+//	case 6:
+//		size = computer_data.details.hdd6sz;
+//		if (computer_data.details.hdd6f == 1)
+//			size |= 0x0400;
+//		break;
+//	case 7:
+//		size = computer_data.details.hdd7sz;
+//		if (computer_data.details.hdd7f == 1)
+//			size |= 0x0400;
+//			break;
+//	default:
+//		break;
+//	}
+//	return size;
+//}
+//
+//uint16_t get_cpu_fq(uint8_t id)
+//{
+//	uint16_t fq = 0;
+//	switch (id) {
+//	case 0:
+//		fq = computer_data.details.cpu0f;
+//		break;
+//	case 1:
+//		fq = computer_data.details.cpu1f;
+//		break;
+//	case 2:
+//		fq = computer_data.details.cpu2f;
+//		break;
+//	case 3:
+//		fq = computer_data.details.cpu3f;
+//		break;
+//	case 4:
+//		fq = computer_data.details.cpu4f;
+//		break;
+//	case 5:
+//		fq = computer_data.details.cpu5f;
+//		break;
+//	case 6:
+//		fq = computer_data.details.cpu6f;
+//		break;
+//	case 7:
+//		fq = computer_data.details.cpu7f;
+//		break;
+//	default:
+//		break;
+//	}
+//	return fq;
+//}
+
 void set_updated_memory_size(char *output_str, uint8_t mem_id)
 {
-	if (computer_data.valid_mem[mem_id])
-		set_mem_size_str(output_str, computer_data.mem_slot_sz[mem_id]);
+	if ((computer_data.packed.mems & (0x01 << mem_id)))
+		set_mem_size_str(output_str, computer_data.packed.memsz[mem_id]);
 	else
 		set_invalid_string(output_str);
 }
 
 void set_updated_hdd_size(char *output_str, uint8_t hdd_id)
 {
-	if (computer_data.valid_hdd_size[hdd_id])
-		set_hdd_size_str(output_str, computer_data.hdd_size[hdd_id], computer_data.hdd_tera_units[hdd_id]);
+	if (computer_data.packed.hdds & (0x01 << hdd_id))
+		set_hdd_size_str(output_str, computer_data.packed.hddsz[hdd_id], computer_data.packed.hddf & (0x01 << hdd_id));
 	else
 		set_invalid_string(output_str);
 }
 
 void set_updated_cpu_frequency(char *output_str, uint8_t cpu_id)
 {
-	if (computer_data.valid_cpu_fq[cpu_id])
-		set_fq_string(output_str, computer_data.cpu_fq[cpu_id]);
+	if (computer_data.packed.cpufs & (0x01 << cpu_id))
+		set_fq_string(output_str, computer_data.packed.cpuf[cpu_id]);
 	else
 		set_invalid_string(output_str);
 }
 
 void set_updated_ambient_temp(char *output_str)
 {
-	if (computer_data.valid_ambient_temp)
-		set_temp_string(output_str, computer_data.ambient_temp);
+	if (computer_data.details.ambs == 1)
+		set_temp_string(output_str, computer_data.details.ambt);
 	else
 		set_invalid_string(output_str);
 }
@@ -173,8 +369,8 @@ void update_adc()
 
 void set_updated_gpu_temp(char *output_str)
 {
-	if (computer_data.valid_gpu_temp)
-		set_temp_string(output_str, computer_data.gpu_temp);
+	if (computer_data.details.gpus == 1)
+		set_temp_string(output_str, computer_data.details.gput);
 	else
 		set_invalid_string(output_str);
 }
@@ -199,18 +395,16 @@ void set_product_name(char *output_str)
 
 void set_mac_address(char *output_str)
 {
-	char mac_address[MAC_ADDRESS_LENGTH + 1];
+	uint8_t mac_address[MAC_ADDRESS_LENGTH];
 	for (int i = 0; i < MAC_ADDRESS_LENGTH; i++)
 		mac_address[i] = eeprom_read_byte(MAC_ADDRESS_EEPROM_ADDRESS + i);
-	mac_address[MAC_ADDRESS_LENGTH] = '\0';
-	strcpy(output_str, mac_address);
+	sprintf(output_str, "%02x%02x%02x%02x%02x%02x", mac_address[0], mac_address[1], mac_address[2], mac_address[3], mac_address[4], mac_address[5]);
 }
 
 void set_update_hdd_temp(char *output_str, uint8_t hdd_id)
 {
-	uint8_t temp = computer_data.hdd_temp[hdd_id];
-	if (computer_data.valid_hdd_temp[hdd_id])
-		set_temp_string(output_str,temp);
+	if ((computer_data.packed.hddts & (0x01 << hdd_id)) != 0)
+		set_temp_string(output_str, computer_data.packed.hddt[hdd_id]);
 	else
 		set_invalid_string(output_str);
 }
@@ -245,16 +439,16 @@ void handle_brightness_buttons(uint8_t key)
 
 void set_dmi_content(char *output_str, uint8_t string_id)
 {
-	uint8_t count = 0;
-	struct direct_string_item * string_item = computer_data.direct_string;
-	while (string_item != 0 && count < string_id){
-		string_item = string_item->next;
-		count++;
-	}
-	if (count == string_id)
-		output_str = strdup(string_item->content);
-	else
-		set_invalid_string(output_str);
+//	uint8_t count = 0;
+//	struct direct_string_item * string_item = computer_data.direct_string;
+//	while (string_item != 0 && count < string_id){
+//		string_item = string_item->next;
+//		count++;
+//	}
+//	if (count == string_id)
+//		output_str = strdup(string_item->content);
+//	else
+//		set_invalid_string(output_str);
 }
 
 void set_brightness(char *str)
@@ -288,16 +482,13 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 		set_power_data(output_str);
 		break;
 	case SHOW_SERIAL_NUMBER:
-//		set_serial_number(output_str);
-		strcpy(output_str, "TEST12TEST"); //TODO
+		set_serial_number(output_str);
 		break;
 	case SHOW_PRODUCT_NAME:
-//		set_product_name(output_str);
-		strcpy(output_str, "1.0"); //TODO
+		set_product_name(output_str);
 		break;
 	case SHOW_MAC_ADDRESS:
-//		set_mac_address(output_str);
-		strcpy(output_str, "0t:3e:4s:5t"); //TODO
+		set_mac_address(output_str);
 		break;
 	case SHOW_POWER_STATE:
 		set_state(output_str);

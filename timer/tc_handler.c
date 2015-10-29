@@ -38,25 +38,25 @@ void disable_sleep_mode()
 void update_ambient_temp()
 {
 	bool valid_update;
-	uint8_t last_temp = computer_data.ambient_temp;
-	bool last_valid = computer_data.valid_ambient_temp;
+	uint8_t last_temp = layout.l.ambt;
+	bool last_valid = layout.l.ambs != 0;
 	if (first_ambient_read) {
-		valid_update = TWI_read_reg(AMBIENT_TWI_ADDRESS, AMBIENT_TEMPERATURE_ADDRESS, &computer_data.ambient_temp, 2);
+		valid_update = TWI_read_reg(AMBIENT_TWI_ADDRESS, AMBIENT_TEMPERATURE_ADDRESS, &layout.l.ambt, 2);
 		if (valid_update) {
 			first_ambient_read = false;
 		}
 	} else {
-		valid_update  = TWI_read(AMBIENT_TWI_ADDRESS, &computer_data.ambient_temp, 2);
+		valid_update  = TWI_read(AMBIENT_TWI_ADDRESS, &layout.l.ambt, 2);
 	}
 	if (valid_update) {
 		ambient_update_fail_count = 0;
-		computer_data.valid_ambient_temp = true;
+		layout.l.ambs = 1;
 	} else if (ambient_update_fail_count == MAX_AMBIENT_UPDATE_FAIL) {
-		computer_data.valid_ambient_temp = false;
+		layout.l.ambs = 0;
 	} else  {
 		ambient_update_fail_count++;
 	}
-	if (ambient_update_fail_count == MAX_AMBIENT_UPDATE_FAIL || (computer_data.valid_ambient_temp && (!last_valid || last_temp != computer_data.ambient_temp)))
+	if (ambient_update_fail_count == MAX_AMBIENT_UPDATE_FAIL || ((layout.l.ambs == 1) && (!last_valid || last_temp != layout.l.ambt)))
 		update_information_frame(SHOW_AMBIENT_TEMPERATURE, true);
 }
 

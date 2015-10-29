@@ -77,8 +77,20 @@ void power_state_init()
 	update_power_state();
 }
 
+void update_fp_info()
+{
+	layout.l.sig[0] = 'C';
+	layout.l.sig[1] = 'L';
+	layout.l.sig[2] = 'F';
+	layout.l.sig[3] = 'P';
+	layout.l.layout_ver = 0x01;
+	layout.l.major_rev = 0x00;
+	layout.l.minor_rev = 0x01;
+}
+
 void updated_info_init()
 {
+	update_fp_info();
 #ifdef DEMO_SHOW
 	computer_data.valid_ambient_temp = true;
 	computer_data.ambient_temp = 65;
@@ -147,22 +159,11 @@ void updated_info_init()
 	computer_data.direct_string->next = 0;
 
 #else
-	computer_data.direct_string = 0;
-	computer_data.valid_ambient_temp = false;
-	computer_data.valid_gpu_temp = false;
-	for (int i=0; i < MAX_CPU; i++){
-		computer_data.valid_cpu_temp[i] = false;
-		computer_data.valid_cpu_fq[i] = false;
-	}
-	for (int i=0; i < MAX_HDD; i++){
-		computer_data.valid_hdd_temp[i] = false;
-		computer_data.valid_hdd_size[i] = false;
-	}
+	uint8_t *p_computer_data = (uint8_t *)&computer_data;
+	for (uint8_t i = 0; i < (sizeof(computer_data) / 8); i++)
+		p_computer_data[i] = 0;
+
 #endif
-	computer_data.req_cpu_fq = false;
-	computer_data.req_cpu_temp = false;
-	computer_data.req_gpu_temp = false;
-	computer_data.wen = false;
 }
 
 void init()

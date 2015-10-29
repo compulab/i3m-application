@@ -34,37 +34,37 @@ void clear_screen()
 
 void set_dmi_mono_menu()
 {
-	is_dmi_set = false;
-	uint8_t count = 0;
-	struct direct_string_item * direct_item = computer_data.direct_string;
-	while (direct_item != 0){
-		count++;
-		direct_item = direct_item->next;
-	}
-	if (count > 0){
-		dmi_menu.menu = malloc(sizeof(struct gfx_mono_menu));
-		dmi_menu.menu->num_elements = count;
-		dmi_menu.menu->title = "DMI STRINGS";
-		dmi_menu.menu->current_selection = 0;
-		direct_item = computer_data.direct_string;
-		for (uint8_t i = 0; i < count  && i < 5; i++){
-			if (direct_item == 0)
-				break;
-			dmi_menu.menu->strings[i] = direct_item->type;
-			direct_item = direct_item->next;
-		}
-		if (dmi_menu.menu->num_elements > 4){
-			dmi_menu.menu->strings[5] = "Back To Main Menu";
-			dmi_menu.menu->num_elements = 6;
-		} else {
-			dmi_menu.menu->strings[count] = "Back To Main Menu";
-			dmi_menu.menu->num_elements++;
-		}
-		is_dmi_set = true;
-	} else {
-		free(dmi_menu.menu);
-		dmi_menu.menu = 0;
-	}
+//	is_dmi_set = false;
+//	uint8_t count = 0;
+//	struct direct_string_item * direct_item = computer_data.direct_string;
+//	while (direct_item != 0){
+//		count++;
+//		direct_item = direct_item->next;
+//	}
+//	if (count > 0){
+//		dmi_menu.menu = malloc(sizeof(struct gfx_mono_menu));
+//		dmi_menu.menu->num_elements = count;
+//		dmi_menu.menu->title = "DMI STRINGS";
+//		dmi_menu.menu->current_selection = 0;
+//		direct_item = computer_data.direct_string;
+//		for (uint8_t i = 0; i < count  && i < 5; i++){
+//			if (direct_item == 0)
+//				break;
+//			dmi_menu.menu->strings[i] = direct_item->type;
+//			direct_item = direct_item->next;
+//		}
+//		if (dmi_menu.menu->num_elements > 4){
+//			dmi_menu.menu->strings[5] = "Back To Main Menu";
+//			dmi_menu.menu->num_elements = 6;
+//		} else {
+//			dmi_menu.menu->strings[count] = "Back To Main Menu";
+//			dmi_menu.menu->num_elements++;
+//		}
+//		is_dmi_set = true;
+//	} else {
+//		free(dmi_menu.menu);
+//		dmi_menu.menu = 0;
+//	}
 }
 
 void set_dmi_position(struct gfx_item *pos)
@@ -80,16 +80,16 @@ struct direct_string_item * curr_item = 0;
 
 void set_dmi_label(struct gfx_label_node *label_node, uint8_t index)
 {
-	struct direct_string_item * direct_item = computer_data.direct_string;
-	while (direct_item != 0){
-		index++;
-		direct_item = direct_item->next;
-	}
-	set_dmi_position(&label_node->label.postion);
-	label_node->label.text.font = fonts[0];
-	label_node->label.text.is_progmem = false;
-//	label_node->label.text.text = direct_item->type;
-	label_node->next = 0;
+//	struct direct_string_item * direct_item = computer_data.direct_string;
+//	while (direct_item != 0){
+//		index++;
+//		direct_item = direct_item->next;
+//	}
+//	set_dmi_position(&label_node->label.postion);
+//	label_node->label.text.font = fonts[0];
+//	label_node->label.text.is_progmem = false;
+////	label_node->label.text.text = direct_item->type;
+//	label_node->next = 0;
 }
 
 void set_dmi_frame(struct gfx_frame *frame, uint8_t index)
@@ -102,11 +102,11 @@ void set_dmi_frame(struct gfx_frame *frame, uint8_t index)
 
 void set_dmi_label_text()
 {
-	struct direct_string_item * direct_item = computer_data.direct_string;
-	for (int i = 0; i < dmi_menu.menu->num_elements -1; i++){
-		dmi_menu.actions[i].frame->label_head->label.text.text = direct_item->content;
-		direct_item = direct_item->next;
-	}
+//	struct direct_string_item * direct_item = computer_data.direct_string;
+//	for (int i = 0; i < dmi_menu.menu->num_elements -1; i++){
+//		dmi_menu.actions[i].frame->label_head->label.text.text = direct_item->content;
+//		direct_item = direct_item->next;
+//	}
 }
 
 void set_dmi_actions()
@@ -151,15 +151,15 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 			show_menu(selected_action.menu, true);
 			break;
 		case ACTION_TYPE_SHOW_DMI_MENU:
-			disable_sleep_mode();
-			if (computer_data.direct_string != 0){
-				set_dmi_menu();
-				if (is_dmi_set){
-					show_menu(&dmi_menu, true);
-				}
-			} else {
-				show_current_menu(true);
-			}
+//			disable_sleep_mode();
+//			if (computer_data.direct_string != 0){
+//				set_dmi_menu();
+//				if (is_dmi_set){
+//					show_menu(&dmi_menu, true);
+//				}
+//			} else {
+//				show_current_menu(true);
+//			}
 			break;
 		default:
 			break;
