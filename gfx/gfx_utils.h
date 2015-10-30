@@ -24,6 +24,6 @@ void update_information();
 
 void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame);
 
-void gfx_frame_draw(struct gfx_frame *frame);
+void gfx_frame_draw(struct gfx_frame *frame, bool redraw);
 
 #endif /* GFX_GFX_UTILS_H_ */

@@ -10,9 +10,9 @@
 #define TWI_MASTER_H_
 #include <stdbool.h>
 
-#ifndef DEBUG_H_
+//#ifndef DEBUG_H_
 #include "../../debug.h"
-#endif
+//#endif
 
 #define TWI						TWIC
 #define TWI_MASTER_vect			TWIC_TWIM_vect

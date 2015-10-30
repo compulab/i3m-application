@@ -35,29 +35,37 @@ void disable_sleep_mode()
 	sleep_mode_enabled = false;
 }
 
+void reset_ambient()
+{
+	first_ambient_read = false;
+	layout.l.ambs = 0;
+}
+
 void update_ambient_temp()
 {
-	bool valid_update;
-	uint8_t last_temp = layout.l.ambt;
-	bool last_valid = layout.l.ambs != 0;
-	if (first_ambient_read) {
-		valid_update = TWI_read_reg(AMBIENT_TWI_ADDRESS, AMBIENT_TEMPERATURE_ADDRESS, &layout.l.ambt, 2);
-		if (valid_update) {
-			first_ambient_read = false;
+	if (current_power_state == POWER_ON) {
+		bool valid_update;
+		uint8_t last_temp = layout.l.ambt;
+		bool last_valid = layout.l.ambs != 0;
+		if (first_ambient_read) {
+			valid_update = TWI_read_reg(AMBIENT_TWI_ADDRESS, AMBIENT_TEMPERATURE_ADDRESS, &layout.l.ambt, 2);
+			if (valid_update) {
+				first_ambient_read = false;
+			}
+		} else {
+			valid_update  = TWI_read(AMBIENT_TWI_ADDRESS, &layout.l.ambt, 2);
 		}
-	} else {
-		valid_update  = TWI_read(AMBIENT_TWI_ADDRESS, &layout.l.ambt, 2);
+		if (valid_update) {
+			ambient_update_fail_count = 0;
+			layout.l.ambs = 1;
+		} else if (ambient_update_fail_count == MAX_AMBIENT_UPDATE_FAIL) {
+			layout.l.ambs = 0;
+		} else  {
+			ambient_update_fail_count++;
+		}
+		if (ambient_update_fail_count == MAX_AMBIENT_UPDATE_FAIL || ((layout.l.ambs == 1) && (!last_valid || last_temp != layout.l.ambt)))
+			update_information_frame(SHOW_AMBIENT_TEMPERATURE, true);
 	}
-	if (valid_update) {
-		ambient_update_fail_count = 0;
-		layout.l.ambs = 1;
-	} else if (ambient_update_fail_count == MAX_AMBIENT_UPDATE_FAIL) {
-		layout.l.ambs = 0;
-	} else  {
-		ambient_update_fail_count++;
-	}
-	if (ambient_update_fail_count == MAX_AMBIENT_UPDATE_FAIL || ((layout.l.ambs == 1) && (!last_valid || last_temp != layout.l.ambt)))
-		update_information_frame(SHOW_AMBIENT_TEMPERATURE, true);
 }
 
 void tc_handle_init()
@@ -69,9 +77,9 @@ void tc_handle_init()
 void tc_handle()
 {
 
-	if (tc_counter % 10 == 0)
+	if (tc_counter % 10 == 0 && current_power_state == POWER_ON)
 		update_ambient_temp();
-	if (tc_counter % 35 == 0)
+	if (tc_counter % 5 == 0)
 		update_adc();
 	if (update_buttons && (tc_counter % MOVE_BUTTON_TIME == 0))
 		handle_button_pressed();

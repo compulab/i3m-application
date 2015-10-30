@@ -25,6 +25,32 @@ void set_invalid_string(char *str){
 	sprintf(str, "INVALID");
 }
 
+void clear_regs(uint8_t *beg_addr, uint8_t *end_addr)
+{
+	for (uint8_t *addr = beg_addr; addr < end_addr; addr++)
+			*addr = 0x00;
+}
+void reset_temperatures()
+{
+	uint8_t *p_computer_data = (uint8_t *)&computer_data;
+	for (int i = 0; i < sizeof(computer_data); i++)
+		p_computer_data[i] = 0x00;
+	clear_regs((uint8_t *)&layout.direct.i2c[CPU0T], (uint8_t *)&layout.direct.i2c[RESERVED42]);
+	clear_regs((uint8_t *)&layout.direct.i2c[CPU0F_LSB], (uint8_t *)&layout.direct.i2c[RESERVED83]);
+}
+
+void handle_power_off()
+{
+	reset_ambient();
+	reset_temperatures();
+}
+
+void handle_power_on()
+{
+	update_adc();
+	update_ambient_temp();
+}
+
 void update_power_state()
 {
 	enum power_state  last_power_state = current_power_state;
@@ -36,8 +62,13 @@ void update_power_state()
 		current_power_state = POWER_STR;
 	else
 		current_power_state = POWER_ON;
-	if (current_power_state != last_power_state)
+	if (current_power_state != last_power_state) {
+		if (current_power_state != POWER_ON)
+			handle_power_off();
+		else
+			handle_power_on();
 		update_information_frame(SHOW_POWER_STATE,true);
+	}
 }
 
 void set_state(char *state)
@@ -128,202 +159,6 @@ void set_cpu_updated_temp(char *data, uint8_t cpu_id)
 	}
 }
 
-//bool is_valid_mem(uint8_t id)
-//{
-//	bool res = false;
-//	switch (id) {
-//	case 0:
-//		res = computer_data.details.mem0s == 1;
-//		break;
-//	case 1:
-//		res = computer_data.details.mem1s == 1;
-//		break;
-//	case 2:
-//		res = computer_data.details.mem2s == 1;
-//		break;
-//	case 3:
-//		res = computer_data.details.mem3s == 1;
-//		break;
-//	default:
-//		break;
-//	}
-//	return res;
-//}
-//
-//bool is_valid_hdd(uint8_t id)
-//{
-//	bool res = false;
-//	switch (id) {
-//	case 0:
-//		res = computer_data.details.hdd0s == 1;
-//		break;
-//	case 1:
-//		res = computer_data.details.hdd1s == 1;
-//		break;
-//	case 2:
-//		res = computer_data.details.hdd2s == 1;
-//		break;
-//	case 3:
-//		res = computer_data.details.hdd3s == 1;
-//		break;
-//	case 4:
-//		res = computer_data.details.hdd4s == 1;
-//		break;
-//	case 5:
-//		res = computer_data.details.hdd5s == 1;
-//		break;
-//	case 6:
-//		res = computer_data.details.hdd6s == 1;
-//		break;
-//	case 7:
-//		res = computer_data.details.hdd7s == 1;
-//		break;
-//	default:
-//		break;
-//	}
-//	return res;
-//}
-//
-//bool is_valid_cpu_fq(uint8_t id)
-//{
-//	bool res = false;
-//	switch (id) {
-//	case 0:
-//		res = computer_data.details.cpu0fs == 1;
-//		break;
-//	case 1:
-//		res = computer_data.details.cpu1fs == 1;
-//		break;
-//	case 2:
-//		res = computer_data.details.cpu2fs == 1;
-//		break;
-//	case 3:
-//		res = computer_data.details.cpu3fs == 1;
-//		break;
-//	case 4:
-//		res = computer_data.details.cpu4fs == 1;
-//		break;
-//	case 5:
-//		res = computer_data.details.cpu5fs == 1;
-//		break;
-//	case 6:
-//		res = computer_data.details.cpu6fs == 1;
-//		break;
-//	case 7:
-//		res = computer_data.details.cpu7fs == 1;
-//		break;
-//	default:
-//		break;
-//	}
-//	return res;
-//}
-//
-//uint8_t get_mem_sz(uint8_t id)
-//{
-//	uint8_t size = 0;
-//	switch (id) {
-//	case 0:
-//		size = computer_data.details.mem0sz;
-//		break;
-//	case 1:
-//		size = computer_data.details.mem1sz;
-//		break;
-//	case 2:
-//		size = computer_data.details.mem2sz;
-//		break;
-//	case 3:
-//		size = computer_data.details.mem3sz;
-//		break;
-//	default:
-//		break;
-//	}
-//	return size;
-//}
-//
-//uint16_t get_hdd_sz_with_factor(uint8_t id)
-//{
-//	uint16_t size = 0;
-//	switch (id) {
-//	case 0:
-//		size = computer_data.details.hdd0sz;
-//		if (computer_data.details.hdd0f == 1)
-//			size |= 0x0400;
-//		break;
-//	case 1:
-//		size = computer_data.details.hdd1sz;
-//		if (computer_data.details.hdd1f == 1)
-//			size |= 0x0400;
-//		break;
-//	case 2:
-//		size = computer_data.details.hdd2sz;
-//			if (computer_data.details.hdd2f == 1)
-//				size |= 0x0400;
-//			break;
-//	case 3:
-//		size = computer_data.details.hdd3sz;
-//			if (computer_data.details.hdd3f == 1)
-//				size |= 0x0400;
-//			break;
-//	case 4:
-//			size = computer_data.details.hdd4sz;
-//			if (computer_data.details.hdd4f == 1)
-//				size |= 0x0400;
-//			break;
-//	case 5:
-//		size = computer_data.details.hdd5sz;
-//		if (computer_data.details.hdd5f == 1)
-//			size |= 0x0400;
-//		break;
-//	case 6:
-//		size = computer_data.details.hdd6sz;
-//		if (computer_data.details.hdd6f == 1)
-//			size |= 0x0400;
-//		break;
-//	case 7:
-//		size = computer_data.details.hdd7sz;
-//		if (computer_data.details.hdd7f == 1)
-//			size |= 0x0400;
-//			break;
-//	default:
-//		break;
-//	}
-//	return size;
-//}
-//
-//uint16_t get_cpu_fq(uint8_t id)
-//{
-//	uint16_t fq = 0;
-//	switch (id) {
-//	case 0:
-//		fq = computer_data.details.cpu0f;
-//		break;
-//	case 1:
-//		fq = computer_data.details.cpu1f;
-//		break;
-//	case 2:
-//		fq = computer_data.details.cpu2f;
-//		break;
-//	case 3:
-//		fq = computer_data.details.cpu3f;
-//		break;
-//	case 4:
-//		fq = computer_data.details.cpu4f;
-//		break;
-//	case 5:
-//		fq = computer_data.details.cpu5f;
-//		break;
-//	case 6:
-//		fq = computer_data.details.cpu6f;
-//		break;
-//	case 7:
-//		fq = computer_data.details.cpu7f;
-//		break;
-//	default:
-//		break;
-//	}
-//	return fq;
-//}
-
 void set_updated_memory_size(char *output_str, uint8_t mem_id)
 {
 	if ((computer_data.packed.mems & (0x01 << mem_id)))
@@ -365,7 +200,6 @@ void update_adc()
 		update_information_frame(SHOW_POWER, true);
 	}
 }
-
 
 void set_updated_gpu_temp(char *output_str)
 {
@@ -409,7 +243,6 @@ void set_update_hdd_temp(char *output_str, uint8_t hdd_id)
 		set_invalid_string(output_str);
 }
 
-
 void update_brightness()
 {
 	ssd1306_set_contrast(eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS));
@@ -439,16 +272,16 @@ void handle_brightness_buttons(uint8_t key)
 
 void set_dmi_content(char *output_str, uint8_t string_id)
 {
-//	uint8_t count = 0;
-//	struct direct_string_item * string_item = computer_data.direct_string;
-//	while (string_item != 0 && count < string_id){
-//		string_item = string_item->next;
-//		count++;
-//	}
-//	if (count == string_id)
-//		output_str = strdup(string_item->content);
-//	else
-//		set_invalid_string(output_str);
+	uint8_t count = 0;
+	struct direct_string_item * string_item = computer_data.details.direct_string;
+	while (string_item != 0 && count < string_id){
+		string_item = string_item->next;
+		count++;
+	}
+	if (count == string_id)
+		output_str = strdup(string_item->content);
+	else
+		set_invalid_string(output_str);
 }
 
 void set_brightness(char *str)
@@ -467,6 +300,7 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 		set_updated_hdd_size(output_str, info);
 		break;
 	case SHOW_AMBIENT_TEMPERATURE:
+		update_ambient_temp();
 		set_updated_ambient_temp(output_str);
 		break;
 	case SHOW_GPU_TEMPERTURE:

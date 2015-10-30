@@ -8,9 +8,10 @@
 #ifndef ADC_ADC_H_
 #define ADC_ADC_H_
 
-#include "../asf.h"
-#include "math.h"
 #include <string.h>
+#include "math.h"
+#include "../asf.h"
+#include "../Fp-utils.h"
 
 extern char current_power_str[7];
 

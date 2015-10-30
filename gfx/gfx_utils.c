@@ -94,17 +94,6 @@ void print_data(struct gfx_text *data, uint8_t x, uint8_t y)
 		draw_string_in_buffer_P(data->textP, x, y, data->font);
 	else
 		draw_string_in_buffer(data->text, x, y, data->font);
-
-
-
-////	gfx_mono_generic_draw_filled_rect(0, y, GFX_MONO_LCD_WIDTH, 8, GFX_PIXEL_CLR);
-//	if (data->is_progmem)
-//		gfx_mono_draw_progmem_string((char PROGMEM_PTR_T)data->textP, x, y, &sysfont);
-//	else
-//		gfx_mono_draw_string(data->text, x, y, &sysfont);
-//	gfx_mono_put_framebuffer();
-//	delay_s(1);
-
 }
 
 void gfx_information_draw(struct gfx_information *info)
@@ -116,7 +105,7 @@ void gfx_information_draw(struct gfx_information *info)
 
 void update_information()
 {
-	gfx_frame_draw(frame_present);
+	gfx_frame_draw(frame_present, true);
 }
 
 void gfx_label_draw(struct gfx_label *label)
@@ -242,13 +231,21 @@ void gfx_images_draw(struct gfx_image_node *curr_image_node)
 	}
 }
 
-void gfx_frame_draw(struct gfx_frame *frame)
+void clear_framebuffer()
+{
+	for (int i = 0; i < 1024; i++)
+		framebuffer[i] = 0x00;
+}
+
+void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
 {
 	if (frame != 0){
 		frame_present = frame;
 		gfx_infos_draw(frame->information_head);
-		gfx_labels_draw(frame->label_head);
-		gfx_images_draw(frame->image_head);
-		gfx_mono_put_framebuffer();
+		if (!redraw){
+			gfx_labels_draw(frame->label_head);
+			gfx_images_draw(frame->image_head);
+		}
+		gfx_mono_ssd1306_put_framebuffer();
 	}
 }

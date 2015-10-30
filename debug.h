@@ -24,7 +24,7 @@ char debug[7];
 #define CLEAR ssd1306_clear();
 
 #define MSG(str, y)	gfx_mono_draw_string(str, 0, y, &sysfont); \
-					gfx_mono_put_framebuffer(); \
+		gfx_mono_ssd1306_put_framebuffer(); \
 					delay_s(DELAY_TIME);
 //					CLEAR
 

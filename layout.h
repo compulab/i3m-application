@@ -536,7 +536,7 @@ union updatable_info {
 		uint8_t cpufr:1;
 		uint8_t cputr:1;
 		uint8_t gputr:1;
-		struct direct_string_item direct_string;
+		struct direct_string_item *direct_string;
 	} details;
 	struct {
 		uint16_t post_code;
@@ -558,7 +558,7 @@ union updatable_info {
 		uint16_t cpuf[MAX_CPU];
 		uint8_t cpufs;
 		uint8_t pending_req:4;
-		struct direct_string_item direct_string;
+		struct direct_string_item *direct_string;
 	} packed;
 };
 

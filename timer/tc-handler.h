@@ -32,6 +32,8 @@ void tc_button_pressed();
 
 void tc_no_button_pressed();
 
+void reset_ambient();
+
 void enable_sleep_mode();
 
 void disable_sleep_mode();

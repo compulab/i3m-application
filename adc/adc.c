@@ -42,9 +42,6 @@ long adc_avg()
 	long power_avg =0;
 	for (i=0; i < 1000 ;i++){
 		adc_start_conversion(&MY_ADC, MY_ADC_CH);  //one conversion begins
-	//	LED_On(LED3_GPIO);
-//		adc_wait_for_interrupt_flag(&MY_ADC, MY_ADC_CH);
-	//	LED_Off(LED3_GPIO);
 		int adca1_result = adc_get_result(&MY_ADC, MY_ADC_CH);
 		power_avg = power_avg+adca1_result;
 	}
@@ -53,7 +50,11 @@ long adc_avg()
 
 void set_power_data(char *str)
 {
-    current_power = adc_avg() * 0.127 ; /// (gain * gain);// * 158.34);//* 0.177; //*0.07731r P =79.17 * V_adc , P/GAIN = 158.34
-    sprintf(str, "%ld W  ", current_power);
-    strcpy(current_power_str, str);
+	if (current_power_state != POWER_ON) {
+		sprintf(str, "0 W");
+	} else {
+		current_power = adc_avg() * 0.127 ; /// (gain * gain);// * 158.34);//* 0.177; //*0.07731r P =79.17 * V_adc , P/GAIN = 158.34
+		sprintf(str, "%ld W  ", current_power);
+	}
+	strcpy(current_power_str, str);
 }
