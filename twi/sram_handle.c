@@ -192,15 +192,14 @@ void write_cpu_status()
 		computer_data.packed.cputs = 0;
 	} else {
 		computer_data.packed.cputs |= layout.direct.i2c[CPUTS];
-		uint8_t *cpu_temp = &layout.l.cpu0t;
 		uint8_t bit = 0x01;
 		for (uint8_t i = 0 ; i < MAX_CPU; i++){
 			if (layout.direct.i2c[CPUTS] & bit)
-				computer_data.packed.cput[i] = *cpu_temp;
-			cpu_temp++;
+				computer_data.packed.cput[i] = layout.direct.i2c[CPU0T + i];
 			bit = bit << 1;
 		}
 		update_information_frame(SHOW_CPU_TEMPERTURE, information_present->info_data < MAX_CPU && (computer_data.packed.cputs &(0x01 << information_present->info_data)));
+
 	}
 }
 
@@ -209,12 +208,10 @@ void write_hdd_status()
 	if (layout.direct.i2c[HDDTS]  == 0){
 		computer_data.packed.hddts = 0;
 	} else {
-		uint8_t *hdd_temp = &layout.l.hdd0t;
 		uint8_t bit = 0x01;
 		for (uint8_t i = 0 ; i < MAX_CPU; i++){
 			if (layout.direct.i2c[CPUTS] & bit)
-				computer_data.packed.hddt[i] = *hdd_temp;
-			hdd_temp++;
+				computer_data.packed.hddt[i] = layout.direct.i2c[CPU0T + i];
 			bit = bit << 1;
 		}
 			update_information_frame(SHOW_HDD_TEMPERTURE, information_present->info_data < MAX_HDD &&(computer_data.packed.hddts &(0x01 << information_present->info_data)));
@@ -223,9 +220,9 @@ void write_hdd_status()
 
 void write_reset()
 {
-	if (layout.l.rst)
+	if (layout.l.rstusb)
 		reset_to_usb();
-	else if (layout.l.rstusb)
+	else if (layout.l.rst)
 		software_reset();
 }
 //
