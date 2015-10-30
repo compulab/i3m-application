@@ -239,7 +239,7 @@ void write_post_code_lsb()
 
 void write_memory(uint8_t mem_addr)
 {
-	uint8_t index = (mem_addr - MEM01SZ) * 2;
+	uint8_t index = (mem_addr - MEM_LSB ) * 2;
 	uint8_t data = layout.direct.i2c[mem_addr];
 	computer_data.packed.memsz[index] = data & MEM_SZ_LSB_MSK;
 	if (data & MEM_SZ_STATUS_LSB_MSK)
@@ -253,16 +253,16 @@ void write_memory(uint8_t mem_addr)
 void read_sig(enum i2c_addr_space sig_address, uint8_t *data)
 {
 	switch(sig_address){
-	case SIG0ADDR:
+	case SIG0:
 		*data = eeprom_read_byte(SIG_FIRST_BYTE_EEPROM_ADDRESS);
 		break;
-	case SIG1ADDR:
+	case SIG1:
 		*data = eeprom_read_byte(SIG_SECOND_BYTE_EEPROM_ADDRESS);
 		break;
-	case SIG2ADDR:
+	case SIG2:
 		*data = eeprom_read_byte(SIG_THIRD_BYTE_EEPROM_ADDRESS);
 		break;
-	case SIG3ADDR:
+	case SIG3:
 		*data = eeprom_read_byte(SIG_FOURTH_BYTE_EEPROM_ADDRESS);
 		break;
 	default:
@@ -273,16 +273,16 @@ void read_sig(enum i2c_addr_space sig_address, uint8_t *data)
 void read_revision(enum i2c_addr_space rev_address, uint8_t *data)
 {
 	switch (rev_address){
-	case MAJOR_REV_LSB:
+	case MAJOR_LSB:
 		*data = eeprom_read_byte(MAJOR_REVISION_LSB_EEPROM_ADDRESS);
 		break;
-	case MAJOR_REV_MSB:
+	case MAJOR_MSB:
 		*data = eeprom_read_byte(MAJOR_REVISION_MSB_EEPROM_ADDRESS);
 		break;
-	case MINOR_REV_LSB:
+	case MINOR_LSB:
 		*data = eeprom_read_byte(MINOR_REVISION_LSB_EEPROM_ADDRESS);
 		break;
-	case MINOR_REV_MSB:
+	case MINOR_MSB:
 		*data = eeprom_read_byte(MINOR_REVISION_MSB_EEPROM_ADDRESS);
 		break;
 	default:
@@ -293,10 +293,10 @@ void read_revision(enum i2c_addr_space rev_address, uint8_t *data)
 void read_bios_post_code(enum i2c_addr_space post_code_address, uint8_t *data)
 {
 	switch(post_code_address){
-	case BIOS_POST_CODE_LSB:
+	case POST_CODE_LSB:
 		*data = computer_data.details.post_code_lsb;
 		break;
-	case BIOS_POST_CODE_MSB:
+	case POST_CODE_MSB:
 		*data = computer_data.details.post_code_msb;
 		break;
 	default:
@@ -349,9 +349,9 @@ void read_adc(enum i2c_addr_space adc_address, uint8_t *data)
 	}
 }
 
-void read_wen(uint8_t *data)
+void read_iwren(uint8_t *data)
 {
-	*data = layout.l.iwen;
+	*data = layout.l.iwren;
 }
 
 //void read_cpu_temp(uint8_t cpu_address, uint8_t *data)
@@ -422,8 +422,8 @@ void end_direct_string(bool is_written_type)
 
 bool is_iwren_mode()
 {
-	bool res = layout.l.iwen != 0;
-	layout.l.iwen = 0;
+	bool res = layout.l.iwren != 0;
+	layout.l.iwren = 0;
 	return res;
 }
 
@@ -471,10 +471,10 @@ void write_direct_byte(bool is_written_type, uint8_t data)
 void write_direct(enum i2c_addr_space write_address)
 {
 	switch (write_address){
-	case DMI_NAME:
+	case DMIN:
 		write_direct_byte(true, layout.l.dmi_name);
 		break;
-	case DMI_VALUE:
+	case DMIV:
 		write_direct_byte(false,layout.l.dmi_value);
 		break;
 	default:
@@ -485,26 +485,26 @@ void write_direct(enum i2c_addr_space write_address)
 void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 {
 	switch (addr) {
-	case SIG0ADDR:
-	case SIG1ADDR:
-	case SIG2ADDR:
-	case SIG3ADDR:
+	case SIG0:
+	case SIG1:
+	case SIG2:
+	case SIG3:
 	case LAYOUT_VER:
-	case MAJOR_REV_LSB:
-	case MAJOR_REV_MSB:
-	case MINOR_REV_LSB:
-	case MINOR_REV_MSB:
-	case RTC_TIME:
-	case RTC_DATE:
+	case MAJOR_LSB:
+	case MAJOR_MSB:
+	case MINOR_LSB:
+	case MINOR_MSB:
+	case RTCT:
+	case RTCD:
 	case ADC_LSB:
 	case ADC_MSB:
 	case AMBT:
-	case OTHER_TEMPERATURE_REGISTERS:
-	case BIOS_POST_CODE_LSB:
-	case BIOS_POST_CODE_MSB:
-	case RESET:
-	case PENDING_CONTROL:
-	case PENDING_DESC0:
+	case SENSORT:
+	case POST_CODE_LSB:
+	case POST_CODE_MSB:
+	case FPCTRL:
+	case REQ:
+	case PENDR0:
 	case POWER_STATE:
 		*data = layout.direct.i2c[addr];
 		break;
@@ -533,8 +533,8 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 	case HDD5_SZ_MSB:
 	case HDD6_SZ_MSB:
 	case HDD7_SZ_MSB:
-	case MEM01SZ:
-	case MEM23SZ:
+	case MEM_LSB :
+	case MEM_MSB:
 	case CPU0T:
 	case CPU1T:
 	case CPU2T:
@@ -561,8 +561,8 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 	case CPU6F_LSB:
 	case CPU7F_LSB:
 	case GPUT:
-	case DMI_NAME:
-	case DMI_VALUE:
+	case DMIN:
+	case DMIV:
 	default:
 		if (is_iwren_mode())
 			*data = layout.direct.i2c[addr];
@@ -697,14 +697,14 @@ void update_data(uint8_t write_address)
 		case CPU7F_MSB:
 			write_cpu_fq_msb(write_address);
 			break;
-		case MEM01SZ:
-		case MEM23SZ:
+		case MEM_LSB :
+		case MEM_MSB:
 			write_memory(write_address);
 			break;
-		case OTHER_TEMPERATURE_REGISTERS:
+		case SENSORT:
 			write_temp_control();
 			break;
-		case BIOS_POST_CODE_LSB:
+		case POST_CODE_LSB:
 		write_post_code_lsb();
 			break;
 		case HDD0_SZ_MSB:
@@ -717,11 +717,11 @@ void update_data(uint8_t write_address)
 		case HDD7_SZ_MSB:
 			write_hd_sz_msb(write_address);
 			break;
-		case DMI_NAME:
-		case DMI_VALUE:
+		case DMIN:
+		case DMIV:
 			write_direct(write_address);
 			break;
-		case RESET:
+		case FPCTRL:
 			write_reset();
 			break;
 	}
@@ -730,8 +730,8 @@ void update_data(uint8_t write_address)
 void write_data(enum i2c_addr_space addr, uint8_t data)
 {
 	switch (addr) {
-	case RTC_TIME:
-	case RTC_DATE:
+	case RTCT:
+	case RTCD:
 	case ADC_LSB:
 	case ADC_MSB:
 	case AMBT:
@@ -770,11 +770,11 @@ void write_data(enum i2c_addr_space addr, uint8_t data)
 	case CPU5F_LSB:
 	case CPU6F_LSB:
 	case CPU7F_LSB:
-	case MEM01SZ:
-	case MEM23SZ:
-	case OTHER_TEMPERATURE_REGISTERS:
-	case BIOS_POST_CODE_LSB:
-	case BIOS_POST_CODE_MSB:
+	case MEM_LSB :
+	case MEM_MSB:
+	case SENSORT:
+	case POST_CODE_LSB:
+	case POST_CODE_MSB:
 	case HDD0_SZ_LSB:
 	case HDD1_SZ_LSB:
 	case HDD2_SZ_LSB:
@@ -791,23 +791,27 @@ void write_data(enum i2c_addr_space addr, uint8_t data)
 	case HDD5_SZ_MSB:
 	case HDD6_SZ_MSB:
 	case HDD7_SZ_MSB:
-	case DMI_NAME:
-	case DMI_VALUE:
-	case RESET:
-	case PENDING_CONTROL:
-	case PENDING_DESC0:
+	case DMIN:
+	case DMIV:
+	case REQ:
+	case PENDR0:
 	case POWER_STATE:
 		layout.direct.i2c[addr] = data;
 		break;
-	case SIG0ADDR:
-	case SIG1ADDR:
-	case SIG2ADDR:
-	case SIG3ADDR:
+	case FPCTRL:
+		layout.l.iwren = (data & 0x80) != 0 ? 1 : 0;
+		layout.l.rstusb = (data & 0x20) != 0 ? 1 : 0;
+		layout.l.rst = (data & 0x01) != 0 ? 1 : 0;
+		break;
+	case SIG0:
+	case SIG1:
+	case SIG2:
+	case SIG3:
 	case LAYOUT_VER:
-	case MAJOR_REV_LSB:
-	case MAJOR_REV_MSB:
-	case MINOR_REV_LSB:
-	case MINOR_REV_MSB:
+	case MAJOR_LSB:
+	case MAJOR_MSB:
+	case MINOR_LSB:
+	case MINOR_MSB:
 	default:
 		if (is_iwren_mode())
 			layout.direct.i2c[addr] = data;

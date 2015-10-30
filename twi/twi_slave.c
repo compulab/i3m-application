@@ -156,7 +156,7 @@ void twi_handle_write(uint8_t data)
 		handle_sram_write_request(reg_address,data);
 
 	enum i2c_addr_space i2c_addr = reg_address;
-	if (i2c_addr != DMI_NAME && i2c_addr != DMI_VALUE)
+	if (i2c_addr != DMIN && i2c_addr != DMIV)
 		++reg_address;
 }
 

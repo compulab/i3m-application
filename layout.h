@@ -53,7 +53,7 @@ struct direct_string_item {
 
 union layout_t {
 	struct {
-		char sig[4];
+		uint8_t sig[4];
 		uint8_t layout_ver;
 		uint16_t major_rev;
 		uint16_t minor_rev;
@@ -173,7 +173,7 @@ union layout_t {
 		uint8_t rst:1;
 		uint8_t rstusb:1;
 		uint8_t reserved25:5;
-		uint8_t iwen:1;
+		uint8_t iwren:1;
 		uint8_t req:1;
 		uint8_t reserved26:7;
 		uint8_t hddtr:1;
@@ -197,15 +197,15 @@ union layout_t {
 };
 
 enum i2c_addr_space  {
-		SIG0ADDR,
-		SIG1ADDR,
-		SIG2ADDR,
-		SIG3ADDR,
+		SIG0,
+		SIG1,
+		SIG2,
+		SIG3,
 		LAYOUT_VER,
-		MAJOR_REV_LSB,
-		MAJOR_REV_MSB,
-		MINOR_REV_LSB,
-		MINOR_REV_MSB,
+		MAJOR_LSB,
+		MAJOR_MSB,
+		MINOR_LSB,
+		MINOR_MSB,
 		RESERVED09,
 		RESERVED0A,
 		RESERVED0B,
@@ -213,8 +213,8 @@ enum i2c_addr_space  {
 		RESERVED0D,
 		RESERVED0E,
 		RESERVED0F,
-		BIOS_POST_CODE_LSB,
-		BIOS_POST_CODE_MSB,
+		POST_CODE_LSB,
+		POST_CODE_MSB,
 		POWER_STATE,
 		RESERVED13,
 		RESERVED14,
@@ -254,7 +254,7 @@ enum i2c_addr_space  {
 		HDD6T,
 		HDD7T,
 		CPUTS,
-		OTHER_TEMPERATURE_REGISTERS,
+		SENSORT,
 		HDDTS,
 		RESERVED3B,
 		RESERVED3C,
@@ -277,8 +277,8 @@ enum i2c_addr_space  {
 		RESERVED4D,
 		RESERVED4E,
 		RESERVED4F,
-		MEM01SZ,
-		MEM23SZ,
+		MEM_LSB,
+		MEM_MSB,
 		RESERVED52,
 		RESERVED53,
 		RESERVED54,
@@ -325,9 +325,9 @@ enum i2c_addr_space  {
 		CPU6F_MSB,
 		CPU7F_LSB,
 		CPU7F_MSB,
-		RESET,
-		PENDING_CONTROL,
-		PENDING_DESC0,
+		FPCTRL,
+		REQ,
+		PENDR0,
 		RESERVED83,
 		RESERVED84,
 		RESERVED85,
@@ -341,16 +341,16 @@ enum i2c_addr_space  {
 		RESERVED8D,
 		RESERVED8E,
 		RESERVED8F,
-		DMI_NAME,
-		DMI_VALUE,
+		DMIN,
+		DMIV,
 		RESERVED92,
 		RESERVED93,
 		RESERVED94,
 		RESERVED95,
 		RESERVED96,
 		RESERVED97,
-		RTC_TIME,
-		RTC_DATE,
+		RTCT,
+		RTCD,
 		RESERVED9A,
 		RESERVED9B,
 		RESERVED9C,

@@ -151,15 +151,15 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 			show_menu(selected_action.menu, true);
 			break;
 		case ACTION_TYPE_SHOW_DMI_MENU:
-//			disable_sleep_mode();
-//			if (computer_data.direct_string != 0){
-//				set_dmi_menu();
-//				if (is_dmi_set){
-//					show_menu(&dmi_menu, true);
-//				}
-//			} else {
-//				show_current_menu(true);
-//			}
+			disable_sleep_mode();
+			if (computer_data.details.direct_string != 0){
+				set_dmi_menu();
+				if (is_dmi_set){
+					show_menu(&dmi_menu, true);
+				}
+			} else {
+				show_current_menu(true);
+			}
 			break;
 		default:
 			break;
