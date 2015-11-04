@@ -70,41 +70,6 @@ bool is_valid_register(int8_t index, uint8_t max_index)
 	return index >= 0 && index < max_index;
 }
 
-//void write_cpu_temp(uint8_t cpu_addr, uint8_t data)
-//{
-//	int8_t index = cpu_addr - CPU0_TEMP_ADDRESS;
-//	if (is_valid_register(index,MAX_CPU))
-//		computer_temperature_registers.cpu_temp[index] = data;
-//}
-
-//void write_hdd_temp(uint8_t hdd_addr, uint8_t data)
-//{
-//	int8_t index = hdd_addr - HDD0_TEMP_ADDRESS;
-//	if (is_valid_register(index,MAX_HDD)){
-//		computer_temperature_registers.hdd_temp[index] = data;
-//		computer_data.valid_hdd_temp[index] = false;
-//	}
-//}
-
-//void read_cpu_fq_msb(uint8_t cpu_addr, uint8_t *data)
-//{
-//	int8_t index = (cpu_addr - CPU0F_MSB_ADDRESS)/2;
-//	if (!is_valid_register(index,MAX_CPU)) {
-//		*data = 0x00;
-//		return ;
-//	}
-//	*data = computer_temperature_registers.cpu_fq[index] << 8;
-//}
-
-//void read_cpu_fq_lsb(uint8_t cpu_addr, uint8_t *data)
-//{
-//	int8_t index = (cpu_addr - CPU0F_MSB_ADDRESS)/2;
-//	if (!is_valid_register(index,MAX_CPU)) {
-//		*data = 0x00;
-//		return ;
-//	}
-//	*data = computer_temperature_registers.cpu_fq[index];
-//}
 void clear_req()
 {
 	if (layout.direct.i2c[PENDR0] == 0)
@@ -124,17 +89,6 @@ void write_cpu_fq_msb(uint8_t cpu_addr)
 	clear_req();
 }
 
-
-
-//void write_cpu_fq_lsb(uint8_t cpu_addr, uint8_t data)
-//{
-//	int8_t index = (cpu_addr - CPU0F_LSB_ADDRESS) / 2;
-//	if (!is_valid_register(index,MAX_CPU))
-//		return ;
-//	computer_temperature_registers.cpu_fq[index] = 0x0000 | data;
-//}
-
-
 void read_temp_control(uint8_t *data)
 {
 	*data = 0x02 & computer_data.packed.other_temp_status;
@@ -148,14 +102,6 @@ void write_temp_control()
 		update_information_frame(SHOW_GPU_TEMPERTURE,true);
 	}
 }
-
-//void write_hd_sz_lsb(uint8_t hd_addr, uint8_t data)
-//{
-//	int8_t index = (hd_addr - HDD0_LSB_SZ_ADDRESS) / 2;
-//	if (!is_valid_register(index, MAX_HDD))
-//		return ;
-//	computer_data.hdd_size[index] = (computer_data.hdd_size[index] & ~ LSB_MSK) | data;
-//}
 
 void write_hd_sz_msb(uint8_t hdd_addr)
 {
@@ -238,17 +184,12 @@ void write_reset()
 	else if (layout.l.rst)
 		software_reset();
 }
-//
+
 void write_post_code_lsb()
 {
 	computer_data.packed.post_code = layout.l.bios_post_code;
 	update_information_frame(SHOW_POST_CODE,true);
 }
-//
-//void write_post_code_msb(uint8_t data)
-//{
-//	computer_data.bios_post_code = (computer_data.bios_post_code & ~MSB_MSK) | (data << 8);
-//}
 
 void write_memory(uint8_t mem_addr)
 {
@@ -367,24 +308,6 @@ void read_iwren(uint8_t *data)
 	*data = layout.l.iwren;
 }
 
-//void read_cpu_temp(uint8_t cpu_address, uint8_t *data)
-//{
-//	uint8_t temp = 0x00;
-//	uint8_t index = cpu_address - CPU0_TEMP_ADDRESS;
-//	if (is_valid_register(index, MAX_CPU))
-//		temp = computer_temperature_registers.cpu_temp[index];
-//	*data = temp;
-//}
-
-//void read_hdd_temp(uint8_t hdd_address, uint8_t *data)
-//{
-//	uint8_t temp = 0x00;
-//	uint8_t index = hdd_address - HDD0_TEMP_ADDRESS;
-//	if (is_valid_register(index, MAX_HDD))
-//		temp = computer_temperature_registers.hdd_temp[index];
-//	*data = temp;
-//}
-
 void read_hdd_status(uint8_t *data)
 {
 	*data = computer_data.packed.hddts;
@@ -410,10 +333,10 @@ void set_direct_string()
 
 void add_direct_string()
 {
-//	direct_string_to_add->next = computer_data.direct_string;
-//	computer_data.direct_string = direct_string_to_add;
-//	direct_string_to_add = 0;
-//	init_direct_write_vars();
+	direct_string_to_add->next = computer_data.details.direct_string;
+	computer_data.details.direct_string = direct_string_to_add;
+	direct_string_to_add = 0;
+	init_direct_write_vars();
 }
 
 
@@ -582,103 +505,6 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 		break;
 	}
 }
-//
-//void handle_sram_read_request(enum i2c_addr_space i2c_addr, uint8_t *data)
-//{
-//	*data = DEFAULT_DATA;
-//	switch(i2c_addr){
-//	case SIG0ADDR:
-//	case SIG1ADDR:
-//	case SIG2ADDR:
-//	case SIG3ADDR:
-//		read_sig(i2c_addr, data);
-//		break;
-//	case MAJOR_REV_LSB:
-//	case MAJOR_REV_MSB:
-//	case MINOR_REV_LSB:
-//	case MINOR_REV_MSB:
-//		read_revision(i2c_addr, data);
-//		break;
-//	case LAYOUT_VER:
-//		read_layout(data);
-//		break;
-//	case BIOS_POST_CODE_LSB:
-//	case BIOS_POST_CODE_MSB:
-//		read_bios_post_code(i2c_addr, data);
-//		break;
-//	case POWER_STATE:
-//		read_power_state(data);
-//		break;
-//	case AMBT:
-//		read_ambient(data);
-//		break;
-//	case ADC_LSB:
-//	case ADC_MSB:
-//		read_adc(i2c_addr, data);
-//		break;
-//	case RESET:
-//		read_wen(data);
-//		break;
-//	case PENDING_CONTROL:
-//		read_pending_requests(data);
-//		break;
-//	case RTC_TIME:
-//	case RTC_DATE:
-////		read_rtc(i2c_addr, data); TODO
-//		break;
-//	case CPU0T:
-//	case CPU1T:
-//	case CPU2T:
-//	case CPU3T:
-//	case CPU4T:
-//	case CPU5T:
-//	case CPU6T:
-//	case CPU7T:
-////		read_cpu_temp(i2c_addr, data);
-//		break;
-//	case CPUTS:
-//		read_cpu_stauts(data);
-//		break;
-//	case HDD0T:
-//	case HDD1T:
-//	case HDD2T:
-//	case HDD3T:
-//	case HDD4T:
-//	case HDD5T:
-//	case HDD6T:
-//	case HDD7T:
-////		read_hdd_temp(i2c_addr, data);
-//		break;
-//	case HDDTS:
-//		read_hdd_status(data);
-//		break;
-//	case CPU0F_MSB:
-//	case CPU1F_MSB:
-//	case CPU2F_MSB:
-//	case CPU3F_MSB:
-//	case CPU4F_MSB:
-//	case CPU5F_MSB:
-//	case CPU6F_MSB:
-//	case CPU7F_MSB:
-////		read_cpu_fq_msb(i2c_addr, data);
-//		break;
-//	case CPU0F_LSB:
-//	case CPU1F_LSB:
-//	case CPU2F_LSB:
-//	case CPU3F_LSB:
-//	case CPU4F_LSB:
-//	case CPU5F_LSB:
-//	case CPU6F_LSB:
-//	case CPU7F_LSB:
-////		read_cpu_fq_lsb(i2c_addr, data);
-//		break;
-//	case OTHER_TEMPERATURE_REGISTERS:
-//		read_temp_control(data);
-//		break;
-//	default:
-//		break;
-//	}
-//}
 
 void write_gpu_temp()
 {
@@ -811,12 +637,8 @@ void write_data(enum i2c_addr_space addr, uint8_t data)
 	case REQ:
 	case PENDR0:
 	case POWER_STATE:
-		layout.direct.i2c[addr] = data;
-		break;
 	case FPCTRL:
-		layout.l.iwren = (data & 0x80) != 0 ? 1 : 0;
-		layout.l.rstusb = (data & 0x20) != 0 ? 1 : 0;
-		layout.l.rst = (data & 0x01) != 0 ? 1 : 0;
+		layout.direct.i2c[addr] = data;
 		break;
 	case SIG0:
 	case SIG1:
