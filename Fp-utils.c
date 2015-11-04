@@ -15,7 +15,7 @@ char power_value[10];
 void update_information_frame(enum information_type type, bool need_to_update)
 {
 	if (!present_menu->visible) {
-		if (information_present->info_type == type && need_to_update) {
+		if (need_to_update && information_present->info_type == type) {
 			update_information();
 		}
 	}
@@ -24,6 +24,63 @@ void update_information_frame(enum information_type type, bool need_to_update)
 void set_invalid_string(char *str){
 	sprintf(str, "INVALID");
 }
+
+
+
+bool need_to_update_req(struct gfx_information_node * curr_info, enum information_type info_type)
+{
+	bool need_to_update = false;
+	while (curr_info != 0){
+		if (curr_info->information.info_type == info_type){
+			need_to_update = true;
+			break;
+		}
+		curr_info = curr_info->next;
+	}
+	return need_to_update;
+}
+
+
+void check_update_hddtr_temp_req()
+{
+	if(need_to_update_req(frame_present->information_head, SHOW_HDD_TEMPERTURE))
+		layout.l.hddtr = 1;
+}
+
+void check_update_cpu_fq_req()
+{
+	if (need_to_update_req(frame_present->information_head, SHOW_CPU_FREQUENCY))
+		layout.l.cpufr = 1;
+}
+
+void check_update_cpu_temp_req()
+{
+	if (need_to_update_req(frame_present->information_head, SHOW_CPU_TEMPERTURE))
+		layout.l.cputr = 1;
+}
+
+void check_update_gpu_temp_req()
+{
+	if (need_to_update_req(frame_present->information_head, SHOW_GPU_TEMPERTURE))
+		layout.l.gputr = 1;
+}
+
+void check_update_pending_req()
+{
+	if (layout.direct.i2c[PENDR0] != 0)
+		layout.l.req = 1;
+}
+
+
+void update_requests()
+{
+	check_update_hddtr_temp_req();
+	check_update_cpu_fq_req();
+	check_update_cpu_temp_req();
+	check_update_gpu_temp_req();
+	check_update_pending_req();
+}
+
 
 void clear_regs(uint8_t *beg_addr, uint8_t *end_addr)
 {

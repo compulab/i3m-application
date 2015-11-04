@@ -35,10 +35,16 @@
 #define AMBIENT_TEMPERATURE_ADDRESS 0x00
 #define EMPTY_SLOT "Empty Slot"
 #define BRIHTNESS_STEP				25
+#define HDDTR_BIT					0
+#define CPUFR_BIT					1
+#define CPUTR_BIT					2
+#define GPUTR_BIT					3
 
 void update_information_frame(enum information_type type, bool need_to_update);
 
 void update_ambient_value(uint8_t high_bit);
+
+void update_requests();
 
 void update_ambient_temp();
 

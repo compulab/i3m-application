@@ -67,7 +67,7 @@ void init_menu()
 {
 	load_config_block();
 	set_menu_by_id(&present_menu, 0);
-	gfx_action_menu_init(present_menu, true);
+	show_current_menu(true);
 	tc_init();
 }
 
@@ -86,6 +86,9 @@ void update_fp_info()
 	layout.l.layout_ver = 0x01;
 	layout.l.major_rev = 0x00;
 	layout.l.minor_rev = 0x01;
+
+	if (eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS) == 0x00)
+		eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, 0xf0);
 }
 
 void updated_info_init()
@@ -171,10 +174,10 @@ void init()
 	board_init();
 	sysclk_init();
 	sram_handle_init();
+	updated_info_init();
 	gfx_mono_init();
 	init_menu();
 	tc_handle_init();
-	updated_info_init();
 	adc_init();
 	pmic_init();
 	portf_init();
@@ -184,58 +187,10 @@ void init()
 	TWI_init();
 }
 
-//uint8_t d;
-//
-//void update_d(uint8_t data)
-//{
-//	d = data;
-//}
-//
-//uint8_t addr = 0x00;
-//int main(void)
-//{
-//	bool second_twi = false;
-//	init();
-//	d = 0xff;
-//	while(true){
-////		MSG("Start")
-////		delay_s(2);
-//		if (!second_twi) {
-//			if (TWI_read_reg(AMBIENT_TWI_ADDRESS, AMBIENT_TEMPERATURE_ADDRESS, &d, 2)){
-//				MSG("1 YEss")
-//				second_twi = true;
-//	//				addr ++;
-//			} else {
-//				MSG("1 No")
-//	//			addr = 0x00;
-//			}
-//		} else {
-//			if (TWI_read(AMBIENT_TWI_ADDRESS, &d, 2)){
-//				MSG("2 YEss")
-////				second_twi = true;
-//	//				addr ++;
-//			} else {
-//				MSG("2 No")
-//				delay_s(2);
-//				if (TWI_read_reg(AMBIENT_TWI_ADDRESS, AMBIENT_TEMPERATURE_ADDRESS, &d, 2)){
-//							MSG("2 YEss")
-//				}
-//	//			addr = 0x00;
-//			}
-//		}
-//
-////		send_read_package(update_d, real);
-//		MSG_dec(d);
-////		MSG("done")
-//		delay_s(5);
-//		ssd1306_clear();
-//	}
-//}
-
-//
 int main(void)
 {
 	init();
+
 
 
 	while(true)

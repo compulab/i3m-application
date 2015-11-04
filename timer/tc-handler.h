@@ -21,8 +21,11 @@
 #define MENU_SHOW_TIME		150
 #define SLEEP_TIME			500
 #define MOVE_BUTTON_TIME	7
-#define UPDATE_ADC_TIME		15
+#define UPDATE_ADC_TIME		5
 #define MAX_CLICK_TIME		MOVE_BUTTON_TIME
+#define UPDATE_REQ_TIME		90
+#define UPDATE_AMBIENT_TIME	10
+
 
 void tc_handle_init();
 

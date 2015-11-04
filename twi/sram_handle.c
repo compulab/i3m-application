@@ -105,7 +105,11 @@ bool is_valid_register(int8_t index, uint8_t max_index)
 //	}
 //	*data = computer_temperature_registers.cpu_fq[index];
 //}
-
+void clear_req()
+{
+	if (layout.direct.i2c[PENDR0] == 0)
+		layout.l.req = 0;
+}
 
 void write_cpu_fq_msb(uint8_t cpu_addr)
 {
@@ -116,7 +120,11 @@ void write_cpu_fq_msb(uint8_t cpu_addr)
 		computer_data.packed.cpuf[index] = (layout.direct.i2c[cpu_addr] & ~CPU_FQ_MSK) | (layout.direct.i2c[cpu_addr - 1] << 8);
 		update_information_frame(SHOW_CPU_FREQUENCY, information_present->info_data == index);
 	}
+	layout.l.cpufr = 0;
+	clear_req();
 }
+
+
 
 //void write_cpu_fq_lsb(uint8_t cpu_addr, uint8_t data)
 //{
@@ -188,6 +196,9 @@ void validate_temperate(bool *valid_bit, uint8_t *dest, uint8_t src)
 
 void write_cpu_status()
 {
+	layout.l.cputr = 0;
+	clear_req();
+
 	if (layout.direct.i2c[CPUTS] == 0){
 		computer_data.packed.cputs = 0;
 	} else {
@@ -199,9 +210,9 @@ void write_cpu_status()
 			bit = bit << 1;
 		}
 		update_information_frame(SHOW_CPU_TEMPERTURE, information_present->info_data < MAX_CPU && (computer_data.packed.cputs &(0x01 << information_present->info_data)));
-
 	}
 }
+
 
 void write_hdd_status()
 {
@@ -216,6 +227,8 @@ void write_hdd_status()
 		}
 			update_information_frame(SHOW_HDD_TEMPERTURE, information_present->info_data < MAX_HDD &&(computer_data.packed.hddts &(0x01 << information_present->info_data)));
 	}
+	layout.l.hddtr = 0;
+	clear_req();
 }
 
 void write_reset()
@@ -673,6 +686,8 @@ void write_gpu_temp()
 		computer_data.details.gput = layout.l.gput;
 		update_information_frame(SHOW_GPU_TEMPERTURE, true);
 	}
+	layout.l.gputr = 0;
+	clear_req();
 }
 
 void update_data(uint8_t write_address)

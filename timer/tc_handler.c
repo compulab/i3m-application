@@ -74,18 +74,22 @@ void tc_handle_init()
 	ambient_update_fail_count = 0;
 }
 
+
 void tc_handle()
 {
-
-	if (tc_counter % 10 == 0 && current_power_state == POWER_ON)
-		update_ambient_temp();
-	if (tc_counter % 5 == 0)
-		update_adc();
-	if (update_buttons && (tc_counter % MOVE_BUTTON_TIME == 0))
-		handle_button_pressed();
-	if (tc_counter == SLEEP_TIME) {
-		tc_counter = 0;
+	if (current_power_state == POWER_ON) {
+		if (tc_counter % UPDATE_REQ_TIME == 0)
+			update_requests();
+		if (tc_counter % UPDATE_AMBIENT_TIME == 0)
+			update_ambient_temp();
+		if (tc_counter % UPDATE_ADC_TIME == 0)
+				update_adc();
+		if (update_buttons && tc_counter % MOVE_BUTTON_TIME == 0)
+			handle_button_pressed();
+		if (tc_counter == SLEEP_TIME) {
+			tc_counter = 0;
 		if (sleep_mode_enabled)
 			show_splash();
+		}
 	}
 }
