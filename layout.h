@@ -61,7 +61,7 @@ union layout_t {
 		uint16_t bios_post_code;
 		uint8_t power_state:3;
 		uint8_t reserved1:5;
-		uint8_t reserved2[7];
+		uint8_t reserved2[13];
 		uint8_t cpu0t;
 		uint8_t cpu1t;
 		uint8_t cpu2t;
