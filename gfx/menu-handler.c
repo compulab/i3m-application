@@ -76,7 +76,7 @@ void show_splash()
 	clear_screen();
 	present_menu->visible = false;
 	gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 0);
-	gfx_mono_put_framebuffer();
+	gfx_mono_ssd1306_put_framebuffer();
 }
 
 void graphic_item_init(struct gfx_image *menu_image, struct cnf_image * image_node)
@@ -119,7 +119,7 @@ void load_fonts(struct cnf_font_node *cnf_font_node, uint8_t size)
 void set_graphic_view(struct gfx_action_menu *action_menu, struct cnf_image_node *cnf_graphic_item_node)
 {
 	struct cnf_image_node cnf_image;
-	 struct gfx_mono_menu *mono_menu = action_menu->menu;
+	struct gfx_mono_menu *mono_menu = action_menu->menu;
 	action_menu->is_graphic_view =  cnf_graphic_item_node != 0;
 	if (action_menu->is_graphic_view){
 		action_menu->graphic_items_head = malloc(sizeof(struct gfx_image_node));
@@ -165,6 +165,13 @@ void set_actions(struct gfx_action_menu * menu, struct cnf_action_node *cnf_acti
 	}
 }
 
+void set_visible_items(struct gfx_action_menu *action_menu)
+{
+	action_menu->visible_items.visible_actions = 0;
+	action_menu->visible_items.visible_images = 0;
+	action_menu->visible_items.visible_menu = 0;
+}
+
 void load_config_block()
 {
 	struct cnf_blk config_block;
@@ -183,6 +190,7 @@ void load_config_block()
 			memcpy_P(&cnf_menu, cnf_menu_node, sizeof(struct cnf_menu_node));
 			memcpy_P(&config_menu, cnf_menu.menu, sizeof(struct cnf_menu));
 			set_mono_menu(action_menus[config_menu.id], config_menu.menu);
+			set_visible_items(action_menus[config_menu.id]);
 			set_graphic_view(action_menus[config_menu.id], config_menu.images_items_head);
 			set_actions(action_menus[i], config_menu.actions_head);
 			cnf_menu_node = cnf_menu.next;

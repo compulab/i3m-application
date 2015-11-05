@@ -40,6 +40,21 @@
 #define CPUTR_BIT					2
 #define GPUTR_BIT					3
 
+
+bool is_valid_cpu_temp(uint8_t cpu_id);
+
+bool is_valid_cpu_fq(uint8_t cpu_id);
+
+bool is_valid_ambient_temp();
+
+bool is_valid_gpu_temp();
+
+bool is_valid_hdd_size(uint8_t hdd_id);
+
+bool is_valid_hdd_temp(uint8_t hdd_id);
+
+bool is_valid_mem(uint8_t mem_id);
+
 void update_information_frame(enum information_type type, bool need_to_update);
 
 void update_ambient_value(uint8_t high_bit);

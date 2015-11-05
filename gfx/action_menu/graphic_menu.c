@@ -32,19 +32,43 @@ void draw_selected_item(char *title)
 }
 
 
+//void graphic_menu_init(struct gfx_action_menu *action_menu, bool redraw)
+//{
+//	struct gfx_image_node *curr_node = action_menu->graphic_items_head;
+//	struct gfx_mono_menu *menu = action_menu->menu;
+//	if (redraw){
+//		for (int i=0 ; i < GFX_MONO_LCD_FRAMEBUFFER_SIZE; i++)
+//			framebuffer[i] = 0x00;
+//		for (int i = 0; i < action_menu->menu->num_elements; i++){
+//			if (curr_node == 0)
+//				break;
+//			set_item_position(&curr_node->image, i);
+//			gfx_mono_generic_put_bitmap(curr_node->image.bitmap, curr_node->image.postion.x, curr_node->image.postion.y);
+//			curr_node = curr_node->next;
+//		}
+//	} else {
+//		invert_item(menu->last_selection);
+//		gfx_mono_draw_filled_rect(0, 54, 128, 10, GFX_PIXEL_CLR);
+//	}
+//	invert_item(menu->current_selection);
+//	draw_selected_item(menu->strings[menu->current_selection]);
+//	gfx_mono_ssd1306_put_framebuffer();
+//}
+
 void graphic_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 {
-	struct gfx_image_node *curr_node = action_menu->graphic_items_head;
-	struct gfx_mono_menu *menu = action_menu->menu;
+	struct gfx_image *curr_image;
+	struct gfx_mono_menu *menu = action_menu->visible_items.visible_menu;
 	if (redraw){
-		for (int i=0 ; i < GFX_MONO_LCD_FRAMEBUFFER_SIZE; i++)
-			framebuffer[i] = 0x00;
-		for (int i = 0; i < action_menu->menu->num_elements; i++){
-			if (curr_node == 0)
+//		for (int i=0 ; i < GFX_MONO_LCD_FRAMEBUFFER_SIZE; i++)
+//			framebuffer[i] = 0x00;
+		clear_screen();
+		for (int i = 0; i < menu->num_elements; i++){
+			curr_image = action_menu->visible_items.visible_images[i];
+			if (curr_image == 0)
 				break;
-			set_item_position(&curr_node->image, i);
-			gfx_mono_generic_put_bitmap(curr_node->image.bitmap, curr_node->image.postion.x, curr_node->image.postion.y);
-			curr_node = curr_node->next;
+			set_item_position(curr_image, i);
+			gfx_mono_generic_put_bitmap(curr_image->bitmap, curr_image->postion.x, curr_image->postion.y);
 		}
 	} else {
 		invert_item(menu->last_selection);
@@ -52,5 +76,4 @@ void graphic_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 	}
 	invert_item(menu->current_selection);
 	draw_selected_item(menu->strings[menu->current_selection]);
-	gfx_mono_ssd1306_put_framebuffer();
 }

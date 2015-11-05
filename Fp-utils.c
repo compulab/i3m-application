@@ -12,13 +12,69 @@ enum power_state current_power_state = POWER_ON;
 
 char power_value[10];
 
-void update_information_frame(enum information_type type, bool need_to_update)
+bool is_valid_cpu_temp(uint8_t cpu_id)
 {
-	if (!present_menu->visible) {
-		if (need_to_update && information_present->info_type == type) {
-			update_information();
+	return (computer_data.packed.cputs & 0x01 << (cpu_id)) != 0;
+}
+
+bool is_valid_cpu_fq(uint8_t cpu_id)
+{
+	return (computer_data.packed.cpufs & 0x01 << (cpu_id)) != 0;
+}
+
+bool is_valid_ambient_temp()
+{
+	return computer_data.details.ambs == 1;
+}
+
+bool is_valid_gpu_temp()
+{
+	return computer_data.details.gpus == 1;
+}
+
+bool is_valid_hdd_size(uint8_t hdd_id)
+{
+	return (computer_data.packed.hdds & 0x01 << (hdd_id)) != 0;
+}
+
+bool is_valid_hdd_temp(uint8_t hdd_id)
+{
+	return (computer_data.packed.hddts & 0x01 << (hdd_id)) != 0;
+}
+
+bool is_valid_mem(uint8_t mem_id)
+{
+	return (computer_data.packed.mems & 0x01 << (mem_id)) != 0;
+}
+
+bool is_action_in_menu(struct gfx_action_menu *menu, enum information_type type)
+{
+	struct gfx_information_node *info_node;
+	for (uint8_t i = 0; i < menu->menu->num_elements; i++){
+		if ( menu->actions[i].type == ACTION_TYPE_SHOW_FRAME){
+			info_node = menu->actions[i].frame->information_head;
+			while (info_node != 0){
+				if (info_node->information.info_type == type)
+					return true;
+				info_node = info_node->next;
+			}
 		}
 	}
+	return false;
+}
+
+void update_information_frame(enum information_type type, bool need_to_update)
+{
+	if (need_to_update){
+		if (!present_menu->visible) {
+			if (information_present->info_type == type) {
+				update_information();
+			}
+		} else if (is_action_in_menu(present_menu, type)){
+//			gfx_action_menu_init(present_menu, true);
+		}
+	}
+
 }
 
 void set_invalid_string(char *str){

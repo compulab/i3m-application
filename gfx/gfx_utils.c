@@ -231,12 +231,6 @@ void gfx_images_draw(struct gfx_image_node *curr_image_node)
 	}
 }
 
-void clear_framebuffer()
-{
-	for (int i = 0; i < 1024; i++)
-		framebuffer[i] = 0x00;
-}
-
 void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
 {
 	if (frame != 0){

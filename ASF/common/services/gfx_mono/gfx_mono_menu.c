@@ -45,7 +45,7 @@
 
 #include "sysfont.h"
 #include "../../../../config/conf_menu.h"
-
+#include "../../../../debug.h"
 #include "gfx_mono_menu.h"
 
 /**
@@ -150,7 +150,6 @@ void gfx_mono_menu_init(struct gfx_mono_menu *menu, bool redraw, bool is_progmem
 
 	/* Draw menu options below */
 	menu_draw(menu, redraw, is_progmem);
-	gfx_mono_put_framebuffer();
 }
 
 /**
@@ -171,6 +170,7 @@ uint8_t gfx_mono_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode, b
 		} else {
 			menu->current_selection++;
 		}
+
 
 		/* Update menu on display */
 //		menu_draw(menu, false, is_progmem);

@@ -32,21 +32,10 @@ struct gfx_item_data {
 struct gfx_item_action {
 	enum action_type type;
 	uint8_t menu_id;
+	bool visible;
 	struct gfx_action_menu *menu;
 	struct gfx_frame *frame;
 };
-
-struct gfx_action_menu {
-	struct gfx_mono_menu *menu;
-	struct gfx_item_action *actions;
-	struct gfx_image_node *graphic_items_head;
-	uint8_t id;
-	bool is_active_frame;
-	bool is_progmem;
-	bool is_graphic_view;
-	bool visible;
-};
-
 
 struct gfx_text {
 	char *text;
@@ -75,6 +64,24 @@ struct gfx_image {
 struct gfx_image_node {
 	struct gfx_image image;
 	struct gfx_image_node *next;
+};
+
+struct gfx_visible_items {
+	struct gfx_item_action **visible_actions;
+	struct gfx_mono_menu *visible_menu;
+	struct gfx_image **visible_images;
+};
+
+struct gfx_action_menu {
+	struct gfx_mono_menu *menu;
+	struct gfx_item_action *actions;
+	struct gfx_image_node *graphic_items_head;
+	struct gfx_visible_items visible_items;
+	uint8_t id;
+	bool is_active_frame;
+	bool is_progmem;
+	bool is_graphic_view;
+	bool visible;
 };
 
 struct gfx_label_node {

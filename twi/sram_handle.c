@@ -155,9 +155,10 @@ void write_cpu_status()
 				computer_data.packed.cput[i] = layout.direct.i2c[CPU0T + i];
 			bit = bit << 1;
 		}
-		update_information_frame(SHOW_CPU_TEMPERTURE, information_present->info_data < MAX_CPU && (computer_data.packed.cputs &(0x01 << information_present->info_data)));
 	}
+	update_information_frame(SHOW_CPU_TEMPERTURE, information_present->info_data < MAX_CPU && (present_menu->visible || (computer_data.packed.cputs &(0x01 << information_present->info_data))));
 }
+
 
 
 void write_hdd_status()
