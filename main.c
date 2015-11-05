@@ -15,11 +15,14 @@
 #include "timer/tc-handler.h"
 #include "twi/sram_handle.h"
 #include "twi/master/twi.h"
+#include "wdt/wdt.h"
+
 //#define DEMO_SHOW
 
 
 ISR(TWIE_TWIS_vect)
 {
+	wdt_reset();
 	twi_slave_interrupt_handler();
 }
 
@@ -31,16 +34,19 @@ ISR(TWIE_TWIS_vect)
 
 ISR(PORTF_INT0_vect)
 {
+	wdt_reset();
 	update_power_state();
 }
 
 ISR(PORTF_INT1_vect){
+	wdt_reset();
 	handle_button_pressed();
 }
 
 ISR(TCC0_OVF_vect)
 {
 	tc_counter++;
+	wdt_reset();
 	tc_handle();
 }
 
@@ -171,6 +177,8 @@ void updated_info_init()
 
 void init()
 {
+	wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_4KCLK);
+	wdt_enable();
 	board_init();
 	sysclk_init();
 	sram_handle_init();
@@ -185,15 +193,17 @@ void init()
 	sei();
 	twi_slave_init();
 	TWI_init();
+	wdt_reset();
+	wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_1KCLK);
 }
 
 int main(void)
 {
 	init();
 
-
-
 	while(true)
-	{}
+	{
+
+	}
 
 }
