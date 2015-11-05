@@ -249,6 +249,7 @@ void hadle_back_to_menu()
 {
 	clear_screen();
 	frame_present = 0;
+//	information_present = 0;
 	gfx_action_menu_init(present_menu, true);
 }
 
@@ -267,7 +268,7 @@ void update_buttons_states()
 void handle_button_pressed()
 {
 	update_buttons_states();
-	
+
 	switch (ok_button){
 	case BUTTON_HOLD:
 	case BUTTON_CLICK:

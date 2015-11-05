@@ -43,7 +43,6 @@ void clear_string_background(uint8_t length, uint8_t x, uint8_t y, struct gfx_fo
 {
 	uint8_t height = font->height + 4;
 	gfx_mono_draw_filled_rect(x, y, length, height, GFX_PIXEL_CLR);
-//	gfx_mono_ssd1306_put_framebuffer();
 }
 
 uint8_t length_P(char *str)

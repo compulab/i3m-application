@@ -194,7 +194,6 @@ void init()
 	twi_slave_init();
 	TWI_init();
 	wdt_reset();
-	wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_1KCLK);
 }
 
 int main(void)

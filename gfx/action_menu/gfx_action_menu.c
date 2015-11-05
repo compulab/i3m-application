@@ -142,9 +142,11 @@ void set_present_menu(struct gfx_action_menu *action_menu)
 void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 {
 	if (redraw){
+		clear_screen();
 		set_present_menu(action_menu);
 		update_visible_items();
 	}
+	frame_present = 0;
 	if (present_menu->is_graphic_view)
 		graphic_menu_init(action_menu, redraw);
 	else
@@ -160,7 +162,7 @@ void show_menu(struct gfx_action_menu *menu, bool redraw)
 
 void show_current_menu(bool redraw)
 {
-	gfx_action_menu_init(present_menu, redraw);
+	show_menu(present_menu, redraw);
 }
 
 struct gfx_action_menu dmi_menu = {.is_progmem = false };

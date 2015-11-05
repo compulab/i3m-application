@@ -51,7 +51,7 @@ bool is_action_in_menu(struct gfx_action_menu *menu, enum information_type type)
 {
 	struct gfx_information_node *info_node;
 	for (uint8_t i = 0; i < menu->menu->num_elements; i++){
-		if ( menu->actions[i].type == ACTION_TYPE_SHOW_FRAME){
+		if (menu->actions[i].type == ACTION_TYPE_SHOW_FRAME){
 			info_node = menu->actions[i].frame->information_head;
 			while (info_node != 0){
 				if (info_node->information.info_type == type)
@@ -67,11 +67,11 @@ void update_information_frame(enum information_type type, bool need_to_update)
 {
 	if (need_to_update){
 		if (!present_menu->visible) {
-			if (information_present->info_type == type) {
+			if (information_present != 0 && information_present->info_type == type) {
 				update_information();
 			}
 		} else if (is_action_in_menu(present_menu, type)){
-//			gfx_action_menu_init(present_menu, true);
+			gfx_action_menu_init(present_menu, true);
 		}
 	}
 
