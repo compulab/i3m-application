@@ -182,7 +182,7 @@ void updated_info_init()
 
 void init()
 {
-	wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_4KCLK);
+	wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_8KCLK);
 	wdt_enable();
 	board_init();
 	sysclk_init();
@@ -206,6 +206,7 @@ int main(int argc, char *argv[])
 	init();
 
 	while(true) {
+		wdt_reset();
 			if (!work_handler());
 				delay_ms(10);
 	}
