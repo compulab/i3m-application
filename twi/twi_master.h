@@ -1,36 +1,41 @@
-///*
-// * twi-master.h
-// *
-// *  Created on: Aug 3, 2015
-// *      Author: arkadi
-// */
-//
-//#ifndef TWI_TWI_MASTER_H_
-//#define TWI_TWI_MASTER_H_
-//
-//#include <stdint.h>
-//#include <stdbool.h>
-//#include "../config/conf_twi.h"
-//#include <avr/io.h>
-//
-//#define MAX_RETRY 2
-//#define READ_REQUEST 0x01
-//#define TWI_BAUD(F_SYS, F_TWI) ((F_SYS / (2 * F_TWI)) - 5)
-//
-//typedef void (*handle_data_func)(uint8_t);
-//
-//struct twi_package{
-//	uint8_t slave_address;
-//	uint8_t buffer[EEPROM_BYTES_IN_PAGE];
-//	uint8_t length;
-//	bool is_write_request;
-//	handle_data_func handle_data_received;
-//};
-//
-//void send_package(struct twi_package *package);
-//
-//void interrupt_handler();
-//
-//void twi_master_init();
-//
-//#endif /* TWI_TWI_MASTER_H_ */
+/*
+ * twi.h
+ *
+ * Created: 10/06/2014 16:36:04
+ *  Author: paul.qureshi
+ */
+
+
+#ifndef TWI_MASTER_H_
+#define TWI_MASTER_H_
+#include <stdbool.h>
+
+//#ifndef DEBUG_H_
+#include "../debug.h"
+//#endif
+
+#define TWI						TWIC
+#define TWI_MASTER_vect			TWIC_TWIM_vect
+//#define TWI_SLAVE_vect			TWIC_TWIS_vect
+
+#define TWI_BAUD_REG			65		// 100KHz, (Fclk/(2*Ftwi)) -5
+#define TWI_MASTER_INTLVL_gc	TWI_MASTER_INTLVL_MED_gc
+#define TWI_IDLE_TIMEOUT_MS		10
+
+#define TWI_INTERRUPT_DRIVEN
+
+void handle_twi_master();
+
+extern void TWI_init(void);
+
+extern bool TWI_write_reg(uint8_t address, uint8_t reg, const uint8_t *buffer, uint8_t buffer_size);
+
+extern bool TWI_read_reg(uint8_t address, uint8_t reg, uint8_t *buffer, uint8_t buffer_size);
+
+extern bool TWI_read(uint8_t address, uint8_t *buffer, uint8_t buffer_size);
+
+extern void TWI_scan(void);
+
+
+
+#endif /* TWI_H_ */

@@ -101,11 +101,6 @@ void gfx_information_draw(struct gfx_information *info)
 	print_data(&info->text, info->postion.x, info->postion.y);
 }
 
-void update_information()
-{
-	gfx_frame_draw(frame_present, true);
-}
-
 void gfx_label_draw(struct gfx_label *label)
 {
 	gfx_item_draw(&label->postion);

@@ -10,7 +10,10 @@ void switch_present_menu(struct gfx_action_menu *action_menu)
 
 void update_action_visibility(struct gfx_item_action *action)
 {
-	if (action->type != ACTION_TYPE_SHOW_FRAME){
+	if (action->type == ACTION_TYPE_SHOW_DMI_MENU) {
+		action->visible = computer_data.details.direct_string != 0;
+		return ;
+	} else if (action->type != ACTION_TYPE_SHOW_FRAME){
 		action->visible = true;
 		return;
 	}

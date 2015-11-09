@@ -20,8 +20,6 @@ struct gfx_frame *frame_present;
 
 struct gfx_information *information_present;
 
-void update_information();
-
 void gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame);
 
 void gfx_frame_draw(struct gfx_frame *frame, bool redraw);

@@ -47,41 +47,9 @@ bool is_valid_mem(uint8_t mem_id)
 	return (computer_data.packed.mems & 0x01 << (mem_id)) != 0;
 }
 
-bool is_action_in_menu(struct gfx_action_menu *menu, enum information_type type)
-{
-	struct gfx_information_node *info_node;
-	for (uint8_t i = 0; i < menu->menu->num_elements; i++){
-		if (menu->actions[i].type == ACTION_TYPE_SHOW_FRAME){
-			info_node = menu->actions[i].frame->information_head;
-			while (info_node != 0){
-				if (info_node->information.info_type == type)
-					return true;
-				info_node = info_node->next;
-			}
-		}
-	}
-	return false;
-}
-
-void update_information_frame(enum information_type type, bool need_to_update)
-{
-	if (need_to_update){
-		if (!present_menu->visible) {
-			if (information_present != 0 && information_present->info_type == type) {
-				update_information();
-			}
-		} else if (is_action_in_menu(present_menu, type)){
-			gfx_action_menu_init(present_menu, true);
-		}
-	}
-
-}
-
 void set_invalid_string(char *str){
 	sprintf(str, "INVALID");
 }
-
-
 
 bool need_to_update_req(struct gfx_information_node * curr_info, enum information_type info_type)
 {
@@ -164,6 +132,17 @@ void handle_power_on()
 	update_ambient_temp();
 }
 
+void handle_power_state_changed()
+{
+	if (current_power_state != POWER_ON)
+			handle_power_off();
+		else
+			handle_power_on();
+	update_information_frame(SHOW_POWER_STATE, true);
+}
+
+struct work power_state_work = { .do_work = handle_power_state_changed, .data = NULL, .next = NULL };
+
 void update_power_state()
 {
 	enum power_state  last_power_state = current_power_state;
@@ -176,11 +155,8 @@ void update_power_state()
 	else
 		current_power_state = POWER_ON;
 	if (current_power_state != last_power_state) {
-		if (current_power_state != POWER_ON)
-			handle_power_off();
-		else
-			handle_power_on();
-		update_information_frame(SHOW_POWER_STATE,true);
+		layout.l.power_state = current_power_state;
+		insert_work(&power_state_work);
 	}
 }
 
@@ -205,7 +181,8 @@ void set_state(char *state)
 	}
 }
 
-int num_of_digits(int x) {
+int num_of_digits(int x)
+{
 	if (x < 0)
 		x *= -1;
 	for (int i = 1; i < MAX_DIGITS; i++)
@@ -451,3 +428,323 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 	}
 	present_menu->is_active_frame = type == SET_BRIGHTNESS;
 }
+
+
+bool is_cpu_fq_need_update(struct gfx_information *info, bool is_visible)
+{
+	char temp_str[3];
+	bool need_update = false;
+	if (is_visible) {
+	switch (info->info_data){
+		case 0:
+			need_update = computer_data.details.cpu0fs == 0;
+			break;
+		case 1:
+			need_update = computer_data.details.cpu1fs == 0;
+			break;
+		case 2:
+			need_update = computer_data.details.cpu2fs == 0;
+			break;
+		case 3:
+			need_update = computer_data.details.cpu3fs == 0;
+			break;
+		case 4:
+			need_update = computer_data.details.cpu4fs == 0;
+			break;
+		case 5:
+			need_update = computer_data.details.cpu5fs == 0;
+			break;
+		case 6:
+			need_update = computer_data.details.cpu6fs == 0;
+			break;
+		case 7:
+			need_update = computer_data.details.cpu7fs == 0;
+			break;
+		default:
+			need_update = false;
+			break;
+		}
+	}
+	if (!need_update) {
+		set_updated_cpu_frequency(temp_str, info->info_data);
+		need_update = strcmp(temp_str, info->text.text) != 0;
+	}
+	return need_update;
+}
+
+bool is_hdd_size_need_update(struct gfx_information *info, bool is_visible)
+{
+	char temp_str[3];
+	bool need_update = false;
+	if (is_visible) {
+		switch (info->info_data){
+		case 0:
+			need_update = computer_data.details.hdd0s == 0;
+			break;
+		case 1:
+			need_update = computer_data.details.hdd1s == 0;
+			break;
+		case 2:
+			need_update = computer_data.details.hdd2s == 0;
+			break;
+		case 3:
+			need_update = computer_data.details.hdd3s == 0;
+			break;
+		case 4:
+			need_update = computer_data.details.hdd4s == 0;
+			break;
+		case 5:
+			need_update = computer_data.details.hdd5s == 0;
+			break;
+		case 6:
+			need_update = computer_data.details.hdd6s == 0;
+			break;
+		case 7:
+			need_update = computer_data.details.hdd7s == 0;
+			break;
+		default:
+			need_update = false;
+			break;
+		}
+	}
+	if (!need_update) {
+		set_hdd_size_str(temp_str, computer_data.packed.hddsz[info->info_data], computer_data.packed.hddf & (0x01 << info->info_data));
+		need_update = strcmp(temp_str, info->text.text) != 0;
+	}
+	return need_update;
+}
+
+bool is_mem_size_need_update(struct gfx_information *info, bool is_visible)
+{
+	char temp_str[3];
+	bool need_update = false;
+	if (is_visible) {
+		switch (info->info_data){
+		case 0:
+			need_update = computer_data.details.mem0s == 0;
+			break;
+		case 1:
+			need_update = computer_data.details.mem1s == 0;
+			break;
+		case 2:
+			need_update = computer_data.details.mem2s == 0;
+			break;
+		case 3:
+			need_update = computer_data.details.mem3s == 0;
+			break;
+		default:
+			need_update = false;
+			break;
+		}
+	}
+	if (!need_update) {
+		set_mem_size_str(temp_str, info->info_data);
+		need_update = strcmp(temp_str, info->text.text) != 0;
+	}
+	return need_update;
+}
+
+bool is_hdd_temp_need_update(struct gfx_information *info, bool is_visible)
+{
+	char temp_str[3];
+	bool need_update = false;
+	if (is_visible) {
+		switch (info->info_data){
+		case 0:
+			need_update = computer_data.details.hdd0ts== 0;
+			break;
+		case 1:
+			need_update = computer_data.details.hdd1ts == 0;
+			break;
+		case 2:
+			need_update = computer_data.details.hdd2ts == 0;
+			break;
+		case 3:
+			need_update = computer_data.details.hdd3ts == 0;
+			break;
+		case 4:
+			need_update = computer_data.details.hdd4ts == 0;
+			break;
+		case 5:
+			need_update = computer_data.details.hdd5ts == 0;
+			break;
+		case 6:
+			need_update = computer_data.details.hdd6ts == 0;
+			break;
+		case 7:
+			need_update = computer_data.details.hdd7ts == 0;
+			break;
+		default:
+			need_update = false;
+			break;
+		}
+	}
+	if (!need_update) {
+		set_update_hdd_temp(temp_str, info->info_data);
+		need_update = strcmp(temp_str, info->text.text) != 0;
+	}
+	return need_update;
+}
+
+bool is_cpu_temp_need_update(struct gfx_information *info, bool is_visible)
+{
+	char temp_str[3];
+	bool need_update = false;
+	if (is_visible) {
+		switch (info->info_data){
+		case 0:
+			need_update = computer_data.details.cpu0ts== 0;
+			break;
+		case 1:
+			need_update = computer_data.details.cpu1ts == 0;
+			break;
+		case 2:
+			need_update = computer_data.details.cpu2ts == 0;
+			break;
+		case 3:
+			need_update = computer_data.details.cpu3ts == 0;
+			break;
+		case 4:
+			need_update = computer_data.details.cpu4ts == 0;
+			break;
+		case 5:
+			need_update = computer_data.details.cpu5ts == 0;
+			break;
+		case 6:
+			need_update = computer_data.details.cpu6ts == 0;
+			break;
+		case 7:
+			need_update = computer_data.details.cpu7ts == 0;
+			break;
+		default:
+			need_update = false;
+			break;
+		}
+	}
+	if (!need_update) {
+		set_cpu_updated_temp(temp_str, info->info_data);
+		need_update = strcmp(temp_str, info->text.text) != 0;
+	}
+	return need_update;
+}
+
+bool is_gpu_temp_need_update(struct gfx_information *info, bool is_visible)
+{
+	bool need_update = is_visible && computer_data.details.gpus == 0;
+	if (!need_update){
+		char temp_str[3];
+		set_updated_gpu_temp(temp_str);
+		need_update = strcmp(temp_str, info->text.text) != 0;
+	}
+	return need_update;
+}
+
+bool is_ambient_need_update(struct gfx_information *info, bool is_visible)
+{
+	bool need_update = is_visible && computer_data.details.ambs == 0;
+	if (!need_update){
+		char temp_str[3];
+		set_updated_ambient_temp(temp_str);
+		need_update = strcasecmp(temp_str, info->text.text) != 0;
+	}
+	return need_update;
+}
+
+bool is_information_need_to_change(struct gfx_information *info, bool is_visible)
+{
+	switch (info->info_type){
+	case SHOW_POWER:
+		return !is_visible && computer_data.details.adcs == 1;
+	case SHOW_CPU_FREQUENCY:
+		return is_cpu_fq_need_update(info, is_visible);
+	case SHOW_HDD_SIZE:
+		return is_hdd_size_need_update(info, is_visible);
+	case SHOW_MEMORY_SIZE:
+		return is_mem_size_need_update(info, is_visible);
+	case SHOW_HDD_TEMPERTURE:
+		return is_hdd_temp_need_update(info, is_visible);
+	case SHOW_CPU_TEMPERTURE:
+		return is_cpu_temp_need_update(info, is_visible);
+	case SHOW_GPU_TEMPERTURE:
+		return is_gpu_temp_need_update(info, is_visible);
+	case SHOW_AMBIENT_TEMPERATURE:
+		return is_ambient_need_update(info, is_visible);
+	case SET_BRIGHTNESS:
+		return true;
+	default:
+		return false;
+	}
+}
+
+bool is_data_need_update()
+{
+	return is_information_need_to_change(information_present, true);
+}
+
+void update_information()
+{
+	if (is_data_need_update())
+		gfx_frame_draw(frame_present, true);
+}
+
+bool is_status_in_menu_changed(struct gfx_action_menu *menu, enum information_type type)
+{
+	bool need_to_update = false;
+	struct gfx_information_node *info_node;
+	for (uint8_t i = 0; i < menu->menu->num_elements; i++){
+		if (menu->actions[i].type == ACTION_TYPE_SHOW_FRAME){
+			info_node = menu->actions[i].frame->information_head;
+			while (info_node != 0){
+				if (info_node->information.info_type == type) {
+					need_to_update = is_information_need_to_change(&info_node->information, menu->actions[i].visible);
+				}
+				if (need_to_update)
+					return true;
+				info_node = info_node->next;
+			}
+		}
+	}
+	return false;
+}
+
+bool is_action_in_menu(struct gfx_action_menu *menu, enum information_type type)
+{
+	struct gfx_information_node *info_node;
+	for (uint8_t i = 0; i < menu->menu->num_elements; i++){
+		if (menu->actions[i].type == ACTION_TYPE_SHOW_FRAME){
+			info_node = menu->actions[i].frame->information_head;
+			while (info_node != 0){
+				if (info_node->information.info_type == type)
+					return true;
+				info_node = info_node->next;
+			}
+		}
+	}
+	return false;
+}
+
+void update_information_frame(enum information_type type, bool need_to_update)
+{
+	if (need_to_update){
+		if (!present_menu->visible) {
+			if (information_present != 0 && information_present->info_type == type) {
+				update_information();
+			}
+		} else if (is_status_in_menu_changed(present_menu, type)){
+			gfx_action_menu_init(present_menu, true);
+		}
+	}
+
+}
+
+//void update_curr_screen()
+//{
+////	need_to_update = false;
+//	if (!present_menu->visible)
+//			update_information();
+//	else if (is_status_in_menu_changed(present_menu, update_information_type)){
+//		MSG("Update", 10)
+//		delay_s(10);
+//		gfx_action_menu_init(present_menu, true);
+//	}
+//}

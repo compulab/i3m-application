@@ -156,7 +156,7 @@ void write_cpu_status()
 			bit = bit << 1;
 		}
 	}
-	update_information_frame(SHOW_CPU_TEMPERTURE, information_present->info_data < MAX_CPU && (present_menu->visible || (computer_data.packed.cputs &(0x01 << information_present->info_data))));
+	update_information_frame(SHOW_CPU_TEMPERTURE, information_present->info_data < MAX_CPU);
 }
 
 
@@ -189,10 +189,10 @@ void write_reset()
 void write_post_code_lsb()
 {
 	computer_data.packed.post_code = layout.l.bios_post_code;
-	update_information_frame(SHOW_POST_CODE,true);
+	update_information_frame(SHOW_POST_CODE, true);
 }
 
-void write_memory(uint8_t mem_addr)
+void write_memory(uint8_t mem_addr) //Todo: change memory status set
 {
 	uint8_t index = (mem_addr - MEM_LSB ) * 2;
 	uint8_t data = layout.direct.i2c[mem_addr];
@@ -202,7 +202,7 @@ void write_memory(uint8_t mem_addr)
 	computer_data.packed.memsz[index + 1] = (data & MEM_SZ_MSB_MSK) >> 4;
 	if (data & MEM_SZ_STATUS_MSB_MSK)
 		computer_data.packed.mems |= 0x01 << (index + 1);
-	update_information_frame(SHOW_MEMORY_SIZE, information_present->info_data < MAX_MEMORY_SLOT && (computer_data.packed.mems & (0x01 <<information_present->info_data)));
+//	update_information_frame(SHOW_MEMORY_SIZE, information_present->info_data < MAX_MEMORY_SLOT && (computer_data.packed.mems & (0x01 <<information_present->info_data)), index, );
 }
 
 void read_sig(enum i2c_addr_space sig_address, uint8_t *data)
@@ -509,17 +509,23 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 
 void write_gpu_temp()
 {
-	if (layout.l.gput != computer_data.details.gput) {
-		computer_data.details.gput = layout.l.gput;
+	computer_data.details.gpus = layout.l.gpus;
+	if (computer_data.details.gpus == 1) {
+		if (layout.l.gput != computer_data.details.gput) {
+			computer_data.details.gput = layout.l.gput;
+			update_information_frame(SHOW_GPU_TEMPERTURE, true);
+		}
+	} else {
 		update_information_frame(SHOW_GPU_TEMPERTURE, true);
 	}
 	layout.l.gputr = 0;
 	clear_req();
 }
 
-void update_data(uint8_t write_address)
+void update_data(void *write_address)
 {
-	switch (write_address){
+	uint8_t addr = (uint8_t)write_address;
+	switch (addr){
 		case GPUT:
 			write_gpu_temp();
 			break;
@@ -537,11 +543,11 @@ void update_data(uint8_t write_address)
 		case CPU5F_MSB:
 		case CPU6F_MSB:
 		case CPU7F_MSB:
-			write_cpu_fq_msb(write_address);
+			write_cpu_fq_msb(addr);
 			break;
 		case MEM_LSB :
 		case MEM_MSB:
-			write_memory(write_address);
+			write_memory(addr);
 			break;
 		case SENSORT:
 			write_temp_control();
@@ -557,11 +563,11 @@ void update_data(uint8_t write_address)
 		case HDD5_SZ_MSB:
 		case HDD6_SZ_MSB:
 		case HDD7_SZ_MSB:
-			write_hd_sz_msb(write_address);
+			write_hd_sz_msb(addr);
 			break;
 		case DMIN:
 		case DMIV:
-			write_direct(write_address);
+			write_direct(addr);
 			break;
 		case FPCTRL:
 			write_reset();
@@ -657,8 +663,15 @@ void write_data(enum i2c_addr_space addr, uint8_t data)
 	}
 }
 
+struct work update_data_work = {
+		.do_work = update_data,
+		.next = NULL,
+};
+
 void handle_sram_write_request(uint8_t write_address, uint8_t data)
 {
 	write_data(write_address, data);
-	update_data(write_address);
+	update_data_work.data = (void *)write_address;
+	insert_work(&update_data_work);
+//	update_data(write_address);
 }

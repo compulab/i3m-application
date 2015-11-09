@@ -48,11 +48,11 @@
 
 //#define SPID_32MHZ
 
-#define CONFIG_SYSCLK_SOURCE		  SYSCLK_SRC_RC2MHZ
+//#define CONFIG_SYSCLK_SOURCE		  SYSCLK_SRC_RC2MHZ
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RC32MHZ
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RC32KHZ
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_XOSC
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLL
+#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLL
 
 
 /* Fbus = Fsys / (2 ^ BUS_div) */
@@ -64,7 +64,7 @@
 //#define CONFIG_PLL0_SOURCE         PLL_SRC_RC32MHZ
 
 /* Fpll = (Fclk * PLL_mul) / PLL_div */
-#define CONFIG_PLL0_MUL            24
+#define CONFIG_PLL0_MUL            15
 #define CONFIG_PLL0_DIV             1
 
 /* External oscillator frequency range */
@@ -78,7 +78,7 @@
 //#define CONFIG_XOSC_RANGE XOSC_RANGE_12TO16
 
 /* DFLL autocalibration */
-//#define CONFIG_OSC_AUTOCAL_RC2MHZ_REF_OSC  OSC_ID_RC32KHZ
+#define CONFIG_OSC_AUTOCAL_RC2MHZ_REF_OSC  OSC_ID_RC32KHZ
 #define CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC OSC_ID_USBSOF
 
 /* The following example clock configuration definitions can be used in XMEGA

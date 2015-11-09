@@ -14,7 +14,7 @@
 
 #define DELAY_TIME 0.02
 
-char debug[7];
+char debug[15];
 
 
 #ifdef DEBUG_MODE

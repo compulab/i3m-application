@@ -95,7 +95,6 @@ void splash_init(struct cnf_blk config_block)
 	splash_bitmap.data.progmem = config_block.splash;
 	splash_bitmap.type = GFX_MONO_BITMAP_SECTION;
 //	show_splash();
-	delay_s(1);
 }
 
 void load_fonts(struct cnf_font_node *cnf_font_node, uint8_t size)
@@ -239,7 +238,7 @@ void update_button_pressed(bool *pressed, uint8_t *time, port_pin_t pin)
 	if (!(*pressed) && is_high){
 		(*time) = tc_counter;
 		(*pressed) = true;
-	} else if (*pressed && (!is_high || tc_counter - (*time) > MAX_CLICK_TIME)) {
+	} else if (*pressed && (!is_high )) { //|| tc_counter - (*time) > MAX_CLICK_TIME)) {
 		(*time) = tc_counter - (*time);
 		(*pressed) = false;
 	}
@@ -265,14 +264,12 @@ void update_buttons_states()
 	update_button_state(ok_pressed, &ok_time, &ok_button);
 }
 
-void handle_button_pressed()
+void handle_buttons_update()
 {
-	update_buttons_states();
-
 	switch (ok_button){
 	case BUTTON_HOLD:
 	case BUTTON_CLICK:
-		tc_button_pressed();
+//		tc_button_pressed();
 		if (present_menu->visible)
 			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_ENTER, !present_menu->visible);
 		else
@@ -285,7 +282,7 @@ void handle_button_pressed()
 	switch (left_button){
 	case BUTTON_HOLD:
 	case BUTTON_CLICK:
-		tc_button_pressed();
+//		tc_button_pressed();
 		if (present_menu->is_active_frame)
 			frame_present->handle_buttons(GFX_MONO_MENU_KEYCODE_UP);
 		else
@@ -297,7 +294,7 @@ void handle_button_pressed()
 	switch (right_button){
 	case BUTTON_HOLD:
 	case BUTTON_CLICK:
-		tc_button_pressed();
+//		tc_button_pressed();
 		if (present_menu->is_active_frame)
 			frame_present->handle_buttons(GFX_MONO_MENU_KEYCODE_DOWN);
 		else
@@ -306,5 +303,13 @@ void handle_button_pressed()
 	default:
 		break;
 	}
-	tc_no_button_pressed();
+//	tc_no_button_pressed();
+}
+
+struct work button_work = { .do_work = handle_buttons_update, .data = NULL, .next = NULL, };
+
+void handle_button_pressed()
+{
+	update_buttons_states();
+	insert_work(&button_work);
 }

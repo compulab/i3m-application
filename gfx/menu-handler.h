@@ -20,6 +20,8 @@
 #include "key-handle.h"
 #endif
 
+#include "../work-queue/work.h"
+
 #include "../display/display_render.h"
 
 #define CONFIG_SECTION_ADDRESS 0x8000

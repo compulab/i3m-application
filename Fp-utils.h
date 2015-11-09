@@ -31,6 +31,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "work-queue/work.h"
+
 #define AMBIENT_TWI_ADDRESS  		0x4C
 #define AMBIENT_TEMPERATURE_ADDRESS 0x00
 #define EMPTY_SLOT "Empty Slot"
@@ -40,6 +42,7 @@
 #define CPUTR_BIT					2
 #define GPUTR_BIT					3
 
+extern enum information_type update_information_type;
 
 bool is_valid_cpu_temp(uint8_t cpu_id);
 
@@ -54,6 +57,8 @@ bool is_valid_hdd_size(uint8_t hdd_id);
 bool is_valid_hdd_temp(uint8_t hdd_id);
 
 bool is_valid_mem(uint8_t mem_id);
+
+//void update_curr_screen();
 
 void update_information_frame(enum information_type type, bool need_to_update);
 

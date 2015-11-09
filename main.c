@@ -2,7 +2,6 @@
 #include <math.h>
 #include "debug.h"
 #include "gfx/menu-handler.h"
-#include "timer/tc.h"
 #include "adc/adc.h"
 #include "config/cnf_blk_components.h"
 #include "gfx/gfx_utils.h"
@@ -12,9 +11,10 @@
 #include "gfx/menu-handler.h"
 #include "gfx/action_menu/gfx_action_menu.h"
 #include "adc/adc.h"
-#include "timer/tc-handler.h"
+#include "timer/timer.h"
+#include "timer/tc.h"
+#include "twi/twi_master.h"
 #include "twi/sram_handle.h"
-#include "twi/master/twi.h"
 #include "wdt/wdt.h"
 
 //#define DEMO_SHOW
@@ -26,28 +26,34 @@ ISR(TWIE_TWIS_vect)
 	twi_slave_interrupt_handler();
 }
 
-//ISR(TWIC_TWIM_vect)
-//{
-//	interrupt_handler();
-//}
-
-
 ISR(PORTF_INT0_vect)
 {
 	wdt_reset();
 	update_power_state();
 }
 
-ISR(PORTF_INT1_vect){
+ISR(PORTF_INT1_vect)
+{
 	wdt_reset();
 	handle_button_pressed();
 }
 
 ISR(TCC0_OVF_vect)
 {
-	tc_counter++;
 	wdt_reset();
-	tc_handle();
+	tc_handle_overflow_interrupt();
+}
+
+ISR(TCC0_CCA_vect)
+{
+	wdt_reset();
+	tc_handle_cmp_interrupt();
+}
+
+ISR(TWIC_TWIM_vect)
+{
+	wdt_reset();
+	handle_twi_master();
 }
 
 void portf_init()
@@ -76,7 +82,6 @@ void init_menu()
 	show_current_menu(true);
 	tc_init();
 }
-
 
 void power_state_init()
 {
@@ -185,7 +190,7 @@ void init()
 	updated_info_init();
 	gfx_mono_init();
 	init_menu();
-	tc_handle_init();
+	tasks_init();
 	adc_init();
 	pmic_init();
 	portf_init();
@@ -196,13 +201,14 @@ void init()
 	wdt_reset();
 }
 
-int main(void)
+int main(int argc, char *argv[])
 {
 	init();
 
-	while(true)
-	{
-
+	while(true) {
+			if (!work_handler());
+				delay_ms(10);
 	}
 
+	return 0;
 }

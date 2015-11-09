@@ -34,10 +34,10 @@ enum action_type {
 };
 
 enum power_state{
-	POWER_ON,
-	POWER_STR,
-	POWER_STD,
-	POWER_OFF
+	POWER_OFF = 0x00,
+	POWER_STD = 0x01,
+	POWER_STR = 0x03,
+	POWER_ON = 0x07,
 };
 
 
