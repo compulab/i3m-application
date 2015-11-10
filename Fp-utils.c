@@ -51,41 +51,53 @@ void set_invalid_string(char *str){
 	sprintf(str, "INVALID");
 }
 
-bool need_to_update_req(struct gfx_information_node * curr_info, enum information_type info_type)
+bool is_type_in_frame(enum information_type info_type, struct gfx_information_node *info_node)
 {
-	bool need_to_update = false;
-	while (curr_info != 0){
-		if (curr_info->information.info_type == info_type){
-			need_to_update = true;
-			break;
-		}
-		curr_info = curr_info->next;
+	while (info_node != NULL) {
+		if (info_node->information.info_type == info_type)
+						return true;
+		info_node = info_node->next;
 	}
-	return need_to_update;
+	return false;
+}
+
+bool need_to_update_req(enum information_type info_type)
+{
+	if (!present_menu->visible) {
+		return is_type_in_frame(info_type, frame_present->information_head);
+	} else {
+		struct gfx_item_action *action;
+		for (int i = 0; i < present_menu->menu->num_elements; i++){
+			action = &present_menu->actions[i];
+			if (action->type == ACTION_TYPE_SHOW_FRAME && is_type_in_frame(info_type, action->frame->information_head))
+				return true;
+		}
+	}
+	return false;
 }
 
 
 void check_update_hddtr_temp_req()
 {
-	if(need_to_update_req(frame_present->information_head, SHOW_HDD_TEMPERTURE))
+	if(need_to_update_req(SHOW_HDD_TEMPERTURE))
 		layout.l.hddtr = 1;
 }
 
 void check_update_cpu_fq_req()
 {
-	if (need_to_update_req(frame_present->information_head, SHOW_CPU_FREQUENCY))
+	if (need_to_update_req(SHOW_CPU_FREQUENCY))
 		layout.l.cpufr = 1;
 }
 
 void check_update_cpu_temp_req()
 {
-	if (need_to_update_req(frame_present->information_head, SHOW_CPU_TEMPERTURE))
+	if (need_to_update_req(SHOW_CPU_TEMPERTURE))
 		layout.l.cputr = 1;
 }
 
 void check_update_gpu_temp_req()
 {
-	if (need_to_update_req(frame_present->information_head, SHOW_GPU_TEMPERTURE))
+	if (need_to_update_req(SHOW_GPU_TEMPERTURE))
 		layout.l.gputr = 1;
 }
 
@@ -756,11 +768,10 @@ void update_information_frame(enum information_type type, bool need_to_update)
 			if (information_present != 0 && information_present->info_type == type) {
 				update_information();
 			}
-		} else if (is_status_in_menu_changed(present_menu, type)){
+		} else if (is_status_in_menu_changed(present_menu, type)) {
 			gfx_action_menu_init(present_menu, true);
 		}
 	}
-
 }
 
 //void update_curr_screen()
