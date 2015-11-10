@@ -28,17 +28,13 @@ char debug[15];
 					delay_s(DELAY_TIME);
 //					CLEAR
 
-#define MSG_hex(num)   ssd1306_set_page_address(4); \
-					ssd1306_set_column_address(3); \
-					itoa(num,debug,16); \
-					ssd1306_write_text(debug);
+#define MSG_hex(num, y) itoa(num,debug,16); \
+					MSG(debug, y)
 //					delay_s(DELAY_TIME);
 //					CLEAR
 
-#define MSG_dec(num)   ssd1306_set_page_address(4); \
-					ssd1306_set_column_address(3); \
-					itoa(num,debug,10); \
-					ssd1306_write_text(debug);
+#define MSG_dec(num, y)   itoa(num,debug,10); \
+					     MSG(debug, y)
 //					delay_s(DELAY_TIME);
 //					CLEAR
 
