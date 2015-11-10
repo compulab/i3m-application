@@ -154,6 +154,7 @@ void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 		graphic_menu_init(action_menu, redraw);
 	else
 		gfx_mono_menu_init(action_menu->visible_items.visible_menu, redraw, action_menu->is_progmem);
+	gfx_mono_generic_draw_horizontal_line(0, 51, GFX_MONO_LCD_WIDTH, GFX_PIXEL_SET);
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
@@ -286,18 +287,18 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 		clear_screen();
 		switch (type){
 		case ACTION_TYPE_SHOW_FRAME:
-			tc_no_button_pressed();
-			disable_sleep_mode();
+//			tc_no_button_pressed();
+//			disable_sleep_mode();
 			gfx_frame_draw(selected_action->frame, false);
 			break;
 		case ACTION_TYPE_SHOW_MENU:
 			if (from_frame && selected_action->menu_id == MAIN_MENU_ID)
 				break;
-			enable_sleep_mode();
+//			enable_sleep_mode();
 			show_menu(selected_action->menu, true);
 			break;
 		case ACTION_TYPE_SHOW_DMI_MENU:
-			disable_sleep_mode();
+//			disable_sleep_mode();
 			if (computer_data.details.direct_string != 0){
 				set_dmi_menu();
 				if (is_dmi_set){
@@ -313,7 +314,10 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 	} else if (keycode == GFX_MONO_MENU_KEYCODE_BACK) {
 		if (!present_menu->visible)
 			show_current_menu(true);
-	}else {
+	} else {
+		if (from_frame && ((keycode == GFX_MONO_MENU_KEYCODE_DOWN && action_menu->visible_items.visible_menu->current_selection == 0) ||
+					(keycode == GFX_MONO_MENU_KEYCODE_UP && action_menu->visible_items.visible_menu->current_selection == action_menu->visible_items.visible_menu->num_elements - 2)))
+				return ;
 		 gfx_mono_menu_process_key(action_menu->visible_items.visible_menu, keycode, action_menu->is_progmem);
 		 action_menu->menu->current_selection = action_menu->visible_items.visible_menu->current_selection;
 		 action_menu->menu->last_selection = action_menu->visible_items.visible_menu->last_selection;

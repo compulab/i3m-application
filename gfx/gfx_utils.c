@@ -104,7 +104,7 @@ void gfx_information_draw(struct gfx_information *info)
 void gfx_label_draw(struct gfx_label *label)
 {
 //	gfx_item_draw(&label->postion);
-	label->postion.x = (GFX_MONO_LCD_WIDTH - (strlen_P(label->text.textP) + 12)) / 8;
+//	label->postion.x = (GFX_MONO_LCD_WIDTH - (strlen_P(label->text.textP) * label->text.font->width)) / 2;
 	print_data(&label->text, label->postion.x, label->postion.y);
 }
 
@@ -233,6 +233,7 @@ void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
 		if (!redraw){
 			gfx_labels_draw(frame->label_head);
 			gfx_images_draw(frame->image_head);
+			gfx_mono_generic_draw_horizontal_line(0, 54, GFX_MONO_LCD_WIDTH, GFX_PIXEL_SET);
 		}
 		gfx_mono_ssd1306_put_framebuffer();
 	}

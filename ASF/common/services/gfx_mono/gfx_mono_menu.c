@@ -164,7 +164,7 @@ uint8_t gfx_mono_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode, b
 {
 	menu->last_selection = menu->current_selection;
 	switch (keycode) {
-	case GFX_MONO_MENU_KEYCODE_DOWN:
+	case GFX_MONO_MENU_KEYCODE_UP:
 		if (menu->current_selection == menu->num_elements - 1) {
 			menu->current_selection = 0;
 		} else {
@@ -177,7 +177,7 @@ uint8_t gfx_mono_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode, b
 		/* Nothing selected yet */
 		return GFX_MONO_MENU_EVENT_IDLE;
 
-	case GFX_MONO_MENU_KEYCODE_UP:
+	case GFX_MONO_MENU_KEYCODE_DOWN:
 		if (menu->current_selection) {
 			menu->current_selection--;
 		} else {

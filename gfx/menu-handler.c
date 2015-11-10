@@ -284,9 +284,9 @@ void handle_buttons_update()
 	case BUTTON_CLICK:
 //		tc_button_pressed();
 		if (present_menu->is_active_frame)
-			frame_present->handle_buttons(GFX_MONO_MENU_KEYCODE_UP);
+			frame_present->handle_buttons(GFX_MONO_MENU_KEYCODE_DOWN);
 		else
-			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP, !present_menu->visible);
+			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN, !present_menu->visible);
 		break;
 	default:
 		break;
@@ -296,9 +296,9 @@ void handle_buttons_update()
 	case BUTTON_CLICK:
 //		tc_button_pressed();
 		if (present_menu->is_active_frame)
-			frame_present->handle_buttons(GFX_MONO_MENU_KEYCODE_DOWN);
+			frame_present->handle_buttons(GFX_MONO_MENU_KEYCODE_UP);
 		else
-			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN, !present_menu->visible);
+			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP, !present_menu->visible);
 		break;
 	default:
 		break;

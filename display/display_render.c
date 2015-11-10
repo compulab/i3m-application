@@ -6,7 +6,7 @@
  */
 
 #include "display_render.h"
-
+#include "../debug.h"
 
 bool is_valid_char(char ch)
 {
@@ -41,8 +41,7 @@ void draw_char(char ch, uint8_t x, uint8_t y, struct gfx_font *font)
 
 void clear_string_background(uint8_t length, uint8_t x, uint8_t y, struct gfx_font *font)
 {
-	uint8_t height = font->height + 4;
-	gfx_mono_draw_filled_rect(x, y, length, height, GFX_PIXEL_CLR);
+	gfx_mono_draw_filled_rect(x, y, length, font->height, GFX_PIXEL_CLR);
 }
 
 uint8_t length_P(char *str)
@@ -58,9 +57,13 @@ uint8_t length_P(char *str)
 
 void draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct gfx_font *font)
 {
-	uint8_t length = length_P(str);
+	uint8_t length = length_P(str) * font->width;
 	if (x == 0)
-		x = (GFX_MONO_LCD_WIDTH - length) / 16;
+		x = (GFX_MONO_LCD_WIDTH - length) / 2 ;
+	MSG_dec(length, 10)
+	MSG_dec(x, 30)
+	delay_s(2);
+
 	clear_string_background(GFX_MONO_LCD_WIDTH, 0, y, font);
 	uint8_t temp_char = PROGMEM_READ_BYTE((uint8_t PROGMEM_PTR_T)(str++));
 
@@ -83,9 +86,9 @@ void draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct gfx_font *f
 void draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct gfx_font *font)
 {
 	uint8_t j = 0;
-	uint8_t length = strlen(str);
+	uint8_t length = strlen(str) * font->width;;
 	if (x == 0)
-		x = (GFX_MONO_LCD_WIDTH - length) / 16;
+		x = (GFX_MONO_LCD_WIDTH - length) / 2;
 	clear_string_background(GFX_MONO_LCD_WIDTH, 0, y, font);
 	while (str[j] != '\0')
 	{
