@@ -580,9 +580,6 @@ void write_data(enum i2c_addr_space addr, uint8_t data)
 	switch (addr) {
 	case RTCT:
 	case RTCD:
-	case ADC_LSB:
-	case ADC_MSB:
-	case AMBT:
 	case GPUT:
 	case CPU0T:
 	case CPU1T:
@@ -641,9 +638,6 @@ void write_data(enum i2c_addr_space addr, uint8_t data)
 	case HDD7_SZ_MSB:
 	case DMIN:
 	case DMIV:
-	case REQ:
-	case PENDR0:
-	case POWER_STATE:
 	case FPCTRL:
 		layout.direct.i2c[addr] = data;
 		break;
@@ -656,6 +650,12 @@ void write_data(enum i2c_addr_space addr, uint8_t data)
 	case MAJOR_MSB:
 	case MINOR_LSB:
 	case MINOR_MSB:
+	case AMBT:
+	case ADC_LSB:
+	case ADC_MSB:
+	case REQ:
+	case PENDR0:
+	case POWER_STATE:
 	default:
 		if (is_iwren_mode())
 			layout.direct.i2c[addr] = data;
