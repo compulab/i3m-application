@@ -380,6 +380,19 @@ void set_brightness(char *str)
 	sprintf(str,"%d ", (eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS) / BRIHTNESS_STEP));
 }
 
+void set_curr_str(char *str, enum information_type type)
+{
+	str = "";
+	struct gfx_information_node *info_node = frame_present->information_head;
+	while (info_node != NULL) {
+		if (info_node->information.info_type == type){
+			strcpy(str, info_node->information.text.text);
+			break;
+		}
+		info_node = info_node->next;
+	}
+}
+
 void update_data_by_type(enum information_type type, char *output_str, uint8_t info)
 {
 	switch (type){
@@ -432,7 +445,6 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 
 bool is_cpu_fq_need_update(struct gfx_information *info, bool is_visible)
 {
-	char temp_str[3];
 	bool need_update = false;
 	if (is_visible) {
 	switch (info->info_data){
@@ -466,15 +478,17 @@ bool is_cpu_fq_need_update(struct gfx_information *info, bool is_visible)
 		}
 	}
 	if (!need_update) {
+		char temp_str[3];
+		char curr_str[3];
 		set_updated_cpu_frequency(temp_str, info->info_data);
-		need_update = strcmp(temp_str, info->text.text) != 0;
+		set_curr_str(curr_str, SHOW_CPU_FREQUENCY);
+		need_update = strcmp(temp_str, curr_str) != 0;
 	}
 	return need_update;
 }
 
 bool is_hdd_size_need_update(struct gfx_information *info, bool is_visible)
 {
-	char temp_str[3];
 	bool need_update = false;
 	if (is_visible) {
 		switch (info->info_data){
@@ -508,15 +522,17 @@ bool is_hdd_size_need_update(struct gfx_information *info, bool is_visible)
 		}
 	}
 	if (!need_update) {
+		char temp_str[3];
+		char curr_str[3];
 		set_hdd_size_str(temp_str, computer_data.packed.hddsz[info->info_data], computer_data.packed.hddf & (0x01 << info->info_data));
-		need_update = strcmp(temp_str, info->text.text) != 0;
+		set_curr_str(curr_str, SHOW_HDD_SIZE);
+		need_update = strcmp(temp_str, curr_str) != 0;
 	}
 	return need_update;
 }
 
 bool is_mem_size_need_update(struct gfx_information *info, bool is_visible)
 {
-	char temp_str[3];
 	bool need_update = false;
 	if (is_visible) {
 		switch (info->info_data){
@@ -538,15 +554,17 @@ bool is_mem_size_need_update(struct gfx_information *info, bool is_visible)
 		}
 	}
 	if (!need_update) {
+		char temp_str[3];
+		char curr_str[3];
 		set_mem_size_str(temp_str, info->info_data);
-		need_update = strcmp(temp_str, info->text.text) != 0;
+		set_curr_str(curr_str, SHOW_MEMORY_SIZE);
+		need_update = strcmp(temp_str, curr_str) != 0;
 	}
 	return need_update;
 }
 
 bool is_hdd_temp_need_update(struct gfx_information *info, bool is_visible)
 {
-	char temp_str[3];
 	bool need_update = false;
 	if (is_visible) {
 		switch (info->info_data){
@@ -580,15 +598,17 @@ bool is_hdd_temp_need_update(struct gfx_information *info, bool is_visible)
 		}
 	}
 	if (!need_update) {
+		char temp_str[3];
+		char curr_str[3];
 		set_update_hdd_temp(temp_str, info->info_data);
-		need_update = strcmp(temp_str, info->text.text) != 0;
+		set_curr_str(curr_str, SHOW_HDD_SIZE);
+		need_update = strcmp(temp_str, curr_str) != 0;
 	}
 	return need_update;
 }
 
 bool is_cpu_temp_need_update(struct gfx_information *info, bool is_visible)
 {
-	char temp_str[3];
 	bool need_update = false;
 	if (is_visible) {
 		switch (info->info_data){
@@ -622,10 +642,13 @@ bool is_cpu_temp_need_update(struct gfx_information *info, bool is_visible)
 		}
 	}
 	if (!need_update) {
+		char temp_str[3];
+		char curr_str[3];
 		set_cpu_updated_temp(temp_str, info->info_data);
-		need_update = strcmp(temp_str, info->text.text) != 0;
+		set_curr_str(curr_str, SHOW_CPU_TEMPERTURE);
+		need_update = strcmp(temp_str, curr_str) != 0;
 	}
-	return need_update;
+		return need_update;
 }
 
 bool is_gpu_temp_need_update(struct gfx_information *info, bool is_visible)
@@ -633,8 +656,10 @@ bool is_gpu_temp_need_update(struct gfx_information *info, bool is_visible)
 	bool need_update = is_visible && computer_data.details.gpus == 0;
 	if (!need_update){
 		char temp_str[3];
+		char curr_str[3];
+		set_curr_str(curr_str, SHOW_GPU_TEMPERTURE);
 		set_updated_gpu_temp(temp_str);
-		need_update = strcmp(temp_str, info->text.text) != 0;
+		need_update = strcmp(temp_str, curr_str) != 0;
 	}
 	return need_update;
 }
@@ -644,8 +669,10 @@ bool is_ambient_need_update(struct gfx_information *info, bool is_visible)
 	bool need_update = is_visible && computer_data.details.ambs == 0;
 	if (!need_update){
 		char temp_str[3];
+		char curr_str[3];
 		set_updated_ambient_temp(temp_str);
-		need_update = strcasecmp(temp_str, info->text.text) != 0;
+		set_curr_str(curr_str, SHOW_AMBIENT_TEMPERATURE);
+		need_update = strcmp(temp_str, curr_str) != 0;
 	}
 	return need_update;
 }
@@ -683,8 +710,7 @@ bool is_data_need_update()
 
 void update_information()
 {
-	if (is_data_need_update())
-		gfx_frame_draw(frame_present, true);
+	gfx_frame_draw(frame_present, true);
 }
 
 bool is_status_in_menu_changed(struct gfx_action_menu *menu, enum information_type type)
