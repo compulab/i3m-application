@@ -103,7 +103,8 @@ void gfx_information_draw(struct gfx_information *info)
 
 void gfx_label_draw(struct gfx_label *label)
 {
-	gfx_item_draw(&label->postion);
+//	gfx_item_draw(&label->postion);
+	label->postion.x = (GFX_MONO_LCD_WIDTH - (strlen_P(label->text.textP) + 12)) / 8;
 	print_data(&label->text, label->postion.x, label->postion.y);
 }
 
