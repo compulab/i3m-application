@@ -524,7 +524,7 @@ void write_gpu_temp()
 
 void update_data(void *write_address)
 {
-	uint8_t addr = (uint8_t)write_address;
+	uint8_t addr = (uint16_t)write_address & 0x00ff;
 	switch (addr){
 		case GPUT:
 			write_gpu_temp();
@@ -670,8 +670,9 @@ struct work update_data_work = {
 
 void handle_sram_write_request(uint8_t write_address, uint8_t data)
 {
+	uint16_t addr = write_address;
 	write_data(write_address, data);
-	update_data_work.data = (void *)write_address;
+	update_data_work.data = (void *)addr;
 	insert_work(&update_data_work);
 //	update_data(write_address);
 }
