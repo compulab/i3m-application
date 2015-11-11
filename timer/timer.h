@@ -13,6 +13,10 @@
 #include "../gfx/action_menu/gfx_action_menu.h"
 #endif
 
+#ifndef FP_UTILS_H_
+#include "../Fp-utils.h"
+#endif
+
 #ifndef TWI_MASTER_H_
 #include "../twi/twi_master.h"
 #endif

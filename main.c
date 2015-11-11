@@ -1,20 +1,6 @@
-#include <string.h>
-#include <math.h>
-#include "debug.h"
-#include "gfx/menu-handler.h"
-#include "adc/adc.h"
-#include "config/cnf_blk_components.h"
-#include "gfx/gfx_utils.h"
-#include "twi/test_twi.h"
-#include "twi/twi_slave.h"
 #include "asf.h"
-#include "gfx/menu-handler.h"
-#include "gfx/action_menu/gfx_action_menu.h"
-#include "adc/adc.h"
+#include "twi/twi_slave.h"
 #include "timer/timer.h"
-#include "timer/tc.h"
-#include "twi/twi_master.h"
-#include "twi/sram_handle.h"
 #include "wdt/wdt.h"
 
 ISR(TWIE_TWIS_vect)

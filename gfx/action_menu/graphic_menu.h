@@ -13,6 +13,8 @@
 #endif
 
 #include <stdbool.h>
+#include <math.h>
+#include "../../gfx/action_menu/gfx_action_menu.h"
 
 #define FRAME_WIDTH	38
 #define FRAME_HEIGHT 25

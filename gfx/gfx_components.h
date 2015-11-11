@@ -9,10 +9,7 @@
 #ifndef GFX_GFX_COMPONENTS_H_
 #define GFX_GFX_COMPONENTS_H_
 
-
-#ifndef FP_UTILS_H_
-#include "../Fp-utils.h"
-#endif
+#include "../asf.h"
 
 #ifndef DEF_H
 #include "../def.h"

@@ -7,6 +7,7 @@
 #ifndef DISPLAY_DISPLAY_RENDER_H_
 #define DISPLAY_DISPLAY_RENDER_H_
 
+#include <string.h>
 
 #ifndef GFX_GFX_COMPONENTS_H_
 	#include "../gfx/gfx_components.h"

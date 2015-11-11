@@ -12,6 +12,10 @@
 #include "../config/cnf_blk_components.h"
 #endif
 
+#ifndef FP_UTILS_H_
+#include "../Fp-utils.h"
+#endif
+
 #ifndef GFX_GFX_COMPONENTS_H_
 #include "gfx_components.h"
 #endif
