@@ -1,5 +1,44 @@
 #include "gfx_action_menu.h"
 
+PROGMEM_DECLARE(gfx_mono_color_t, right [5]) = {
+0x00, 0x7E, 0x3C, 0x18, 0x00,
+};
+
+
+PROGMEM_DECLARE(gfx_mono_color_t, left [5]) = {
+0x00, 0x18, 0x3C, 0x7E, 0x00,
+};
+
+static struct gfx_mono_bitmap left_bitmap = {
+		.width = 5,
+		.height = 8,
+		.data.progmem = left,
+		.type = GFX_MONO_BITMAP_PROGMEM
+};
+
+static struct gfx_mono_bitmap right_bitmap = {
+		.width = 5,
+		.height = 8,
+		.data.progmem = right,
+		.type = GFX_MONO_BITMAP_PROGMEM
+};
+
+static struct gfx_image left_sign_image = {
+	.postion = {
+		.x = 0,
+		.y = 57,
+	},
+	.bitmap = &left_bitmap,
+};
+
+static struct gfx_image right_sign_image = {
+	.postion = {
+		.x = 115,
+		.y = 57,
+	},
+	.bitmap = &right_bitmap,
+};
+
 void switch_present_menu(struct gfx_action_menu *action_menu)
 {
 	present_menu->visible = false;
@@ -93,6 +132,19 @@ void visible_menu_init()
 	menu->num_elements = count_visible_elemnts();
 	present_menu->visible_items.visible_actions = malloc(sizeof(struct gfx_item_action *) * menu->num_elements);
 	present_menu->visible_items.visible_images = malloc(sizeof(struct gfx_image *) * menu->num_elements);
+}
+
+void insert_graphic_signs(struct gfx_item_action *action, uint8_t index, uint8_t max_index)
+{
+		if (index == 0) {
+			gfx_mono_put_bitmap(right_sign_image.bitmap, right_sign_image.postion.x, right_sign_image.postion.y);
+		} else if (index == max_index) {
+			gfx_mono_put_bitmap(left_sign_image.bitmap, left_sign_image.postion.x, left_sign_image.postion.y);
+		} else {
+			gfx_mono_put_bitmap(right_sign_image.bitmap, right_sign_image.postion.x, right_sign_image.postion.y);
+			gfx_mono_put_bitmap(left_sign_image.bitmap, left_sign_image.postion.x, left_sign_image.postion.y);
+		}
+		gfx_mono_put_framebuffer();
 }
 
 void update_visible_elements()
@@ -290,6 +342,7 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 //			tc_no_button_pressed();
 //			disable_sleep_mode();
 			gfx_frame_draw(selected_action->frame, false);
+			insert_graphic_signs(selected_action, (action_menu->visible_items.visible_menu)->current_selection, (action_menu->visible_items.visible_menu)->num_elements - 2);
 			break;
 		case ACTION_TYPE_SHOW_MENU:
 			if (from_frame && selected_action->menu_id == MAIN_MENU_ID)
