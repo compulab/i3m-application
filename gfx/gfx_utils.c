@@ -5,11 +5,47 @@
  *      Author: arkadi
  */
 
-
 #include "gfx_utils.h"
 
 #define PAGE_ADDRESS(y) floor (y/8)
 
+PROGMEM_DECLARE(gfx_mono_color_t, right [5]) = {
+0x00, 0x7E, 0x3C, 0x18, 0x00,
+};
+
+PROGMEM_DECLARE(gfx_mono_color_t, left [5]) = {
+0x00, 0x18, 0x3C, 0x7E, 0x00,
+};
+
+static struct gfx_mono_bitmap left_bitmap = {
+		.width = 5,
+		.height = 8,
+		.data.progmem = left,
+		.type = GFX_MONO_BITMAP_PROGMEM
+};
+
+static struct gfx_mono_bitmap right_bitmap = {
+		.width = 5,
+		.height = 8,
+		.data.progmem = right,
+		.type = GFX_MONO_BITMAP_PROGMEM
+};
+
+static struct gfx_image left_sign_image = {
+	.postion = {
+		.x = 0,
+		.y = 57,
+	},
+	.bitmap = &left_bitmap,
+};
+
+static struct gfx_image right_sign_image = {
+	.postion = {
+		.x = 115,
+		.y = 57,
+	},
+	.bitmap = &right_bitmap,
+};
 void print_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
 {
 	gfx_mono_draw_line(x, y, x + length, y, GFX_PIXEL_SET);
@@ -225,11 +261,35 @@ void gfx_images_draw(struct gfx_image_node *curr_image_node)
 	}
 }
 
+void draw_graphic_signs(uint8_t index, uint8_t max_index)
+{
+	gfx_mono_draw_filled_rect(left_sign_image.postion.x, left_sign_image.postion.y, left_sign_image.bitmap->width, left_sign_image.bitmap->height, GFX_PIXEL_CLR);
+	gfx_mono_draw_filled_rect(right_sign_image.postion.x, right_sign_image.postion.y, right_sign_image.bitmap->width, right_sign_image.bitmap->height, GFX_PIXEL_CLR);
+	if (index == 0) {
+		gfx_mono_put_bitmap(right_sign_image.bitmap, right_sign_image.postion.x, right_sign_image.postion.y);
+	} else if (index == max_index) {
+		gfx_mono_put_bitmap(left_sign_image.bitmap, left_sign_image.postion.x, left_sign_image.postion.y);
+	} else {
+		gfx_mono_put_bitmap(right_sign_image.bitmap, right_sign_image.postion.x, right_sign_image.postion.y);
+		gfx_mono_put_bitmap(left_sign_image.bitmap, left_sign_image.postion.x, left_sign_image.postion.y);
+	}
+}
+
+void insert_graphic_signs(struct gfx_frame *frame)
+{
+	if (frame->information_head != NULL && frame->information_head->information.info_type == SET_BRIGHTNESS)
+		draw_graphic_signs(get_brightness_level(), MAX_BRIGHTNESS_LEVEL);
+	else
+		draw_graphic_signs((present_menu->visible_items.visible_menu)->current_selection, (present_menu->visible_items.visible_menu)->num_elements - 2);
+}
+
+
 void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
 {
 	if (frame != 0){
 		frame_present = frame;
 		gfx_infos_draw(frame->information_head);
+		insert_graphic_signs(frame);
 		if (!redraw){
 			gfx_labels_draw(frame->label_head);
 			gfx_images_draw(frame->image_head);

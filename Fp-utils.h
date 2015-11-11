@@ -32,11 +32,12 @@
 #include <string.h>
 
 #include "work-queue/work.h"
-
+#include "debug.h"
 #define AMBIENT_TWI_ADDRESS  		0x4C
 #define AMBIENT_TEMPERATURE_ADDRESS 0x00
 #define EMPTY_SLOT "Empty Slot"
-#define BRIHTNESS_STEP				25
+#define BRIGHTNESS_STEP				25
+#define MAX_BRIGHTNESS_LEVEL		10
 #define HDDTR_BIT					0
 #define CPUFR_BIT					1
 #define CPUTR_BIT					2
@@ -49,6 +50,8 @@ bool is_valid_cpu_temp(uint8_t cpu_id);
 bool is_valid_cpu_fq(uint8_t cpu_id);
 
 bool is_valid_ambient_temp();
+
+uint8_t get_brightness_level();
 
 bool is_valid_gpu_temp();
 

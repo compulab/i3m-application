@@ -134,7 +134,7 @@ void reset_temperatures()
 
 void handle_power_off()
 {
-	reset_ambient();
+//	reset_ambient();
 	reset_temperatures();
 }
 
@@ -351,24 +351,50 @@ void update_brightness()
 	update_information_frame(SET_BRIGHTNESS, true);
 }
 
-void handle_brightness_buttons(uint8_t key)
+uint8_t get_brightness_level()
 {
 	uint8_t brightness = eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS);
+	uint8_t brightness_level;
+	if (brightness > (MAX_BRIGHTNESS_LEVEL -1) * BRIGHTNESS_STEP)
+		brightness_level = MAX_BRIGHTNESS_LEVEL;
+	else if (brightness < BRIGHTNESS_STEP)
+		brightness_level = 0;
+	else
+		brightness_level = brightness / BRIGHTNESS_STEP;
+	return brightness_level;
+}
+
+void increse_brightness_level()
+{
+	uint8_t brightness_level = get_brightness_level();
+	if (brightness_level < MAX_BRIGHTNESS_LEVEL)
+		brightness_level++;
+	uint8_t brightness = brightness_level * BRIGHTNESS_STEP;
+	eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, brightness);
+}
+
+void decrese_brightness_level()
+{
+	uint8_t brightness_level = get_brightness_level();
+	if (brightness_level > 0)
+		brightness_level--;
+	uint8_t brightness = brightness_level * BRIGHTNESS_STEP;
+	eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, brightness);
+}
+
+void handle_brightness_buttons(uint8_t key)
+{
+	uint8_t brightness_level = get_brightness_level();
 	switch (key) {
 	case GFX_MONO_MENU_KEYCODE_DOWN:
-		if (brightness > BRIHTNESS_STEP)
-			brightness -= BRIHTNESS_STEP;
-		else
-			brightness = 0;
+		if (brightness_level > 0)
+			decrese_brightness_level();
 		break;
 	case GFX_MONO_MENU_KEYCODE_UP:
-		if (brightness < (0xff - BRIHTNESS_STEP))
-			brightness += BRIHTNESS_STEP;
-		else
-			brightness = 0xff;
+		if (brightness_level < MAX_BRIGHTNESS_LEVEL)
+			increse_brightness_level();
 		break;
 	}
-	eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, brightness);
 	update_brightness();
 }
 
@@ -389,7 +415,7 @@ void set_dmi_content(char *output_str, uint8_t string_id)
 void set_brightness(char *str)
 {
 	frame_present->handle_buttons = handle_brightness_buttons;
-	sprintf(str,"%d ", (eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS) / BRIHTNESS_STEP));
+	sprintf(str,"%d ", (eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS) / BRIGHTNESS_STEP));
 }
 
 void set_curr_str(char *str, enum information_type type)
