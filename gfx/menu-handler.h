@@ -24,7 +24,7 @@
 
 #include "../display/display_render.h"
 
-#define CONFIG_SECTION_ADDRESS 0x8000
+#define CONFIG_SECTION_ADDRESS 0xa000
 
 struct gfx_action_menu **action_menus;
 
