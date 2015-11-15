@@ -17,7 +17,7 @@
 #include "../../gfx/action_menu/gfx_action_menu.h"
 
 #define FRAME_WIDTH	38
-#define FRAME_HEIGHT 25
+#define FRAME_HEIGHT 22
 
 void graphic_menu_init(struct gfx_action_menu *action_menu, bool redraw);
 

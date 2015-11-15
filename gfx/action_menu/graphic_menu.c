@@ -7,9 +7,6 @@
 
 #include "graphic_menu.h"
 
-uint8_t x_pos[] = {5, 45, 85, 5, 45, 85},
-		y_pos[] = {1, 1, 1, 25, 25, 25};
-
 void set_item_position(struct gfx_image *bitmap, uint8_t i)
 {
 	bitmap->postion.x = lrint(i % 3) * 40 + 5;
@@ -19,7 +16,7 @@ void set_item_position(struct gfx_image *bitmap, uint8_t i)
 void invert_item(uint8_t index)
 {
 	uint8_t frame_x = lrint(index % 3) * 40 + 5;
-	uint8_t frame_y = lrint(index / 3) * 25 + 1;
+	uint8_t frame_y = lrint(index / 3) * 24 + 1;
 	for (uint8_t x = frame_x; x < frame_x + FRAME_WIDTH; x++)
 		for (uint8_t y = frame_y; y < frame_y + FRAME_HEIGHT; y++)
 			gfx_mono_ssd1306_draw_pixel(x, y, GFX_PIXEL_XOR);
