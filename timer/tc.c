@@ -71,6 +71,8 @@ int tc_counter;
 
 int standby_counter;
 
+bool cmp_enable;
+
 void tc_init()
 {
 	tc_counter = 0;
@@ -81,16 +83,24 @@ void tc_init()
 	TCC0.INTCTRLA = TC_OVFINTLVL_LO_gc;
 	TCC0.INTCTRLB = TC_CCAINTLVL_LO_gc;
 	TCC0.PER = TIMER_MAX_VALUE;
+	tc_cmp_disable();
 }
 
 void tc_cmp_enable()
 {
 	TCC0.CTRLB |= TC0_CCAEN_bm;
+	cmp_enable = true;
+}
+
+bool is_tc_cmp_enable()
+{
+	return cmp_enable;
 }
 
 void tc_cmp_disable()
 {
 	TCC0.CTRLB &= ~TC0_CCAEN_bm;
+	cmp_enable = false;
 }
 
 void tc_set_cmp_value(uint16_t value)

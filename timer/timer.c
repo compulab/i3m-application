@@ -88,10 +88,10 @@ static struct work adc_work = { .do_work = update_adc, .data = NULL, .next = NUL
 static struct work screen_saver_work = { .do_work = show_splash, .data = NULL, .next = NULL, };
 
 
-uint32_t get_ticks_in_sec()
+uint16_t get_ticks_in_sec()
 {
 	uint16_t tc_div;
-	switch (TCC0.CCA & 0x0f) {
+	switch (TCC0.CTRLA & TC_CLKSEL_DIV1024_gc) {
 	case TC_CLKSEL_DIV1_gc:
 		tc_div = 1;
 		break;
@@ -120,20 +120,18 @@ uint32_t get_ticks_in_sec()
 	return F_CPU / tc_div;
 }
 
-void set_timer(int sec_to_update, enum TYPE_OF_TASK type)
+void set_task_timer(int sec_to_update, enum TYPE_OF_TASK type)
 {
 	struct scheduler_task *task = &tasks_to_do[type];
 	uint32_t ticks = sec_to_update * get_ticks_in_sec();
-	if (ticks < TIMER_MAX_VALUE - TCC0.CNT) {
+
+	uint16_t ticks_to_overflow = TIMER_MAX_VALUE - TCC0.CNT;
+	if (ticks < ticks_to_overflow) {
 		task->offset = ticks + TCC0.CNT;
 		task->overlaps_count = 0;
-		if (task->offset < TCC0.CCA) {
-			TCC0.CCA = task->offset;
-			tc_cmp_enable();
-		}
 	} else {
-		ticks -= (TIMER_MAX_VALUE - TCC0.CNT);
-		task->overlaps_count = ticks / TIMER_MAX_VALUE;
+		ticks -= ticks_to_overflow;
+		task->overlaps_count = ticks / TIMER_MAX_VALUE + 1;
 		task->offset = ticks % TIMER_MAX_VALUE;
 	}
 }
@@ -145,22 +143,22 @@ void screen_saver_set_timer()
 
 void ambient_set_timer()
 {
-	set_timer(UPDATE_AMBIENT_SEC, AMBIENT_TASK);
+//	set_task_timer(UPDATE_AMBIENT_SEC, AMBIENT_TASK);
 }
 
 void adc_set_timer()
 {
-	set_timer(UPDATE_ADC_SEC, ADC_TASK);
+	set_task_timer(UPDATE_ADC_SEC, ADC_TASK);
 }
 
 void pending_req_set_timer()
 {
-	set_timer(UPDATE_REQ_SEC, PENDING_REQ_TASK);
+//	set_task_timer(UPDATE_REQ_SEC, PENDING_REQ_TASK);
 }
 
 void update_screen_set_timer()
 {
-	set_timer(UPDATE_SCREEN_SEC, UPDATE_SCREEN_TASK);
+//	set_task_timer(UPDATE_SCREEN_SEC, UPDATE_SCREEN_TASK);
 }
 
 
@@ -197,48 +195,60 @@ static struct scheduler_task tasks_to_do[NUMBER_OF_TASKS] = {
 		},
 };
 
-void tasks_init()
+bool set_task_cmp(uint8_t task_id)
+{
+	if (tasks_to_do[task_id].overlaps_count == 0 && (!is_tc_cmp_enable() || tasks_to_do[task_id].offset < TCC0.CCA)) {
+		TCC0.CCA = tasks_to_do[task_id].offset;
+		return true;
+	}
+
+	return false;
+}
+
+void find_next_task(void)
+{
+	bool task_is_set = false;
+	for (uint8_t i = 0; i < NUMBER_OF_TASKS; i++) {
+		if (set_task_cmp(i))
+			task_is_set = true;
+	}
+
+	if (task_is_set)
+		tc_cmp_enable();
+	else
+		tc_cmp_disable();
+}
+
+void tasks_init(void)
 {
 	for (uint8_t i = 0; i < NUMBER_OF_TASKS; i++)
 		tasks_to_do[i].set_new_timer();
+
+	find_next_task();
 }
 
-void tc_handle_overflow_interrupt()
+void tc_handle_overflow_interrupt(void)
 {
 	for (uint8_t i = 0; i < NUMBER_OF_TASKS; i++) {
-		if (tasks_to_do[i].overlaps_count == -1)
+		if (tasks_to_do[i].overlaps_count <= 0)
 			continue;
-		else if (tasks_to_do[i].overlaps_count > 0)
+		else
 			tasks_to_do[i].overlaps_count--;
-
-		if (tasks_to_do[i].overlaps_count == 0 && tasks_to_do[i].offset < TCC0.CCA) {
-			TCC0.CCA = tasks_to_do[i].offset;
-			tc_cmp_enable();
-		}
 	}
+
+	find_next_task();
 }
 
-void tc_handle_cmp_interrupt()
+
+void tc_handle_cmp_interrupt(void)
 {
-	bool reset_cmp = false;
+	/* Find expired task and add it to the work queue */
 	for (uint8_t i = 0; i < NUMBER_OF_TASKS; i++) {
 		if (tasks_to_do[i].overlaps_count == 0 && tasks_to_do[i].offset <= TCC0.CNT) {
 			insert_work(tasks_to_do[i].work);
 			tasks_to_do[i].set_new_timer();
-			reset_cmp = true;
 		}
 	}
 
-	if (reset_cmp) {
-		TCC0.CCA = TIMER_MAX_VALUE;
-		tc_cmp_disable();
-	}
-
-	for (uint8_t i = 0; i < NUMBER_OF_TASKS; i++) {
-		if (tasks_to_do[i].overlaps_count == 0 && tasks_to_do[i].offset < TCC0.CCA) {
-			TCC0.CCA = tasks_to_do[i].offset;
-			tc_cmp_enable();
-		}
-	}
-
+	find_next_task();
 }

@@ -162,7 +162,7 @@ void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 void show_menu(struct gfx_action_menu *menu, bool redraw)
 {
 	gfx_action_menu_init(menu, redraw);
-	update_requests();
+//	update_requests();
 }
 
 void show_current_menu(bool redraw)

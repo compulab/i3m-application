@@ -13,6 +13,8 @@ extern int standby_counter;
 
 void tc_init();
 
+bool is_tc_cmp_enable();
+
 void tc_cmp_enable();
 
 void tc_cmp_disable();
