@@ -188,6 +188,7 @@ void load_config_block()
 		if (cnf_menu_node != 0){
 			memcpy_P(&cnf_menu, cnf_menu_node, sizeof(struct cnf_menu_node));
 			memcpy_P(&config_menu, cnf_menu.menu, sizeof(struct cnf_menu));
+			action_menus[config_menu.id]->id = config_menu.id;
 			set_mono_menu(action_menus[config_menu.id], config_menu.menu);
 			set_visible_items(action_menus[config_menu.id]);
 			set_graphic_view(action_menus[config_menu.id], config_menu.images_items_head);
