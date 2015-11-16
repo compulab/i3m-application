@@ -317,16 +317,16 @@ void set_serial_number(char *output_str)
 	for (int i=0; i < SERIAL_NUMBER_LENGTH; i++)
 		serial[i] = eeprom_read_byte(SERIAL_NUMBER_EEPROM_ADDRESS + i);
 	serial[SERIAL_NUMBER_LENGTH] = '\0';
-	strcpy(output_str, serial);
+	sprintf(output_str, "%d", atoi(serial));
 }
 
-void set_product_name(char *output_str)
+void set_part_number(char *output_str)
 {
-	char product_name[PRODUCT_NAME_LENGTH + 1];
+	char part_number[PRODUCT_NAME_LENGTH + 1];
 	for (int i = 0; i < PRODUCT_NAME_LENGTH; i++)
-		product_name[i] = eeprom_read_byte(PRODUCT_NAME_EEPROM_ADDRESS + i);
-	product_name[PRODUCT_NAME_LENGTH] = '\0';
-	strcpy(output_str, product_name);
+		part_number[i] = eeprom_read_byte(PRODUCT_NAME_EEPROM_ADDRESS + i);
+	part_number[PRODUCT_NAME_LENGTH] = '\0';
+	strcpy(output_str, part_number);
 }
 
 void set_mac_address(char *output_str)
@@ -459,8 +459,8 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 	case SHOW_SERIAL_NUMBER:
 		set_serial_number(output_str);
 		break;
-	case SHOW_PRODUCT_NAME:
-		set_product_name(output_str);
+	case SHOW_PART_NUMBER:
+		set_part_number(output_str);
 		break;
 	case SHOW_MAC_ADDRESS:
 		set_mac_address(output_str);

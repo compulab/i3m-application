@@ -1,7 +1,7 @@
 avrtarget/ClockFrequency=2000000
 avrtarget/ExtRAMSize=0
 avrtarget/ExtendedRAM=false
-avrtarget/MCUType=atxmega64a3u
+avrtarget/MCUType=atxmega256a3u
 avrtarget/UseEEPROM=false
 avrtarget/UseExtendedRAMforHeap=true
 avrtarget/avrdude/BitBangDelay=
