@@ -58,24 +58,28 @@ uint8_t length_P(char *str)
 void draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct gfx_font *font)
 {
 	uint8_t length = length_P(str) * font->width;
-	if (x == 0)
-		x = (GFX_MONO_LCD_WIDTH - length - 10) / 4;
+	if (length >= GFX_MONO_LCD_WIDTH) {
+			gfx_mono_draw_string(str, 0, y, &sysfont);
+	} else {
+		if (x == 0)
+			x = (GFX_MONO_LCD_WIDTH - length - 10) / 4;
 
-	clear_string_background(GFX_MONO_LCD_WIDTH - 6, 6, y, font);
-	uint8_t temp_char = PROGMEM_READ_BYTE((uint8_t PROGMEM_PTR_T)(str++));
+		clear_string_background(GFX_MONO_LCD_WIDTH - 6, 6, y, font);
+		uint8_t temp_char = PROGMEM_READ_BYTE((uint8_t PROGMEM_PTR_T)(str++));
 
-	while (temp_char){
-		if (temp_char == '\n'){
-			draw_string_in_buffer_P(str, x, y + 8, font);
-			break;
+		while (temp_char){
+			if (temp_char == '\n'){
+				draw_string_in_buffer_P(str, x, y + 8, font);
+				break;
+			}
+			if (x > 120)
+			{
+				break;
+			}
+			draw_char(temp_char, x, y, font);
+			x += 8;
+			temp_char = PROGMEM_READ_BYTE((uint8_t PROGMEM_PTR_T)(str++));
 		}
-		if (x > 120)
-		{
-			break;
-		}
-		draw_char(temp_char, x, y, font);
-		x += 8;
-		temp_char = PROGMEM_READ_BYTE((uint8_t PROGMEM_PTR_T)(str++));
 	}
 }
 
@@ -83,18 +87,26 @@ void draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct gfx_font *f
 void draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct gfx_font *font)
 {
 	uint8_t j = 0;
-	uint8_t length = strlen(str) * font->width;;
-	if (x == 0)
-		x = (GFX_MONO_LCD_WIDTH - length - 10) / 4;
-	clear_string_background(GFX_MONO_LCD_WIDTH - 6, 6, y, font);
-	while (str[j] != '\0')
-	{
-		if (x > 120)
+	uint8_t length = strlen(str) * font->width;
+//	if (length >= GFX_MONO_LCD_WIDTH) {
+//		gfx_mono_draw_string(str, 0, y, &sysfont);
+//	} else {
+		if (x == 0)
+			x = (GFX_MONO_LCD_WIDTH - length - 10) / 4;
+		clear_string_background(GFX_MONO_LCD_WIDTH - 6, 6, y, font);
+		while (str[j] != '\0')
 		{
-			break;
+			if (x > 120 || str[j] == '\n')
+			{
+				y += font->height;
+				x = 0;
+				if (str[j] == '\n')
+					j ++;
+				continue;
+			}
+			draw_char(str[j], x, y, font);
+			x += 8;
+			j++;
 		}
-		draw_char(str[j], x, y, font);
-		x += 8;
-		j++;
-	}
+//	}
 }
