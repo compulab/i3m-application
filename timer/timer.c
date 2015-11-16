@@ -70,7 +70,6 @@ void tc_handle_init()
 }
 
 
-//static struct work curr_screen_work = { .do_work = update_curr_screen, .data = NULL, .next = NULL, };
 static struct work requests_work = { .do_work = update_requests, .data = NULL, .next = NULL, };
 static struct work ambient_work = { .do_work = update_ambient_temp, .data = NULL, .next = NULL, };
 static struct work adc_work = { .do_work = update_adc, .data = NULL, .next = NULL, };
@@ -129,7 +128,7 @@ void set_task_timer(uint8_t sec_to_update, enum TYPE_OF_TASK type)
 
 void screen_saver_set_timer()
 {
-	set_task_timer(UPDATE_SCREEN_SEC, SCREEN_SAVER_TASK);
+	set_task_timer(UPDATE_SCREEN_SAVER_SEC, SCREEN_SAVER_TASK);
 }
 
 void ambient_set_timer()
@@ -139,23 +138,19 @@ void ambient_set_timer()
 
 void adc_set_timer()
 {
-//	set_task_timer(UPDATE_ADC_SEC, ADC_TASK);
+	set_task_timer(UPDATE_ADC_SEC, ADC_TASK);
 }
 
 void pending_req_set_timer()
 {
-//	set_task_timer(UPDATE_REQ_SEC, PENDING_REQ_TASK);
-}
-
-void update_screen_set_timer()
-{
-//	set_task_timer(UPDATE_SCREEN_SEC, UPDATE_SCREEN_TASK);
+	set_task_timer(UPDATE_REQ_SEC, PENDING_REQ_TASK);
 }
 
 void reset_screen_saver()
 {
 	screen_saver_set_timer();
 }
+
 static struct scheduler_task tasks_to_do[NUMBER_OF_TASKS] = {
 		{
 				.overlaps_count = -1,
@@ -180,12 +175,6 @@ static struct scheduler_task tasks_to_do[NUMBER_OF_TASKS] = {
 				.offset = 0,
 				.work = &requests_work,
 				.set_new_timer = pending_req_set_timer,
-		},
-		{
-				.overlaps_count = -1,
-				.offset = 0,
-				.work = 0, //&curr_screen_work,
-				.set_new_timer = update_screen_set_timer,
 		},
 };
 
