@@ -31,7 +31,7 @@
 #define UPDATE_ADC_SEC		1
 //#define MAX_CLICK_SEC		MOVE_BUTTON_TIME
 #define UPDATE_REQ_SEC		3
-#define UPDATE_SCREEN_SEC	2
+#define UPDATE_SCREEN_SEC	5
 #define UPDATE_AMBIENT_SEC	4
 
 
@@ -53,16 +53,13 @@ struct scheduler_task {
 };
 
 
+void reset_screen_saver();
 
 void tc_button_pressed();
 
 void tc_no_button_pressed();
 
 void reset_ambient();
-
-void enable_sleep_mode();
-
-void disable_sleep_mode();
 
 void tc_handle_overflow_interrupt();
 

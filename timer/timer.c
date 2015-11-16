@@ -10,7 +10,7 @@
 
 #define MAX_AMBIENT_UPDATE_FAIL	2
 
-bool sleep_mode_enabled;
+
 bool update_buttons;
 bool first_ambient_read;
 uint8_t ambient_update_fail_count;
@@ -26,16 +26,6 @@ void tc_button_pressed()
 void tc_no_button_pressed()
 {
 	update_buttons = false;
-}
-
-void enable_sleep_mode()
-{
-	sleep_mode_enabled = true;
-}
-
-void disable_sleep_mode()
-{
-	sleep_mode_enabled = false;
 }
 
 void reset_ambient()
@@ -88,7 +78,7 @@ static struct work adc_work = { .do_work = update_adc, .data = NULL, .next = NUL
 static struct work screen_saver_work = { .do_work = show_splash, .data = NULL, .next = NULL, };
 
 
-uint16_t get_ticks_in_sec()
+uint32_t get_ticks_in_sec()
 {
 	uint16_t tc_div;
 	switch (TCC0.CTRLA & TC_CLKSEL_DIV1024_gc) {
@@ -117,10 +107,11 @@ uint16_t get_ticks_in_sec()
 		tc_div = 1;
 		break;
 	}
-	return F_CPU / tc_div;
+
+	return sysclk_get_cpu_hz() / tc_div;
 }
 
-void set_task_timer(int sec_to_update, enum TYPE_OF_TASK type)
+void set_task_timer(uint8_t sec_to_update, enum TYPE_OF_TASK type)
 {
 	struct scheduler_task *task = &tasks_to_do[type];
 	uint32_t ticks = sec_to_update * get_ticks_in_sec();
@@ -138,7 +129,7 @@ void set_task_timer(int sec_to_update, enum TYPE_OF_TASK type)
 
 void screen_saver_set_timer()
 {
-
+	set_task_timer(UPDATE_SCREEN_SEC, SCREEN_SAVER_TASK);
 }
 
 void ambient_set_timer()
@@ -148,7 +139,7 @@ void ambient_set_timer()
 
 void adc_set_timer()
 {
-	set_task_timer(UPDATE_ADC_SEC, ADC_TASK);
+//	set_task_timer(UPDATE_ADC_SEC, ADC_TASK);
 }
 
 void pending_req_set_timer()
@@ -161,7 +152,10 @@ void update_screen_set_timer()
 //	set_task_timer(UPDATE_SCREEN_SEC, UPDATE_SCREEN_TASK);
 }
 
-
+void reset_screen_saver()
+{
+	screen_saver_set_timer();
+}
 static struct scheduler_task tasks_to_do[NUMBER_OF_TASKS] = {
 		{
 				.overlaps_count = -1,
