@@ -22,11 +22,13 @@
 
 #include "../work-queue/work.h"
 
+#include "../timer/timer.h"
+
 #include "../display/display_render.h"
 
 #define CONFIG_SECTION_ADDRESS 0xa000
 
-extern bool is_screen_saver_mode;
+extern bool is_screen_saver_on;
 
 struct gfx_action_menu **action_menus;
 

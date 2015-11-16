@@ -280,9 +280,10 @@ void set_dmi_menu()
 
 void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
 {
+	reset_screen_saver();
 	enable_screen_saver_mode();
-	if (is_screen_saver_mode) {
-		is_screen_saver_mode = false;
+	if (is_screen_saver_on) {
+		is_screen_saver_on = false;
 		show_current_menu(true);
 	} else {
 		if (keycode == GFX_MONO_MENU_KEYCODE_ENTER){
