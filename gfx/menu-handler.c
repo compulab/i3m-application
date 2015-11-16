@@ -13,6 +13,7 @@ uint8_t left_time = 0,
 		right_time = 0,
 		ok_time = 0;
 uint8_t size_of_menus;
+bool is_screen_saver_mode;
 
 //TODO: enter bootloader through SW
 void enter_to_bootloader(){
@@ -73,10 +74,13 @@ void load_action(struct gfx_item_action *action, struct cnf_action config_action
 
 void show_splash()
 {
-	clear_screen();
-	present_menu->visible = false;
-	gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 0);
-	gfx_mono_ssd1306_put_framebuffer();
+	if (!is_screen_saver_mode && sleep_mode_enabled) {
+		is_screen_saver_mode = true;
+		clear_screen();
+		present_menu->visible = false;
+		gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 0);
+		gfx_mono_ssd1306_put_framebuffer();
+	}
 }
 
 void graphic_item_init(struct gfx_image *menu_image, struct cnf_image * image_node)
@@ -311,6 +315,7 @@ struct work button_work = { .do_work = handle_buttons_update, .data = NULL, .nex
 
 void handle_button_pressed()
 {
+	reset_screen_saver();
 	update_buttons_states();
 	insert_work(&button_work);
 }

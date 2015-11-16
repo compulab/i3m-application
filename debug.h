@@ -28,7 +28,7 @@ char debug[15];
 					delay_s(DELAY_TIME);
 //					CLEAR
 
-#define MSG_hex(num, y) itoa(num,debug,16); \
+#define MSG_hex(num, y) ltoa(num,debug,16); \
 					MSG(debug, y)
 //					delay_s(DELAY_TIME);
 //					CLEAR
@@ -40,7 +40,7 @@ char debug[15];
 
 #define MSG_T_N(str,num,y)	gfx_mono_draw_string(str, 0, y, &sysfont); \
 					itoa(num,debug,16); \
-					gfx_mono_draw_string(debug, 10, y, &sysfont); \
+					gfx_mono_draw_string(debug, 10, y + 8, &sysfont); \
 					delay_s(DELAY_TIME);
 //					CLEAR
 

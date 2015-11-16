@@ -26,6 +26,8 @@
 
 #define CONFIG_SECTION_ADDRESS 0xa000
 
+extern bool is_screen_saver_mode;
+
 struct gfx_action_menu **action_menus;
 
 struct gfx_font** fonts;

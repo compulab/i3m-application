@@ -9,8 +9,18 @@
 #define MAX_DIGITS 5
 
 enum power_state current_power_state = POWER_ON;
-
+bool sleep_mode_enabled;
 char power_value[10];
+
+void enable_screen_saver_mode()
+{
+	sleep_mode_enabled = true;
+}
+
+void disable_screen_saver_mode()
+{
+	sleep_mode_enabled = false;
+}
 
 bool is_valid_cpu_temp(uint8_t cpu_id)
 {
@@ -789,7 +799,7 @@ bool is_action_in_menu(struct gfx_action_menu *menu, enum information_type type)
 
 void update_information_frame(enum information_type type, bool need_to_update)
 {
-	if (need_to_update){
+	if (need_to_update && !is_screen_saver_mode){
 		if (!present_menu->visible) {
 			if (information_present != 0 && information_present->info_type == type) {
 				update_information();

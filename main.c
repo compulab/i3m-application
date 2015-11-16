@@ -63,6 +63,7 @@ void init_menu()
 	load_config_block();
 	set_menu_by_id(&present_menu, 0);
 	show_current_menu(true);
+	enable_screen_saver_mode();
 	tc_init();
 }
 
@@ -103,7 +104,6 @@ void init()
 	updated_info_init();
 	gfx_mono_init();
 	init_menu();
-	tasks_init();
 	adc_init();
 	pmic_init();
 	portf_init();
@@ -111,6 +111,7 @@ void init()
 	sei();
 	twi_slave_init();
 	TWI_init();
+	tasks_init();
 	wdt_reset();
 }
 
