@@ -67,8 +67,6 @@ bool is_valid_hdd_temp(uint8_t hdd_id);
 
 bool is_valid_mem(uint8_t mem_id);
 
-//void update_curr_screen();
-
 void update_information_frame(enum information_type type, bool need_to_update);
 
 void update_ambient_value(uint8_t high_bit);

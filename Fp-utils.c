@@ -86,34 +86,33 @@ bool need_to_update_req(enum information_type info_type)
 	return false;
 }
 
-
 void check_update_hddtr_temp_req()
 {
-	if(need_to_update_req(SHOW_HDD_TEMPERTURE))
+	if(layout.l.hddtr == 0 && need_to_update_req(SHOW_HDD_TEMPERTURE))
 		layout.l.hddtr = 1;
 }
 
 void check_update_cpu_fq_req()
 {
-	if (need_to_update_req(SHOW_CPU_FREQUENCY))
+	if (layout.l.cpufr == 0 && need_to_update_req(SHOW_CPU_FREQUENCY))
 		layout.l.cpufr = 1;
 }
 
 void check_update_cpu_temp_req()
 {
-	if (need_to_update_req(SHOW_CPU_TEMPERTURE))
+	if (layout.l.cputr == 0 && need_to_update_req(SHOW_CPU_TEMPERTURE))
 		layout.l.cputr = 1;
 }
 
 void check_update_gpu_temp_req()
 {
-	if (need_to_update_req(SHOW_GPU_TEMPERTURE))
+	if (layout.l.gputr == 0 && need_to_update_req(SHOW_GPU_TEMPERTURE))
 		layout.l.gputr = 1;
 }
 
 void check_update_pending_req()
 {
-	if (layout.direct.i2c[PENDR0] != 0)
+	if (layout.l.req == 0 && layout.direct.i2c[PENDR0] != 0)
 		layout.l.req = 1;
 }
 
@@ -799,7 +798,7 @@ bool is_action_in_menu(struct gfx_action_menu *menu, enum information_type type)
 
 void update_information_frame(enum information_type type, bool need_to_update)
 {
-	if (need_to_update && !is_screen_saver_mode){
+	if (need_to_update && !is_screen_saver_on){
 		if (!present_menu->visible) {
 			if (information_present != 0 && information_present->info_type == type) {
 				update_information();
@@ -809,15 +808,3 @@ void update_information_frame(enum information_type type, bool need_to_update)
 		}
 	}
 }
-
-//void update_curr_screen()
-//{
-////	need_to_update = false;
-//	if (!present_menu->visible)
-//			update_information();
-//	else if (is_status_in_menu_changed(present_menu, update_information_type)){
-//		MSG("Update", 10)
-//		delay_s(10);
-//		gfx_action_menu_init(present_menu, true);
-//	}
-//}
