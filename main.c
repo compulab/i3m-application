@@ -2,6 +2,7 @@
 #include "twi/twi_slave.h"
 #include "timer/timer.h"
 #include "wdt/wdt.h"
+#include "uart/uart.h"
 
 ISR(TWIE_TWIS_vect)
 {
@@ -112,6 +113,7 @@ void init()
 	twi_slave_init();
 	TWI_init();
 	tasks_init();
+	uart_init();
 	wdt_reset();
 }
 
@@ -120,6 +122,7 @@ int main(int argc, char *argv[])
 	init();
 
 	while(true) {
+		uart_send_string("testing");
 		wdt_reset();
 			if (!work_handler())
 				delay_ms(10);
