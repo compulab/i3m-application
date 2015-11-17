@@ -343,7 +343,7 @@ void set_mac_address(char *output_str)
 	uint8_t mac_address[MAC_ADDRESS_LENGTH];
 	for (int i = 0; i < MAC_ADDRESS_LENGTH; i++)
 		mac_address[i] = eeprom_read_byte(MAC_ADDRESS_EEPROM_ADDRESS + i);
-	sprintf(output_str, "%02X.%02X.%02X.%02X.%02X.%02X", mac_address[0], mac_address[1], mac_address[2], mac_address[3], mac_address[4], mac_address[5]);
+	sprintf(output_str, "%02X:%02X:%02X:%02X:%02X:%02X", mac_address[0], mac_address[1], mac_address[2], mac_address[3], mac_address[4], mac_address[5]);
 }
 
 void set_update_hdd_temp(char *output_str, uint8_t hdd_id)
