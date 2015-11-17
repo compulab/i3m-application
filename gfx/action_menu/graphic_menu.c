@@ -15,13 +15,13 @@ void set_item_position(struct gfx_image *bitmap, uint8_t i, bool is_back_item)
 	bitmap->postion.width = FRAME_WIDTH;
 }
 
-#define CURSOR_WIDTH   4
-#define CURSOR_HEIGHT   4
+#define CURSOR_WIDTH   5
+#define CURSOR_HEIGHT   5
 
 
 void invert_cursor_horizontal_lines(uint8_t frame_x, uint8_t frame_y)
 {
-	gfx_mono_generic_draw_horizontal_line(frame_x, frame_y, CURSOR_WIDTH, GFX_PIXEL_XOR);
+	gfx_mono_generic_draw_horizontal_line(frame_x + 1, frame_y, CURSOR_WIDTH - 1, GFX_PIXEL_XOR);
 	gfx_mono_generic_draw_horizontal_line(frame_x, frame_y + FRAME_HEIGHT, CURSOR_WIDTH, GFX_PIXEL_XOR);
 	gfx_mono_generic_draw_horizontal_line(frame_x + FRAME_WIDTH - CURSOR_WIDTH, frame_y, CURSOR_WIDTH, GFX_PIXEL_XOR);
 	gfx_mono_generic_draw_horizontal_line(frame_x + FRAME_WIDTH - CURSOR_WIDTH, frame_y + FRAME_HEIGHT, CURSOR_WIDTH, GFX_PIXEL_XOR);
@@ -32,7 +32,7 @@ void invert_cursor_vertical_lines(uint8_t frame_x, uint8_t frame_y)
 	gfx_mono_generic_draw_vertical_line(frame_x, frame_y, CURSOR_HEIGHT, GFX_PIXEL_XOR);
 	gfx_mono_generic_draw_vertical_line(frame_x + FRAME_WIDTH, frame_y, CURSOR_HEIGHT, GFX_PIXEL_XOR);
 	gfx_mono_generic_draw_vertical_line(frame_x, frame_y + FRAME_HEIGHT - CURSOR_HEIGHT, CURSOR_HEIGHT, GFX_PIXEL_XOR);
-	gfx_mono_generic_draw_vertical_line(frame_x + FRAME_WIDTH, frame_y + FRAME_HEIGHT - CURSOR_HEIGHT, CURSOR_HEIGHT, GFX_PIXEL_XOR);
+	gfx_mono_generic_draw_vertical_line(frame_x + FRAME_WIDTH, frame_y + FRAME_HEIGHT - CURSOR_HEIGHT + 1, CURSOR_HEIGHT, GFX_PIXEL_XOR);
 }
 
 void invert_item(uint8_t index, bool is_back_item)
@@ -51,9 +51,12 @@ void draw_selected_item(char *title)
 
 void draw_disable_item(struct gfx_item *pos)
 {
-//	gfx_mono_draw_horizontal_line(pos->x, pos->y + (pos->height / 2), pos->width, GFX_PIXEL_SET);
-	gfx_mono_generic_draw_line(pos->x, pos->y, pos->x + pos->width, pos->y + pos->height, GFX_PIXEL_SET);
-	gfx_mono_generic_draw_line(pos->x, pos->y + pos->height, pos->x + pos->width, pos->y, GFX_PIXEL_SET);
+	for (int y = pos->y + 1; y < pos->y + pos->height; y += 2)
+		gfx_mono_draw_horizontal_line(pos->x, y, pos->width, GFX_PIXEL_CLR);
+
+
+	//	gfx_mono_generic_draw_line(pos->x, pos->y, pos->x + pos->width, pos->y + pos->height, GFX_PIXEL_SET);
+//	gfx_mono_generic_draw_line(pos->x, pos->y + pos->height, pos->x + pos->width, pos->y, GFX_PIXEL_SET);
 }
 
 void graphic_menu_init(struct gfx_action_menu *action_menu, bool redraw)
