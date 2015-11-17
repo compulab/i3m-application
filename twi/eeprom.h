@@ -12,9 +12,10 @@
 #include "../config/conf_twi.h"
 #include "eeprom_driver.h"
 
+void eeprom_write_str(char *str, uint16_t addr);
 
-uint8_t eeprom_read_byte(uint8_t regAddr);
+uint8_t eeprom_read_byte(uint16_t regAddr);
 
-void eeprom_write_byte(uint8_t regAddr, uint8_t value);
+void eeprom_write_byte(uint16_t regAddr, uint8_t value);
 
 #endif /* EEPROM_H */
