@@ -53,10 +53,6 @@ void draw_disable_item(struct gfx_item *pos)
 {
 	for (int y = pos->y + 1; y < pos->y + pos->height; y += 2)
 		gfx_mono_draw_horizontal_line(pos->x, y, pos->width, GFX_PIXEL_CLR);
-
-
-	//	gfx_mono_generic_draw_line(pos->x, pos->y, pos->x + pos->width, pos->y + pos->height, GFX_PIXEL_SET);
-//	gfx_mono_generic_draw_line(pos->x, pos->y + pos->height, pos->x + pos->width, pos->y, GFX_PIXEL_SET);
 }
 
 void graphic_menu_init(struct gfx_action_menu *action_menu, bool redraw)
