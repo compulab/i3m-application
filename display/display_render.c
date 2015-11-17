@@ -88,9 +88,9 @@ void draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct gfx_font *fon
 {
 	uint8_t j = 0;
 	uint8_t length = strlen(str) * font->width;
-//	if (length >= GFX_MONO_LCD_WIDTH) {
-//		gfx_mono_draw_string(str, 0, y, &sysfont);
-//	} else {
+	if (length >= GFX_MONO_LCD_WIDTH) {
+		gfx_mono_draw_string(str, 0, y, &sysfont);
+	} else {
 		if (x == 0)
 			x = (GFX_MONO_LCD_WIDTH - length - 10) / 4;
 		clear_string_background(GFX_MONO_LCD_WIDTH - 6, 6, y, font);
@@ -108,5 +108,5 @@ void draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct gfx_font *fon
 			x += 8;
 			j++;
 		}
-//	}
+	}
 }
