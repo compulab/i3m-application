@@ -280,7 +280,7 @@ void insert_graphic_signs(struct gfx_frame *frame)
 	if (frame->information_head != NULL && frame->information_head->information.info_type == SET_BRIGHTNESS)
 		draw_graphic_signs(get_brightness_level(), MAX_BRIGHTNESS_LEVEL);
 	else
-		draw_graphic_signs((present_menu->visible_items.visible_menu)->current_selection, (present_menu->visible_items.visible_menu)->num_elements - 2);
+		draw_graphic_signs((present_menu->menu)->current_selection, (present_menu->menu)->num_elements - 2);
 }
 
 

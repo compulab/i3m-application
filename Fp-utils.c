@@ -58,7 +58,7 @@ bool is_valid_mem(uint8_t mem_id)
 }
 
 void set_invalid_string(char *str){
-	sprintf(str, "INVALID");
+	sprintf(str, "UNAVAILABLE");
 }
 
 bool is_type_in_frame(enum information_type info_type, struct gfx_information_node *info_node)

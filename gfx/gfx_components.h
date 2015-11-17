@@ -73,7 +73,7 @@ struct gfx_action_menu {
 	struct gfx_mono_menu *menu;
 	struct gfx_item_action *actions;
 	struct gfx_image_node *graphic_items_head;
-	struct gfx_visible_items visible_items;
+//	struct gfx_visible_items visible_items;
 	uint8_t id;
 	bool is_active_frame;
 	bool is_progmem;

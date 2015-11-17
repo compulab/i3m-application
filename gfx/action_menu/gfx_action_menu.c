@@ -67,80 +67,14 @@ void update_actions_visibility()
 	}
 }
 
-void free_old_menus()
-{
-	free(present_menu->visible_items.visible_actions);
-	free(present_menu->visible_items.visible_menu);
-	free(present_menu->visible_items.visible_images);
-}
-
-uint8_t count_visible_elemnts()
-{
-	uint8_t count = 0;
-	for (uint8_t i = 0; i < present_menu->menu->num_elements; i++){
-		if (present_menu->actions[i].visible)
-			count++;
-	}
-	return count;
-}
-void visible_menu_init()
-{
-	struct gfx_mono_menu *menu = present_menu->visible_items.visible_menu;
-	menu->current_page = present_menu->menu->current_page;
-	menu->current_selection = present_menu->menu->current_selection;
-	menu->last_selection = present_menu->menu->last_selection;
-	menu->title = present_menu->menu->title;
-	menu->num_elements = count_visible_elemnts();
-	present_menu->visible_items.visible_actions = malloc(sizeof(struct gfx_item_action *) * menu->num_elements);
-	present_menu->visible_items.visible_images = malloc(sizeof(struct gfx_image *) * menu->num_elements);
-}
-
-
-void update_visible_elements()
-{
-	struct gfx_mono_menu *menu = present_menu->visible_items.visible_menu;
-	struct gfx_item_action **actions = present_menu->visible_items.visible_actions;
-	struct gfx_image **images = present_menu->visible_items.visible_images;
-	struct gfx_image_node *curr_image = present_menu->graphic_items_head;
-	if (curr_image == 0)
-		present_menu->visible_items.visible_images = 0;
-	uint8_t visible_index = 0;
-	for (uint8_t i = 0; i < menu->num_elements; i++){
-		while(visible_index < present_menu->menu->num_elements && !present_menu->actions[visible_index].visible){
-			visible_index++;
-			if (curr_image != 0)
-				curr_image = curr_image->next;
-		}
-		menu->strings[i] = present_menu->menu->strings[visible_index];
-		actions[i] = &present_menu->actions[visible_index];
-		if (curr_image != 0)
-			images[i] = &curr_image->image;
-		visible_index++;
-		if (curr_image != 0)
-			curr_image = curr_image->next;
-	}
-
-}
-
-void update_visible_menus()
-{
-	free_old_menus();
-	visible_menu_init();
-	update_visible_elements();
-}
-
-void update_visible_items()
-{
-	update_actions_visibility();
-	update_visible_menus();
-}
-
 void set_present_menu(struct gfx_action_menu *action_menu)
 {
 	present_menu->visible = false;
 	present_menu = action_menu;
 	present_menu->is_active_frame = false;
 	action_menu->visible = true;
+	for (int i = 0; i < action_menu->menu->num_elements; i++)
+		update_action_visibility(&action_menu->actions[i]);
 }
 
 void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw)
@@ -148,13 +82,12 @@ void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 	if (redraw){
 		clear_screen();
 		set_present_menu(action_menu);
-		update_visible_items();
 	}
 	frame_present = 0;
 	if (present_menu->is_graphic_view)
 		graphic_menu_init(action_menu, redraw);
 	else
-		gfx_mono_menu_init(action_menu->visible_items.visible_menu, redraw, action_menu->is_progmem);
+		gfx_mono_menu_init(action_menu->menu, redraw, action_menu->is_progmem);
 	gfx_mono_generic_draw_horizontal_line(0, 51, GFX_MONO_LCD_WIDTH, GFX_PIXEL_SET);
 	gfx_mono_ssd1306_put_framebuffer();
 }
@@ -190,23 +123,23 @@ void set_dmi_mono_menu()
 		direct_item = direct_item->next;
 	}
 	if (count > 0){
-		dmi_menu.visible_items.visible_menu = malloc(sizeof(struct gfx_mono_menu));
-		dmi_menu.menu->num_elements = dmi_menu.visible_items.visible_menu->num_elements = count;
-		dmi_menu.visible_items.visible_menu->title = "DMI STRINGS";
-		dmi_menu.visible_items.visible_menu->current_selection = 0;
+		dmi_menu.menu = malloc(sizeof(struct gfx_mono_menu));
+		dmi_menu.menu->num_elements = count;
+		dmi_menu.menu->title = "DMI STRINGS";
+		dmi_menu.menu->current_selection = 0;
 		direct_item = computer_data.details.direct_string;
 		for (uint8_t i = 0; i < count  && i < 5; i++){
 			if (direct_item == 0)
 				break;
-			dmi_menu.visible_items.visible_menu->strings[i] = direct_item->type;
+			dmi_menu.menu->strings[i] = direct_item->type;
 			direct_item = direct_item->next;
 		}
-		if (dmi_menu.visible_items.visible_menu->num_elements > 4){
-			dmi_menu.visible_items.visible_menu->strings[5] = "Back To Main Menu";
-			dmi_menu.visible_items.visible_menu->num_elements = 6;
+		if (dmi_menu.menu->num_elements > 4){
+			dmi_menu.menu->strings[5] = "Back To Main Menu";
+			dmi_menu.menu->num_elements = 6;
 		} else {
-			dmi_menu.visible_items.visible_menu->strings[count] = "Back To Main Menu";
-			dmi_menu.visible_items.visible_menu->num_elements++;
+			dmi_menu.menu->strings[count] = "Back To Main Menu";
+			dmi_menu.menu->num_elements++;
 		}
 		is_dmi_set = true;
 	} else {
@@ -287,7 +220,7 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 		show_current_menu(true);
 	} else {
 		if (keycode == GFX_MONO_MENU_KEYCODE_ENTER){
-			struct gfx_item_action *selected_action = action_menu->visible_items.visible_actions[(action_menu->visible_items.visible_menu)->current_selection];
+			struct gfx_item_action *selected_action = &action_menu->actions[(action_menu->menu)->current_selection];
 			enum action_type type = selected_action->type;
 			present_menu->visible = false;
 			frame_present = 0;
@@ -322,12 +255,10 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 			if (!present_menu->visible)
 				show_current_menu(true);
 		} else {
-			if (from_frame && ((keycode == GFX_MONO_MENU_KEYCODE_DOWN && action_menu->visible_items.visible_menu->current_selection == 0) ||
-						(keycode == GFX_MONO_MENU_KEYCODE_UP && action_menu->visible_items.visible_menu->current_selection == action_menu->visible_items.visible_menu->num_elements - 2)))
+			if (from_frame && ((keycode == GFX_MONO_MENU_KEYCODE_DOWN && action_menu->menu->current_selection == 0) ||
+						(keycode == GFX_MONO_MENU_KEYCODE_UP && action_menu->menu->current_selection == action_menu->menu->num_elements - 2)))
 					return ;
-			 gfx_mono_menu_process_key(action_menu->visible_items.visible_menu, keycode, action_menu->is_progmem);
-			 action_menu->menu->current_selection = action_menu->visible_items.visible_menu->current_selection;
-			 action_menu->menu->last_selection = action_menu->visible_items.visible_menu->last_selection;
+			 gfx_mono_menu_process_key(action_menu->menu, keycode, action_menu->is_progmem);
 			 if (from_frame)
 				 gfx_action_menu_process_key(action_menu, GFX_MONO_MENU_KEYCODE_ENTER, true);
 			 else

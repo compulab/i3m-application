@@ -168,13 +168,6 @@ void set_actions(struct gfx_action_menu * menu, struct cnf_action_node *cnf_acti
 	}
 }
 
-void set_visible_items(struct gfx_action_menu *action_menu)
-{
-	action_menu->visible_items.visible_actions = 0;
-	action_menu->visible_items.visible_images = 0;
-	action_menu->visible_items.visible_menu = 0;
-}
-
 void load_config_block()
 {
 	struct cnf_blk config_block;
@@ -194,7 +187,6 @@ void load_config_block()
 			memcpy_P(&config_menu, cnf_menu.menu, sizeof(struct cnf_menu));
 			action_menus[config_menu.id]->id = config_menu.id;
 			set_mono_menu(action_menus[config_menu.id], config_menu.menu);
-			set_visible_items(action_menus[config_menu.id]);
 			set_graphic_view(action_menus[config_menu.id], config_menu.images_items_head);
 			set_actions(action_menus[i], config_menu.actions_head);
 			cnf_menu_node = cnf_menu.next;
