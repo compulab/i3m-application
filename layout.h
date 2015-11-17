@@ -562,6 +562,16 @@ union updatable_info {
 	} packed;
 };
 
+enum screen_saver_type {
+	SPLASH,
+	DASHBOARD
+};
+
+struct settings {
+	bool screen_saver_visible;
+	enum screen_saver_type screen_saver_type_selected;
+	uint8_t sleep_time;
+};
 
 union layout_t layout;
 
