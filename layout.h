@@ -570,16 +570,13 @@ union updatable_info {
 	} packed;
 };
 
+#define SCREEN_SAVER_TYPE_SIZE	2
+
 enum screen_saver_type {
 	SCREEN_SAVER_SPLASH = 0,
 	SCREEN_SAVER_DASHBOARD = 1,
 };
 
-struct settings {
-	bool screen_saver_visible;
-	enum screen_saver_type screen_saver_type_selected;
-	uint8_t sleep_time;
-};
 
 union layout_t layout;
 

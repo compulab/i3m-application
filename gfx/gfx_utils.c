@@ -277,10 +277,27 @@ void draw_graphic_signs(uint8_t index, uint8_t max_index)
 
 void insert_graphic_signs(struct gfx_frame *frame)
 {
-	if (frame->information_head != NULL && frame->information_head->information.info_type == SET_BRIGHTNESS)
-		draw_graphic_signs(get_brightness_level(), MAX_BRIGHTNESS_LEVEL);
-	else
+	if (frame->information_head != NULL) {
+		switch (frame->information_head->information.info_type) {
+		case SET_BRIGHTNESS:
+			draw_graphic_signs(get_brightness_level(), MAX_BRIGHTNESS_LEVEL);
+			break;
+		case SET_SCREEN_SAVER_ENABLE:
+			draw_graphic_signs(computer_data.details.screen_saver_visible, 1);
+			break;
+		case SET_SCREEN_SAVER_TIME:
+			draw_graphic_signs((computer_data.details.screen_saver_update_time / 2) - 1, 4);
+			break;
+		case SET_SCREEN_SAVER_TYPE:
+			draw_graphic_signs(computer_data.details.screen_saver_type, SCREEN_SAVER_TYPE_SIZE - 1);
+			break;
+		default:
+			draw_graphic_signs((present_menu->menu)->current_selection, (present_menu->menu)->num_elements - 2);
+			break;
+		}
+	} else {
 		draw_graphic_signs((present_menu->menu)->current_selection, (present_menu->menu)->num_elements - 2);
+	}
 }
 
 
