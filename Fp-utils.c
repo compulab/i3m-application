@@ -12,6 +12,15 @@ enum power_state current_power_state = POWER_ON;
 bool sleep_mode_enabled;
 char power_value[10];
 
+struct calendar_date computer_date_time = {
+    .second = 0,
+    .minute = 1,
+    .hour = 20,
+    .date = 3,
+    .month = 3,
+    .year = 1986
+};
+
 void enable_screen_saver_mode()
 {
 	sleep_mode_enabled = true;

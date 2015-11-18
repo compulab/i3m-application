@@ -3,11 +3,18 @@
 #include "timer/timer.h"
 #include "wdt/wdt.h"
 #include "uart/uart.h"
+#include "rtc/rtc.h"
 
 ISR(TWIE_TWIS_vect)
 {
 	wdt_reset();
 	twi_slave_interrupt_handler();
+}
+
+ISR(RTC_OVF_vect)
+{
+	wdt_reset();
+	rtc_handle_sec_update();
 }
 
 ISR(PORTF_INT0_vect)
@@ -83,6 +90,13 @@ void update_fp_info()
 	layout.l.major_rev = 0x00;
 	layout.l.minor_rev = 0x01;
 
+	computer_data.details.screen_saver_visible = 1;
+	computer_data.details.screen_saver_type = SCREEN_SAVER_SPLASH;
+	eeprom_write_byte(SCREEN_SAVER_CONFIG_ADDRESS, computer_data.packed.screen_saver_config);
+	eeprom_write_byte(SCREEN_SAVER_EEPROM_ADDRESS, 0x05);
+
+	computer_data.details.screen_saver_update_time = eeprom_read_byte(SCREEN_SAVER_EEPROM_ADDRESS);
+
 	if (eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS) == 0x00)
 		eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, 0xff);
 }
@@ -114,6 +128,7 @@ void init()
 	TWI_init();
 	tasks_init();
 	uart_init();
+	rtc_init();
 	wdt_reset();
 }
 
@@ -122,7 +137,6 @@ int main(int argc, char *argv[])
 	init();
 
 	while(true) {
-		uart_send_string("testing");
 		wdt_reset();
 			if (!work_handler())
 				delay_ms(10);

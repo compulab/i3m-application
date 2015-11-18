@@ -31,6 +31,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "calendar/calendar.h"
+
 #include "work-queue/work.h"
 #include "debug.h"
 #define AMBIENT_TWI_ADDRESS  		0x4C
@@ -44,6 +46,8 @@
 #define GPUTR_BIT					3
 
 extern enum information_type update_information_type;
+
+extern struct calendar_date computer_date_time;
 
 extern bool sleep_mode_enabled;
 

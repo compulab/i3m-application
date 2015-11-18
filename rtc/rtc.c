@@ -8,12 +8,6 @@
 #include <avr/interrupt.h>
 #include "rtc.h"
 
-long rtc_time =0;
-
-ISR(RTC_OVF_vect)
-{
-	rtc_time ++;
-}
 
 void rtc_init()
 {
