@@ -90,13 +90,13 @@ void update_fp_info()
 	layout.l.major_rev = 0x00;
 	layout.l.minor_rev = 0x01;
 
+
+
+	computer_data.details.screen_saver_update_time = 2;
 	computer_data.details.screen_saver_visible = 1;
-	computer_data.details.screen_saver_type = SCREEN_SAVER_SPLASH;
+	computer_data.details.screen_saver_type = 0;
 	eeprom_write_byte(SCREEN_SAVER_CONFIG_ADDRESS, computer_data.packed.screen_saver_config);
-	eeprom_write_byte(SCREEN_SAVER_EEPROM_ADDRESS, 0x05);
-
-	computer_data.details.screen_saver_update_time = eeprom_read_byte(SCREEN_SAVER_EEPROM_ADDRESS);
-
+	eeprom_write_byte(SCREEN_SAVER_EEPROM_ADDRESS, computer_data.packed.screen_saver_update_time);
 	if (eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS) == 0x00)
 		eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, 0xff);
 }
