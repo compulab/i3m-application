@@ -94,7 +94,6 @@ void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 
 void show_menu(struct gfx_action_menu *menu, bool redraw)
 {
-	enable_screen_saver_mode();
 	gfx_action_menu_init(menu, redraw);
 }
 
@@ -232,7 +231,6 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 				gfx_frame_draw(selected_action->frame, false);
 				break;
 			case ACTION_TYPE_SHOW_MENU:
-				enable_screen_saver_mode();
 				if (from_frame && selected_action->menu_id == MAIN_MENU_ID)
 					break;
 				show_menu(selected_action->menu, true);

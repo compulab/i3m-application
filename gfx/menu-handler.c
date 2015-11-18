@@ -74,7 +74,7 @@ void load_action(struct gfx_item_action *action, struct cnf_action config_action
 
 void show_splash()
 {
-	if (!is_screen_saver_on && sleep_mode_enabled) {
+	if (!is_screen_saver_on && computer_data.details.screen_saver_visible == 1 && sleep_mode_enabled) {
 		is_screen_saver_on = true;
 		clear_screen();
 		present_menu->visible = false;
@@ -246,6 +246,7 @@ void hadle_back_to_menu()
 	clear_screen();
 	frame_present = 0;
 //	information_present = 0;
+	enable_screen_saver_mode();
 	gfx_action_menu_init(present_menu, true);
 }
 
