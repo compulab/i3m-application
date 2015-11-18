@@ -23,6 +23,8 @@
 
 #include "tc.h"
 
+#include "../uart/uart.h"
+
 //#define SUPPORT_HOLD_BUTTON
 
 #define MENU_SHOW_TIME			150

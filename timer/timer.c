@@ -114,21 +114,32 @@ void set_task_timer(uint8_t sec_to_update, enum TYPE_OF_TASK type)
 {
 	struct scheduler_task *task = &tasks_to_do[type];
 	uint32_t ticks = sec_to_update * get_ticks_in_sec();
-
+	uart_send_num(type, 10);
+	uart_send_string(" setting timer to offset = ");
 	uint16_t ticks_to_overflow = TIMER_MAX_VALUE - TCC0.CNT;
 	if (ticks < ticks_to_overflow) {
 		task->offset = ticks + TCC0.CNT;
 		task->overlaps_count = 0;
+		uart_send_num((task->offset & 0xff00) >> 8, 16);
+		uart_send_num(task->offset & 0xff, 16);
+		uart_send_string("  overlaps = 0\n\r");
 	} else {
 		ticks -= ticks_to_overflow;
 		task->overlaps_count = ticks / TIMER_MAX_VALUE + 1;
 		task->offset = ticks % TIMER_MAX_VALUE;
+		uart_send_num((task->offset & 0xff00) >> 8, 16);
+		uart_send_num(task->offset & 0xff, 16);
+		uart_send_string("  overlaps = ");
+		uart_send_num((task->overlaps_count & 0xff00) >> 8, 16);
+		uart_send_num(task->overlaps_count & 0xff, 16);
+		uart_send_string("\n\r");
 	}
 }
 
 void screen_saver_set_timer()
 {
-	set_task_timer(UPDATE_SCREEN_SAVER_SEC, SCREEN_SAVER_TASK);
+	uart_send_string("screen saver set\t");
+	set_task_timer(computer_data.details.screen_saver_update_time , SCREEN_SAVER_TASK);
 }
 
 void ambient_set_timer()
@@ -228,6 +239,8 @@ void tc_handle_cmp_interrupt(void)
 	/* Find expired task and add it to the work queue */
 	for (uint8_t i = 0; i < NUMBER_OF_TASKS; i++) {
 		if (tasks_to_do[i].overlaps_count == 0 && tasks_to_do[i].offset <= TCC0.CNT) {
+			if (i == 0)
+				uart_send_string("screen is working");
 			insert_work(tasks_to_do[i].work);
 			tasks_to_do[i].set_new_timer();
 		}
