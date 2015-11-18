@@ -18,4 +18,6 @@ void uart_send_char(char c);
 
 void uart_send_string(char *text);
 
+void uart_send_num(uint8_t num, uint8_t radix);
+
 #endif /* UART_UART_H_ */

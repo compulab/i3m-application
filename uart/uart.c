@@ -23,10 +23,11 @@ void uart_init(void)
 	UART_BASE.CTRLB = USART_TXEN_bm | USART_RXEN_bm;
 }
 
+char num_str[5];
 
 void uart_send_char(char c)
 {
-	if (c == '\n')
+	if (c == '\0')
 		return ;
     while( !(UART_BASE.STATUS & USART_DREIF_bm) ); //Wait until DATA buffer is empty
 
@@ -40,4 +41,10 @@ void uart_send_string(char *text)
     {
     	uart_send_char(*text++);
     }
+}
+
+void uart_send_num(uint8_t num, uint8_t radix)
+{
+	itoa(num, num_str, radix);
+	uart_send_string(num_str);
 }
