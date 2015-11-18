@@ -15,7 +15,8 @@ bool update_buttons;
 bool first_ambient_read;
 uint8_t ambient_update_fail_count;
 
-static struct scheduler_task tasks_to_do[NUMBER_OF_TASKS];
+static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS];
+static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS];
 
 void tc_button_pressed()
 {
@@ -110,9 +111,14 @@ uint32_t get_ticks_in_sec()
 	return sysclk_get_cpu_hz() / tc_div;
 }
 
-void set_task_timer(uint8_t sec_to_update, enum TYPE_OF_TASK type)
+void set_sec_task_timer(uint8_t sec_to_update, enum TYPE_OF_SEC_TASK type)
 {
-	struct scheduler_task *task = &tasks_to_do[type];
+	sec_tasks_to_do[type].secs_left = sec_to_update;
+}
+
+void set_tick_task_timer(uint8_t sec_to_update, enum TYPE_OF_TICK_TASK type)
+{
+	struct scheduler_tick_task *task = &tick_tasks_to_do[type];
 	uint32_t ticks = sec_to_update * get_ticks_in_sec();
 	uart_send_num(type, 10);
 	uart_send_string(" setting timer to offset = ");
@@ -138,23 +144,23 @@ void set_task_timer(uint8_t sec_to_update, enum TYPE_OF_TASK type)
 
 void screen_saver_set_timer()
 {
-	uart_send_string("screen saver set\t");
-	set_task_timer(computer_data.details.screen_saver_update_time , SCREEN_SAVER_TASK);
+	uart_send_string("screen saver set\t\n\r");
+	set_sec_task_timer(computer_data.details.screen_saver_update_time , SCREEN_SAVER_TASK);
 }
 
 void ambient_set_timer()
 {
-//	set_task_timer(UPDATE_AMBIENT_SEC, AMBIENT_TASK);
+//	set_task_timer(UPDATE_AMBIENT_SEC, AMBIENT_TASK, false);
 }
 
 void adc_set_timer()
 {
-	set_task_timer(UPDATE_ADC_SEC, ADC_TASK);
+	set_tick_task_timer(UPDATE_ADC_SEC, ADC_TASK);
 }
 
 void pending_req_set_timer()
 {
-	set_task_timer(UPDATE_REQ_SEC, PENDING_REQ_TASK);
+	set_tick_task_timer(UPDATE_REQ_SEC, PENDING_REQ_TASK);
 }
 
 void reset_screen_saver()
@@ -162,13 +168,15 @@ void reset_screen_saver()
 	screen_saver_set_timer();
 }
 
-static struct scheduler_task tasks_to_do[NUMBER_OF_TASKS] = {
+static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS] = {
 		{
-				.overlaps_count = -1,
-				.offset = 0,
+				.secs_left = -1,
 				.work = &screen_saver_work,
 				.set_new_timer = screen_saver_set_timer,
 		},
+};
+
+static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = {
 		{
 				.overlaps_count = -1,
 				.offset = 0,
@@ -191,8 +199,8 @@ static struct scheduler_task tasks_to_do[NUMBER_OF_TASKS] = {
 
 bool set_task_cmp(uint8_t task_id)
 {
-	if (tasks_to_do[task_id].overlaps_count == 0 && (!is_tc_cmp_enable() || tasks_to_do[task_id].offset < TCC0.CCA)) {
-		TCC0.CCA = tasks_to_do[task_id].offset;
+	if (tick_tasks_to_do[task_id].overlaps_count == 0 && (!is_tc_cmp_enable() || tick_tasks_to_do[task_id].offset < TCC0.CCA)) {
+		TCC0.CCA = tick_tasks_to_do[task_id].offset;
 		return true;
 	}
 
@@ -202,7 +210,7 @@ bool set_task_cmp(uint8_t task_id)
 void find_next_task(void)
 {
 	bool task_is_set = false;
-	for (uint8_t i = 0; i < NUMBER_OF_TASKS; i++) {
+	for (uint8_t i = 0; i < NUMBER_OF_TICK_TASKS; i++) {
 		if (set_task_cmp(i))
 			task_is_set = true;
 	}
@@ -215,19 +223,43 @@ void find_next_task(void)
 
 void tasks_init(void)
 {
-	for (uint8_t i = 0; i < NUMBER_OF_TASKS; i++)
-		tasks_to_do[i].set_new_timer();
+	for (uint8_t i = 0; i < NUMBER_OF_TICK_TASKS; i++)
+		tick_tasks_to_do[i].set_new_timer();
+	for (uint8_t i = 0; i < NUMBER_OF_SEC_TASKS; i++)
+		sec_tasks_to_do[i].set_new_timer();
+
 
 	find_next_task();
 }
 
+void rtc_handle_sec_update(void)
+{
+	calendar_add_second_to_date(&computer_date_time);
+	uart_send_string("||||Time update ");
+	uart_send_num(computer_date_time.second, 10);
+	uart_send_string("\n\n\r");
+	for (int i = 0; i < NUMBER_OF_SEC_TASKS; i ++) {
+		if (sec_tasks_to_do[i].secs_left > 0)
+			sec_tasks_to_do[i].secs_left--;
+	}
+
+	for (int i = 0; i < NUMBER_OF_SEC_TASKS; i ++) {
+		if (sec_tasks_to_do[i].secs_left == 0) {
+			if (i == 0)
+				uart_send_string("screen is working");
+			insert_work(sec_tasks_to_do[i].work);
+			sec_tasks_to_do[i].set_new_timer();
+		}
+	}
+}
+
 void tc_handle_overflow_interrupt(void)
 {
-	for (uint8_t i = 0; i < NUMBER_OF_TASKS; i++) {
-		if (tasks_to_do[i].overlaps_count <= 0)
+	for (uint8_t i = 0; i < NUMBER_OF_TICK_TASKS; i++) {
+		if (tick_tasks_to_do[i].overlaps_count <= 0)
 			continue;
 		else
-			tasks_to_do[i].overlaps_count--;
+			tick_tasks_to_do[i].overlaps_count--;
 	}
 
 	find_next_task();
@@ -237,12 +269,11 @@ void tc_handle_overflow_interrupt(void)
 void tc_handle_cmp_interrupt(void)
 {
 	/* Find expired task and add it to the work queue */
-	for (uint8_t i = 0; i < NUMBER_OF_TASKS; i++) {
-		if (tasks_to_do[i].overlaps_count == 0 && tasks_to_do[i].offset <= TCC0.CNT) {
-			if (i == 0)
-				uart_send_string("screen is working");
-			insert_work(tasks_to_do[i].work);
-			tasks_to_do[i].set_new_timer();
+	for (uint8_t i = 0; i < NUMBER_OF_TICK_TASKS; i++) {
+		if (tick_tasks_to_do[i].overlaps_count == 0 &&  tick_tasks_to_do[i].offset <= TCC0.CNT) {
+
+			insert_work(tick_tasks_to_do[i].work);
+			tick_tasks_to_do[i].set_new_timer();
 		}
 	}
 

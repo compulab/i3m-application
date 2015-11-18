@@ -25,6 +25,8 @@
 
 #include "../uart/uart.h"
 
+#include "../calendar/calendar.h"
+
 //#define SUPPORT_HOLD_BUTTON
 
 #define MENU_SHOW_TIME			150
@@ -38,35 +40,47 @@
 #define UPDATE_AMBIENT_SEC		4
 
 
-#define NUMBER_OF_TASKS		4
+#define NUMBER_OF_TICK_TASKS		3
 
-enum TYPE_OF_TASK {
-	SCREEN_SAVER_TASK 	=	0,
+enum TYPE_OF_TICK_TASK {
+	PENDING_REQ_TASK 	= 	0,
 	AMBIENT_TASK	  	=	1,
 	ADC_TASK		 	=	2,
-	PENDING_REQ_TASK 	= 	3,
 };
 
-struct scheduler_task {
+struct scheduler_tick_task {
 	int overlaps_count;
 	uint16_t offset;
 	struct work *work;
 	void (* set_new_timer)(void);
 };
 
+#define NUMBER_OF_SEC_TASKS		1
 
-void reset_screen_saver();
+enum TYPE_OF_SEC_TASK {
+	SCREEN_SAVER_TASK 	=	0,
+};
 
-void tc_button_pressed();
+struct scheduler_sec_task {
+	int secs_left;
+	struct work *work;
+	void (* set_new_timer)(void);
+};
 
-void tc_no_button_pressed();
+void reset_screen_saver(void);
 
-void reset_ambient();
+void tc_button_pressed(void);
 
-void tc_handle_overflow_interrupt();
+void tc_no_button_pressed(void);
 
-void tc_handle_cmp_interrupt();
+void reset_ambient(void);
 
-void tasks_init();
+void rtc_handle_sec_update(void);
+
+void tc_handle_overflow_interrupt(void);
+
+void tc_handle_cmp_interrupt(void);
+
+void tasks_init(void);
 
 #endif /* TIMER_TIMER_H_ */
