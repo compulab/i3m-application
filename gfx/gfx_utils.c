@@ -281,23 +281,23 @@ void insert_graphic_signs(struct gfx_frame *frame)
 		switch (frame->information_head->information.info_type) {
 		case SET_BRIGHTNESS:
 			draw_graphic_signs(get_brightness_level(), MAX_BRIGHTNESS_LEVEL);
-			break;
+			return ;
 		case SET_SCREEN_SAVER_ENABLE:
 			draw_graphic_signs(computer_data.details.screen_saver_visible, 1);
-			break;
+			return ;
 		case SET_SCREEN_SAVER_TIME:
-			draw_graphic_signs((computer_data.details.screen_saver_update_time / 2) - 1, 4);
-			break;
+			if (computer_data.details.screen_saver_visible == 1)
+				draw_graphic_signs((computer_data.details.screen_saver_update_time / 2) - 1, 4);
+			return ;
 		case SET_SCREEN_SAVER_TYPE:
-			draw_graphic_signs(computer_data.details.screen_saver_type, SCREEN_SAVER_TYPE_SIZE - 1);
-			break;
+			if (computer_data.details.screen_saver_visible == 1)
+				draw_graphic_signs(computer_data.details.screen_saver_type, SCREEN_SAVER_TYPE_SIZE - 1);
+			return ;
 		default:
-			draw_graphic_signs((present_menu->menu)->current_selection, (present_menu->menu)->num_elements - 2);
 			break;
 		}
-	} else {
-		draw_graphic_signs((present_menu->menu)->current_selection, (present_menu->menu)->num_elements - 2);
 	}
+	draw_graphic_signs((present_menu->menu)->current_selection, (present_menu->menu)->num_elements - 2);
 }
 
 

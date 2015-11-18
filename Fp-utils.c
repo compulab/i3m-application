@@ -402,38 +402,43 @@ void decrese_brightness_level()
 
 void handle_screen_saver_type_buttons(uint8_t key)
 {
-	switch (key) {
-	case GFX_MONO_MENU_KEYCODE_DOWN:
-		if (computer_data.details.screen_saver_type == 0)
-			return ;
-		computer_data.details.screen_saver_type--;
-		break;
-	case GFX_MONO_MENU_KEYCODE_UP:
-		if (computer_data.details.screen_saver_type == SCREEN_SAVER_TYPE_SIZE - 1)
-			return ;
-		computer_data.details.screen_saver_type++;
-		break;
+	uart_send_string("type buttons click\n\r");
+	if (computer_data.details.screen_saver_visible == 1) {
+		switch (key) {
+		case GFX_MONO_MENU_KEYCODE_DOWN:
+			if (computer_data.details.screen_saver_type == 0)
+				return ;
+			computer_data.details.screen_saver_type--;
+			break;
+		case GFX_MONO_MENU_KEYCODE_UP:
+			if (computer_data.details.screen_saver_type == SCREEN_SAVER_TYPE_SIZE - 1)
+				return ;
+			computer_data.details.screen_saver_type++;
+			break;
+		}
+		eeprom_write_byte(SCREEN_SAVER_CONFIG_ADDRESS, computer_data.packed.screen_saver_config);
+		update_information_frame(SET_SCREEN_SAVER_TYPE, true);
 	}
-	eeprom_write_byte(SCREEN_SAVER_CONFIG_ADDRESS, computer_data.packed.screen_saver_config);
-	update_information_frame(SET_SCREEN_SAVER_TYPE, true);
 }
 
 void handle_screen_saver_time_buttons(uint8_t key)
 {
-	switch (key) {
-	case GFX_MONO_MENU_KEYCODE_DOWN:
-		if (computer_data.details.screen_saver_update_time == 2)
-			return ;
-		computer_data.details.screen_saver_update_time -= 2;
-		break;
-	case GFX_MONO_MENU_KEYCODE_UP:
-		if (computer_data.details.screen_saver_update_time == 10)
-			return ;
-		computer_data.details.screen_saver_update_time += 2;
-		break;
+	if (computer_data.details.screen_saver_visible == 1) {
+		switch (key) {
+		case GFX_MONO_MENU_KEYCODE_DOWN:
+			if (computer_data.details.screen_saver_update_time == 2)
+				return ;
+			computer_data.details.screen_saver_update_time -= 2;
+			break;
+		case GFX_MONO_MENU_KEYCODE_UP:
+			if (computer_data.details.screen_saver_update_time == 10)
+				return ;
+			computer_data.details.screen_saver_update_time += 2;
+			break;
+		}
+		eeprom_write_byte(SCREEN_SAVER_EEPROM_ADDRESS, computer_data.packed.screen_saver_update_time);
+		update_information_frame(SET_SCREEN_SAVER_TIME, true);
 	}
-	eeprom_write_byte(SCREEN_SAVER_EEPROM_ADDRESS, computer_data.packed.screen_saver_update_time);
-	update_information_frame(SET_SCREEN_SAVER_TIME, true);
 }
 
 void handle_screen_saver_enable_buttons(uint8_t key)
@@ -489,13 +494,21 @@ const char *screen_saver_type_str[SCREEN_SAVER_TYPE_SIZE] = { "LOGO", "DASHBOARD
 void set_screen_saver_type(char *str)
 {
 	frame_present->handle_buttons = handle_screen_saver_type_buttons;
-	sprintf(str, screen_saver_type_str[computer_data.details.screen_saver_type]);
+	if (computer_data.details.screen_saver_visible == 1) {
+		sprintf(str, screen_saver_type_str[computer_data.details.screen_saver_type]);
+	} else {
+		sprintf(str, "SCREEN SAVER\n DISABLED");
+	}
 }
 
 void set_screen_saver_time(char *str)
 {
 	frame_present->handle_buttons = handle_screen_saver_time_buttons;
-	sprintf(str, "%d" , computer_data.details.screen_saver_update_time);
+	if (computer_data.details.screen_saver_visible == 1) {
+		sprintf(str, "%d" , computer_data.details.screen_saver_update_time);
+	} else {
+		sprintf(str, "SCREEN SAVER\n DISABLED");
+	}
 }
 
 void set_screen_saver_enable(char *str)
