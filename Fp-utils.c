@@ -497,7 +497,7 @@ void set_screen_saver_type(char *str)
 	if (computer_data.details.screen_saver_visible == 1) {
 		sprintf(str, screen_saver_type_str[computer_data.details.screen_saver_type]);
 	} else {
-		sprintf(str, "SCREEN SAVER\n DISABLED");
+		sprintf(str, "DISABLED");
 	}
 }
 
@@ -507,7 +507,7 @@ void set_screen_saver_time(char *str)
 	if (computer_data.details.screen_saver_visible == 1) {
 		sprintf(str, "%d" , computer_data.details.screen_saver_update_time);
 	} else {
-		sprintf(str, "SCREEN SAVER\n DISABLED");
+		sprintf(str, "DISABLED");
 	}
 }
 
