@@ -32,7 +32,9 @@
 #define MAC_ADDRESS 0x02
 #define REVISION_ADDRESS 0x00
 
-static const uint16_t BRIGHTNESS_EEPROM_ADDRESS = 0x0100;
+#define BRIGHTNESS_EEPROM_ADDRESS 			0x0100
+#define SCREEN_SAVER_EEPROM_ADDRESS			0x0101
+#define SCREEN_SAVER_CONFIG_ADDRESS 		0x0102
 
 #define SERIAL_NUMBER_LENGTH	12
 #define PRODUCT_NAME_LENGTH		16
@@ -537,6 +539,10 @@ union updatable_info {
 		uint8_t cputr:1;
 		uint8_t gputr:1;
 		struct direct_string_item *direct_string;
+		uint8_t screen_saver_update_time;
+		uint8_t screen_saver_visible:1;
+		uint8_t screen_saver_type:2;
+		uint8_t screen_saver_reserved:5;
 	} details;
 	struct {
 		uint16_t post_code;
@@ -559,12 +565,14 @@ union updatable_info {
 		uint8_t cpufs;
 		uint8_t pending_req:4;
 		struct direct_string_item *direct_string;
+		uint8_t screen_saver_update_time;
+		uint8_t screen_saver_config;
 	} packed;
 };
 
 enum screen_saver_type {
-	SPLASH,
-	DASHBOARD
+	SCREEN_SAVER_SPLASH = 0,
+	SCREEN_SAVER_DASHBOARD = 1,
 };
 
 struct settings {
