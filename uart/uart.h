@@ -9,7 +9,7 @@
 #define UART_UART_H_
 #include "../asf.h"
 
-#define BSEL 	207
+#define BSEL 	16
 #define UART_BASE	USARTD0
 
 void uart_init(void);
