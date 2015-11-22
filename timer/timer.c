@@ -13,6 +13,7 @@
 
 bool update_buttons;
 bool first_ambient_read;
+bool reset_screen_saver_req;
 uint8_t ambient_update_fail_count;
 
 static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS];
@@ -45,12 +46,11 @@ void update_ambient_temp()
 		bool last_valid = layout.l.ambs != 0;
 		if (first_ambient_read) {
 			valid_update = TWI_read_reg(AMBIENT_TWI_ADDRESS, AMBIENT_TEMPERATURE_ADDRESS, &layout.l.ambt, 2);
-			if (valid_update) {
-				first_ambient_read = false;
-			}
+			first_ambient_read = !valid_update;
 		} else {
-			valid_update  = TWI_read(AMBIENT_TWI_ADDRESS, &layout.l.ambt, 2);
+			valid_update = TWI_read_reg(AMBIENT_TWI_ADDRESS, AMBIENT_TEMPERATURE_ADDRESS, &layout.l.ambt, 2);
 		}
+
 		if (valid_update) {
 			ambient_update_fail_count = 0;
 			layout.l.ambs = 1;
@@ -58,7 +58,9 @@ void update_ambient_temp()
 			layout.l.ambs = 0;
 		} else  {
 			ambient_update_fail_count++;
+			update_ambient_temp();
 		}
+
 		if (ambient_update_fail_count == MAX_AMBIENT_UPDATE_FAIL || ((layout.l.ambs == 1) && (!last_valid || last_temp != layout.l.ambt)))
 			update_information_frame(SHOW_AMBIENT_TEMPERATURE, true);
 	}
@@ -120,37 +122,25 @@ void set_tick_task_timer(uint8_t sec_to_update, enum TYPE_OF_TICK_TASK type)
 {
 	struct scheduler_tick_task *task = &tick_tasks_to_do[type];
 	uint32_t ticks = sec_to_update * get_ticks_in_sec();
-	uart_send_num(type, 10);
-	uart_send_string(" setting timer to offset = ");
 	uint16_t ticks_to_overflow = TIMER_MAX_VALUE - TCC0.CNT;
 	if (ticks < ticks_to_overflow) {
 		task->offset = ticks + TCC0.CNT;
 		task->overlaps_count = 0;
-		uart_send_num((task->offset & 0xff00) >> 8, 16);
-		uart_send_num(task->offset & 0xff, 16);
-		uart_send_string("  overlaps = 0\n\r");
 	} else {
 		ticks -= ticks_to_overflow;
 		task->overlaps_count = ticks / TIMER_MAX_VALUE + 1;
 		task->offset = ticks % TIMER_MAX_VALUE;
-		uart_send_num((task->offset & 0xff00) >> 8, 16);
-		uart_send_num(task->offset & 0xff, 16);
-		uart_send_string("  overlaps = ");
-		uart_send_num((task->overlaps_count & 0xff00) >> 8, 16);
-		uart_send_num(task->overlaps_count & 0xff, 16);
-		uart_send_string("\n\r");
 	}
 }
 
 void screen_saver_set_timer()
 {
-	uart_send_string("screen saver set\t\n\r");
 	set_sec_task_timer(computer_data.details.screen_saver_update_time , SCREEN_SAVER_TASK);
 }
 
 void ambient_set_timer()
 {
-//	set_task_timer(UPDATE_AMBIENT_SEC, AMBIENT_TASK, false);
+	set_tick_task_timer(UPDATE_AMBIENT_SEC, AMBIENT_TASK);
 }
 
 void adc_set_timer()
@@ -180,6 +170,12 @@ static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = {
 		{
 				.overlaps_count = -1,
 				.offset = 0,
+				.work = &requests_work,
+				.set_new_timer = pending_req_set_timer,
+		},
+		{
+				.overlaps_count = -1,
+				.offset = 0,
 				.work = &ambient_work,
 				.set_new_timer = ambient_set_timer,
 		},
@@ -189,12 +185,7 @@ static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = {
 				.work = &adc_work,
 				.set_new_timer = adc_set_timer,
 		},
-		{
-				.overlaps_count = -1,
-				.offset = 0,
-				.work = &requests_work,
-				.set_new_timer = pending_req_set_timer,
-		},
+
 };
 
 bool set_task_cmp(uint8_t task_id)
@@ -235,7 +226,11 @@ void tasks_init(void)
 void rtc_handle_sec_update(void)
 {
 	calendar_add_second_to_date(&computer_date_time);
-	uart_send_string("||||Time update ");
+	uart_send_string("||||Time update: ");
+	uart_send_num(computer_date_time.hour, 10);
+	uart_send_char(':');
+	uart_send_num(computer_date_time.minute, 10);
+	uart_send_char(':');
 	uart_send_num(computer_date_time.second, 10);
 	uart_send_string("\n\n\r");
 	for (int i = 0; i < NUMBER_OF_SEC_TASKS; i ++) {
@@ -245,8 +240,6 @@ void rtc_handle_sec_update(void)
 
 	for (int i = 0; i < NUMBER_OF_SEC_TASKS; i ++) {
 		if (sec_tasks_to_do[i].secs_left == 0) {
-			if (i == 0)
-				uart_send_string("screen is working");
 			insert_work(sec_tasks_to_do[i].work);
 			sec_tasks_to_do[i].set_new_timer();
 		}

@@ -1,5 +1,7 @@
 #include "menu-handler.h"
 
+#include "../uart/uart.h"
+
 #define is_key_selected(var,key) (var & key) == key
 
 struct gfx_mono_bitmap splash_bitmap;
@@ -74,12 +76,18 @@ void load_action(struct gfx_item_action *action, struct cnf_action config_action
 
 void show_splash()
 {
-	if (!is_screen_saver_on && computer_data.details.screen_saver_visible == 1 && sleep_mode_enabled) {
-		is_screen_saver_on = true;
-		clear_screen();
-		present_menu->visible = false;
-		gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 0);
-		gfx_mono_ssd1306_put_framebuffer();
+	if (reset_screen_saver_req){
+		reset_screen_saver();
+		reset_screen_saver_req = false;
+	} else {
+		if (!is_screen_saver_on && computer_data.details.screen_saver_visible == 1 && sleep_mode_enabled) {
+			uart_send_string("screen saver on\n\r");
+			is_screen_saver_on = true;
+			clear_screen();
+			present_menu->visible = false;
+			gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 0);
+			gfx_mono_ssd1306_put_framebuffer();
+		}
 	}
 }
 

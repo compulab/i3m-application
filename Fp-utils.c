@@ -13,9 +13,9 @@ bool sleep_mode_enabled;
 char power_value[10];
 
 struct calendar_date computer_date_time = {
-    .second = 0,
-    .minute = 1,
-    .hour = 20,
+    .second = 30,
+    .minute = 37,
+    .hour = 17,
     .date = 3,
     .month = 3,
     .year = 1986
@@ -402,7 +402,6 @@ void decrese_brightness_level()
 
 void handle_screen_saver_type_buttons(uint8_t key)
 {
-	uart_send_string("type buttons click\n\r");
 	if (computer_data.details.screen_saver_visible == 1) {
 		switch (key) {
 		case GFX_MONO_MENU_KEYCODE_DOWN:
@@ -919,7 +918,7 @@ bool is_action_in_menu(struct gfx_action_menu *menu, enum information_type type)
 void update_information_frame(enum information_type type, bool need_to_update)
 {
 	if (type == SET_SCREEN_SAVER_TIME && !is_screen_saver_on)
-		reset_screen_saver();
+		reset_screen_saver_req = true;
 	if (need_to_update && !is_screen_saver_on){
 		if (!present_menu->visible) {
 			if (information_present != 0 && information_present->info_type == type) {

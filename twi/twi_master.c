@@ -17,6 +17,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+#include "../uart/uart.h"
 
 
 enum TRANSACTION_TYPES_enum
@@ -360,7 +361,11 @@ void handle_twi_master()
 						TWI.MASTER.STATUS = TWI_MASTER_BUSSTATE_IDLE_gc;
 						transaction_result_AT = TWI_RESULT_OK;
 					}
-					*data_buffer_AT++ = TWI.MASTER.DATA;
+					char ch = TWI.MASTER.DATA;
+					*data_buffer_AT++ = ch;
+					uart_send_string("twi master: ");
+					uart_send_num(ch, 10);
+					uart_send_string("\n\r");
 					break;
 
 				default:

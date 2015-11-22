@@ -22,9 +22,7 @@
 #endif
 
 #include "tc.h"
-
 #include "../uart/uart.h"
-
 #include "../calendar/calendar.h"
 
 //#define SUPPORT_HOLD_BUTTON
@@ -66,6 +64,8 @@ struct scheduler_sec_task {
 	struct work *work;
 	void (* set_new_timer)(void);
 };
+
+extern bool reset_screen_saver_req;
 
 void reset_screen_saver(void);
 

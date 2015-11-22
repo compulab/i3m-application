@@ -95,6 +95,7 @@ void update_fp_info()
 	computer_data.details.screen_saver_update_time = 2;
 	computer_data.details.screen_saver_visible = 1;
 	computer_data.details.screen_saver_type = 0;
+	reset_ambient();
 	eeprom_write_byte(SCREEN_SAVER_CONFIG_ADDRESS, computer_data.packed.screen_saver_config);
 	eeprom_write_byte(SCREEN_SAVER_EEPROM_ADDRESS, computer_data.packed.screen_saver_update_time);
 	if (eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS) == 0x00)
