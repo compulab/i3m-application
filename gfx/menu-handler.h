@@ -26,7 +26,7 @@
 
 #include "../display/display_render.h"
 
-#define CONFIG_SECTION_ADDRESS 0xa000
+#define CONFIG_SECTION_ADDRESS 0x00010000
 
 extern bool is_screen_saver_on;
 
