@@ -7,10 +7,15 @@
 #include "Fp-utils.h"
 
 #define MAX_DIGITS 5
+#define UPDATE_FRAME_MIN_TICKS	0x08ff
+#define UPDATE_MENU_MIN_TICKS	0xafff
 
 enum power_state current_power_state = POWER_ON;
 bool sleep_mode_enabled;
 char power_value[10];
+uint16_t update_timestamp;
+uint16_t wait_time;
+
 
 struct calendar_date computer_date_time = {
     .second = 30,
@@ -64,6 +69,12 @@ bool is_valid_hdd_temp(uint8_t hdd_id)
 bool is_valid_mem(uint8_t mem_id)
 {
 	return (computer_data.packed.mems & 0x01 << (mem_id)) != 0;
+}
+
+void fp_init()
+{
+	wait_time = 1;
+	update_timestamp = 0;
 }
 
 void set_invalid_string(char *str){
@@ -869,11 +880,6 @@ bool is_information_need_to_change(struct gfx_information *info, bool is_visible
 	}
 }
 
-bool is_data_need_update()
-{
-	return is_information_need_to_change(information_present, true);
-}
-
 void update_information()
 {
 	gfx_frame_draw(frame_present, true);
@@ -915,17 +921,40 @@ bool is_action_in_menu(struct gfx_action_menu *menu, enum information_type type)
 	return false;
 }
 
+bool is_enable_to_draw(uint16_t wait_time)
+{
+	return (TCC0.CNT >= update_timestamp && ((TCC0.CNT - update_timestamp) >= wait_time)) || (TCC0.CNT < update_timestamp && (TCC0.CNT >= wait_time));
+}
+
+bool is_enable_update_frame()
+{
+	return is_enable_to_draw(UPDATE_FRAME_MIN_TICKS);
+}
+
+bool is_enable_update_menu()
+{
+	return is_enable_to_draw(UPDATE_MENU_MIN_TICKS);
+}
+
+void update_draw()
+{
+	wait_time = UPDATE_FRAME_MIN_TICKS;
+	update_timestamp = TCC0.CNT;
+}
+
 void update_information_frame(enum information_type type, bool need_to_update)
 {
 	if (type == SET_SCREEN_SAVER_TIME && !is_screen_saver_on)
 		reset_screen_saver_req = true;
 	if (need_to_update && !is_screen_saver_on){
 		if (!present_menu->visible) {
-			if (information_present != 0 && information_present->info_type == type) {
+			if (is_enable_update_frame() && information_present != 0 && information_present->info_type == type) {
 				update_information();
+				update_draw();
 			}
-		} else if (is_status_in_menu_changed(present_menu, type)) {
-			gfx_action_menu_init(present_menu, true);
+		} else if (is_enable_update_menu() && is_status_in_menu_changed(present_menu, type)) {
+				update_draw();
+				gfx_action_menu_init(present_menu, true);
 		}
 	}
 }

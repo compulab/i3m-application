@@ -15,6 +15,7 @@
 #include "../gfx/action_menu/gfx_action_menu.h"
 #include "../work-queue/work.h"
 #include "../debug.h"
+#include "twi_slave.h"
 
 void handle_sram_read_request(uint8_t read_address, uint8_t *data);
 

@@ -69,6 +69,8 @@ bool is_valid_hdd_size(uint8_t hdd_id);
 
 bool is_valid_hdd_temp(uint8_t hdd_id);
 
+void fp_init();
+
 bool is_valid_mem(uint8_t mem_id);
 
 void update_information_frame(enum information_type type, bool need_to_update);
