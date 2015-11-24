@@ -86,6 +86,8 @@ static uint8_t reg_address = UNSET_ADDRESS;
 static bool data_sent;
 static bool is_read_request;
 
+bool is_twi_busy;
+
 void twi_slave_init()
 {
 		TWI_SLAVE_BASE.ADDR = TWI_SLAVE_ADDRESS << 1;
@@ -95,6 +97,7 @@ void twi_slave_init()
                 TWI_SLAVE_APIEN_bm |
                 TWI_SLAVE_ENABLE_bm |
 				TWI_SLAVE_PIEN_bm;
+        is_twi_busy = false;
 }
 
 void clear()
@@ -134,6 +137,8 @@ void twi_clear_dif()
 
 void twi_end_transmission()
 {
+	if (!is_read_request && slave_address != TWI_REAL_TIME_ADDRESS)
+		is_twi_busy = false;
 	clear();
 }
 
@@ -170,11 +175,11 @@ void twi_slave_address_match_handler()
 	}
 	twi_clear_apif();
 	twi_ack();
-
 }
 
 void twi_slave_stop_handler()
 {
+	is_twi_busy = false;
 	clear();
 	twi_clear_apif();
 }
@@ -203,12 +208,17 @@ void twi_slave_write_data_handler()
 
 void twi_save_address()
 {
-	reg_address = TWI_SLAVE_BASE.DATA;
-	if (is_read_request)
-		twi_slave_read_data_handler();
-	 else
-		twi_ack();
-	twi_clear_dif();
+	if (!is_twi_busy) {
+		is_twi_busy = true;
+		reg_address = TWI_SLAVE_BASE.DATA;
+		if (is_read_request)
+			twi_slave_read_data_handler();
+		 else
+			twi_ack();
+		twi_clear_dif();
+	} else {
+		twi_nack();
+	}
 }
 
 void twi_slave_interrupt_handler()

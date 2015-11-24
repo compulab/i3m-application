@@ -144,19 +144,24 @@ void write_cpu_status()
 {
 	layout.l.cputr = 0;
 	clear_req();
-
+	bool status_changed;
 	if (layout.direct.i2c[CPUTS] == 0){
+		status_changed = computer_data.packed.cputs != 0;
 		computer_data.packed.cputs = 0;
 	} else {
+		status_changed = computer_data.packed.cputs != layout.direct.i2c[CPUTS];
 		computer_data.packed.cputs |= layout.direct.i2c[CPUTS];
 		uint8_t bit = 0x01;
 		for (uint8_t i = 0 ; i < MAX_CPU; i++){
-			if (layout.direct.i2c[CPUTS] & bit)
+			if (layout.direct.i2c[CPUTS] & bit) {
+				status_changed |= computer_data.packed.cput[i] != layout.direct.i2c[CPU0T + i];
 				computer_data.packed.cput[i] = layout.direct.i2c[CPU0T + i];
+			}
 			bit = bit << 1;
 		}
 	}
-	update_information_frame(SHOW_CPU_TEMPERTURE, information_present->info_data < MAX_CPU);
+	if (status_changed)
+		update_information_frame(SHOW_CPU_TEMPERTURE, information_present->info_data < MAX_CPU);
 }
 
 
@@ -524,7 +529,8 @@ void write_gpu_temp()
 
 void update_data(void *write_address)
 {
-	uint8_t addr = (uint16_t)write_address & 0x00ff;
+	uart_send_string("do work");
+	uint8_t addr = (uint8_t)write_address;
 	switch (addr){
 		case GPUT:
 			write_gpu_temp();
@@ -573,6 +579,7 @@ void update_data(void *write_address)
 			write_reset();
 			break;
 	}
+	is_twi_busy = false;
 }
 
 void write_data(enum i2c_addr_space addr, uint8_t data)
@@ -672,6 +679,7 @@ void handle_sram_write_request(uint8_t write_address, uint8_t data)
 {
 	uint16_t addr = write_address;
 	write_data(write_address, data);
+	uart_send_string("set work");
 	update_data_work.data = (void *)addr;
 	insert_work(&update_data_work);
 //	update_data(write_address);

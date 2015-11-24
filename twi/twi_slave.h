@@ -21,6 +21,7 @@
 #define TWIS_STATUS_READY                0x00
 #define TWIS_STATUS_BUSY                 0xff
 
+extern bool is_twi_busy;
 void twi_slave_init(void);
 
 void twi_slave_interrupt_handler(void);
