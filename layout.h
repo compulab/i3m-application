@@ -198,6 +198,32 @@ union layout_t {
 	} direct;
 };
 
+enum memory_error_codes {
+	NO_ERROR = 0,
+	NEW_WORK,
+	INFO_LABEL_TEXT,
+	IMAGE_BITMAP,
+	IMAGE_NODE,
+	LABEL_NODE,
+	INFORMATION_NODE,
+	FRAME_NODE,
+	MENU_BITMAP,
+	FONTS_ARRAY,
+	FONT,
+	GRAPHIC_HEAD,
+	GRAPHIC_IMAGE_NEXT,
+	MONO_MENU,
+	ACTIONS_MENU_ARRAY,
+	ACTION_MENU,
+	DMI_STRING_ADD,
+	DMI_STRING_TYPE,
+	DMI_STRING_CONTENT,
+	DMI_MENU,
+	DMI_LABEL,
+	DMI_ACTION,
+	DMI_FRAME,
+};
+
 enum i2c_addr_space  {
 		SIG0,
 		SIG1,
@@ -543,6 +569,7 @@ union updatable_info {
 		uint8_t screen_saver_visible:1;
 		uint8_t screen_saver_type:2;
 		uint8_t screen_saver_reserved:5;
+		uint32_t error_count;
 	} details;
 	struct {
 		uint16_t post_code;
@@ -567,6 +594,7 @@ union updatable_info {
 		struct direct_string_item *direct_string;
 		uint8_t screen_saver_update_time;
 		uint8_t screen_saver_config;
+		uint32_t error_count;
 	} packed;
 };
 
