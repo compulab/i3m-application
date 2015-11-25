@@ -149,19 +149,26 @@ void twi_handle_read(uint8_t address)
 		 data = eeprom_read_byte(address);
 	else if (slave_address == TWI_REAL_TIME_ADDRESS)
 		handle_sram_read_request(address, &data);
+
 	TWI_SLAVE_BASE.DATA = data;
 	++reg_address;
 }
 
-void twi_handle_write(uint8_t data)
+int twi_handle_write(uint8_t data)
 {
 	if (slave_address == TWI_EEPROM_ADDRESS)
-		eeprom_write_byte(reg_address,data);
-	else if (slave_address == TWI_REAL_TIME_ADDRESS)
-		handle_sram_write_request(reg_address,data);
+		eeprom_write_byte(reg_address, data);
+	else if (slave_address == TWI_REAL_TIME_ADDRESS) {
+		int res = handle_sram_write_request(reg_address, data);
+		if (res != 0)
+			return res;
+	}
+
 	enum i2c_addr_space i2c_addr = reg_address;
 	if (i2c_addr != DMIN && i2c_addr != DMIV)
 		++reg_address;
+
+	return 0;
 }
 
 void twi_slave_address_match_handler()
@@ -201,9 +208,12 @@ void twi_slave_read_data_handler()
 
 void twi_slave_write_data_handler()
 {
-	twi_handle_write(TWI_SLAVE_BASE.DATA);
+	if (twi_handle_write(TWI_SLAVE_BASE.DATA) != 0)
+		twi_nack();
+	else
+		twi_ack();
+
 	twi_clear_dif();
-	twi_ack();
 }
 
 void twi_save_address()
@@ -220,6 +230,7 @@ void twi_save_address()
 		twi_nack();
 	}
 }
+
 
 void twi_slave_interrupt_handler()
 {
