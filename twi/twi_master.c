@@ -363,9 +363,6 @@ void handle_twi_master()
 					}
 					char ch = TWI.MASTER.DATA;
 					*data_buffer_AT++ = ch;
-					uart_send_string("twi master: ");
-					uart_send_num(ch, 10);
-					uart_send_string("\n\r");
 					break;
 
 				default:
