@@ -226,13 +226,13 @@ void tasks_init(void)
 void rtc_handle_sec_update(void)
 {
 	calendar_add_second_to_date(&computer_date_time);
-	uart_send_string("||||Time update: ");
-	uart_send_num(computer_date_time.hour, 10);
-	uart_send_char(':');
-	uart_send_num(computer_date_time.minute, 10);
-	uart_send_char(':');
-	uart_send_num(computer_date_time.second, 10);
-	uart_send_string("\n\n\r");
+//	uart_send_string("||||Time update: ");
+//	uart_send_num(computer_date_time.hour, 10);
+//	uart_send_char(':');
+//	uart_send_num(computer_date_time.minute, 10);
+//	uart_send_char(':');
+//	uart_send_num(computer_date_time.second, 10);
+//	uart_send_string("\n\n\r");
 	for (int i = 0; i < NUMBER_OF_SEC_TASKS; i ++) {
 		if (sec_tasks_to_do[i].secs_left > 0)
 			sec_tasks_to_do[i].secs_left--;
