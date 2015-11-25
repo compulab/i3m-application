@@ -7,43 +7,36 @@
 
 ISR(TWIE_TWIS_vect)
 {
-	wdt_reset();
 	twi_slave_interrupt_handler();
 }
 
 ISR(RTC_OVF_vect)
 {
-	wdt_reset();
 	rtc_handle_sec_update();
 }
 
 ISR(PORTF_INT0_vect)
 {
-	wdt_reset();
 	update_power_state();
 }
 
 ISR(PORTF_INT1_vect)
 {
-	wdt_reset();
 	handle_button_pressed();
 }
 
 ISR(TCC0_OVF_vect)
 {
-	wdt_reset();
 	tc_handle_overflow_interrupt();
 }
 
 ISR(TCC0_CCA_vect)
 {
-	wdt_reset();
 	tc_handle_cmp_interrupt();
 }
 
 ISR(TWIC_TWIM_vect)
 {
-	wdt_reset();
 	handle_twi_master();
 }
 
@@ -112,7 +105,7 @@ void updated_info_init()
 
 void init()
 {
-	wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_8KCLK);
+	wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_2KCLK);
 	wdt_enable();
 	board_init();
 	sysclk_init();
@@ -138,9 +131,10 @@ int main(int argc, char *argv[])
 	init();
 
 	while(true) {
-		wdt_reset();
 			if (!work_handler())
 				delay_ms(10);
+			else
+				wdt_reset();
 	}
 
 	return 0;
