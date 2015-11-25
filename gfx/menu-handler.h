@@ -34,7 +34,7 @@ struct gfx_action_menu **action_menus;
 
 struct gfx_font** fonts;
 
-void load_config_block();
+int load_config_block();
 
 void set_menu_by_id(struct gfx_action_menu **menu, uint8_t index);
 
