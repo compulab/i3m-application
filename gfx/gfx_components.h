@@ -37,6 +37,7 @@ struct gfx_item_action {
 struct gfx_text {
 	char *text;
 	char *textP;
+	uint8_t max_text_size;
 	bool is_progmem;
 	struct gfx_font *font;
 };

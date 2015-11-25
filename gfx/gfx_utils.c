@@ -58,12 +58,6 @@ void print_vertical_line(uint8_t x, uint8_t y, uint8_t length)
 
 void gfx_item_draw(struct gfx_item *item)
 {
-//	if (item->visible && item->border_visible){
-//		print_horizontal_line(item->x, item->y, item->width);
-//		print_vertical_line(item->x, item->y, item->height);
-//		print_horizontal_line(item->x, item->y+item->height, item->width);
-//		print_vertical_line(item->x + item->width, item->y, item->height);
-//	}
 }
 
 void gfx_item_init(struct gfx_item *item, uint8_t x, uint8_t y, uint8_t width, uint8_t height)
@@ -98,14 +92,7 @@ int gfx_information_init(struct gfx_information *info,
 	info->info_type = info_type;
 	info->info_data = info_data;
 	info->text.is_progmem = false;
-	info->text.text = malloc (sizeof(char) * max_length);
-	if (info->text.text != NULL) {
-		uart_send_num(info->info_type, 16);
-		uart_send_string(" - info type.\n\r");
-		uart_send_num(info->info_data, 16);
-		uart_send_string(" - info data.\n\r");
-		return -1;
-	}
+	info->text.max_text_size = max_length;
 	gfx_item_init(&info->postion, x, y, 0, 0);
 	info->text.font = fonts[font_id];
 	return 0;
@@ -125,26 +112,30 @@ void update_information_present(struct gfx_information *info)
 	}
 }
 
-void print_data(struct gfx_text *data, uint8_t x, uint8_t y)
+void print_data_P(char *text, struct gfx_font *font, uint8_t x, uint8_t y)
 {
-	if (data->is_progmem)
-		draw_string_in_buffer_P(data->textP, x, y, data->font);
-	else
-		draw_string_in_buffer(data->text, x, y, data->font);
+	draw_string_in_buffer_P(text, x, y, font);
+
+}
+void print_data(char *text, struct gfx_font *font, uint8_t x, uint8_t y)
+{
+	draw_string_in_buffer(text, x, y, font);
 }
 
 void gfx_information_draw(struct gfx_information *info)
 {
+	char *text_to_draw = malloc(info->text.max_text_size);
+	if (text_to_draw == NULL)
+		return ;
 	update_information_present(info);
-	update_data_by_type(info); // info->info_type, (info->text).text, info->info_data);
-	print_data(&info->text, info->postion.x, info->postion.y);
+	update_data_by_type(info->info_type, text_to_draw, info->info_data);
+	print_data(text_to_draw, info->text.font, info->postion.x, info->postion.y);
+	free(text_to_draw);
 }
 
 void gfx_label_draw(struct gfx_label *label)
 {
-//	gfx_item_draw(&label->postion);
-//	label->postion.x = (GFX_MONO_LCD_WIDTH - (strlen_P(label->text.textP) * label->text.font->width)) / 2;
-	print_data(&label->text, label->postion.x, label->postion.y);
+	print_data_P(label->text.textP, label->text.font, label->postion.x, label->postion.y);
 }
 
 int gfx_image_init(struct gfx_image *image, gfx_mono_color_t PROGMEM_T *bitmap_progmem,
