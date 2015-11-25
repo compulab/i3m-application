@@ -21,7 +21,7 @@ struct work_queue {
 	struct work *last;
 };
 
-void insert_work(struct work *work);
+int insert_work(struct work *work);
 
 bool work_handler(void);
 
