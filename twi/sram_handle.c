@@ -329,12 +329,15 @@ void read_pending_requests(uint8_t *data)
 	*data = 0x0f & computer_data.packed.pending_req;
 }
 
-void set_direct_string()
+int set_direct_string()
 {
 	direct_string_to_add = malloc(sizeof(struct direct_string_item));
+	if (direct_string_to_add == NULL)
+		return -1;
 	direct_string_to_add->content = 0;
 	direct_string_to_add->next = 0;
 	direct_string_to_add->type = 0;
+	return 0;
 }
 
 void add_direct_string()
@@ -384,14 +387,29 @@ void set_written_length(bool is_written_type, uint8_t data)
 	is_length_set = true;
 	if (is_written_type){
 		if (direct_string_to_add == 0){
-			set_direct_string();
-			direct_string_to_add->type = malloc (sizeof(char *) * direct_write_length + 1);
+			if (set_direct_string() != 0) {
+				clear_direct_help_vars();
+				return ;
+			} else {
+				direct_string_to_add->type = malloc (sizeof(char *) * direct_write_length + 1);
+				if (direct_string_to_add->type == NULL) {
+					free(direct_string_to_add);
+					clear_direct_help_vars();
+					return ;
+				}
+			}
 		} else {
 			clear_direct_help_vars();
 			return;
 		}
 	} else if (is_last_type){
 		direct_string_to_add->content = malloc (sizeof(char *) * direct_write_length + 1);
+		if (direct_string_to_add->content == NULL) {
+			free(direct_string_to_add->type);
+			free(direct_string_to_add);
+			clear_direct_help_vars();
+			return ;
+		}
 	} else {
 		is_last_type = false;
 		init_direct_write_vars();
@@ -529,7 +547,7 @@ void write_gpu_temp()
 
 void update_data(void *write_address)
 {
-	uart_send_string("do work");
+//	uart_send_string("do work\n\r");
 	uint8_t addr = (uint8_t)write_address;
 	switch (addr){
 		case GPUT:
@@ -675,12 +693,9 @@ struct work update_data_work = {
 		.next = NULL,
 };
 
-void handle_sram_write_request(uint8_t write_address, uint8_t data)
+int handle_sram_write_request(uint8_t write_address, uint8_t data)
 {
-	uint16_t addr = write_address;
 	write_data(write_address, data);
-	uart_send_string("set work");
-	update_data_work.data = (void *)addr;
-	insert_work(&update_data_work);
-//	update_data(write_address);
+	update_data_work.data = (void *)write_address;
+	return insert_work(&update_data_work);
 }
