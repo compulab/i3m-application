@@ -127,6 +127,10 @@ void set_dmi_mono_menu()
 	}
 	if (count > 0){
 		dmi_menu.menu = malloc(sizeof(struct gfx_mono_menu));
+		if (dmi_menu.menu == NULL) {
+			free_dmi_menu();
+			return ;
+		}
 		dmi_menu.menu->num_elements = count;
 		dmi_menu.menu->title = "DMI STRINGS";
 		dmi_menu.menu->current_selection = 0;
@@ -176,11 +180,44 @@ void set_dmi_label(struct gfx_label_node *label_node, uint8_t index)
 	label_node->next = 0;
 }
 
+void free_dmi_frame(struct gfx_frame *frame)
+{
+	struct gfx_label_node *curr_label = frame->label_head;
+	struct gfx_label_node *next_label;
+	while (curr_label) {
+		next_label = curr_label->next;
+		free(curr_label);
+		curr_label = next_label;
+	}
+}
+
+void free_dmi_menu()
+{
+	if (dmi_menu.actions != NULL) {
+		for (int i = 0; i < dmi_menu.menu->num_elements -1; i++) {
+			if (dmi_menu.actions[i].type == ACTION_TYPE_SHOW_FRAME) {
+				if (dmi_menu.actions[i].frame != NULL) {
+					free_dmi_frame(dmi_menu.actions[i].frame);
+					free(dmi_menu.actions[i].frame);
+				} else {
+					break;
+				}
+			}
+		}
+	}
+	free(dmi_menu.menu );
+	is_dmi_set = false;
+}
+
 void set_dmi_frame(struct gfx_frame *frame, uint8_t index)
 {
 	frame->information_head = 0;
 	frame->image_head = 0;
-	frame->label_head =  malloc(sizeof(struct gfx_label_node));;
+	frame->label_head =  malloc(sizeof(struct gfx_label_node));
+	if (frame->label_head == NULL) {
+		free_dmi_menu();
+		return ;
+	}
 	set_dmi_label(frame->label_head, index);
 }
 
@@ -197,9 +234,17 @@ void set_dmi_actions()
 {
 	if (is_dmi_set){
 		dmi_menu.actions = malloc(sizeof(struct gfx_item_action) * dmi_menu.menu->num_elements);
+		if (dmi_menu.actions == NULL) {
+			free_dmi_menu();
+			return ;
+		}
 		for (int i = 0; i < dmi_menu.menu->num_elements -1; i++){
 			dmi_menu.actions[i].type =  ACTION_TYPE_SHOW_FRAME;
 			dmi_menu.actions[i].frame = malloc(sizeof(struct gfx_frame));
+			if (dmi_menu.actions[i].frame == NULL) {
+				free_dmi_menu();
+				return ;
+			}
 			set_dmi_frame(dmi_menu.actions[i].frame, i);
 		}
 		set_dmi_label_text();
