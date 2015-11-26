@@ -115,16 +115,6 @@ void twi_ack()
 	TWI_SLAVE_BASE.CTRLB = TWI_SLAVE_CMD_RESPONSE_gc;
 }
 
-void insert_to_log(char ch)
-{
-	cli();
-	if (log_twi.top >= MAX_LOG_SIZE)
-		return ;
-	log_twi.data[log_twi.top] = ch;
-	log_twi.top++;
-	sei();
-}
-
 void twi_nack()
 {
 	TWI_SLAVE_BASE.CTRLB = TWI_SLAVE_ACKACT_bm |
