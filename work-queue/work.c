@@ -23,6 +23,7 @@ int insert_work(struct work *work)
 		sei();
 		return -1;
 	}
+	insert_to_log('I');
 	new_work->data = work->data;
 	new_work->do_work = work->do_work;
 	new_work->next = NULL;
@@ -59,7 +60,7 @@ bool work_handler(void)
 //	if (work_to_do.first == NULL)
 //		uart_send_string(" last work");
 //	uart_send_string("\n\r");
-
+	insert_to_log('O');
 	work->do_work(work->data);
 	cli();
 	free(work);
