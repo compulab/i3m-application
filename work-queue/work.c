@@ -16,15 +16,16 @@ static struct work_queue work_to_do = {
 
 int insert_work(struct work *work)
 {
+	cli();
 	struct work *new_work = malloc(sizeof(struct work));
 	if (new_work == NULL) {
 		computer_data.details.error_count++;
+		sei();
 		return -1;
 	}
 	new_work->data = work->data;
 	new_work->do_work = work->do_work;
 	new_work->next = NULL;
-	cli();
 	if (work_to_do.last != NULL)
 		work_to_do.last->next = new_work;
 	else
@@ -60,7 +61,9 @@ bool work_handler(void)
 //	uart_send_string("\n\r");
 
 	work->do_work(work->data);
+	cli();
 	free(work);
+	sei();
 	return true;
 }
 
