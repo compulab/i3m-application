@@ -7,6 +7,7 @@
 
 #include "uart.h"
 
+#ifdef UART_DEBUG
 
 
 void uart_init(void)
@@ -48,3 +49,15 @@ void uart_send_num(uint32_t num, uint8_t radix)
 	itoa(num, num_str, radix);
 	uart_send_string(num_str);
 }
+
+#else
+
+void uart_init(void) {return ;}
+
+void uart_send_char(char c) {return ;}
+
+void uart_send_string(char *text) {return ;}
+
+void uart_send_num(uint32_t num, uint8_t radix) {return ;}
+
+#endif
