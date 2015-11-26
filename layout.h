@@ -53,7 +53,7 @@ struct direct_string_item {
 	struct direct_string_item *next;
 };
 
-#define MAX_LOG_SIZE 3000
+#define MAX_LOG_SIZE 30
 
 struct twi_log {
 	char data[MAX_LOG_SIZE];
