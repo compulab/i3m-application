@@ -20,13 +20,15 @@ int insert_work(struct work *work)
 	struct work *new_work = malloc(sizeof(struct work));
 	if (new_work == NULL) {
 		computer_data.details.error_count++;
+		insert_to_log('E');
 		sei();
 		return -1;
 	}
-	insert_to_log('I');
+	sei();
 	new_work->data = work->data;
 	new_work->do_work = work->do_work;
 	new_work->next = NULL;
+	cli();
 	if (work_to_do.last != NULL)
 		work_to_do.last->next = new_work;
 	else
@@ -60,11 +62,14 @@ bool work_handler(void)
 //	if (work_to_do.first == NULL)
 //		uart_send_string(" last work");
 //	uart_send_string("\n\r");
-	insert_to_log('O');
 	work->do_work(work->data);
 	cli();
 	free(work);
 	sei();
+	if (computer_data.details.error_count > 0) {
+			computer_data.details.error_count--;
+			insert_to_log('O');
+		}
 	return true;
 }
 

@@ -65,7 +65,6 @@ void init_menu()
 	set_menu_by_id(&present_menu, 0);
 	show_current_menu(true);
 	enable_screen_saver_mode();
-	tc_init();
 }
 
 void power_state_init()
@@ -103,8 +102,8 @@ void updated_info_init()
 
 void init()
 {
-	wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_4KCLK);
-	wdt_enable();
+	cli();
+	wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_2KCLK);
 	board_init();
 	sysclk_init();
 	gfx_mono_init();
@@ -117,42 +116,54 @@ void init()
 	power_state_init();
 	twi_slave_init();
 	TWI_init();
-	tasks_init();
 	uart_init();
-	rtc_init();
 	sei();
+	tc_init();
+	rtc_init();
+	insert_to_log('P');
+	tasks_init();
+	insert_to_log('U');
+	wdt_enable();
 }
 
 int main(int argc, char *argv[])
 {
+	log_twi.bottom = log_twi.top = 0;
+
 	init();
+
+	wdt_reset();
+	uart_send_string("start main\n\r");
+
 	uint32_t error_count = 0;
 	computer_data.details.error_count = 0;
-	log_twi.bottom = log_twi.top = 0;
 	bool is_changed;
 	while(true) {
-			is_changed = false;
-			if (!work_handler()) {
-				delay_ms(10);
-			} else {
-				wdt_reset();
+		is_changed = false;
+		if (log_twi.bottom != log_twi.top) {
+			for (; log_twi.bottom < log_twi.top; log_twi.bottom++){
+				uart_send_char(log_twi.data[log_twi.bottom]);
+				uart_send_string(", ");
+				is_changed = true;
 			}
+			if (is_changed)
+				uart_send_string(".\n\r");
+		}
 
-			if (log_twi.bottom != log_twi.top) {
-				for (; log_twi.bottom < log_twi.top; log_twi.bottom++){
-					uart_send_char(log_twi.data[log_twi.bottom]);
-					uart_send_string(", ");
-					is_changed = true;
-				}
-				if (is_changed)
-					uart_send_string(".\n\r");
-			}
 
-			if (0 != computer_data.details.error_count) {
-				uart_send_num(computer_data.details.error_count - error_count, 10);
-				uart_send_string(" - new errors\n\r");
-				error_count = computer_data.details.error_count;
-			}
+		if (!work_handler()) {
+			delay_ms(10);
+		} else {
+			wdt_reset();
+		}
+
+
+
+		if (0 != computer_data.details.error_count) {
+			uart_send_num(computer_data.details.error_count - error_count, 10);
+			uart_send_string(" - new errors\n\r");
+			error_count = computer_data.details.error_count;
+		}
 	}
 
 	return 0;

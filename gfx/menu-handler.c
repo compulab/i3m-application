@@ -468,5 +468,6 @@ struct work button_work = { .do_work = handle_buttons_update, .data = NULL, .nex
 void handle_button_pressed()
 {
 	update_buttons_states();
-	insert_work(&button_work);
+	if (!insert_work(&button_work))
+		insert_to_log('B');
 }

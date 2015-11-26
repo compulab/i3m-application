@@ -66,6 +66,22 @@ void update_ambient_temp()
 	}
 }
 
+void time_task()
+{
+	calendar_add_second_to_date(&computer_date_time);
+	uart_send_string("||||Time update: ");
+	uart_send_num(computer_date_time.hour, 10);
+	uart_send_char(':');
+	uart_send_num(computer_date_time.minute, 10);
+	uart_send_char(':');
+	uart_send_num(computer_date_time.second, 10);
+	uart_send_char(' ');
+	uart_send_num(computer_date_time.date, 10);
+	uart_send_string("\\");
+	uart_send_num(computer_date_time.month, 10);
+	uart_send_string("\n\n\r");
+}
+
 void tc_handle_init()
 {
 	first_ambient_read = false;
@@ -78,6 +94,7 @@ static struct work ambient_work = { .do_work = update_ambient_temp, .data = NULL
 static struct work adc_work = { .do_work = update_adc, .data = NULL, .next = NULL, };
 //static struct work buttons_clear_work = { .do_work = handle_button_pressed, .data = NULL, .next = NULL, };
 static struct work screen_saver_work = { .do_work = show_splash, .data = NULL, .next = NULL, };
+static struct work time_work = { .do_work = time_task , .data = NULL, .next = NULL, };
 
 
 uint32_t get_ticks_in_sec()
@@ -133,6 +150,11 @@ void set_tick_task_timer(uint8_t sec_to_update, enum TYPE_OF_TICK_TASK type)
 	}
 }
 
+void time_set_timer()
+{
+	set_sec_task_timer(1 , TIME_TASK);
+}
+
 void screen_saver_set_timer()
 {
 	set_sec_task_timer(computer_data.details.screen_saver_update_time , SCREEN_SAVER_TASK);
@@ -164,7 +186,14 @@ static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS] = {
 				.work = &screen_saver_work,
 				.set_new_timer = screen_saver_set_timer,
 		},
+		{
+				.secs_left = -1,
+				.work = &time_work,
+				.set_new_timer = time_set_timer,
+		},
 };
+
+
 
 static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = {
 		{
@@ -225,14 +254,6 @@ void tasks_init(void)
 
 void rtc_handle_sec_update(void)
 {
-	calendar_add_second_to_date(&computer_date_time);
-//	uart_send_string("||||Time update: ");
-//	uart_send_num(computer_date_time.hour, 10);
-//	uart_send_char(':');
-//	uart_send_num(computer_date_time.minute, 10);
-//	uart_send_char(':');
-//	uart_send_num(computer_date_time.second, 10);
-//	uart_send_string("\n\n\r");
 	for (int i = 0; i < NUMBER_OF_SEC_TASKS; i ++) {
 		if (sec_tasks_to_do[i].secs_left > 0)
 			sec_tasks_to_do[i].secs_left--;
@@ -240,7 +261,8 @@ void rtc_handle_sec_update(void)
 
 	for (int i = 0; i < NUMBER_OF_SEC_TASKS; i ++) {
 		if (sec_tasks_to_do[i].secs_left == 0) {
-			insert_work(sec_tasks_to_do[i].work);
+			if (!insert_work(sec_tasks_to_do[i].work))
+				insert_to_log('S'+i);
 			sec_tasks_to_do[i].set_new_timer();
 		}
 	}
@@ -264,8 +286,8 @@ void tc_handle_cmp_interrupt(void)
 	/* Find expired task and add it to the work queue */
 	for (uint8_t i = 0; i < NUMBER_OF_TICK_TASKS; i++) {
 		if (tick_tasks_to_do[i].overlaps_count == 0 &&  tick_tasks_to_do[i].offset <= TCC0.CNT) {
-
-			insert_work(tick_tasks_to_do[i].work);
+			if (!insert_work(tick_tasks_to_do[i].work))
+				insert_to_log('T'+i);
 			tick_tasks_to_do[i].set_new_timer();
 		}
 	}

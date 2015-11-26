@@ -13,7 +13,7 @@
 #define BSEL 	16
 #define UART_BASE	USARTD0
 
-//#define UART_DEBUG
+#define UART_DEBUG
 
 
 void uart_init(void);

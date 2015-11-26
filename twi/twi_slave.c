@@ -158,8 +158,10 @@ int twi_handle_write(uint8_t data)
 		eeprom_write_byte(reg_address, data);
 	else if (slave_address == TWI_REAL_TIME_ADDRESS) {
 		int res = handle_sram_write_request(reg_address, data);
-		if (res != 0)
+		if (res != 0) {
+			insert_to_log('W');
 			return res;
+		}
 	}
 
 	enum i2c_addr_space i2c_addr = reg_address;
@@ -171,19 +173,19 @@ int twi_handle_write(uint8_t data)
 
 void twi_slave_address_match_handler()
 {
-	if (!is_twi_busy) {
+	if (computer_data.details.error_count == 0) {
 		is_twi_busy = true;
 		is_read_request = (TWI_SLAVE_BASE.STATUS & TWI_SLAVE_DIR_bm) == TWI_SLAVE_DIR_bm;
 		data_sent = false;
 		uint8_t address = (TWI_SLAVE_BASE.DATA >>1);
 		if (address != slave_address || !is_read_request){
 			if (address != slave_address)
-				insert_to_log('I');
+//				insert_to_log('I');
 			if (!is_read_request)
-				insert_to_log('J');
+//				insert_to_log('J');
 			clear_addresses();
 		} else {
-			insert_to_log('W');
+//			insert_to_log('W');
 		}
 		slave_address = address;
 		twi_clear_apif();
@@ -240,31 +242,31 @@ void twi_slave_interrupt_handler()
 {
 	uint8_t current_status = TWI_SLAVE_BASE.STATUS;
 	if (current_status & TWI_SLAVE_BUSERR_bm) {    		/* If bus error. */
-		insert_to_log('A');
+//		insert_to_log('A');
 		twi_end_transmission();
 	} else if (current_status & TWI_SLAVE_COLL_bm) { 		/* If transmit collision. */
-		insert_to_log('B');
+//		insert_to_log('B');
 		twi_end_transmission();
 	} else if ((current_status & TWI_SLAVE_APIF_bm) && 	/* If address match. */
 			(current_status & TWI_SLAVE_AP_bm)) {
-		insert_to_log('C');
+//		insert_to_log('C');
 		twi_slave_address_match_handler();
 	} else if (current_status & TWI_SLAVE_APIF_bm) {		/* If stop (only enabled through slave read transaction). */
-		insert_to_log('D');
+//		insert_to_log('D');
 		twi_slave_stop_handler();
 	} else if (current_status & TWI_SLAVE_DIF_bm) {		/* If data interrupt. */
 		if (current_status & TWI_SLAVE_DIR_bm) {
-			insert_to_log('E');
+//			insert_to_log('E');
 			twi_slave_read_data_handler();
 		} else if (reg_address == UNSET_ADDRESS) {
-			insert_to_log('F');
+//			insert_to_log('F');
 			twi_save_address();
 		} else {
-			insert_to_log('G');
+//			insert_to_log('G');
 			twi_slave_write_data_handler();
 		}
 	} else { 												/* If unexpected state. */
-		insert_to_log('H');
+//		insert_to_log('H');
 		twi_end_transmission();
 	}
 }

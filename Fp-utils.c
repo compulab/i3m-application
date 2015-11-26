@@ -18,12 +18,12 @@ uint16_t wait_time;
 
 
 struct calendar_date computer_date_time = {
-    .second = 30,
-    .minute = 37,
+    .second = 40,
+    .minute = 03,
     .hour = 17,
-    .date = 3,
-    .month = 3,
-    .year = 1986
+    .date = 26,
+    .month = 11,
+    .year = 2015
 };
 
 void enable_screen_saver_mode()
@@ -197,7 +197,8 @@ void update_power_state()
 		current_power_state = POWER_ON;
 	if (current_power_state != last_power_state) {
 		layout.l.power_state = current_power_state;
-		insert_work(&power_state_work);
+		if (!insert_work(&power_state_work))
+			insert_to_log('X');
 	}
 }
 
