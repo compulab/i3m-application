@@ -1,5 +1,9 @@
 #include "gfx_action_menu.h"
 
+struct gfx_action_menu dmi_menu = {.is_progmem = false };
+
+bool is_dmi_set;
+
 void switch_present_menu(struct gfx_action_menu *action_menu)
 {
 	present_menu->visible = false;
@@ -96,6 +100,42 @@ void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
+
+void free_dmi_frame(struct gfx_frame *frame)
+{
+	struct gfx_label_node *curr_label = frame->label_head;
+	struct gfx_label_node *next_label;
+	while (curr_label) {
+		next_label = curr_label->next;
+		cli();
+		free(curr_label);
+		sei();
+		curr_label = next_label;
+	}
+}
+
+void free_dmi_menu()
+{
+	if (dmi_menu.actions != NULL) {
+		for (int i = 0; i < dmi_menu.menu->num_elements -1; i++) {
+			if (dmi_menu.actions[i].type == ACTION_TYPE_SHOW_FRAME) {
+				if (dmi_menu.actions[i].frame != NULL) {
+					free_dmi_frame(dmi_menu.actions[i].frame);
+					cli();
+					free(dmi_menu.actions[i].frame);
+					sei();
+				} else {
+					break;
+				}
+			}
+		}
+	}
+	cli();
+	free(dmi_menu.menu );
+	sei();
+	is_dmi_set = false;
+}
+
 void show_menu(struct gfx_action_menu *menu, bool redraw)
 {
 	gfx_action_menu_init(menu, redraw);
@@ -105,10 +145,6 @@ void show_current_menu(bool redraw)
 {
 	show_menu(present_menu, redraw);
 }
-
-struct gfx_action_menu dmi_menu = {.is_progmem = false };
-
-bool is_dmi_set;
 
 void clear_screen()
 {
@@ -183,41 +219,6 @@ void set_dmi_label(struct gfx_label_node *label_node, uint8_t index)
 	label_node->label.text.is_progmem = false;
 	label_node->label.text.text = direct_item->type;
 	label_node->next = 0;
-}
-
-void free_dmi_frame(struct gfx_frame *frame)
-{
-	struct gfx_label_node *curr_label = frame->label_head;
-	struct gfx_label_node *next_label;
-	while (curr_label) {
-		next_label = curr_label->next;
-		cli();
-		free(curr_label);
-		sei();
-		curr_label = next_label;
-	}
-}
-
-void free_dmi_menu()
-{
-	if (dmi_menu.actions != NULL) {
-		for (int i = 0; i < dmi_menu.menu->num_elements -1; i++) {
-			if (dmi_menu.actions[i].type == ACTION_TYPE_SHOW_FRAME) {
-				if (dmi_menu.actions[i].frame != NULL) {
-					free_dmi_frame(dmi_menu.actions[i].frame);
-					cli();
-					free(dmi_menu.actions[i].frame);
-					sei();
-				} else {
-					break;
-				}
-			}
-		}
-	}
-	cli();
-	free(dmi_menu.menu );
-	sei();
-	is_dmi_set = false;
 }
 
 void set_dmi_frame(struct gfx_frame *frame, uint8_t index)
