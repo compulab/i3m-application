@@ -91,7 +91,7 @@ void twi_slave_init()
 {
 		TWI_SLAVE_BASE.ADDR = TWI_SLAVE_ADDRESS << 1;
 		TWI_SLAVE_BASE.ADDRMASK = TWI_SLAVE_MSK << 1;
-        TWI_SLAVE_BASE.CTRLA = TWI_SLAVE_INTLVL_LO_gc |
+        TWI_SLAVE_BASE.CTRLA = TWI_SLAVE_INTLVL_MED_gc |
                 TWI_SLAVE_DIEN_bm |
                 TWI_SLAVE_APIEN_bm |
                 TWI_SLAVE_ENABLE_bm |
