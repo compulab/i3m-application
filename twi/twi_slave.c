@@ -91,7 +91,7 @@ void twi_slave_init()
 {
 		TWI_SLAVE_BASE.ADDR = TWI_SLAVE_ADDRESS << 1;
 		TWI_SLAVE_BASE.ADDRMASK = TWI_SLAVE_MSK << 1;
-        TWI_SLAVE_BASE.CTRLA = TWI_SLAVE_INTLVL_MED_gc |
+        TWI_SLAVE_BASE.CTRLA = TWI_SLAVE_INTLVL_LO_gc |
                 TWI_SLAVE_DIEN_bm |
                 TWI_SLAVE_APIEN_bm |
                 TWI_SLAVE_ENABLE_bm |
@@ -113,6 +113,16 @@ void clear_addresses()
 void twi_ack()
 {
 	TWI_SLAVE_BASE.CTRLB = TWI_SLAVE_CMD_RESPONSE_gc;
+}
+
+void insert_to_log(char ch)
+{
+	cli();
+	if (log_twi.top >= MAX_LOG_SIZE)
+		return ;
+	log_twi.data[log_twi.top] = ch;
+	log_twi.top++;
+	sei();
 }
 
 void twi_nack()
@@ -177,7 +187,13 @@ void twi_slave_address_match_handler()
 		data_sent = false;
 		uint8_t address = (TWI_SLAVE_BASE.DATA >>1);
 		if (address != slave_address || !is_read_request){
+			if (address != slave_address)
+				insert_to_log('I');
+			if (!is_read_request)
+				insert_to_log('J');
 			clear_addresses();
+		} else {
+			insert_to_log('W');
 		}
 		slave_address = address;
 		twi_clear_apif();
@@ -234,23 +250,31 @@ void twi_slave_interrupt_handler()
 {
 	uint8_t current_status = TWI_SLAVE_BASE.STATUS;
 	if (current_status & TWI_SLAVE_BUSERR_bm) {    		/* If bus error. */
+		insert_to_log('A');
 		twi_end_transmission();
 	} else if (current_status & TWI_SLAVE_COLL_bm) { 		/* If transmit collision. */
+		insert_to_log('B');
 		twi_end_transmission();
 	} else if ((current_status & TWI_SLAVE_APIF_bm) && 	/* If address match. */
 			(current_status & TWI_SLAVE_AP_bm)) {
+		insert_to_log('C');
 		twi_slave_address_match_handler();
 	} else if (current_status & TWI_SLAVE_APIF_bm) {		/* If stop (only enabled through slave read transaction). */
+		insert_to_log('D');
 		twi_slave_stop_handler();
 	} else if (current_status & TWI_SLAVE_DIF_bm) {		/* If data interrupt. */
 		if (current_status & TWI_SLAVE_DIR_bm) {
+			insert_to_log('E');
 			twi_slave_read_data_handler();
 		} else if (reg_address == UNSET_ADDRESS) {
+			insert_to_log('F');
 			twi_save_address();
 		} else {
+			insert_to_log('G');
 			twi_slave_write_data_handler();
 		}
 	} else { 												/* If unexpected state. */
+		insert_to_log('H');
 		twi_end_transmission();
 	}
 }

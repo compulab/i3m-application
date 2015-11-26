@@ -53,6 +53,14 @@ struct direct_string_item {
 	struct direct_string_item *next;
 };
 
+#define MAX_LOG_SIZE 3000
+
+struct twi_log {
+	char data[MAX_LOG_SIZE];
+	uint8_t bottom;
+	uint8_t top;
+};
+
 union layout_t {
 	struct {
 		uint8_t sig[4];
@@ -605,6 +613,7 @@ enum screen_saver_type {
 	SCREEN_SAVER_DASHBOARD = 1,
 };
 
+struct twi_log log_twi;
 
 union layout_t layout;
 

@@ -109,32 +109,52 @@ void init()
 	wdt_enable();
 	board_init();
 	sysclk_init();
-	sram_handle_init();
-	updated_info_init();
 	gfx_mono_init();
 	init_menu();
+	sram_handle_init();
+	updated_info_init();
 	adc_init();
 	pmic_init();
 	portf_init();
 	power_state_init();
-	sei();
 	twi_slave_init();
 	TWI_init();
 	tasks_init();
 	uart_init();
 	rtc_init();
-	wdt_reset();
+	sei();
 }
 
 int main(int argc, char *argv[])
 {
 	init();
-
+	uint32_t error_count = 0;
+	computer_data.details.error_count = 0;
+	log_twi.bottom = log_twi.top = 0;
+	bool is_changed;
 	while(true) {
-			if (!work_handler())
+			is_changed = false;
+			if (!work_handler()) {
 				delay_ms(10);
-			else
+			} else {
 				wdt_reset();
+			}
+
+			if (log_twi.bottom != log_twi.top) {
+				for (; log_twi.bottom < log_twi.top; log_twi.bottom++){
+					uart_send_char(log_twi.data[log_twi.bottom]);
+					uart_send_string(", ");
+					is_changed = true;
+				}
+				if (is_changed)
+					uart_send_string(".\n\r");
+			}
+
+			if (0 != computer_data.details.error_count) {
+				uart_send_num(computer_data.details.error_count - error_count, 10);
+				uart_send_string(" - new errors\n\r");
+				error_count = computer_data.details.error_count;
+			}
 	}
 
 	return 0;
