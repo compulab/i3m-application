@@ -83,8 +83,6 @@ void update_fp_info()
 	layout.l.major_rev = 0x00;
 	layout.l.minor_rev = 0x01;
 
-
-
 	computer_data.details.screen_saver_update_time = 6;
 	computer_data.details.screen_saver_visible = 0;
 	computer_data.details.screen_saver_type = 0;
@@ -105,7 +103,7 @@ void updated_info_init()
 
 void init()
 {
-	wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_2KCLK);
+	wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_4KCLK);
 	wdt_enable();
 	board_init();
 	sysclk_init();
