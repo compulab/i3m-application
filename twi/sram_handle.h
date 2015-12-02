@@ -23,4 +23,10 @@ int handle_sram_write_request(uint8_t write_address, uint8_t data);
 
 void sram_handle_init();
 
+enum dmi_state_t {
+	DMI_IDLE,
+	DMI_NAME_WRITE,
+	DMI_VALUE_WRITE
+};
+
 #endif /* TWI_SRAM_HANDLE_H_ */

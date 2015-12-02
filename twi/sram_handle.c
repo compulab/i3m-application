@@ -43,12 +43,13 @@
 uint8_t direct_write_length;
 uint8_t direct_write_index;
 bool is_length_set;
-bool is_last_type;
-struct direct_string_item *direct_string_to_add;
 
+struct direct_string_item *direct_string_to_add;
+enum dmi_state_t dmi_curr_state;
 
 void clear_direct_help_vars()
 {
+	uart_send_string("direct string clear");
 	direct_write_index = 0;
 	direct_write_length = 0;
 	is_length_set = false;
@@ -56,15 +57,17 @@ void clear_direct_help_vars()
 
 void init_direct_write_vars()
 {
+	uart_send_string("direct string init");
 	direct_string_to_add = 0;
+	dmi_curr_state = DMI_IDLE;
 	clear_direct_help_vars();
 }
 
 void sram_handle_init()
 {
-	is_last_type = false;
 	init_direct_write_vars();
 }
+
 bool is_valid_register(int8_t index, uint8_t max_index)
 {
 	return index >= 0 && index < max_index;
@@ -309,6 +312,17 @@ void read_adc(enum i2c_addr_space adc_address, uint8_t *data)
 	}
 }
 
+void free_direct_string(void)
+{
+	if (direct_string_to_add != NULL){
+		free(direct_string_to_add->content);
+		free(direct_string_to_add->type);
+	}
+	free(direct_string_to_add);
+	dmi_curr_state = DMI_IDLE;
+	clear_direct_help_vars();
+}
+
 void read_iwren(uint8_t *data)
 {
 	*data = layout.l.iwren;
@@ -342,27 +356,28 @@ int set_direct_string()
 
 void add_direct_string()
 {
+	uart_send_string("direct string added");
 	direct_string_to_add->next = computer_data.details.direct_string;
 	computer_data.details.direct_string = direct_string_to_add;
 	direct_string_to_add = 0;
-	init_direct_write_vars();
+	free_direct_string();
 }
 
 
-void end_direct_string(bool is_written_type)
+void end_direct_string(bool is_name_byte)
 {
-	if(is_written_type && !is_last_type){
+	if(is_name_byte && dmi_curr_state == DMI_NAME_WRITE){
 		direct_string_to_add->type[direct_write_length]='\0';
+		dmi_curr_state = DMI_VALUE_WRITE;
+		uart_send_string("now value turn\n\r");
 		clear_direct_help_vars();
-	} else if (is_last_type){
+	} else if (dmi_curr_state == DMI_VALUE_WRITE){
 		direct_string_to_add->content[direct_write_length]='\0';
 		add_direct_string();
 	} else{
 		init_direct_write_vars();
-		is_last_type = false;
 		return;
 	}
-	is_last_type = !is_last_type;
 }
 
 bool is_iwren_mode()
@@ -379,30 +394,43 @@ void write_byte_direct_string(bool is_written_type, uint8_t data)
 	else
 		direct_string_to_add->content[direct_write_index] = data;
 	direct_write_index++;
+	uart_send_string(" direct write index: ");
+	uart_send_num(direct_write_index, 10);
+	uart_send_string(" direct write length: ");
+	uart_send_num(direct_write_length, 10);
+	uart_send_string("\n\r");
 }
 
-void set_written_length(bool is_written_type, uint8_t data)
+void set_written_length(bool is_written_name, uint8_t data)
 {
 	direct_write_length = data;
+	direct_write_index = 0;
+	uart_send_string(" length set: ");
+	uart_send_num(data, 16);
+	uart_send_string("\t \n\r");
 	is_length_set = true;
-	if (is_written_type){
+	if (is_written_name){
 		if (direct_string_to_add == 0){
 			if (set_direct_string() != 0) {
-				clear_direct_help_vars();
+				uart_send_string("malloc failed\n\r");
+				free_direct_string();
 				return ;
 			} else {
 				direct_string_to_add->type = malloc (sizeof(char *) * direct_write_length + 1);
 				if (direct_string_to_add->type == NULL) {
-					free(direct_string_to_add);
-					clear_direct_help_vars();
+					uart_send_string("malloc failed ");
+					free_direct_string();
 					return ;
 				}
+				uart_send_string(" num of chars in string: ");
+				uart_send_num(data, 10);
 			}
 		} else {
-			clear_direct_help_vars();
+			uart_send_string("written value not name!!\n\r");
+			free_direct_string();
 			return;
 		}
-	} else if (is_last_type){
+	} else if (dmi_curr_state == DMI_VALUE_WRITE){
 		direct_string_to_add->content = malloc (sizeof(char *) * direct_write_length + 1);
 		if (direct_string_to_add->content == NULL) {
 			free(direct_string_to_add->type);
@@ -411,7 +439,6 @@ void set_written_length(bool is_written_type, uint8_t data)
 			return ;
 		}
 	} else {
-		is_last_type = false;
 		init_direct_write_vars();
 		return;
 	}
@@ -419,12 +446,19 @@ void set_written_length(bool is_written_type, uint8_t data)
 
 void write_direct_byte(bool is_written_type, uint8_t data)
 {
+	uart_send_num(data, 16);
 	if (is_length_set){
+		uart_send_string(" byte added ");
 		write_byte_direct_string(is_written_type, data);
-		if (direct_write_length == direct_write_index)
+		if (direct_write_length == direct_write_index) {
+			uart_send_string(" last byte in written ");
 			end_direct_string(is_written_type);
+		}
 	} else {
+		uart_send_string(" first byte is written ");
 		set_written_length(is_written_type, data);
+		if (is_written_type)
+			dmi_curr_state = DMI_NAME_WRITE;
 	}
 }
 
@@ -432,14 +466,26 @@ void write_direct(enum i2c_addr_space write_address)
 {
 	switch (write_address){
 	case DMIN:
+		uart_send_string("direct write name byte ");
+		if (dmi_curr_state == DMI_VALUE_WRITE) {
+			uart_send_string("DMI reset- START NEW NAME\n\r");
+			free_direct_string();
+			break;
+		}
 		write_direct_byte(true, layout.l.dmi_name);
 		break;
 	case DMIV:
+		if (dmi_curr_state != DMI_VALUE_WRITE) {
+			uart_send_string("DMI reset - NOT NAME WRITE TIME\n\r");
+			break;
+		}
+		uart_send_string("direct write value byte");
 		write_direct_byte(false,layout.l.dmi_value);
 		break;
 	default:
 		break;
 	}
+	uart_send_string("write direct end \n\r");
 }
 
 void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
@@ -547,8 +593,9 @@ void write_gpu_temp()
 
 void update_data(void *write_address)
 {
-//	uart_send_string("do work\n\r");
 	uint8_t addr = (uint8_t)write_address;
+	uart_send_num(addr, 16);
+	uart_send_string("update sram\n\r");
 	switch (addr){
 		case GPUT:
 			write_gpu_temp();
@@ -592,6 +639,7 @@ void update_data(void *write_address)
 		case DMIN:
 		case DMIV:
 			write_direct(addr);
+			twi_enable();
 			break;
 		case FPCTRL:
 			write_reset();
@@ -696,6 +744,15 @@ struct work update_data_work = {
 int handle_sram_write_request(uint8_t write_address, uint8_t data)
 {
 	write_data(write_address, data);
+	switch(write_address) {
+	case DMIV:
+	case DMIN:
+		twi_disable();
+		break;
+	default:
+		twi_enable();
+		break;
+	}
 	update_data_work.data = (void *)write_address;
 	return insert_work(&update_data_work);
 }
