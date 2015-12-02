@@ -191,7 +191,7 @@ union layout_t {
 		uint8_t cputr:1;
 		uint8_t gputr:1;
 		uint8_t reserved27:4;
-		uint8_t reserved28[10];
+		uint8_t reserved28[13];
 		uint8_t dmi_name;
 		uint8_t dmi_value;
 		uint8_t reserved29[6];
