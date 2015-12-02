@@ -135,7 +135,10 @@ void gfx_information_draw(struct gfx_information *info)
 
 void gfx_label_draw(struct gfx_label *label)
 {
-	print_data_P(label->text.textP, label->text.font, label->postion.x, label->postion.y);
+	if (label->text.textP != NULL)
+		print_data_P(label->text.textP, label->text.font, label->postion.x, label->postion.y);
+	else
+		print_data(label->text.text, label->text.font, label->postion.x, label->postion.y);
 }
 
 int gfx_image_init(struct gfx_image *image, gfx_mono_color_t PROGMEM_T *bitmap_progmem,

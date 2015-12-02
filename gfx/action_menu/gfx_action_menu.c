@@ -180,9 +180,9 @@ void set_dmi_mono_menu()
 			dmi_menu.menu->strings[i] = direct_item->type;
 			direct_item = direct_item->next;
 		}
-		if (dmi_menu.menu->num_elements > 4){
-			dmi_menu.menu->strings[5] = "Back To Main Menu";
-			dmi_menu.menu->num_elements = 6;
+		if (dmi_menu.menu->num_elements > 3){
+			dmi_menu.menu->strings[4] = "Back To Main Menu";
+			dmi_menu.menu->num_elements = 5;
 		} else {
 			dmi_menu.menu->strings[count] = "Back To Main Menu";
 			dmi_menu.menu->num_elements++;
@@ -237,9 +237,10 @@ void set_dmi_frame(struct gfx_frame *frame, uint8_t index)
 
 void set_dmi_label_text()
 {
-	struct direct_string_item * direct_item = computer_data.details.direct_string;
+	struct direct_string_item *direct_item = computer_data.details.direct_string;
 	for (int i = 0; i < dmi_menu.menu->num_elements -1; i++){
 		dmi_menu.actions[i].frame->label_head->label.text.text = direct_item->content;
+		dmi_menu.actions[i].frame->label_head->label.text.textP = NULL;
 		direct_item = direct_item->next;
 	}
 }
