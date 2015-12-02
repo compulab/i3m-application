@@ -24,6 +24,10 @@
 extern bool is_twi_busy;
 void twi_slave_init(void);
 
+void twi_disable(void);
+
+void twi_enable(void);
+
 void twi_slave_interrupt_handler(void);
 
 #endif /* TWI_SLAVE_H */

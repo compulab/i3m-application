@@ -87,6 +87,18 @@ static bool data_sent;
 static bool is_read_request;
 bool is_twi_busy;
 
+bool twi_enabled;
+
+void twi_disable(void)
+{
+	twi_enabled = false;
+}
+
+void twi_enable(void)
+{
+	twi_enabled = true;
+}
+
 void twi_slave_init()
 {
 		TWI_SLAVE_BASE.ADDR = TWI_SLAVE_ADDRESS << 1;
@@ -97,6 +109,7 @@ void twi_slave_init()
                 TWI_SLAVE_ENABLE_bm |
 				TWI_SLAVE_PIEN_bm;
         is_twi_busy = false;
+        twi_enable();
 }
 
 void clear()
@@ -167,13 +180,15 @@ int twi_handle_write(uint8_t data)
 	enum i2c_addr_space i2c_addr = reg_address;
 	if (i2c_addr != DMIN && i2c_addr != DMIV)
 		++reg_address;
+	else
+		reg_address = 0;
 
 	return 0;
 }
 
 void twi_slave_address_match_handler()
 {
-	if (computer_data.details.error_count == 0) {
+	if (twi_enabled) {
 		is_twi_busy = true;
 		is_read_request = (TWI_SLAVE_BASE.STATUS & TWI_SLAVE_DIR_bm) == TWI_SLAVE_DIR_bm;
 		data_sent = false;
