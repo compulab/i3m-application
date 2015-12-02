@@ -104,6 +104,7 @@ void init()
 {
 	cli();
 	wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_2KCLK);
+	wdt_enable();
 	board_init();
 	sysclk_init();
 	gfx_mono_init();
@@ -123,7 +124,6 @@ void init()
 	insert_to_log('P');
 	tasks_init();
 	insert_to_log('U');
-	wdt_enable();
 }
 
 int main(int argc, char *argv[])
