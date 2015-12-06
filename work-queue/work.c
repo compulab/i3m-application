@@ -7,6 +7,7 @@
 #include "work.h"
 #include "../debug.h"
 #include "../uart/uart.h"
+#include "../Fp-utils.h"
 
 static struct work_queue work_to_do = {
 		.first =  NULL,
@@ -35,6 +36,7 @@ int insert_work(struct work *work)
 		work_to_do.first = new_work;
 
 	work_to_do.last = new_work;
+	wakeup = true;
 	sei();
 	return 0;
 }

@@ -35,6 +35,9 @@
 
 #include "work-queue/work.h"
 #include "debug.h"
+
+extern bool wakeup;
+
 #define AMBIENT_TWI_ADDRESS  		0x4C
 #define AMBIENT_TEMPERATURE_ADDRESS 0x00
 #define EMPTY_SLOT "Empty Slot"

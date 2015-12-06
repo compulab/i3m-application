@@ -118,6 +118,15 @@ void init()
 	insert_to_log('U');
 }
 
+void sleep_interuptable(uint8_t time)
+{
+	uint8_t time_pass = 0;
+	while (time_pass < time && !wakeup) {
+		time_pass++;
+		delay_us(1);
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	log_twi.bottom = log_twi.top = 0;
@@ -131,6 +140,7 @@ int main(int argc, char *argv[])
 	computer_data.details.error_count = 0;
 	bool is_changed;
 	while(true) {
+		wakeup = false;
 		is_changed = false;
 		if (log_twi.bottom != log_twi.top) {
 			for (; log_twi.bottom < log_twi.top; log_twi.bottom++){
@@ -144,7 +154,7 @@ int main(int argc, char *argv[])
 
 
 		if (!work_handler()) {
-			delay_ms(10);
+			sleep_interuptable(10);
 		} else {
 			wdt_reset();
 		}
