@@ -63,10 +63,10 @@ struct twi_log {
 
 union layout_t {
 	struct {
-		uint8_t sig[4];
-		uint8_t layout_ver;
-		uint16_t major_rev;
-		uint16_t minor_rev;
+		const uint8_t sig[4];
+		const uint8_t layout_ver;
+		const uint16_t major_rev;
+		const uint16_t minor_rev;
 		uint8_t reserved0[7];
 		uint16_t bios_post_code;
 		uint8_t power_state:3;
@@ -205,6 +205,8 @@ union layout_t {
 		char i2c[256];
 	} direct;
 };
+
+extern union layout_t layout;
 
 enum memory_error_codes {
 	NO_ERROR = 0,
@@ -614,8 +616,6 @@ enum screen_saver_type {
 };
 
 struct twi_log log_twi;
-
-union layout_t layout;
 
 union updatable_info computer_data;
 

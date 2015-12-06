@@ -74,14 +74,6 @@ void power_state_init()
 
 void update_fp_info()
 {
-	layout.l.sig[0] = 'C';
-	layout.l.sig[1] = 'L';
-	layout.l.sig[2] = 'F';
-	layout.l.sig[3] = 'P';
-	layout.l.layout_ver = 0x01;
-	layout.l.major_rev = 0x00;
-	layout.l.minor_rev = 0x01;
-
 	computer_data.details.screen_saver_update_time = 6;
 	computer_data.details.screen_saver_visible = 0;
 	computer_data.details.screen_saver_type = 0;
