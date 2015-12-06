@@ -638,8 +638,6 @@ void update_data(void *write_address)
 			break;
 		case DMIN:
 		case DMIV:
-			write_direct(addr);
-			twi_enable();
 			break;
 		case FPCTRL:
 			write_reset();
@@ -747,12 +745,11 @@ int handle_sram_write_request(uint8_t write_address, uint8_t data)
 	switch(write_address) {
 	case DMIV:
 	case DMIN:
-		twi_disable();
-		break;
+		write_direct(write_address);
+		return 0;
 	default:
-		twi_enable();
-		break;
+		update_data_work.data = (void *)write_address;
+		return insert_work(&update_data_work);
 	}
-	update_data_work.data = (void *)write_address;
-	return insert_work(&update_data_work);
+
 }
