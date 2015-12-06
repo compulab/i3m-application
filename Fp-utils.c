@@ -12,6 +12,7 @@
 
 enum power_state current_power_state = POWER_ON;
 bool sleep_mode_enabled;
+bool wakeup;
 char power_value[10];
 uint16_t update_timestamp;
 uint16_t wait_time;
