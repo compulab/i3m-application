@@ -86,7 +86,6 @@ void write_cpu_fq_msb(uint8_t cpu_addr)
 		return ;
 	if (layout.direct.i2c[cpu_addr] & CPU_FQ_MSB_MSK) {
 		computer_data.packed.cpuf[index] = (layout.direct.i2c[cpu_addr] & ~CPU_FQ_MSK) | (layout.direct.i2c[cpu_addr - 1] << 8);
-		update_information_frame(SHOW_CPU_FREQUENCY, information_present->info_data == index);
 	}
 	layout.l.cpufr = 0;
 	clear_req();
@@ -100,10 +99,8 @@ void read_temp_control(uint8_t *data)
 void write_temp_control()
 {
 	computer_data.details.gput = layout.l.gpus;
-	if (computer_data.details.gput && (layout.l.gput != computer_data.details.gput)) {
+	if (computer_data.details.gput && (layout.l.gput != computer_data.details.gput))
 		computer_data.details.gput = layout.l.gput;
-		update_information_frame(SHOW_GPU_TEMPERTURE,true);
-	}
 }
 
 void write_hd_sz_msb(uint8_t hdd_addr)
@@ -116,7 +113,6 @@ void write_hd_sz_msb(uint8_t hdd_addr)
 		computer_data.packed.hdds |= (0x01 << index);
 		uint8_t factor = (layout.direct.i2c[hdd_addr] & HDD_SZ_UNIT_MSK) != 0 ? 1 : 0;
 		computer_data.packed.hddf |= (0x01 << index) & factor;
-		update_information_frame(SHOW_HDD_SIZE,information_present->info_data == index);
 	}
 }
 
@@ -147,24 +143,22 @@ void write_cpu_status()
 {
 	layout.l.cputr = 0;
 	clear_req();
-	bool status_changed;
+	computer_data.packed.cput_update = 0x00;
 	if (layout.direct.i2c[CPUTS] == 0){
-		status_changed = computer_data.packed.cputs != 0;
 		computer_data.packed.cputs = 0;
 	} else {
-		status_changed = computer_data.packed.cputs != layout.direct.i2c[CPUTS];
 		computer_data.packed.cputs |= layout.direct.i2c[CPUTS];
 		uint8_t bit = 0x01;
 		for (uint8_t i = 0 ; i < MAX_CPU; i++){
 			if (layout.direct.i2c[CPUTS] & bit) {
-				status_changed |= computer_data.packed.cput[i] != layout.direct.i2c[CPU0T + i];
-				computer_data.packed.cput[i] = layout.direct.i2c[CPU0T + i];
+				if (computer_data.packed.cput[i] != layout.direct.i2c[CPU0T + i]) {
+					computer_data.packed.cput[i] = layout.direct.i2c[CPU0T + i];
+					computer_data.packed.cput_update |= bit;
+				}
 			}
 			bit = bit << 1;
 		}
 	}
-	if (status_changed)
-		update_information_frame(SHOW_CPU_TEMPERTURE, information_present->info_data < MAX_CPU);
 }
 
 
@@ -180,7 +174,6 @@ void write_hdd_status()
 				computer_data.packed.hddt[i] = layout.direct.i2c[CPU0T + i];
 			bit = bit << 1;
 		}
-			update_information_frame(SHOW_HDD_TEMPERTURE, information_present->info_data < MAX_HDD &&(computer_data.packed.hddts &(0x01 << information_present->info_data)));
 	}
 	layout.l.hddtr = 0;
 	clear_req();
@@ -197,7 +190,6 @@ void write_reset()
 void write_post_code_lsb()
 {
 	computer_data.packed.post_code = layout.l.bios_post_code;
-	update_information_frame(SHOW_POST_CODE, true);
 }
 
 void write_memory(uint8_t mem_addr) //Todo: change memory status set
@@ -210,7 +202,6 @@ void write_memory(uint8_t mem_addr) //Todo: change memory status set
 	computer_data.packed.memsz[index + 1] = (data & MEM_SZ_MSB_MSK) >> 4;
 	if (data & MEM_SZ_STATUS_MSB_MSK)
 		computer_data.packed.mems |= 0x01 << (index + 1);
-//	update_information_frame(SHOW_MEMORY_SIZE, information_present->info_data < MAX_MEMORY_SLOT && (computer_data.packed.mems & (0x01 <<information_present->info_data)), index, );
 }
 
 void read_sig(enum i2c_addr_space sig_address, uint8_t *data)
@@ -582,10 +573,7 @@ void write_gpu_temp()
 	if (computer_data.details.gpus == 1) {
 		if (layout.l.gput != computer_data.details.gput) {
 			computer_data.details.gput = layout.l.gput;
-			update_information_frame(SHOW_GPU_TEMPERTURE, true);
 		}
-	} else {
-		update_information_frame(SHOW_GPU_TEMPERTURE, true);
 	}
 	layout.l.gputr = 0;
 	clear_req();

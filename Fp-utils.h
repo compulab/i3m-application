@@ -76,7 +76,7 @@ void fp_init();
 
 bool is_valid_mem(uint8_t mem_id);
 
-void update_information_frame(enum information_type type, bool need_to_update);
+void update_info();
 
 void update_ambient_value(uint8_t high_bit);
 

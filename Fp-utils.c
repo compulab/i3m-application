@@ -180,7 +180,6 @@ void handle_power_state_changed()
 			handle_power_off();
 		else
 			handle_power_on();
-	update_information_frame(SHOW_POWER_STATE, true);
 }
 
 struct work power_state_work = { .do_work = handle_power_state_changed, .data = NULL, .next = NULL };
@@ -284,12 +283,10 @@ void set_temp_string(char *str, int8_t temperature)
 
 void set_cpu_updated_temp(char *data, uint8_t cpu_id)
 {
-	if ((computer_data.packed.cputs & (0x01 << cpu_id)) != 0){
-	uint8_t temp = computer_data.details.cput[cpu_id];
-		set_temp_string(data, temp);
-	} else {
+	if ((computer_data.packed.cputs & (0x01 << cpu_id)) != 0)
+		set_temp_string(data, computer_data.details.cput[cpu_id]);
+	else
 		set_invalid_string(data);
-	}
 }
 
 void set_updated_memory_size(char *output_str, uint8_t mem_id)
@@ -329,9 +326,6 @@ void update_adc()
 	char last_value[10] = "0 W";
 	strcpy(last_value, power_value);
 	set_power_data(power_value);
-	if (strcmp(power_value, last_value) != 0){
-		update_information_frame(SHOW_COMPUTER_POWER, true);
-	}
 }
 
 void set_updated_gpu_temp(char *output_str)
@@ -379,7 +373,6 @@ void set_update_hdd_temp(char *output_str, uint8_t hdd_id)
 void update_brightness()
 {
 	ssd1306_set_contrast(eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS));
-	update_information_frame(SET_BRIGHTNESS, true);
 }
 
 uint8_t get_brightness_level()
@@ -429,7 +422,6 @@ void handle_screen_saver_type_buttons(uint8_t key)
 			break;
 		}
 		eeprom_write_byte(SCREEN_SAVER_CONFIG_ADDRESS, computer_data.packed.screen_saver_config);
-		update_information_frame(SET_SCREEN_SAVER_TYPE, true);
 	}
 }
 
@@ -449,7 +441,6 @@ void handle_screen_saver_time_buttons(uint8_t key)
 			break;
 		}
 		eeprom_write_byte(SCREEN_SAVER_EEPROM_ADDRESS, computer_data.packed.screen_saver_update_time);
-		update_information_frame(SET_SCREEN_SAVER_TIME, true);
 	}
 }
 
@@ -468,7 +459,6 @@ void handle_screen_saver_enable_buttons(uint8_t key)
 		break;
 	}
 	eeprom_write_byte(SCREEN_SAVER_CONFIG_ADDRESS, computer_data.packed.screen_saver_config);
-	update_information_frame(SET_SCREEN_SAVER_ENABLE, true);
 }
 
 void handle_brightness_buttons(uint8_t key)
@@ -792,7 +782,7 @@ bool is_cpu_temp_need_update(struct gfx_information *info, bool is_visible)
 	if (is_visible) {
 		switch (info->info_data){
 		case 0:
-			need_update = computer_data.details.cpu0ts== 0;
+			need_update = computer_data.details.cpu0ts == 0;
 			break;
 		case 1:
 			need_update = computer_data.details.cpu1ts == 0;
@@ -820,14 +810,12 @@ bool is_cpu_temp_need_update(struct gfx_information *info, bool is_visible)
 			break;
 		}
 	}
-	if (!need_update) {
-		char temp_str[3];
-		char curr_str[3];
-		set_cpu_updated_temp(temp_str, info->info_data);
-		set_curr_str(curr_str, SHOW_CPU_TEMPERTURE);
-		need_update = strcmp(temp_str, curr_str) != 0;
-	}
-		return need_update;
+	if (!need_update)
+		if ((computer_data.packed.cput_update & (1 << info->info_data))  != 0x00) {
+			computer_data.packed.cput_update = computer_data.packed.cput_update & ~(1 << info->info_data);
+			need_update = true;
+		}
+	return need_update;
 }
 
 bool is_gpu_temp_need_update(struct gfx_information *info, bool is_visible)
@@ -860,7 +848,7 @@ bool is_information_need_to_change(struct gfx_information *info, bool is_visible
 {
 	switch (info->info_type){
 	case SHOW_COMPUTER_POWER:
-		return !is_visible && computer_data.details.adcs == 1;
+		return !present_menu->visible;
 	case SHOW_CPU_FREQUENCY:
 		return is_cpu_fq_need_update(info, is_visible);
 	case SHOW_HDD_SIZE:
@@ -880,11 +868,6 @@ bool is_information_need_to_change(struct gfx_information *info, bool is_visible
 	default:
 		return false;
 	}
-}
-
-void update_information()
-{
-	gfx_frame_draw(frame_present, true);
 }
 
 bool is_status_in_menu_changed(struct gfx_action_menu *menu, enum information_type type)
@@ -944,19 +927,53 @@ void update_draw()
 	update_timestamp = TCC0.CNT;
 }
 
-void update_information_frame(enum information_type type, bool need_to_update)
+bool is_menu_need_update(struct gfx_action_menu *menu)
 {
-	if (type == SET_SCREEN_SAVER_TIME && !is_screen_saver_on)
-		reset_screen_saver_req = true;
-	if (need_to_update && !is_screen_saver_on){
-		if (!present_menu->visible) {
-			if (is_enable_update_frame() && information_present != 0 && information_present->info_type == type) {
-				update_information();
-				update_draw();
+	bool need_to_update = false;
+	struct gfx_information_node *info_node;
+	for (uint8_t i = 0; i < menu->menu->num_elements; i++) {
+		if (menu->actions[i].type == ACTION_TYPE_SHOW_FRAME) {
+			info_node = menu->actions[i].frame->information_head;
+			while (info_node != 0){
+				need_to_update = is_information_need_to_change(&info_node->information, menu->actions[i].visible);
+				if (need_to_update)
+					return true;
+
+				info_node = info_node->next;
 			}
-		} else if (is_enable_update_menu() && is_status_in_menu_changed(present_menu, type)) {
-				update_draw();
+		}
+	}
+	return false;
+}
+
+bool is_info_need_update(struct gfx_information *info)
+{
+	return is_information_need_to_change(info, true);
+}
+
+bool is_frame_need_update(struct gfx_frame *frame)
+{
+	struct gfx_information_node *info_node= frame->information_head;
+	while (info_node != NULL) {
+		if (is_info_need_update(&info_node->information))
+			return true;
+		info_node = info_node->next;
+	}
+	return false;
+}
+
+void update_info()
+{
+	bool need_to_update = false;
+	if (!is_screen_saver_on) {
+		if (present_menu->visible) {
+			if (is_menu_need_update(present_menu))
 				gfx_action_menu_init(present_menu, true);
+		} else {
+			need_to_update = is_frame_need_update(frame_present);
+			if (need_to_update)
+				gfx_frame_draw(frame_present, true);
 		}
 	}
 }
+

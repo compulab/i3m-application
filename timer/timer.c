@@ -42,8 +42,8 @@ void update_ambient_temp()
 {
 	if (current_power_state == POWER_ON) {
 		bool valid_update;
-		uint8_t last_temp = layout.l.ambt;
-		bool last_valid = layout.l.ambs != 0;
+//		uint8_t last_temp = layout.l.ambt;
+//		bool last_valid = layout.l.ambs != 0;
 		if (first_ambient_read) {
 			valid_update = TWI_read_reg(AMBIENT_TWI_ADDRESS, AMBIENT_TEMPERATURE_ADDRESS, &layout.l.ambt, 2);
 			first_ambient_read = !valid_update;
@@ -61,8 +61,8 @@ void update_ambient_temp()
 			update_ambient_temp();
 		}
 
-		if (ambient_update_fail_count == MAX_AMBIENT_UPDATE_FAIL || ((layout.l.ambs == 1) && (!last_valid || last_temp != layout.l.ambt)))
-			update_information_frame(SHOW_AMBIENT_TEMPERATURE, true);
+//		if (ambient_update_fail_count == MAX_AMBIENT_UPDATE_FAIL || ((layout.l.ambs == 1) && (!last_valid || last_temp != layout.l.ambt)))
+//			update_information_frame(SHOW_AMBIENT_TEMPERATURE, true);
 	}
 }
 
@@ -92,6 +92,7 @@ void tc_handle_init()
 static struct work requests_work = { .do_work = update_requests, .data = NULL, .next = NULL, };
 static struct work ambient_work = { .do_work = update_ambient_temp, .data = NULL, .next = NULL, };
 static struct work adc_work = { .do_work = update_adc, .data = NULL, .next = NULL, };
+static struct work update_screen_work = { .do_work = update_info, .data = NULL, .next = NULL, };
 //static struct work buttons_clear_work = { .do_work = handle_button_pressed, .data = NULL, .next = NULL, };
 static struct work screen_saver_work = { .do_work = show_splash, .data = NULL, .next = NULL, };
 static struct work time_work = { .do_work = time_task , .data = NULL, .next = NULL, };
@@ -170,6 +171,11 @@ void adc_set_timer()
 	set_tick_task_timer(UPDATE_ADC_SEC, ADC_TASK);
 }
 
+void adc_update_screen_timer()
+{
+	set_tick_task_timer(UPDATE_SCREEN_TIME, UPDATE_SCREEN_TASK);
+}
+
 void pending_req_set_timer()
 {
 	set_tick_task_timer(UPDATE_REQ_SEC, PENDING_REQ_TASK);
@@ -214,7 +220,12 @@ static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = {
 				.work = &adc_work,
 				.set_new_timer = adc_set_timer,
 		},
-
+		{
+				.overlaps_count = -1,
+				.offset = 0,
+				.work = &update_screen_work,
+				.set_new_timer = adc_update_screen_timer,
+		},
 };
 
 bool set_task_cmp(uint8_t task_id)
