@@ -507,6 +507,14 @@ union updatable_info {
 		uint8_t cpu5ts:1;
 		uint8_t cpu6ts:1;
 		uint8_t cpu7ts:1;
+		uint8_t cput0_update:1;
+		uint8_t cput1_update:1;
+		uint8_t cput2_update:1;
+		uint8_t cput3_update:1;
+		uint8_t cput4_update:1;
+		uint8_t cput5_update:1;
+		uint8_t cput6_update:1;
+		uint8_t cput7_update:1;
 		uint8_t	gput;
 		uint8_t ambt;
 		uint8_t hddt[MAX_HDD];
@@ -586,6 +594,7 @@ union updatable_info {
 		uint8_t power_state:3;
 		uint8_t cput[MAX_CPU];
 		uint8_t cputs;
+		uint8_t cput_update;
 		uint8_t	gput;
 		uint8_t ambt;
 		uint8_t hddt[MAX_HDD];
