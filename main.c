@@ -118,13 +118,16 @@ void init()
 	insert_to_log('U');
 }
 
-void sleep_interuptable(uint8_t time)
+bool sleep_interuptable(uint32_t timeout_us)
 {
-	uint8_t time_pass = 0;
-	while (time_pass < time && !wakeup) {
-		time_pass++;
+	uint32_t us = 0;
+
+	while (us < timeout_us && !wakeup) {
+		us++;
 		delay_us(1);
 	}
+
+	return wakeup;
 }
 
 int main(int argc, char *argv[])
@@ -132,14 +135,13 @@ int main(int argc, char *argv[])
 	log_twi.bottom = log_twi.top = 0;
 
 	init();
-
 	wdt_reset();
 	uart_send_string("start main\n\r");
 
 	uint32_t error_count = 0;
 	computer_data.details.error_count = 0;
 	bool is_changed;
-	while(true) {
+	while (true) {
 		wakeup = false;
 		is_changed = false;
 		if (log_twi.bottom != log_twi.top) {
@@ -148,13 +150,13 @@ int main(int argc, char *argv[])
 				uart_send_string(", ");
 				is_changed = true;
 			}
+
 			if (is_changed)
 				uart_send_string(".\n\r");
 		}
 
-
 		if (!work_handler()) {
-			sleep_interuptable(10);
+			sleep_interuptable(1000); /* 1 ms */
 		} else {
 			wdt_reset();
 		}
