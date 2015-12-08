@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
 	init();
 	wdt_reset();
 	uart_send_string("start main\n\r");
-
+	works_count = 0;
 	uint32_t error_count = 0;
 	computer_data.details.error_count = 0;
 	bool is_changed;

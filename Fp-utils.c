@@ -37,6 +37,13 @@ void disable_screen_saver_mode()
 	sleep_mode_enabled = false;
 }
 
+void print_work_count()
+{
+	uart_send_string("works in queue: ");
+	uart_send_num(works_count, 10);
+	uart_send_string("\n\r");
+}
+
 bool is_valid_cpu_temp(uint8_t cpu_id)
 {
 	return (computer_data.packed.cputs & 0x01 << (cpu_id)) != 0;

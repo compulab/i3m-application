@@ -93,6 +93,7 @@ static struct work requests_work = { .do_work = update_requests, .data = NULL, .
 static struct work ambient_work = { .do_work = update_ambient_temp, .data = NULL, .next = NULL, };
 static struct work adc_work = { .do_work = update_adc, .data = NULL, .next = NULL, };
 static struct work update_screen_work = { .do_work = update_info, .data = NULL, .next = NULL, };
+static struct work print_works_count_work = { .do_work = print_work_count, .data = NULL, .next = NULL, };
 //static struct work buttons_clear_work = { .do_work = handle_button_pressed, .data = NULL, .next = NULL, };
 static struct work screen_saver_work = { .do_work = show_splash, .data = NULL, .next = NULL, };
 static struct work time_work = { .do_work = time_task , .data = NULL, .next = NULL, };
@@ -151,6 +152,12 @@ void set_tick_task_timer(uint8_t sec_to_update, enum TYPE_OF_TICK_TASK type)
 	}
 }
 
+
+void print_works_count_timer()
+{
+	set_sec_task_timer(1, PRINT_WORKS_COUNT_TASK);
+}
+
 void time_set_timer()
 {
 	set_sec_task_timer(1 , TIME_TASK);
@@ -197,6 +204,11 @@ static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS] = {
 				.work = &time_work,
 				.set_new_timer = time_set_timer,
 		},
+		{
+				.secs_left = -1,
+				.work = &print_works_count_work,
+				.set_new_timer = print_works_count_timer,
+		},
 };
 
 
@@ -226,6 +238,7 @@ static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = {
 				.work = &update_screen_work,
 				.set_new_timer = adc_update_screen_timer,
 		},
+
 };
 
 bool set_task_cmp(uint8_t task_id)

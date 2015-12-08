@@ -55,11 +55,12 @@ struct scheduler_tick_task {
 	void (* set_new_timer)(void);
 };
 
-#define NUMBER_OF_SEC_TASKS		2
+#define NUMBER_OF_SEC_TASKS		3
 
 enum TYPE_OF_SEC_TASK {
-	SCREEN_SAVER_TASK 	=	0,
-	TIME_TASK 			=	1,
+	SCREEN_SAVER_TASK 		=	0,
+	TIME_TASK 				=	1,
+	PRINT_WORKS_COUNT_TASK	=	2,
 };
 
 struct scheduler_sec_task {

@@ -9,6 +9,8 @@
 #include "../uart/uart.h"
 #include "../Fp-utils.h"
 
+uint16_t works_count;
+
 static struct work_queue work_to_do = {
 		.first =  NULL,
 		.last =  NULL,
@@ -36,6 +38,7 @@ int insert_work(struct work *work)
 		work_to_do.first = new_work;
 
 	work_to_do.last = new_work;
+	works_count++;
 	wakeup = true;
 	sei();
 	return 0;
@@ -67,6 +70,7 @@ bool work_handler(void)
 	work->do_work(work->data);
 	cli();
 	free(work);
+	works_count--;
 	sei();
 	if (computer_data.details.error_count > 0) {
 			computer_data.details.error_count--;

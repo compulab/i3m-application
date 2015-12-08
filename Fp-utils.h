@@ -58,6 +58,8 @@ void enable_screen_saver_mode();
 
 void disable_screen_saver_mode();
 
+void print_work_count();
+
 bool is_valid_cpu_temp(uint8_t cpu_id);
 
 bool is_valid_cpu_fq(uint8_t cpu_id);

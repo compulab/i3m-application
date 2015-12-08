@@ -21,6 +21,8 @@ struct work_queue {
 	struct work *last;
 };
 
+extern uint16_t works_count;
+
 int insert_work(struct work *work);
 
 bool work_handler(void);
