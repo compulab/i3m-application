@@ -61,7 +61,6 @@ void portf_init()
 
 void init_menu()
 {
-	load_config_block();
 	set_menu_by_id(&present_menu, 0);
 	show_current_menu(true);
 	enable_screen_saver_mode();
@@ -94,13 +93,13 @@ void updated_info_init()
 
 void init()
 {
-	cli();
 	wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_2KCLK);
 	wdt_enable();
-	board_init();
 	sysclk_init();
+	board_init();
+	load_config_block();
+	cli();
 	gfx_mono_init();
-	init_menu();
 	sram_handle_init();
 	updated_info_init();
 	adc_init();
@@ -110,6 +109,7 @@ void init()
 	twi_slave_init();
 	TWI_init();
 	uart_init();
+	init_menu();
 	sei();
 	tc_init();
 	rtc_init();
@@ -133,11 +133,15 @@ bool sleep_interuptable(uint32_t timeout_us)
 int main(int argc, char *argv[])
 {
 	log_twi.bottom = log_twi.top = 0;
-
-	init();
-	wdt_reset();
-	uart_send_string("start main\n\r");
 	works_count = 0;
+	init();
+
+	uart_send_num(RST.STATUS , 16);
+	if ((RST.STATUS & RST_WDRF_bm) != 0)
+		uart_send_string("WDT reset\n\r");
+	else
+		uart_send_string("start main\n\r");
+	wdt_reset();
 	uint32_t error_count = 0;
 	computer_data.details.error_count = 0;
 	bool is_changed;
