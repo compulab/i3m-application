@@ -5,11 +5,10 @@
  *      Author: arkadi
  */
 #include "work.h"
-#include "../debug.h"
-#include "../uart/uart.h"
-#include "../Fp-utils.h"
+
 
 uint16_t works_count;
+bool wakeup;
 
 static struct work_queue work_to_do = {
 		.first =  NULL,

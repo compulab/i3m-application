@@ -582,8 +582,8 @@ void write_gpu_temp()
 void update_data(void *write_address)
 {
 	uint8_t addr = (uint8_t)write_address;
-	uart_send_num(addr, 16);
-	uart_send_string("update sram\n\r");
+//	uart_send_num(addr, 16);
+//	uart_send_string("update sram\n\r");
 	switch (addr){
 		case GPUT:
 			write_gpu_temp();

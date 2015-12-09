@@ -9,6 +9,8 @@
 #define WORK_QUEUE_WORK_H_
 
 #include "../asf.h"
+#include "../debug.h"
+#include "../uart/uart.h"
 
 struct work {
 	void (*do_work)(void *);
@@ -22,6 +24,7 @@ struct work_queue {
 };
 
 extern uint16_t works_count;
+extern bool wakeup;
 
 int insert_work(struct work *work);
 
