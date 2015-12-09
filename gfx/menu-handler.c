@@ -140,7 +140,7 @@ int load_action(struct gfx_item_action *action, struct cnf_action config_action)
 #ifdef DEBUG_MODE_ACTION
 		MSG("action is frame")
 #endif
-		action->frame = malloc (sizeof(struct gfx_frame));
+		action->frame = malloc_locked(sizeof(struct gfx_frame));
 		if (action->frame == NULL) {
 			uart_send_string("action frame failed\n\r");
 			return -1;
@@ -181,7 +181,7 @@ void show_splash()
 
 int graphic_item_init(struct gfx_image *menu_image, struct cnf_image * image_node)
 {
-	menu_image->bitmap = malloc(sizeof(struct gfx_mono_bitmap));
+	menu_image->bitmap = malloc_locked(sizeof(struct gfx_mono_bitmap));
 	if (menu_image->bitmap == NULL) {
 		uart_send_string("graphic image bitmap failed\n\r");
 		return -1;
@@ -206,14 +206,14 @@ int load_fonts(struct cnf_font_node *cnf_font_node)
 {
 	struct cnf_font_node font_node;
 	struct gfx_font *font;
-	fonts = malloc(sizeof(struct gfx_font *) * fonts_size);
+	fonts = malloc_locked(sizeof(struct gfx_font *) * fonts_size);
 	if (fonts == NULL) {
 		uart_send_string("fonts array failed\n\r");
 		return -1;
 	}
 	while (cnf_font_node != 0) {
 		memcpy_P(&font_node, cnf_font_node, sizeof(struct cnf_font_node));
-		font = malloc(sizeof(struct gfx_font));
+		font = malloc_locked(sizeof(struct gfx_font));
 		if (font == NULL) {
 			uart_send_string("font failed\n\r");
 			return -1;
@@ -235,7 +235,7 @@ int set_graphic_view(struct gfx_action_menu *action_menu, struct cnf_image_node 
 	struct gfx_mono_menu *mono_menu = action_menu->menu;
 	action_menu->is_graphic_view =  cnf_graphic_item_node != 0;
 	if (action_menu->is_graphic_view){
-		action_menu->graphic_items_head = malloc(sizeof(struct gfx_image_node));
+		action_menu->graphic_items_head = malloc_locked(sizeof(struct gfx_image_node));
 		if (action_menu->graphic_items_head == NULL) {
 			uart_send_string("graphic image head failed\n\r");
 			return -1;
@@ -251,7 +251,7 @@ int set_graphic_view(struct gfx_action_menu *action_menu, struct cnf_image_node 
 			}
 			cnf_graphic_item_node = cnf_image.next;
 			if (i < mono_menu->num_elements - 1){
-				image_node->next = malloc(sizeof(struct gfx_image_node));
+				image_node->next = malloc_locked(sizeof(struct gfx_image_node));
 				if (image_node->next == NULL) {
 					uart_send_string("graphic image node failed\n\r");
 					return -1;
@@ -270,7 +270,7 @@ int set_graphic_view(struct gfx_action_menu *action_menu, struct cnf_image_node 
 
 int set_mono_menu(struct gfx_action_menu *action_menu, struct gfx_mono_menu *menu)
 {
-	struct gfx_mono_menu *mono_menu = malloc(sizeof(struct gfx_mono_menu));
+	struct gfx_mono_menu *mono_menu = malloc_locked(sizeof(struct gfx_mono_menu));
 	if (mono_menu == NULL) {
 		uart_send_string("mono menu failed\n\r");
 		return -1;
@@ -279,7 +279,7 @@ int set_mono_menu(struct gfx_action_menu *action_menu, struct gfx_mono_menu *men
 	memcpy_P(mono_menu, menu, sizeof(struct gfx_mono_menu));
 	action_menu->is_progmem = true;
 	action_menu->menu= mono_menu;
-	action_menu->actions = malloc (sizeof(struct gfx_item_action) * mono_menu->num_elements);
+	action_menu->actions = malloc_locked(sizeof(struct gfx_item_action) * mono_menu->num_elements);
 	if (action_menu->actions == NULL) {
 		uart_send_string("actions set failed\n\r");
 		return -1;
@@ -321,7 +321,7 @@ int load_config_block()
 		}
 
 	splash_init(config_block);
-	action_menus = malloc(sizeof (struct gfx_action_menu *) * size_of_menus);
+	action_menus = malloc_locked(sizeof(struct gfx_action_menu *) * size_of_menus);
 	if (action_menus == NULL) {
 		uart_send_string("action menus set fail\n\r");
 		return -1;
@@ -329,7 +329,7 @@ int load_config_block()
 
 	struct cnf_menu_node *cnf_menu_node = config_block.menus_head;
 	for (int i=0; i < size_of_menus; i++) {
-		action_menus[i] = malloc(sizeof(struct gfx_action_menu));
+		action_menus[i] = malloc_locked(sizeof(struct gfx_action_menu));
 		if (action_menus[i] == NULL) {
 			uart_send_string("action menu settings fail\n\r");
 			return config_block_error();
@@ -427,10 +427,12 @@ void handle_buttons_update()
 	case BUTTON_HOLD:
 	case BUTTON_CLICK:
 //		tc_button_pressed();
+		uart_send_string("\tok pressed\n\r");
 		if (present_menu->visible)
 			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_ENTER, !present_menu->visible);
 		else
 			hadle_back_to_menu();
+		uart_send_string("showing...\n\r");
 		return ;
 		break;
 	default:
@@ -468,6 +470,7 @@ struct work button_work = { .do_work = handle_buttons_update, .data = NULL, .nex
 void handle_button_pressed()
 {
 	update_buttons_states();
+	uart_send_string("\tbutton pressed\n\r");
 	if (!insert_work(&button_work))
 		insert_to_log('B');
 }

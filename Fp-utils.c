@@ -17,7 +17,6 @@ char power_value[10];
 uint16_t update_timestamp;
 uint16_t wait_time;
 
-
 struct calendar_date computer_date_time = {
     .second = 40,
     .minute = 03,
@@ -26,6 +25,14 @@ struct calendar_date computer_date_time = {
     .month = 11,
     .year = 2015
 };
+
+void *malloc_locked(size_t size)
+{
+	cli();
+	void *ret = malloc(size);
+	sei();
+	return ret;
+}
 
 void enable_screen_saver_mode()
 {

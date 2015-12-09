@@ -54,6 +54,8 @@ extern struct calendar_date computer_date_time;
 
 extern bool sleep_mode_enabled;
 
+void * malloc_locked(size_t size);
+
 void enable_screen_saver_mode();
 
 void disable_screen_saver_mode();

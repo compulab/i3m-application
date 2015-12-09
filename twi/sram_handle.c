@@ -49,7 +49,7 @@ enum dmi_state_t dmi_curr_state;
 
 void clear_direct_help_vars()
 {
-	uart_send_string("direct string clear");
+//	uart_send_string("direct string clear");
 	direct_write_index = 0;
 	direct_write_length = 0;
 	is_length_set = false;
@@ -57,7 +57,7 @@ void clear_direct_help_vars()
 
 void init_direct_write_vars()
 {
-	uart_send_string("direct string init");
+//	uart_send_string("direct string init");
 	direct_string_to_add = 0;
 	dmi_curr_state = DMI_IDLE;
 	clear_direct_help_vars();
@@ -336,7 +336,7 @@ void read_pending_requests(uint8_t *data)
 
 int set_direct_string()
 {
-	direct_string_to_add = malloc(sizeof(struct direct_string_item));
+	direct_string_to_add = malloc_locked(sizeof(struct direct_string_item));
 	if (direct_string_to_add == NULL)
 		return -1;
 	direct_string_to_add->content = 0;
@@ -407,7 +407,7 @@ void set_written_length(bool is_written_name, uint8_t data)
 				free_direct_string();
 				return ;
 			} else {
-				direct_string_to_add->type = malloc (sizeof(char *) * direct_write_length + 1);
+				direct_string_to_add->type = malloc_locked(sizeof(char *) * direct_write_length + 1);
 				if (direct_string_to_add->type == NULL) {
 					uart_send_string("malloc failed ");
 					free_direct_string();
@@ -422,7 +422,7 @@ void set_written_length(bool is_written_name, uint8_t data)
 			return;
 		}
 	} else if (dmi_curr_state == DMI_VALUE_WRITE){
-		direct_string_to_add->content = malloc (sizeof(char *) * direct_write_length + 1);
+		direct_string_to_add->content = malloc_locked(sizeof(char *) * direct_write_length + 1);
 		if (direct_string_to_add->content == NULL) {
 			free(direct_string_to_add->type);
 			free(direct_string_to_add);

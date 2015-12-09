@@ -124,7 +124,7 @@ void print_data(char *text, struct gfx_font *font, uint8_t x, uint8_t y)
 
 void gfx_information_draw(struct gfx_information *info)
 {
-	char *text_to_draw = malloc(info->text.max_text_size);
+	char *text_to_draw = malloc_locked(info->text.max_text_size);
 	if (text_to_draw == NULL)
 		return ;
 	update_information_present(info);
@@ -144,7 +144,7 @@ void gfx_label_draw(struct gfx_label *label)
 int gfx_image_init(struct gfx_image *image, gfx_mono_color_t PROGMEM_T *bitmap_progmem,
 		uint8_t height, uint8_t width, uint8_t x, uint8_t y)
 {
-	struct gfx_mono_bitmap *bitmap = malloc(sizeof(struct gfx_mono_bitmap));
+	struct gfx_mono_bitmap *bitmap = malloc_locked(sizeof(struct gfx_mono_bitmap));
 	if (bitmap == NULL){
 		uart_send_string("bitmap failed\n\r");
 		return -1;
@@ -178,7 +178,7 @@ int set_images(struct gfx_frame *frame, struct cnf_image_node *cnf_image_pgmem)
 	struct gfx_image_node *frame_image_last = 0;
 	while (cnf_image_pgmem != 0){
 		struct cnf_image_node cnf_image_node;
-		struct gfx_image_node *gfx_image_node = malloc(sizeof(struct gfx_image_node));
+		struct gfx_image_node *gfx_image_node = malloc_locked(sizeof(struct gfx_image_node));
 		if (gfx_image_node == NULL){
 			uart_send_string("gfx_image_node failed\n\r");
 			return -1;
@@ -205,7 +205,7 @@ int set_labels(struct gfx_frame *frame, struct cnf_label_node *cnf_label_pgmem)
 	struct gfx_label_node *frame_label_last = 0;
 	while (cnf_label_pgmem != 0){
 		struct cnf_label_node cnf_label_node;
-		struct gfx_label_node *gfx_label_node = malloc(sizeof(struct gfx_label_node));
+		struct gfx_label_node *gfx_label_node = malloc_locked(sizeof(struct gfx_label_node));
 		if (gfx_label_node == NULL) {
 			uart_send_string("label node fail \n\r");
 			return -1;
@@ -228,7 +228,7 @@ int set_infos(struct gfx_frame *frame,	struct cnf_info_node *cnf_info_pgmem)
 	struct gfx_information_node *frame_information_last = 0;
 	while (cnf_info_pgmem != 0){
 		struct cnf_info_node cnf_info_node;
-		struct gfx_information_node *gfx_information_node = malloc(sizeof(struct gfx_information_node));
+		struct gfx_information_node *gfx_information_node = malloc_locked(sizeof(struct gfx_information_node));
 		if (gfx_information_node == NULL) {
 			uart_send_string("information_node fail\n\r");
 			return -1;

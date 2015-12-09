@@ -19,15 +19,12 @@ static struct work_queue work_to_do = {
 
 int insert_work(struct work *work)
 {
-	cli();
-	struct work *new_work = malloc(sizeof(struct work));
+	struct work *new_work = malloc_locked(sizeof(struct work));
 	if (new_work == NULL) {
 		computer_data.details.error_count++;
 		insert_to_log('E');
-		sei();
 		return -1;
 	}
-	sei();
 	new_work->data = work->data;
 	new_work->do_work = work->do_work;
 	new_work->next = NULL;

@@ -163,9 +163,7 @@ void set_dmi_mono_menu()
 	}
 
 	if (count > 0){
-		cli();
-		dmi_menu.menu = malloc(sizeof(struct gfx_mono_menu));
-		sei();
+		dmi_menu.menu = malloc_locked(sizeof(struct gfx_mono_menu));
 		if (dmi_menu.menu == NULL) {
 			free_dmi_menu();
 			return ;
@@ -225,9 +223,7 @@ void set_dmi_frame(struct gfx_frame *frame, uint8_t index)
 {
 	frame->information_head = 0;
 	frame->image_head = 0;
-	cli();
-	frame->label_head =  malloc(sizeof(struct gfx_label_node));
-	sei();
+	frame->label_head =  malloc_locked(sizeof(struct gfx_label_node));
 	if (frame->label_head == NULL) {
 		free_dmi_menu();
 		return ;
@@ -248,18 +244,14 @@ void set_dmi_label_text()
 void set_dmi_actions()
 {
 	if (is_dmi_set){
-		cli();
-		dmi_menu.actions = malloc(sizeof(struct gfx_item_action) * dmi_menu.menu->num_elements);
-		sei();
+		dmi_menu.actions = malloc_locked(sizeof(struct gfx_item_action) * dmi_menu.menu->num_elements);
 		if (dmi_menu.actions == NULL) {
 			free_dmi_menu();
 			return ;
 		}
 		for (int i = 0; i < dmi_menu.menu->num_elements -1; i++){
 			dmi_menu.actions[i].type =  ACTION_TYPE_SHOW_FRAME;
-			cli();
-			dmi_menu.actions[i].frame = malloc(sizeof(struct gfx_frame));
-			sei();
+			dmi_menu.actions[i].frame = malloc_locked(sizeof(struct gfx_frame));
 			if (dmi_menu.actions[i].frame == NULL) {
 				free_dmi_menu();
 				return ;
