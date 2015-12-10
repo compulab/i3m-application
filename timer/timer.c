@@ -60,9 +60,6 @@ void update_ambient_temp()
 			ambient_update_fail_count++;
 			update_ambient_temp();
 		}
-
-//		if (ambient_update_fail_count == MAX_AMBIENT_UPDATE_FAIL || ((layout.l.ambs == 1) && (!last_valid || last_temp != layout.l.ambt)))
-//			update_information_frame(SHOW_AMBIENT_TEMPERATURE, true);
 	}
 }
 
@@ -137,7 +134,7 @@ void set_sec_task_timer(uint8_t sec_to_update, enum TYPE_OF_SEC_TASK type)
 	sec_tasks_to_do[type].secs_left = sec_to_update;
 }
 
-void set_tick_task_timer(uint8_t sec_to_update, enum TYPE_OF_TICK_TASK type)
+void set_tick_task_timer(double sec_to_update, enum TYPE_OF_TICK_TASK type)
 {
 	struct scheduler_tick_task *task = &tick_tasks_to_do[type];
 	uint32_t ticks = sec_to_update * get_ticks_in_sec();
