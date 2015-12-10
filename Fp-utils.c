@@ -529,10 +529,7 @@ void set_screen_saver_time(char *str)
 void set_screen_saver_enable(char *str)
 {
 	frame_present->handle_buttons = handle_screen_saver_enable_buttons;
-	if (computer_data.details.screen_saver_visible == 1)
-		sprintf(str, "ENABLE");
-	else
-		sprintf(str, "DISABLE");
+	sprintf(str, "DISABLE ENABLE");
 }
 
 void set_brightness(char *str)
@@ -876,6 +873,9 @@ bool is_information_need_to_change(struct gfx_information *info, bool is_visible
 		return is_gpu_temp_need_update(info, is_visible);
 	case SHOW_AMBIENT_TEMPERATURE:
 		return is_ambient_need_update(info, is_visible);
+	case SET_SCREEN_SAVER_ENABLE:
+	case SET_SCREEN_SAVER_TYPE:
+	case SET_SCREEN_SAVER_TIME:
 	case SET_BRIGHTNESS:
 		return true;
 	default:
