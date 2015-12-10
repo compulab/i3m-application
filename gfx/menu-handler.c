@@ -442,10 +442,12 @@ void handle_buttons_update()
 	case BUTTON_HOLD:
 	case BUTTON_CLICK:
 //		tc_button_pressed();
-		if (present_menu->is_active_frame)
+		if (present_menu->is_active_frame) {
 			frame_present->handle_buttons(GFX_MONO_MENU_KEYCODE_DOWN);
-		else
+			update_info();
+		} else {
 			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN, !present_menu->visible);
+		}
 		break;
 	default:
 		break;
@@ -454,10 +456,12 @@ void handle_buttons_update()
 	case BUTTON_HOLD:
 	case BUTTON_CLICK:
 //		tc_button_pressed();
-		if (present_menu->is_active_frame)
+		if (present_menu->is_active_frame) {
 			frame_present->handle_buttons(GFX_MONO_MENU_KEYCODE_UP);
-		else
+			update_info();
+		} else {
 			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP, !present_menu->visible);
+		}
 		break;
 	default:
 		break;
