@@ -16,10 +16,6 @@
 #include "gfx_utils.h"
 #endif
 
-#ifndef GFX_KEYPAD_H_
-#include "key-handle.h"
-#endif
-
 #include "../work-queue/work.h"
 
 #include "../timer/timer.h"
@@ -27,6 +23,20 @@
 #include "../display/display_render.h"
 
 #define CONFIG_SECTION_ADDRESS 0xa000
+
+enum button_state {
+	BUTTON_NOT_PRESSED,
+	BUTTON_CLICK,
+	BUTTON_HOLD
+};
+
+enum key_state {
+	KEY_NONE = 0x00,
+	KEY_LEFT = 0x01,
+	KEY_RIGHT = 0x02,
+	KEY_SELECT = 0x04,
+	KEY_HOLD = 0x08
+};
 
 extern bool is_screen_saver_on;
 

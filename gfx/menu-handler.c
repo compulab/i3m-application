@@ -6,7 +6,7 @@
 
 struct gfx_mono_bitmap splash_bitmap;
 
-enum key_Select selected_Key;
+enum key_state selected_Key;
 enum button_state left_button, right_button, ok_button;
 bool left_pressed = false,
 		right_pressed = false,
