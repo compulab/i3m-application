@@ -307,18 +307,31 @@ void gfx_images_draw(struct gfx_image_node *curr_image_node)
 	}
 }
 
-void draw_graphic_signs(uint8_t index, uint8_t max_index)
+void clr_old_signs()
 {
 	gfx_mono_draw_filled_rect(left_sign_image.postion.x, left_sign_image.postion.y, left_sign_image.bitmap->width, left_sign_image.bitmap->height, GFX_PIXEL_CLR);
 	gfx_mono_draw_filled_rect(right_sign_image.postion.x, right_sign_image.postion.y, right_sign_image.bitmap->width, right_sign_image.bitmap->height, GFX_PIXEL_CLR);
-	if (index == 0) {
-		gfx_mono_put_bitmap(right_sign_image.bitmap, right_sign_image.postion.x, right_sign_image.postion.y);
-	} else if (index == max_index) {
-		gfx_mono_put_bitmap(left_sign_image.bitmap, left_sign_image.postion.x, left_sign_image.postion.y);
-	} else {
-		gfx_mono_put_bitmap(right_sign_image.bitmap, right_sign_image.postion.x, right_sign_image.postion.y);
-		gfx_mono_put_bitmap(left_sign_image.bitmap, left_sign_image.postion.x, left_sign_image.postion.y);
-	}
+}
+
+void draw_left_sign()
+{
+	gfx_mono_put_bitmap(left_sign_image.bitmap, left_sign_image.postion.x, left_sign_image.postion.y);
+}
+
+void draw_right_sign()
+{
+	gfx_mono_put_bitmap(right_sign_image.bitmap, right_sign_image.postion.x, right_sign_image.postion.y);
+}
+
+void draw_graphic_signs(uint8_t selection, uint8_t max_index)
+{
+	clr_old_signs();
+
+	if (selection != 0)
+		draw_left_sign();
+
+	if (selection != max_index)
+		draw_right_sign();
 }
 
 void insert_graphic_signs(struct gfx_frame *frame)
@@ -327,23 +340,23 @@ void insert_graphic_signs(struct gfx_frame *frame)
 		switch (frame->information_head->information.info_type) {
 		case SET_BRIGHTNESS:
 			draw_graphic_signs(get_brightness_level(), MAX_BRIGHTNESS_LEVEL);
-			return ;
+			break;
 		case SET_SCREEN_SAVER_ENABLE:
 			draw_graphic_signs(computer_data.details.screen_saver_visible, 1);
-			return ;
+			break;
 		case SET_SCREEN_SAVER_TIME:
 			if (computer_data.details.screen_saver_visible == 1)
 				draw_graphic_signs((computer_data.details.screen_saver_update_time / 2) - 1, 4);
-			return ;
+			break;
 		case SET_SCREEN_SAVER_TYPE:
 			if (computer_data.details.screen_saver_visible == 1)
 				draw_graphic_signs(computer_data.details.screen_saver_type, SCREEN_SAVER_TYPE_SIZE - 1);
-			return ;
+			break;
 		default:
+			draw_graphic_signs((present_menu->menu)->current_selection, (present_menu->menu)->num_elements - 2);
 			break;
 		}
 	}
-	draw_graphic_signs((present_menu->menu)->current_selection, (present_menu->menu)->num_elements - 2);
 }
 
 
