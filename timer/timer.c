@@ -190,9 +190,9 @@ void adc_set_timer()
 	set_tick_task_timer(UPDATE_ADC_SEC, ADC_TASK);
 }
 
-void adc_update_screen_timer()
+void update_screen_timer()
 {
-	set_tick_task_timer(UPDATE_SCREEN_TIME, UPDATE_SCREEN_TASK);
+	set_sec_task_timer(UPDATE_SCREEN_TIME, UPDATE_SCREEN_TASK);
 }
 
 void pending_req_set_timer()
@@ -221,6 +221,11 @@ static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS] = {
 				.work = &print_works_count_work,
 				.set_new_timer = print_works_count_timer,
 		},
+		{
+				.secs_left = -1,
+				.work = &update_screen_work,
+				.set_new_timer = update_screen_timer,
+		},
 };
 
 
@@ -244,12 +249,7 @@ static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = {
 				.work = &adc_work,
 				.set_new_timer = adc_set_timer,
 		},
-		{
-				.overlaps_count = -1,
-				.offset = 0,
-				.work = &update_screen_work,
-				.set_new_timer = adc_update_screen_timer,
-		},
+
 
 };
 

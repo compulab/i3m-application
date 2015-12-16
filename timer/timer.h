@@ -31,7 +31,7 @@
 #define SLEEP_TIME				500
 //#define MOVE_BUTTON_TIME		7
 #define UPDATE_ADC_SEC			1
-#define UPDATE_SCREEN_TIME		0.5
+#define UPDATE_SCREEN_TIME		2
 //#define MAX_CLICK_SEC		MOVE_BUTTON_TIME
 #define UPDATE_REQ_SEC			1
 #define UPDATE_SCREEN_SAVER_SEC	5
@@ -39,13 +39,12 @@
 #define UPDATE_AMBIENT_SEC		4
 
 
-#define NUMBER_OF_TICK_TASKS		4
+#define NUMBER_OF_TICK_TASKS		3
 
 enum TYPE_OF_TICK_TASK {
 	PENDING_REQ_TASK 	= 	0,
 	AMBIENT_TASK	  	=	1,
 	ADC_TASK		 	=	2,
-	UPDATE_SCREEN_TASK	= 	3,
 };
 
 struct scheduler_tick_task {
@@ -55,12 +54,14 @@ struct scheduler_tick_task {
 	void (* set_new_timer)(void);
 };
 
-#define NUMBER_OF_SEC_TASKS		3
+#define NUMBER_OF_SEC_TASKS		4
 
 enum TYPE_OF_SEC_TASK {
 	SCREEN_SAVER_TASK 		=	0,
 	TIME_TASK 				=	1,
 	PRINT_WORKS_COUNT_TASK	=	2,
+	UPDATE_SCREEN_TASK		= 	3,
+
 };
 
 struct scheduler_sec_task {
