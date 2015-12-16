@@ -786,46 +786,27 @@ bool is_hdd_temp_need_update(struct gfx_information *info, bool is_visible)
 	return need_update;
 }
 
+
+
 bool is_cpu_temp_need_update(struct gfx_information *info, bool is_visible)
 {
-	bool need_update = false;
 	if (is_visible) {
-		switch (info->info_data){
-		case 0:
-			need_update = computer_data.details.cpu0ts == 0;
-			break;
-		case 1:
-			need_update = computer_data.details.cpu1ts == 0;
-			break;
-		case 2:
-			need_update = computer_data.details.cpu2ts == 0;
-			break;
-		case 3:
-			need_update = computer_data.details.cpu3ts == 0;
-			break;
-		case 4:
-			need_update = computer_data.details.cpu4ts == 0;
-			break;
-		case 5:
-			need_update = computer_data.details.cpu5ts == 0;
-			break;
-		case 6:
-			need_update = computer_data.details.cpu6ts == 0;
-			break;
-		case 7:
-			need_update = computer_data.details.cpu7ts == 0;
-			break;
-		default:
-			need_update = false;
-			break;
-		}
+		if (!present_menu->visible)
+			return true;
+		else
+			return ((computer_data.packed.cputs & (0x01 << info->info_data)) == 0x00);
 	}
-	if (!need_update)
-		if ((computer_data.packed.cput_update & (1 << info->info_data))  != 0x00) {
-			computer_data.packed.cput_update = computer_data.packed.cput_update & ~(1 << info->info_data);
-			need_update = true;
-		}
-	return need_update;
+
+	uart_send_string("cputs update status reg: ");
+	uart_send_num(computer_data.packed.cput_update, 16);
+	uart_send_string(" ; layout cputs: ");
+	uart_send_num(layout.direct.i2c[CPUTS], 16);
+	uart_send_string("\n\r");
+	if ((computer_data.packed.cput_update & (1 << info->info_data))  != 0x00) {
+		computer_data.packed.cput_update = computer_data.packed.cput_update & ~(1 << info->info_data);
+		return true;
+	}
+	return false;
 }
 
 bool is_gpu_temp_need_update(struct gfx_information *info, bool is_visible)
@@ -968,6 +949,7 @@ bool is_frame_need_update(struct gfx_frame *frame)
 {
 	struct gfx_information_node *info_node= frame->information_head;
 	while (info_node != NULL) {
+		uart_send_string("check update info\n\r");
 		if (is_info_need_update(&info_node->information))
 			return true;
 		info_node = info_node->next;
@@ -978,11 +960,14 @@ bool is_frame_need_update(struct gfx_frame *frame)
 void update_info()
 {
 	bool need_to_update = false;
+	uart_send_string("update_info start\n\r");
 	if (!is_screen_saver_on) {
 		if (present_menu->visible) {
+			uart_send_string("check update menu\n\r");
 			if (is_menu_need_update(present_menu))
 				gfx_action_menu_init(present_menu, true);
 		} else {
+			uart_send_string("check update frame\n\r");
 			need_to_update = is_frame_need_update(frame_present);
 			if (need_to_update)
 				gfx_frame_draw(frame_present, true);

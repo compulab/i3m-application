@@ -23,6 +23,4 @@ void uart_send_string(char *text);
 
 void uart_send_num(uint32_t num, uint8_t radix);
 
-void uart_system_reset_msg();
-
 #endif /* UART_UART_H_ */

@@ -143,7 +143,7 @@ void write_cpu_status()
 {
 	layout.l.cputr = 0;
 	clear_req();
-	computer_data.packed.cput_update = 0x00;
+//	computer_data.packed.cput_update = 0x00;
 	if (layout.direct.i2c[CPUTS] == 0){
 		computer_data.packed.cputs = 0;
 	} else {
