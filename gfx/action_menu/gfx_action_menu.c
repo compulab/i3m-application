@@ -194,7 +194,16 @@ void set_dmi_mono_menu()
 	}
 }
 
-void set_dmi_position(struct gfx_item *pos)
+void set_dmi_name_position(struct gfx_item* pos)
+{
+	pos->x = 0;
+	pos->y = 12;
+	pos->height = 8;
+	pos->width = 0;
+	pos->visible = true;
+}
+
+void set_dmi_content_position(struct gfx_item* pos)
 {
 	pos->x = 0;
 	pos->y = 32;
@@ -205,18 +214,35 @@ void set_dmi_position(struct gfx_item *pos)
 
 struct direct_string_item * curr_item = 0;
 
-void set_dmi_label(struct gfx_label_node *label_node, uint8_t index)
+void set_dmi_name_label(struct gfx_label_node **label_node, struct direct_string_item * direct_item)
+{
+	set_dmi_name_position(&(*label_node)->label.postion);
+	(*label_node)->label.text.font = fonts[0];
+	(*label_node)->label.text.is_progmem = false;
+	(*label_node)->label.text.text = direct_item->content;
+}
+
+void set_dmi_content_label(struct gfx_label_node *label_node, struct direct_string_item * direct_item)
+{
+	set_dmi_content_position(&label_node->label.postion);
+	label_node->label.text.font = fonts[0];
+	label_node->label.text.is_progmem = false;
+	label_node->label.text.text = direct_item->type;
+}
+
+int set_dmi_label(struct gfx_label_node *label_node, uint8_t index)
 {
 	struct direct_string_item * direct_item = computer_data.details.direct_string;
 	while (direct_item != 0){
 		index++;
 		direct_item = direct_item->next;
 	}
-	set_dmi_position(&label_node->label.postion);
-	label_node->label.text.font = fonts[0];
-	label_node->label.text.is_progmem = false;
-	label_node->label.text.text = direct_item->type;
-	label_node->next = 0;
+	label_node->next = malloc_locked(sizeof(struct gfx_label_node));
+	if (label_node->next == NULL)
+		return -1;
+	set_dmi_content_label(label_node, direct_item);
+	set_dmi_name_label(&(label_node->next), direct_item);
+	return 0;
 }
 
 void set_dmi_frame(struct gfx_frame *frame, uint8_t index)
@@ -224,19 +250,25 @@ void set_dmi_frame(struct gfx_frame *frame, uint8_t index)
 	frame->information_head = 0;
 	frame->image_head = 0;
 	frame->label_head =  malloc_locked(sizeof(struct gfx_label_node));
-	if (frame->label_head == NULL) {
+	if (frame->label_head == NULL || set_dmi_label(frame->label_head, index) != 0) {
 		free_dmi_menu();
 		return ;
 	}
-	set_dmi_label(frame->label_head, index);
 }
 
 void set_dmi_label_text()
 {
 	struct direct_string_item *direct_item = computer_data.details.direct_string;
+	struct gfx_label_node *label;
 	for (int i = 0; i < dmi_menu.menu->num_elements -1; i++){
-		dmi_menu.actions[i].frame->label_head->label.text.text = direct_item->content;
-		dmi_menu.actions[i].frame->label_head->label.text.textP = NULL;
+		label = dmi_menu.actions[i].frame->label_head;
+		label->label.text.text = direct_item->content;
+		label->label.text.textP = NULL;
+		label = label->next;
+		if (label != NULL) {
+			label->label.text.text = direct_item->type;
+			label->label.text.textP = NULL;
+		}
 		direct_item = direct_item->next;
 	}
 }

@@ -869,7 +869,7 @@ bool is_status_in_menu_changed(struct gfx_action_menu *menu, enum information_ty
 	bool need_to_update = false;
 	struct gfx_information_node *info_node;
 	for (uint8_t i = 0; i < menu->menu->num_elements; i++){
-		if (menu->actions[i].type == ACTION_TYPE_SHOW_FRAME){
+		if (menu->actions[i].type == ACTION_TYPE_SHOW_FRAME) {
 			info_node = menu->actions[i].frame->information_head;
 			while (info_node != 0){
 				if (info_node->information.info_type == type) {
@@ -879,6 +879,9 @@ bool is_status_in_menu_changed(struct gfx_action_menu *menu, enum information_ty
 					return true;
 				info_node = info_node->next;
 			}
+		} else if (menu->actions[i].type == ACTION_TYPE_SHOW_DMI_MENU) {
+			if (!menu->actions[i].visible && computer_data.details.direct_string != NULL)
+				return true;
 		}
 	}
 	return false;
