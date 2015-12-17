@@ -858,7 +858,7 @@ bool is_information_need_to_change(struct gfx_information *info, bool is_visible
 	case SET_SCREEN_SAVER_TYPE:
 	case SET_SCREEN_SAVER_TIME:
 	case SET_BRIGHTNESS:
-		return true;
+		return !present_menu->visible;
 	default:
 		return false;
 	}
