@@ -792,7 +792,7 @@ bool is_cpu_temp_need_update(struct gfx_information *info, bool is_visible)
 {
 	if (is_visible) {
 		if (!present_menu->visible)
-			return true;
+			return computer_data.details.cpu0ts == 1;
 		else
 			return ((computer_data.packed.cputs & (0x01 << info->info_data)) == 0x00);
 	}
