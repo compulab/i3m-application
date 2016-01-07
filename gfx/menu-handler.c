@@ -311,7 +311,7 @@ int load_config_block()
 	struct cnf_blk config_block;
 	struct cnf_menu config_menu;
 	struct cnf_menu_node cnf_menu;
-	memcpy_P(&config_block,(void *) CONFIG_SECTION_ADDRESS, sizeof(struct cnf_blk));
+	memcpy_PF(&config_block, CONFIG_SECTION_ADDRESS, sizeof(struct cnf_blk));
 	size_of_menus = config_block.size;
 	fonts_size = config_block.font_size;
 	if (config_block.fonts_head != 0)
