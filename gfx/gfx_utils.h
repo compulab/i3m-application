@@ -20,6 +20,8 @@
 #include "gfx_components.h"
 #endif
 
+#define MAX_TEMPERATURE_LENGTH 10
+
 struct gfx_frame *frame_present;
 
 struct gfx_information *information_present;

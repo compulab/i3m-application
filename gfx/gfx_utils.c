@@ -146,7 +146,7 @@ void print_info(struct gfx_information *info)
 
 void gfx_information_draw(struct gfx_information *info)
 {
-	char *text_to_draw = malloc_locked(info->text.max_text_size);
+	char *text_to_draw = malloc_locked(MAX_TEMPERATURE_LENGTH);
 	if (text_to_draw == NULL)
 		return ;
 	update_information_present(info);
