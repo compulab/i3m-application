@@ -41,7 +41,7 @@ void draw_char(char ch, uint8_t x, uint8_t y, struct gfx_font *font)
 
 void clear_string_background(uint8_t length, uint8_t x, uint8_t y, struct gfx_font *font)
 {
-	gfx_mono_draw_filled_rect(x, y, length, font->height, GFX_PIXEL_CLR);
+	gfx_mono_draw_filled_rect(x, y, length, font->height + 3, GFX_PIXEL_CLR);
 }
 
 uint8_t length_P(char *str)
