@@ -22,7 +22,7 @@
 
 #include "../display/display_render.h"
 
-#define CONFIG_SECTION_ADDRESS 0x00019000
+#define CONFIG_SECTION_ADDRESS 0x9000
 
 enum button_state {
 	BUTTON_NOT_PRESSED,

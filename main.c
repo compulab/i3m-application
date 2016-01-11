@@ -97,6 +97,7 @@ void init()
 	wdt_enable();
 	sysclk_init();
 	board_init();
+	uart_init();
 	load_config_block();
 	cli();
 	gfx_mono_init();
@@ -108,7 +109,6 @@ void init()
 	power_state_init();
 	twi_slave_init();
 	TWI_init();
-	uart_init();
 	init_menu();
 	sei();
 	tc_init();

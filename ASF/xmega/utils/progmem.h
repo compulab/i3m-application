@@ -72,6 +72,7 @@
 # define PROGMEM_PTR_T const *
 # define PROGMEM_BYTE_ARRAY_T uint8_t*
 # define PROGMEM_WORD_ARRAY_T uint16_t*
+# define PROGMEM_READ_FAR_BYTE(x) pgm_read_byte_far(0x0010000 + x)
 # define PROGMEM_READ_BYTE(x) pgm_read_byte(x)
 # define PROGMEM_READ_WORD(x) pgm_read_word(x)
 

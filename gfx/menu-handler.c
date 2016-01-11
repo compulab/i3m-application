@@ -41,6 +41,12 @@ void free_images(struct gfx_image_node *images_head)
 	}
 }
 
+
+void memcpy_config(void *dst, void *src_addr, size_t size)
+{
+	memcpy_PF(dst, (uint_farptr_t) (0x00010000 + (uint16_t)src_addr), size);
+}
+
 void free_infos(struct gfx_information_node *infos_head)
 {
 	struct gfx_information_node *curr_info = infos_head;
@@ -212,6 +218,7 @@ int load_fonts(struct cnf_font_node *cnf_font_node)
 		return -1;
 	}
 	while (cnf_font_node != 0) {
+//		memcpy_config(&font_node, cnf_font_node, sizeof(struct cnf_font_node));
 		memcpy_P(&font_node, cnf_font_node, sizeof(struct cnf_font_node));
 		font = malloc_locked(sizeof(struct gfx_font));
 		if (font == NULL) {
@@ -311,7 +318,10 @@ int load_config_block()
 	struct cnf_blk config_block;
 	struct cnf_menu config_menu;
 	struct cnf_menu_node cnf_menu;
-	memcpy_PF(&config_block, CONFIG_SECTION_ADDRESS, sizeof(struct cnf_blk));
+	uart_send_string("start load config\n\r");
+	memcpy_config(&config_block, (void *)CONFIG_SECTION_ADDRESS, sizeof(struct cnf_blk));
+//	memcpy_PF(&config_block, CONFIG_SECTION_ADDRESS, sizeof(struct cnf_blk));
+	uart_send_string("start load config2\n\r");
 	size_of_menus = config_block.size;
 	fonts_size = config_block.font_size;
 	if (config_block.fonts_head != 0)
@@ -340,6 +350,7 @@ int load_config_block()
 		if (cnf_menu_node != 0){
 			memcpy_P(&cnf_menu, cnf_menu_node, sizeof(struct cnf_menu_node));
 			memcpy_P(&config_menu, cnf_menu.menu, sizeof(struct cnf_menu));
+			uart_send_num(config_menu.id, 16);
 			action_menus[config_menu.id]->id = config_menu.id;
 			if ((set_mono_menu(action_menus[config_menu.id], config_menu.menu) != 0) |
 					(set_graphic_view(action_menus[config_menu.id], config_menu.images_items_head) != 0) |

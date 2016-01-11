@@ -23,7 +23,7 @@ void draw_char(char ch, uint8_t x, uint8_t y, struct gfx_font *font)
 			for (uint8_t i = 0; i < font->width; i++)
 			{
 				inc_y = y + 8 + l;
-				glyph_byte = PROGMEM_READ_BYTE(font->source + (c * font->height + i + l));
+				glyph_byte = PROGMEM_READ_FAR_BYTE((uint16_t)font->source + (c * font->height + i + l));
 
 				for (uint8_t z = 0; z < 8 ; z++){
 					if ((glyph_byte & 0x80)) {
