@@ -24,7 +24,7 @@ void uart_init(void)
 	UART_BASE.CTRLB = USART_TXEN_bm | USART_RXEN_bm ;
 }
 
-char num_str[5];
+char num_str[10];
 
 void uart_send_char(char c)
 {
@@ -46,7 +46,7 @@ void uart_send_string(char *text)
 
 void uart_send_num(uint32_t num, uint8_t radix)
 {
-	itoa(num, num_str, radix);
+	ltoa(num, num_str, radix);
 	uart_send_string(num_str);
 }
 //
