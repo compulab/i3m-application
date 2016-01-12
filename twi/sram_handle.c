@@ -745,16 +745,15 @@ struct work update_data_work = {
 int handle_sram_write_request(uint8_t write_address, uint8_t data)
 {
 	write_data(write_address, data);
-	uint16_t work_data;
 	switch(write_address) {
 	case DMIV:
 	case DMIN:
 		write_direct(write_address);
 		return 0;
 	default:
-		work_data = 0x00FF & (uint16_t)write_address;
-		update_data_work.data = (void *)work_data;
-		return insert_work(&update_data_work);
+		break;
 	}
-
+	uint16_t work_data = 0x00FF & write_address;
+	update_data_work.data = (void *) work_data;
+	return insert_work(&update_data_work);
 }
