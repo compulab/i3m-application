@@ -483,7 +483,7 @@ void gfx_mono_generic_put_bitmap(struct gfx_mono_bitmap *bitmap, gfx_coord_t x,
 	case GFX_MONO_BITMAP_SECTION:
 	for (i = 0; i < num_pages; i++) {
 		for (column = 0; column < bitmap->width; column++) {
-			temp = pgm_read_byte(bitmap->data.progmem
+			temp = PROGMEM_READ_FAR_BYTE(bitmap->data.progmem
 					+ (i * bitmap->width)
 					+ column);
 			gfx_mono_put_byte(i + page, column + x, temp);
