@@ -116,11 +116,6 @@ void write_hd_sz_msb(uint8_t hdd_addr)
 	}
 }
 
-void reset_to_usb()
-{
-//TODO
-}
-
 void software_reset()
 {
   uint8_t oldInterruptState = SREG;  // no real need to store the interrupt context as the reset will pre-empt its restoration
@@ -132,6 +127,11 @@ void software_reset()
   SREG=oldInterruptState;            // Restore interrupts enabled/disabled state (out of common decency - this line will never be reached because the reset will pre-empt it)
 }
 
+void reset_to_bootloader()
+{
+  nvm_eeprom_write_byte(BOOTLOADER_MAGIC_EEPROM_ADDRESS, ENTER_TO_BOOTLOADER);
+  software_reset();
+}
 
 void validate_temperate(bool *valid_bit, uint8_t *dest, uint8_t src)
 {
@@ -182,7 +182,7 @@ void write_hdd_status()
 void write_reset()
 {
 	if (layout.l.rstusb)
-		reset_to_usb();
+		reset_to_bootloader();
 	else if (layout.l.rst)
 		software_reset();
 }
