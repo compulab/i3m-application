@@ -32,11 +32,14 @@
 #define MAC_ADDRESS 						0x02
 #define REVISION_ADDRESS 					0x00
 
-#define BRIGHTNESS_EEPROM_ADDRESS 			0x0100
-#define SCREEN_SAVER_EEPROM_ADDRESS			0x0101
-#define SCREEN_SAVER_CONFIG_ADDRESS 		0x0102
 
-#define BOOTLOADER_MAGIC_EEPROM_ADDRESS 	0x0300
+#define APPLICATION_VER_MSB_EEPROM_ADDRESS	0x0103
+#define APPLICATION_VER_LSB_EEPROM_ADDRESS	0x0104
+#define SCREEN_SAVER_TIME_EEPROM_ADDRESS	0x0107
+#define SCREEN_SAVER_CONFIG_EEPROM_ADDRESS	0x0108
+#define BRIGHTNESS_EEPROM_ADDRESS 			0x0109
+
+#define BOOTLOADER_MAGIC_EEPROM_ADDRESS 	0x0100
 #define ENTER_TO_BOOTLOADER				 	0x03
 
 
@@ -589,7 +592,7 @@ union updatable_info {
 		struct direct_string_item *direct_string;
 		uint8_t screen_saver_update_time;
 		uint8_t screen_saver_visible:1;
-		uint8_t screen_saver_type:2;
+		uint8_t screen_saver_type:3;
 		uint8_t screen_saver_reserved:5;
 		uint32_t error_count;
 	} details;

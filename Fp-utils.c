@@ -434,7 +434,7 @@ void handle_screen_saver_type_buttons(uint8_t key)
 			computer_data.details.screen_saver_type++;
 			break;
 		}
-		eeprom_write_byte(SCREEN_SAVER_CONFIG_ADDRESS, computer_data.packed.screen_saver_config);
+		eeprom_write_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS, computer_data.packed.screen_saver_config);
 	}
 }
 
@@ -453,7 +453,7 @@ void handle_screen_saver_time_buttons(uint8_t key)
 			computer_data.details.screen_saver_update_time += 2;
 			break;
 		}
-		eeprom_write_byte(SCREEN_SAVER_EEPROM_ADDRESS, computer_data.packed.screen_saver_update_time);
+		eeprom_write_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS, computer_data.packed.screen_saver_update_time);
 	}
 }
 
@@ -471,7 +471,7 @@ void handle_screen_saver_enable_buttons(uint8_t key)
 		computer_data.details.screen_saver_visible = 1;
 		break;
 	}
-	eeprom_write_byte(SCREEN_SAVER_CONFIG_ADDRESS, computer_data.packed.screen_saver_config);
+	eeprom_write_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS, computer_data.packed.screen_saver_config);
 }
 
 void handle_brightness_buttons(uint8_t key)
