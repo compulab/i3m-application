@@ -46,6 +46,14 @@
 #define CPUTR_BIT					2
 #define GPUTR_BIT					3
 
+#ifndef APPLICATION_VER_MSB
+#define APPLICATION_VER_MSB 0
+#endif
+
+#ifndef APPLICATION_VER_LSB
+#define APPLICATION_VER_LSB 1
+#endif
+
 extern enum information_type update_information_type;
 
 extern struct calendar_date computer_date_time;
