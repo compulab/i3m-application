@@ -350,9 +350,22 @@ int set_direct_string()
 void add_direct_string()
 {
 	uart_send_string("direct string added");
-	direct_string_to_add->next = computer_data.details.direct_string;
-	computer_data.details.direct_string = direct_string_to_add;
-	direct_string_to_add = 0;
+	struct direct_string_item *curr = computer_data.details.direct_string;
+	while (curr != NULL) {
+		if (strcmp(direct_string_to_add->type, curr->type))
+			break;
+		else
+			curr = curr->next;
+	}
+
+	if (curr != NULL) { /* change existing DMI string */
+		strdup(direct_string_to_add->content);
+	} else {
+		direct_string_to_add->next = computer_data.details.direct_string;
+		computer_data.details.direct_string = direct_string_to_add;
+		direct_string_to_add = 0;
+	}
+
 	free_direct_string();
 }
 
