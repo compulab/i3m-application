@@ -25,14 +25,6 @@ struct calendar_date computer_date_time = {
     .year = 2015
 };
 
-void *malloc_locked(size_t size)
-{
-	cli();
-	void *ret = malloc(size);
-	sei();
-	return ret;
-}
-
 void enable_screen_saver_mode()
 {
 	sleep_mode_enabled = true;

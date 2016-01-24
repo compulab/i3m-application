@@ -15,6 +15,14 @@ static struct work_queue work_to_do = {
 		.last =  NULL,
 };
 
+void *malloc_locked(size_t size)
+{
+	cli();
+	void *ret = malloc(size);
+	sei();
+	return ret;
+}
+
 
 int insert_work(struct work *work)
 {
