@@ -130,6 +130,8 @@ void software_reset()
 void reset_to_bootloader()
 {
   nvm_eeprom_write_byte(BOOTLOADER_MAGIC_EEPROM_ADDRESS, ENTER_TO_BOOTLOADER);
+  uart_send_string("reset to bootloader\n\r");
+  uart_send_num(nvm_eeprom_read_byte(BOOTLOADER_MAGIC_EEPROM_ADDRESS), 16);
   software_reset();
 }
 
@@ -203,46 +205,46 @@ void write_memory(uint8_t mem_addr) //Todo: change memory status set
 	if (data & MEM_SZ_STATUS_MSB_MSK)
 		computer_data.packed.mems |= 0x01 << (index + 1);
 }
-
-void read_sig(enum i2c_addr_space sig_address, uint8_t *data)
-{
-	switch(sig_address){
-	case SIG0:
-		*data = eeprom_read_byte(SIG_FIRST_BYTE_EEPROM_ADDRESS);
-		break;
-	case SIG1:
-		*data = eeprom_read_byte(SIG_SECOND_BYTE_EEPROM_ADDRESS);
-		break;
-	case SIG2:
-		*data = eeprom_read_byte(SIG_THIRD_BYTE_EEPROM_ADDRESS);
-		break;
-	case SIG3:
-		*data = eeprom_read_byte(SIG_FOURTH_BYTE_EEPROM_ADDRESS);
-		break;
-	default:
-		break;
-	}
-}
-
-void read_revision(enum i2c_addr_space rev_address, uint8_t *data)
-{
-	switch (rev_address){
-	case MAJOR_LSB:
-		*data = eeprom_read_byte(MAJOR_REVISION_LSB_EEPROM_ADDRESS);
-		break;
-	case MAJOR_MSB:
-		*data = eeprom_read_byte(MAJOR_REVISION_MSB_EEPROM_ADDRESS);
-		break;
-	case MINOR_LSB:
-		*data = eeprom_read_byte(MINOR_REVISION_LSB_EEPROM_ADDRESS);
-		break;
-	case MINOR_MSB:
-		*data = eeprom_read_byte(MINOR_REVISION_MSB_EEPROM_ADDRESS);
-		break;
-	default:
-		break;
-	}
-}
+//
+//void read_sig(enum i2c_addr_space sig_address, uint8_t *data)
+//{
+//	switch(sig_address){
+//	case SIG0:
+//		*data = eeprom_read_byte(SIG_FIRST_BYTE_EEPROM_ADDRESS);
+//		break;
+//	case SIG1:
+//		*data = eeprom_read_byte(SIG_SECOND_BYTE_EEPROM_ADDRESS);
+//		break;
+//	case SIG2:
+//		*data = eeprom_read_byte(SIG_THIRD_BYTE_EEPROM_ADDRESS);
+//		break;
+//	case SIG3:
+//		*data = eeprom_read_byte(SIG_FOURTH_BYTE_EEPROM_ADDRESS);
+//		break;
+//	default:
+//		break;
+//	}
+//}
+//
+//void read_revision(enum i2c_addr_space rev_address, uint8_t *data)
+//{
+//	switch (rev_address){
+//	case MAJOR_LSB:
+//		*data = eeprom_read_byte(MAJOR_REVISION_LSB_EEPROM_ADDRESS);
+//		break;
+//	case MAJOR_MSB:
+//		*data = eeprom_read_byte(MAJOR_REVISION_MSB_EEPROM_ADDRESS);
+//		break;
+//	case MINOR_LSB:
+//		*data = eeprom_read_byte(MINOR_REVISION_LSB_EEPROM_ADDRESS);
+//		break;
+//	case MINOR_MSB:
+//		*data = eeprom_read_byte(MINOR_REVISION_MSB_EEPROM_ADDRESS);
+//		break;
+//	default:
+//		break;
+//	}
+//}
 
 void read_bios_post_code(enum i2c_addr_space post_code_address, uint8_t *data)
 {
