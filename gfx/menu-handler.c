@@ -298,10 +298,9 @@ int set_mono_menu(struct gfx_action_menu *action_menu, struct gfx_mono_menu *men
 int set_actions(struct gfx_action_menu * menu, struct cnf_action_node *cnf_action_node)
 {
 	struct cnf_action_node action_node;
-	memcpy_P(&action_node, cnf_action_node, sizeof(struct cnf_action_node));
 	uint8_t action_index = 0;
 	while (cnf_action_node != 0){
-		memcpy_P(&action_node, cnf_action_node, sizeof(struct cnf_action_node));
+		memcpy_config(&action_node, cnf_action_node, sizeof(struct cnf_action_node));
 		if (load_action(&(menu->actions[action_index]), action_node.action) != 0) {
 			uart_send_string("load action fail\n\r");
 			return -1;

@@ -233,7 +233,7 @@ int set_labels(struct gfx_frame *frame, struct cnf_label_node *cnf_label_pgmem)
 			uart_send_string("label node fail \n\r");
 			return -1;
 		}
-		memcpy_P(&cnf_label_node, cnf_label_pgmem, sizeof(struct cnf_label_node));
+		memcpy_config(&cnf_label_node, cnf_label_pgmem, sizeof(struct cnf_label_node));
 		gfx_label_init(&gfx_label_node->label, cnf_label_node.label.text, cnf_label_node.label.x, cnf_label_node.label.y, cnf_label_node.font_id);
 		gfx_label_node->next = 0;
 		if (frame->label_head == 0)
@@ -257,7 +257,7 @@ int set_infos(struct gfx_frame *frame,	struct cnf_info_node *cnf_info_pgmem)
 			return -1;
 		}
 
-		memcpy_P(&cnf_info_node, cnf_info_pgmem, sizeof(struct cnf_info_node));
+		memcpy_config(&cnf_info_node, (void *)cnf_info_pgmem, sizeof(struct cnf_info_node));
 		if (gfx_information_init(&gfx_information_node->information, cnf_info_node.info.info_type, cnf_info_node.info.information,
 						cnf_info_node.info.max_length, cnf_info_node.info.x, cnf_info_node.info.y, cnf_info_node.font_id) != 0) {
 			uart_send_string("information init fail\n\r");
@@ -278,14 +278,14 @@ int set_infos(struct gfx_frame *frame,	struct cnf_info_node *cnf_info_pgmem)
 int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
 {
 	struct cnf_frame cnf_frame;
-	memcpy_P(&cnf_frame, cnf_frame_pgmem, sizeof(cnf_frame));
+	memcpy_config(&cnf_frame, cnf_frame_pgmem, sizeof(cnf_frame));
 	init_frame(frame);
 	return ((set_images(frame, cnf_frame.images_head) != 0) | (set_labels(frame, cnf_frame.labels_head) != 0) | (set_infos(frame, cnf_frame.infos_head) != 0));
 }
 
 void gfx_labels_draw(struct gfx_label_node *curr_label_node)
 {
-	while (curr_label_node != 0){
+	while (curr_label_node != 0) {
 		gfx_label_draw(&curr_label_node->label);
 		curr_label_node = curr_label_node->next;
 	}
