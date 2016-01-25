@@ -309,7 +309,7 @@ void gfx_mono_draw_progmem_string(char PROGMEM_PTR_T str, gfx_coord_t x,
 	const gfx_coord_t start_of_string_position_x = x;
 
 	/* Draw characters until trailing null byte */
-	temp_char = PROGMEM_READ_BYTE((uint8_t PROGMEM_PTR_T)str);
+	temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)str);
 
 	while (temp_char) {
 		/* Handle '\n' as newline, draw normal characters. */
@@ -323,7 +323,7 @@ void gfx_mono_draw_progmem_string(char PROGMEM_PTR_T str, gfx_coord_t x,
 			x += font->width;
 		}
 
-		temp_char = PROGMEM_READ_BYTE((uint8_t PROGMEM_PTR_T)(++str));
+		temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)(++str));
 	}
 }
 

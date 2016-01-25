@@ -47,10 +47,10 @@ void clear_string_background(uint8_t length, uint8_t x, uint8_t y, struct gfx_fo
 uint8_t length_P(char *str)
 {
 	uint8_t count = 0;
-	uint8_t temp_char = PROGMEM_READ_BYTE((uint8_t PROGMEM_PTR_T)(str++));
+	uint8_t temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)(str++));
 	while (is_valid_char(temp_char)) {
 		count++;
-		temp_char = PROGMEM_READ_BYTE((uint8_t PROGMEM_PTR_T)(str++));
+		temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)(str++));
 	}
 	return count;
 }
@@ -65,7 +65,7 @@ void draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct gfx_font *f
 			x = (GFX_MONO_LCD_WIDTH - length - 10) / 4;
 
 		clear_string_background(GFX_MONO_LCD_WIDTH - 6, 6, y, font);
-		uint8_t temp_char = PROGMEM_READ_BYTE((uint8_t PROGMEM_PTR_T)(str++));
+		uint8_t temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)(str++));
 
 		while (temp_char){
 			if (temp_char == '\n'){
@@ -78,7 +78,7 @@ void draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct gfx_font *f
 			}
 			draw_char(temp_char, x, y, font);
 			x += 8;
-			temp_char = PROGMEM_READ_BYTE((uint8_t PROGMEM_PTR_T)(str++));
+			temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)(str++));
 		}
 	}
 }

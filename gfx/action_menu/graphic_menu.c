@@ -45,7 +45,7 @@ void invert_item(uint8_t index, bool is_back_item)
 
 void draw_selected_item(char *title)
 {
-	uint8_t start_title = (GFX_MONO_LCD_WIDTH - strlen_P(title)) / 4;
+	uint8_t start_title = (GFX_MONO_LCD_WIDTH - strlen_PF((uint16_t)title + 0x10000)) / 4;
 	gfx_mono_draw_progmem_string(title, start_title, 54, &sysfont);
 }
 
