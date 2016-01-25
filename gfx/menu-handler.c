@@ -283,7 +283,7 @@ int set_mono_menu(struct gfx_action_menu *action_menu, struct gfx_mono_menu *men
 		return -1;
 	}
 
-	memcpy_P(mono_menu, menu, sizeof(struct gfx_mono_menu));
+	memcpy_config(mono_menu, menu, sizeof(struct gfx_mono_menu));
 	action_menu->is_progmem = true;
 	action_menu->menu= mono_menu;
 	action_menu->actions = malloc_locked(sizeof(struct gfx_item_action) * mono_menu->num_elements);
