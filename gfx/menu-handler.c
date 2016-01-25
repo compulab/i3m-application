@@ -218,8 +218,8 @@ int load_fonts(struct cnf_font_node *cnf_font_node)
 		return -1;
 	}
 	while (cnf_font_node != 0) {
-//		memcpy_config(&font_node, cnf_font_node, sizeof(struct cnf_font_node));
-		memcpy_P(&font_node, cnf_font_node, sizeof(struct cnf_font_node));
+		memcpy_config(&font_node, cnf_font_node, sizeof(struct cnf_font_node));
+//		memcpy_P(&font_node, cnf_font_node, sizeof(struct cnf_font_node));
 		font = malloc_locked(sizeof(struct gfx_font));
 		if (font == NULL) {
 			uart_send_string("font failed\n\r");
@@ -347,8 +347,8 @@ int load_config_block()
 
 	for (int i=0; i < size_of_menus; i++){
 		if (cnf_menu_node != 0){
-			memcpy_P(&cnf_menu, cnf_menu_node, sizeof(struct cnf_menu_node));
-			memcpy_P(&config_menu, cnf_menu.menu, sizeof(struct cnf_menu));
+			memcpy_config(&cnf_menu, cnf_menu_node, sizeof(struct cnf_menu_node));
+			memcpy_config(&config_menu, cnf_menu.menu, sizeof(struct cnf_menu));
 			uart_send_num(config_menu.id, 16);
 			action_menus[config_menu.id]->id = config_menu.id;
 			if ((set_mono_menu(action_menus[config_menu.id], config_menu.menu) != 0) |
