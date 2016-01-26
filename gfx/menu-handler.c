@@ -6,8 +6,10 @@
 
 struct gfx_mono_bitmap splash_bitmap;
 
+struct gfx_frame *dashboard;
+
 enum key_state selected_Key;
-enum button_state left_button, right_button, ok_button;
+
 bool left_pressed = false,
 		right_pressed = false,
 		ok_pressed = false;
@@ -18,6 +20,10 @@ uint8_t size_of_menus;
 bool is_screen_saver_on;
 
 uint8_t fonts_size;
+
+enum button_state ok_button = BUTTON_NOT_PRESSED,
+		left_button = BUTTON_NOT_PRESSED,
+		right_button = BUTTON_NOT_PRESSED;
 
 //TODO: enter bootloader through SW
 void enter_to_bootloader(){
@@ -151,7 +157,7 @@ int load_action(struct gfx_item_action *action, struct cnf_action config_action)
 			uart_send_string("action frame failed\n\r");
 			return -1;
 		}
-		if (gfx_frame_init(action->frame, config_action.frame) != 0) {
+		if (gfx_frame_init(action->frame, config_action.frame, false) != 0) {
 			uart_send_string("frame init fail\n\r");
 			return -1;
 		}
@@ -170,6 +176,7 @@ int load_action(struct gfx_item_action *action, struct cnf_action config_action)
 
 void show_splash()
 {
+	uart_send_string("show_splash\n\r");
 	if (reset_screen_saver_req){
 		reset_screen_saver();
 		reset_screen_saver_req = false;
@@ -251,7 +258,7 @@ int set_graphic_view(struct gfx_action_menu *action_menu, struct cnf_image_node 
 		for (uint8_t i = 0; i < mono_menu->num_elements; i++){
 			if (cnf_graphic_item_node == 0)
 				break;
-			memcpy_P(&cnf_image, cnf_graphic_item_node, sizeof(struct cnf_image_node));
+			memcpy_config(&cnf_image, cnf_graphic_item_node, sizeof(struct cnf_image_node));
 			if (graphic_item_init(&image_node->image, &cnf_image.image) != 0) {
 				uart_send_string("grpahic error\n\r");
 				return config_block_error();
@@ -319,8 +326,6 @@ int load_config_block()
 	struct cnf_menu_node cnf_menu;
 	uart_send_string("start load config\n\r");
 	memcpy_config(&config_block, (void *)CONFIG_SECTION_ADDRESS, sizeof(struct cnf_blk));
-//	memcpy_PF(&config_block, CONFIG_SECTION_ADDRESS, sizeof(struct cnf_blk));
-	uart_send_string("start load config2\n\r");
 	size_of_menus = config_block.size;
 	fonts_size = config_block.font_size;
 	if (config_block.fonts_head != 0)
@@ -328,6 +333,14 @@ int load_config_block()
 			uart_send_string("load fonts error \n\r");
 			return config_block_error();
 		}
+	if (config_block.dashboard != NULL) {
+		dashboard = malloc_locked(sizeof(struct gfx_frame));
+		if (dashboard == NULL)
+			return config_block_error();
+		gfx_frame_init(dashboard, config_block.dashboard, true);
+	} else {
+		dashboard = NULL;
+	}
 
 	splash_init(config_block);
 	action_menus = malloc_locked(sizeof(struct gfx_action_menu *) * size_of_menus);
@@ -437,12 +450,10 @@ void handle_buttons_update()
 	case BUTTON_HOLD:
 	case BUTTON_CLICK:
 //		tc_button_pressed();
-		uart_send_string("\tok pressed\n\r");
 		if (present_menu->visible)
 			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_ENTER, !present_menu->visible);
 		else
 			hadle_back_to_menu();
-		uart_send_string("showing...\n\r");
 		return ;
 		break;
 	default:
@@ -484,7 +495,6 @@ struct work button_work = { .do_work = handle_buttons_update, .data = NULL, .nex
 void handle_button_pressed()
 {
 	update_buttons_states();
-	uart_send_string("\tbutton pressed\n\r");
 	if (!insert_work(&button_work))
 		insert_to_log('B');
 }

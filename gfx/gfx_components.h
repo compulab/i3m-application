@@ -97,6 +97,7 @@ struct gfx_frame {
 	struct gfx_image_node *image_head;
 	struct gfx_label_node *label_head;
 	struct gfx_information_node *information_head;
+	enum frame_type type;
 };
 
 #endif /* GFX_GFX_COMPONENTS_H_ */

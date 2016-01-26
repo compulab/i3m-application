@@ -40,6 +40,7 @@ enum information_type update_information_type;
 
 void update_ambient_temp()
 {
+	uart_send_string("update_ambient_temp\n\r");
 	if (current_power_state == POWER_ON) {
 		bool valid_update;
 //		uint8_t last_temp = layout.l.ambt;
@@ -65,18 +66,19 @@ void update_ambient_temp()
 
 void time_task()
 {
+	uart_send_string("time_task\n\r");
 	calendar_add_second_to_date(&computer_date_time);
-	uart_send_string("||||Time update: ");
-	uart_send_num(computer_date_time.hour, 10);
-	uart_send_char(':');
-	uart_send_num(computer_date_time.minute, 10);
-	uart_send_char(':');
-	uart_send_num(computer_date_time.second, 10);
-	uart_send_char(' ');
-	uart_send_num(computer_date_time.date, 10);
-	uart_send_string("\\");
-	uart_send_num(computer_date_time.month, 10);
-	uart_send_string("\n\n\r");
+//	uart_send_string("||||Time update: ");
+//	uart_send_num(computer_date_time.hour, 10);
+//	uart_send_char(':');
+//	uart_send_num(computer_date_time.minute, 10);
+//	uart_send_char(':');
+//	uart_send_num(computer_date_time.second, 10);
+//	uart_send_char(' ');
+//	uart_send_num(computer_date_time.date, 10);
+//	uart_send_string("\\");
+//	uart_send_num(computer_date_time.month, 10);
+//	uart_send_string("\n\n\r");
 }
 
 void tc_handle_init()
@@ -85,6 +87,18 @@ void tc_handle_init()
 	ambient_update_fail_count = 0;
 }
 
+void update_screen_saver()
+{
+	switch(computer_data.details.screen_saver_type) {
+	case SCREEN_SAVER_SPLASH:
+		show_splash();
+		break;
+	case SCREEN_SAVER_DASHBOARD:
+		if (dashboard != NULL)
+			show_frame(dashboard);
+		break;
+	}
+}
 
 static struct work requests_work = { .do_work = update_requests, .data = NULL, .next = NULL, };
 static struct work ambient_work = { .do_work = update_ambient_temp, .data = NULL, .next = NULL, };
@@ -92,8 +106,9 @@ static struct work adc_work = { .do_work = update_adc, .data = NULL, .next = NUL
 static struct work update_screen_work = { .do_work = update_info, .data = NULL, .next = NULL, };
 static struct work print_works_count_work = { .do_work = print_work_count, .data = NULL, .next = NULL, };
 //static struct work buttons_clear_work = { .do_work = handle_button_pressed, .data = NULL, .next = NULL, };
-static struct work screen_saver_work = { .do_work = show_splash, .data = NULL, .next = NULL, };
+static struct work screen_saver_work = { .do_work = update_screen_saver, .data = NULL, .next = NULL, };
 static struct work time_work = { .do_work = time_task , .data = NULL, .next = NULL, };
+
 
 
 uint32_t get_ticks_in_sec()

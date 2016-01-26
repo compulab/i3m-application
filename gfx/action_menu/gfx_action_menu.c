@@ -23,8 +23,8 @@ void update_action_visibility(struct gfx_item_action *action)
 	}
 	bool visible = true;
 	struct gfx_information_node * info_node = action->frame->information_head;
-	while (info_node != 0){
-		switch(info_node->information.info_type){
+	while (info_node != 0) {
+		switch(info_node->information.info_type) {
 		case SHOW_CPU_TEMPERTURE:
 			if (!is_valid_cpu_temp(info_node->information.info_data))
 				visible = false;
@@ -302,6 +302,14 @@ void set_dmi_menu()
 	set_dmi_actions();
 }
 
+void show_frame(struct gfx_frame *frame)
+{
+	present_menu->visible = false;
+	clear_screen();
+	disable_screen_saver_mode();
+	gfx_frame_draw(frame, false);
+}
+
 void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
 {
 	reset_screen_saver();
@@ -319,8 +327,7 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 			switch (type){
 			case ACTION_TYPE_SHOW_FRAME:
 	//			tc_no_button_pressed();
-				disable_screen_saver_mode();
-				gfx_frame_draw(selected_action->frame, false);
+				show_frame(selected_action->frame);
 				break;
 			case ACTION_TYPE_SHOW_MENU:
 				if (from_frame && selected_action->menu_id == MAIN_MENU_ID)

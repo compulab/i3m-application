@@ -38,6 +38,8 @@ enum key_state {
 	KEY_HOLD = 0x08
 };
 
+extern struct gfx_frame *dashboard;
+
 extern bool is_screen_saver_on;
 
 struct gfx_action_menu **action_menus;

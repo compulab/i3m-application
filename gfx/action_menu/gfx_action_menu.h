@@ -24,6 +24,8 @@ void show_current_menu(bool redraw);
 
 void clear_screen();
 
+void show_frame(struct gfx_frame *frame);
+
 void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw);
 
 void gfx_action_menu_process_key(struct gfx_action_menu *action_menu,

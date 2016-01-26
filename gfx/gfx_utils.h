@@ -26,7 +26,7 @@ struct gfx_frame *frame_present;
 
 struct gfx_information *information_present;
 
-int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame);
+int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem, bool is_dashboard);
 
 void gfx_frame_draw(struct gfx_frame *frame, bool redraw);
 

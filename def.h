@@ -29,6 +29,11 @@ enum information_type{
 	SHOW_POST_CODE
 };
 
+enum frame_type {
+	FRAME_REGULAR,
+	FRAME_DASHBOARD,
+};
+
 enum action_type {
 	ACTION_TYPE_NONE,
 	ACTION_TYPE_SHOW_MENU,

@@ -99,6 +99,7 @@ struct cnf_font_node {
 struct cnf_blk  {
 	struct cnf_menu_node *menus_head;
 	struct cnf_font_node *fonts_head;
+	struct cnf_frame *dashboard;
 	uint8_t font_size;
 	uint8_t signature;
 	uint8_t size;

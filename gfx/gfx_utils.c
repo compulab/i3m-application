@@ -189,11 +189,12 @@ void gfx_image_draw(struct gfx_image *image)
 //	gfx_mono_put_framebuffer();
 }
 
-void init_frame(struct gfx_frame *frame)
+void init_frame(struct gfx_frame *frame, bool is_dashboard)
 {
 	frame->image_head = 0;
 	frame->information_head = 0;
 	frame->label_head = 0;
+	frame->type = is_dashboard ? FRAME_DASHBOARD : FRAME_REGULAR;
 }
 
 int set_images(struct gfx_frame *frame, struct cnf_image_node *cnf_image_pgmem)
@@ -206,7 +207,7 @@ int set_images(struct gfx_frame *frame, struct cnf_image_node *cnf_image_pgmem)
 			uart_send_string("gfx_image_node failed\n\r");
 			return -1;
 		}
-		memcpy_P(&cnf_image_node, cnf_image_pgmem, sizeof(struct cnf_image_node));
+		memcpy_config(&cnf_image_node, cnf_image_pgmem, sizeof(struct cnf_image_node));
 		if (gfx_image_init(&gfx_image_node->image, cnf_image_node.image.bitmap_progmem, cnf_image_node.image.height,
 				cnf_image_node.image.width, cnf_image_node.image.x, cnf_image_node.image.y) != 0) {
 			uart_send_string("gfx_image_node init failed\n\r");
@@ -275,11 +276,11 @@ int set_infos(struct gfx_frame *frame,	struct cnf_info_node *cnf_info_pgmem)
 	return 0;
 }
 
-int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
+int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem, bool is_dashboard)
 {
 	struct cnf_frame cnf_frame;
 	memcpy_config(&cnf_frame, cnf_frame_pgmem, sizeof(cnf_frame));
-	init_frame(frame);
+	init_frame(frame, is_dashboard);
 	return ((set_images(frame, cnf_frame.images_head) != 0) | (set_labels(frame, cnf_frame.labels_head) != 0) | (set_infos(frame, cnf_frame.infos_head) != 0));
 }
 
@@ -336,6 +337,9 @@ void draw_graphic_signs(uint8_t selection, uint8_t max_index)
 
 void insert_graphic_signs(struct gfx_frame *frame)
 {
+	if (frame->type == FRAME_DASHBOARD)
+		return ;
+
 	if (frame->information_head != NULL) {
 		switch (frame->information_head->information.info_type) {
 		case SET_BRIGHTNESS:
@@ -362,13 +366,14 @@ void insert_graphic_signs(struct gfx_frame *frame)
 
 void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
 {
-	if (frame != 0){
+	if (frame != 0) {
 		frame_present = frame;
 		gfx_infos_draw(frame->information_head);
-		if (!redraw){
+		if (!redraw) {
 			gfx_labels_draw(frame->label_head);
 			gfx_images_draw(frame->image_head);
-			gfx_mono_generic_draw_horizontal_line(0, 54, GFX_MONO_LCD_WIDTH, GFX_PIXEL_SET);
+			if (frame->type == FRAME_REGULAR)
+				gfx_mono_generic_draw_horizontal_line(0, 54, GFX_MONO_LCD_WIDTH, GFX_PIXEL_SET);
 		}
 		insert_graphic_signs(frame);
 		gfx_mono_ssd1306_put_framebuffer();
