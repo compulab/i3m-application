@@ -85,7 +85,12 @@ void write_cpu_fq_msb(uint8_t cpu_addr)
 	if (!is_valid_register(index,MAX_CPU))
 		return ;
 	if (layout.direct.i2c[cpu_addr] & CPU_FQ_MSB_MSK) {
-		computer_data.packed.cpuf[index] = (layout.direct.i2c[cpu_addr] & ~CPU_FQ_MSK) | (layout.direct.i2c[cpu_addr - 1] << 8);
+		computer_data.packed.cpuf[index] = (layout.direct.i2c[cpu_addr] & CPU_FQ_MSB_MSK) << 8 | layout.direct.i2c[cpu_addr - 1];
+		if (layout.direct.i2c[cpu_addr] & CPU_FQ_VALID_BIT)
+			computer_data.packed.cpufs |= (0x01) << index;
+		else
+			computer_data.packed.cpufs &= ~((0x01) << index);
+		computer_data.packed.cpufq_update |= (0x01) << index;
 	}
 	layout.l.cpufr = 0;
 	clear_req();
@@ -145,7 +150,6 @@ void write_cpu_status()
 {
 	layout.l.cputr = 0;
 	clear_req();
-//	computer_data.packed.cput_update = 0x00;
 	if (layout.direct.i2c[CPUTS] == 0){
 		computer_data.packed.cputs = 0;
 	} else {

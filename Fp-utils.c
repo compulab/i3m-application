@@ -286,6 +286,7 @@ void set_temp_string(char *str, int8_t temperature)
 	sprintf(str,"%d C",temperature);
 }
 
+
 void set_cpu_updated_temp(char *data, uint8_t cpu_id)
 {
 	if ((computer_data.packed.cputs & (0x01 << cpu_id)) != 0)
@@ -613,49 +614,18 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 	present_menu->is_active_frame = is_active_frame;
 }
 
-
 bool is_cpu_fq_need_update(struct gfx_information *info, bool is_visible)
 {
-	bool need_update = false;
 	if (is_visible) {
-	switch (info->info_data){
-		case 0:
-			need_update = computer_data.details.cpu0fs == 0;
-			break;
-		case 1:
-			need_update = computer_data.details.cpu1fs == 0;
-			break;
-		case 2:
-			need_update = computer_data.details.cpu2fs == 0;
-			break;
-		case 3:
-			need_update = computer_data.details.cpu3fs == 0;
-			break;
-		case 4:
-			need_update = computer_data.details.cpu4fs == 0;
-			break;
-		case 5:
-			need_update = computer_data.details.cpu5fs == 0;
-			break;
-		case 6:
-			need_update = computer_data.details.cpu6fs == 0;
-			break;
-		case 7:
-			need_update = computer_data.details.cpu7fs == 0;
-			break;
-		default:
-			need_update = false;
-			break;
+			return present_menu->visible ? ((computer_data.packed.cpufs & (0x01 << info->info_data)) == 0x00) :
+					((computer_data.packed.cpufs & (0x01 << info->info_data)) != 0x00);
 		}
-	}
-	if (!need_update) {
-		char temp_str[3];
-		char curr_str[3];
-		set_updated_cpu_frequency(temp_str, info->info_data);
-		set_curr_str(curr_str, SHOW_CPU_FREQUENCY);
-		need_update = strcmp(temp_str, curr_str) != 0;
-	}
-	return need_update;
+
+	if ((computer_data.packed.cpufq_update & (1 << info->info_data))  != 0x00) {
+			computer_data.packed.cpufq_update = computer_data.packed.cpufq_update & ~(1 << info->info_data);
+			return true;
+		}
+	return false;
 }
 
 bool is_hdd_size_need_update(struct gfx_information *info, bool is_visible)
@@ -778,22 +748,13 @@ bool is_hdd_temp_need_update(struct gfx_information *info, bool is_visible)
 	return need_update;
 }
 
-
-
 bool is_cpu_temp_need_update(struct gfx_information *info, bool is_visible)
 {
 	if (is_visible) {
-		if (!present_menu->visible)
-			return computer_data.details.cpu0ts == 1;
-		else
-			return ((computer_data.packed.cputs & (0x01 << info->info_data)) == 0x00);
+		return present_menu->visible ? ((computer_data.packed.cputs & (0x01 << info->info_data)) == 0x00) :
+				((computer_data.packed.cputs & (0x01 << info->info_data)) != 0x00);
 	}
 
-	uart_send_string("cputs update status reg: ");
-	uart_send_num(computer_data.packed.cput_update, 16);
-	uart_send_string(" ; layout cputs: ");
-	uart_send_num(layout.direct.i2c[CPUTS], 16);
-	uart_send_string("\n\r");
 	if ((computer_data.packed.cput_update & (1 << info->info_data))  != 0x00) {
 		computer_data.packed.cput_update = computer_data.packed.cput_update & ~(1 << info->info_data);
 		return true;

@@ -53,6 +53,7 @@
 
 #define HDD_TMP_VALID_BIT					0x80
 #define CPU_TMP_VALID_BIT					0x80
+#define CPU_FQ_VALID_BIT					0x80
 
 struct direct_string_item {
 	char *type;
@@ -585,6 +586,14 @@ union updatable_info {
 		uint8_t cpu5fs:1;
 		uint8_t cpu6fs:1;
 		uint8_t cpu7fs:1;
+		uint8_t cpu0fs_update:1;
+		uint8_t cpu1fs_update:1;
+		uint8_t cpu2fs_update:1;
+		uint8_t cpu3fs_update:1;
+		uint8_t cpu4fs_update:1;
+		uint8_t cpu5fs_update:1;
+		uint8_t cpu6fs_update:1;
+		uint8_t cpu7fs_update:1;
 		uint8_t hddtr:1;
 		uint8_t cpufr:1;
 		uint8_t cputr:1;
@@ -616,6 +625,7 @@ union updatable_info {
 		uint8_t hddf;
 		uint16_t cpuf[MAX_CPU];
 		uint8_t cpufs;
+		uint8_t cpufq_update;
 		uint8_t pending_req:4;
 		struct direct_string_item *direct_string;
 		uint8_t screen_saver_update_time;
