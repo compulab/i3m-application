@@ -84,7 +84,7 @@ void fp_init()
 }
 
 void set_invalid_string(char *str){
-	sprintf(str, "UNAVAILABLE");
+	sprintf(str, "N/A");
 }
 
 bool is_type_in_frame(enum information_type info_type, struct gfx_information_node *info_node)
