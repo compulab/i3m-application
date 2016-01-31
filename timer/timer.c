@@ -89,14 +89,16 @@ void tc_handle_init()
 
 void update_screen_saver()
 {
-	switch(computer_data.details.screen_saver_type) {
-	case SCREEN_SAVER_SPLASH:
-		show_splash();
-		break;
-	case SCREEN_SAVER_DASHBOARD:
-		if (dashboard != NULL)
-			show_frame(dashboard);
-		break;
+	if (screen_saver_mode_enabled && computer_data.details.screen_saver_visible == 1) {
+		switch(computer_data.details.screen_saver_type) {
+		case SCREEN_SAVER_SPLASH:
+			show_splash();
+			break;
+		case SCREEN_SAVER_DASHBOARD:
+			if (current_power_state != POWER_OFF && dashboard != NULL)
+				show_frame(dashboard);
+			break;
+		}
 	}
 }
 
