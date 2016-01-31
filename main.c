@@ -73,16 +73,18 @@ void power_state_init()
 
 void update_fp_info()
 {
-	computer_data.details.screen_saver_update_time = 6;
-	computer_data.details.screen_saver_visible = 0;
-	computer_data.details.screen_saver_type = 0;
+	eeprom_write_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS, 0x02);
+	eeprom_write_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS, 0x02);
+	computer_data.packed.screen_saver_config = eeprom_read_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS);
+	computer_data.packed.screen_saver_update_time = eeprom_read_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS);
+
 	reset_ambient();
-	eeprom_write_byte(APPLICATION_VER_MSB_EEPROM_ADDRESS, APPLICATION_VER_MSB);
-	eeprom_write_byte(APPLICATION_VER_LSB_EEPROM_ADDRESS, APPLICATION_VER_LSB);
-	eeprom_write_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS, computer_data.packed.screen_saver_config);
-	eeprom_write_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS, computer_data.packed.screen_saver_update_time);
+	if (eeprom_read_byte(APPLICATION_VER_MSB_EEPROM_ADDRESS) != APPLICATION_VER_MSB)
+		eeprom_write_byte(APPLICATION_VER_MSB_EEPROM_ADDRESS, APPLICATION_VER_MSB);
+	if (eeprom_read_byte(APPLICATION_VER_LSB_EEPROM_ADDRESS) != APPLICATION_VER_LSB)
+		eeprom_write_byte(APPLICATION_VER_LSB_EEPROM_ADDRESS, APPLICATION_VER_LSB);
 	if (eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS) == 0x00)
-		eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, 0xff);
+		eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, 0xee);
 }
 
 void updated_info_init()
@@ -91,6 +93,7 @@ void updated_info_init()
 	uint8_t *p_computer_data = (uint8_t *)&computer_data;
 	for (uint8_t i = 0; i < (sizeof(computer_data) / 8); i++)
 		p_computer_data[i] = 0;
+	dmi_init();
 }
 
 void init()
@@ -159,15 +162,10 @@ int main(int argc, char *argv[])
 	works_count = 0;
 
 	init();
-	uart_send_num(RST.STATUS , 16);
-	if ((RST.STATUS & RST_WDRF_bm) != 0)
-		uart_send_string("WDT reset\n\r");
-	else
-		uart_send_string("start main\n\r");
 
 	wdt_reset();
 	while (true) {
-		debug_print_log();
+//		debug_print_log();
 		wakeup = false;
 		if (!work_handler()) {
 			sleep_interuptable(1000); /* 1 ms */
