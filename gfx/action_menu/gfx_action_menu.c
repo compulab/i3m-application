@@ -87,6 +87,7 @@ void set_present_menu(struct gfx_action_menu *action_menu)
 
 void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 {
+	display_state = DISPLAY_MENU;
 	if (redraw){
 		clear_screen();
 		set_present_menu(action_menu);
@@ -310,48 +311,45 @@ void show_frame(struct gfx_frame *frame)
 	gfx_frame_draw(frame, false);
 }
 
-void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
+void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
 {
-	reset_screen_saver();
-	enable_screen_saver_mode();
-	if (is_screen_saver_on) {
-		is_screen_saver_on = false;
-		show_current_menu(true);
-	} else {
-		if (keycode == GFX_MONO_MENU_KEYCODE_ENTER){
-			struct gfx_item_action *selected_action = &action_menu->actions[(action_menu->menu)->current_selection];
-			enum action_type type = selected_action->type;
-			present_menu->visible = false;
-			frame_present = 0;
-			clear_screen();
-			switch (type){
-			case ACTION_TYPE_SHOW_FRAME:
-	//			tc_no_button_pressed();
-				show_frame(selected_action->frame);
+	enum action_type type;
+	struct gfx_item_action *selected_action;
+	switch(keycode) {
+	case GFX_MONO_MENU_KEYCODE_ENTER:
+		selected_action = &action_menu->actions[(action_menu->menu)->current_selection];
+		type = selected_action->type;
+		present_menu->visible = false;
+		frame_present = 0;
+		clear_screen();
+		switch (type){
+		case ACTION_TYPE_SHOW_FRAME:
+			show_frame(selected_action->frame);
+			break;
+		case ACTION_TYPE_SHOW_MENU:
+			if (from_frame && selected_action->menu_id == MAIN_MENU_ID)
 				break;
-			case ACTION_TYPE_SHOW_MENU:
-				if (from_frame && selected_action->menu_id == MAIN_MENU_ID)
-					break;
-				show_menu(selected_action->menu, true);
-				break;
-			case ACTION_TYPE_SHOW_DMI_MENU:
-//				disable_sleep_mode();
-				if (computer_data.details.direct_string != 0){
-					set_dmi_menu();
-					if (is_dmi_set){
-						show_menu(&dmi_menu, true);
-					}
-				} else {
-					show_current_menu(true);
+			show_menu(selected_action->menu, true);
+			break;
+		case ACTION_TYPE_SHOW_DMI_MENU:
+			if (computer_data.details.direct_string != 0){
+				set_dmi_menu();
+				if (is_dmi_set){
+					show_menu(&dmi_menu, true);
 				}
-				break;
-			default:
-				break;
+			} else {
+				show_current_menu(true);
 			}
-		} else if (keycode == GFX_MONO_MENU_KEYCODE_BACK) {
+			break;
+		default:
+			break;
+		}
+		break;
+		case GFX_MONO_MENU_KEYCODE_BACK:
 			if (!present_menu->visible)
 				show_current_menu(true);
-		} else {
+			break;
+		default:
 			if (from_frame && ((keycode == GFX_MONO_MENU_KEYCODE_DOWN && action_menu->menu->current_selection == 0) ||
 						(keycode == GFX_MONO_MENU_KEYCODE_UP && action_menu->menu->current_selection == action_menu->menu->num_elements - 2)))
 					return ;
@@ -360,6 +358,25 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 				 gfx_action_menu_process_key(action_menu, GFX_MONO_MENU_KEYCODE_ENTER, true);
 			 else
 				 show_current_menu(false);
-		}
+			 break;
+	}
+}
+
+void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
+{
+	reset_screen_saver();
+	enable_screen_saver_mode();
+	switch (display_state) {
+	case DISPLAY_LOGO:
+		return show_current_menu(true);
+
+	case DISPLAY_SLEEP:
+		exit_sleep_mode();
+		gfx_handle_key_pressed(action_menu, keycode, from_frame);
+		break;
+
+	default:
+		gfx_handle_key_pressed(action_menu, keycode, from_frame);
+		break;
 	}
 }
