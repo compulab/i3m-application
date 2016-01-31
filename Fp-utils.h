@@ -55,6 +55,18 @@
 #define APPLICATION_VER_LSB 1
 #endif
 
+#define SCREEN_SAVER_SECOND_MIN_VALUE	5
+#define SCREEN_SAVER_SECOND_MAX_VALUE	55
+#define SCREEN_SAVER_SECOND_JUMP		5
+
+#define SCREEN_SAVER_MINUTE_MIN_VALUE	1
+#define SCREEN_SAVER_MINUTE_MAX_VALUE	59
+#define SCREEN_SAVER_MINUTE_JUMP		2
+
+#define SCREEN_SAVER_HOUR_MIN_VALUE		1
+#define SCREEN_SAVER_HOUR_MAX_VALUE		5
+#define SCREEN_SAVER_HOUR_JUMP			1
+
 extern enum power_state current_power_state;
 
 extern enum display_state display_state;

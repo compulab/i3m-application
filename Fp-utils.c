@@ -220,7 +220,6 @@ void update_power_state()
 		if (!insert_work(&power_state_work))
 			insert_to_log('P');
 	}
-
 }
 
 void set_state(char *state)
@@ -447,20 +446,76 @@ void handle_screen_saver_type_buttons(uint8_t key)
 	}
 }
 
+int screen_saver_less_time()
+{
+	uint8_t min_value, jump;
+	switch(computer_data.details.screen_saver_update_time_unit) {
+	case SCREEN_SAVER_SECOND_UNIT:
+		min_value = SCREEN_SAVER_SECOND_MIN_VALUE;
+		jump = SCREEN_SAVER_SECOND_JUMP;
+		break;
+
+	case SCREEN_SAVER_MINUTE_UNIT:
+		min_value = SCREEN_SAVER_MINUTE_MIN_VALUE;
+		jump = SCREEN_SAVER_MINUTE_JUMP;
+		break;
+
+	case SCREEN_SAVER_HOUR_UNIT:
+		min_value = SCREEN_SAVER_HOUR_MIN_VALUE;
+		jump = SCREEN_SAVER_HOUR_JUMP;
+		break;
+	default:
+		return false;
+	}
+
+	if (computer_data.details.screen_saver_update_time <= min_value)
+		return false;
+	computer_data.details.screen_saver_update_time -= jump;
+	return true;
+}
+
+bool screen_saver_more_time()
+{
+	uint8_t max_value, jump;
+	switch(computer_data.details.screen_saver_update_time_unit) {
+	case SCREEN_SAVER_SECOND_UNIT:
+		max_value = SCREEN_SAVER_SECOND_MAX_VALUE;
+		jump = SCREEN_SAVER_SECOND_JUMP;
+		break;
+
+	case SCREEN_SAVER_MINUTE_UNIT:
+		max_value = SCREEN_SAVER_MINUTE_MAX_VALUE;
+		jump = SCREEN_SAVER_MINUTE_JUMP;
+		break;
+
+	case SCREEN_SAVER_HOUR_UNIT:
+		max_value = SCREEN_SAVER_HOUR_MAX_VALUE;
+		jump = SCREEN_SAVER_HOUR_JUMP;
+		break;
+	default:
+		return false;
+	}
+
+	if (computer_data.details.screen_saver_update_time >= max_value)
+		return false;
+	computer_data.details.screen_saver_update_time += jump;
+	return true;
+}
+
 void handle_screen_saver_time_buttons(uint8_t key)
 {
 	if (computer_data.details.screen_saver_visible == 1) {
 		switch (key) {
 		case GFX_MONO_MENU_KEYCODE_DOWN:
-			if (computer_data.details.screen_saver_update_time == 2)
+			if (!screen_saver_less_time())
 				return ;
-			computer_data.details.screen_saver_update_time -= 2;
 			break;
 		case GFX_MONO_MENU_KEYCODE_UP:
-			if (computer_data.details.screen_saver_update_time == 10)
+			if (!screen_saver_more_time())
 				return ;
-			computer_data.details.screen_saver_update_time += 2;
 			break;
+		default:
+			return ;
 		}
 		eeprom_write_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS, computer_data.packed.screen_saver_update_time);
 	}
@@ -514,7 +569,6 @@ void set_dmi_content(char *output_str, uint8_t string_id)
 }
 const char *screen_saver_type_str[SCREEN_SAVER_TYPE_SIZE] = { "LOGO", "DASHBOARD"};
 
-
 void set_screen_saver_type(char *str)
 {
 	frame_present->handle_buttons = handle_screen_saver_type_buttons;
@@ -562,6 +616,8 @@ void set_curr_str(char *str, enum information_type type)
 
 void update_data_by_type(enum information_type type, char *output_str, uint8_t info)
 {
+	bool is_active_frame;
+
 	switch (type){
 	case SHOW_MEMORY_SIZE:
 		set_updated_memory_size(output_str, info);
@@ -615,7 +671,7 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 	default:
 		break;
 	}
-	bool is_active_frame;
+
 	switch (type) {
 	case SET_BRIGHTNESS:
 	case SET_SCREEN_SAVER_ENABLE:

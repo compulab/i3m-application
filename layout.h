@@ -603,7 +603,8 @@ union updatable_info {
 		uint8_t cputr:1;
 		uint8_t gputr:1;
 		struct direct_string_item *direct_string;
-		uint8_t screen_saver_update_time;
+		uint8_t screen_saver_update_time:6;
+		uint8_t screen_saver_update_time_unit:2;
 		uint8_t screen_saver_visible:1;
 		uint8_t screen_saver_type:3;
 		uint8_t screen_saver_reserved:5;
