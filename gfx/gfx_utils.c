@@ -98,19 +98,6 @@ int gfx_information_init(struct gfx_information *info,
 	return 0;
 }
 
-void update_information_present(struct gfx_information *info)
-{
-	switch(info->info_type){
-	case SHOW_SERIAL_NUMBER:
-	case SHOW_PART_NUMBER:
-	case SHOW_HDD_SIZE:
-	case SHOW_MEMORY_SIZE:
-			break;
-	default:
-		information_present = info;
-		break;
-	}
-}
 
 void print_data_P(char *text, struct gfx_font *font, uint8_t x, uint8_t y)
 {
@@ -149,7 +136,6 @@ void gfx_information_draw(struct gfx_information *info)
 	char *text_to_draw = malloc_locked(MAX_TEMPERATURE_LENGTH);
 	if (text_to_draw == NULL)
 		return ;
-	update_information_present(info);
 	update_data_by_type(info->info_type, text_to_draw, info->info_data);
 	print_data(text_to_draw, info->text.font, info->postion.x, info->postion.y);
 	print_info(info);
@@ -362,7 +348,6 @@ void insert_graphic_signs(struct gfx_frame *frame)
 		}
 	}
 }
-
 
 void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
 {
