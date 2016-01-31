@@ -42,6 +42,8 @@
 
 uint8_t direct_write_length;
 uint8_t direct_write_index;
+uint16_t dmi_eeprom_index;
+
 bool is_length_set;
 
 struct direct_string_item *direct_string_to_add;
@@ -134,10 +136,11 @@ void software_reset()
 
 void reset_to_bootloader()
 {
-  nvm_eeprom_write_byte(BOOTLOADER_MAGIC_EEPROM_ADDRESS, ENTER_TO_BOOTLOADER);
-  uart_send_string("reset to bootloader\n\r");
-  uart_send_num(nvm_eeprom_read_byte(BOOTLOADER_MAGIC_EEPROM_ADDRESS), 16);
-  software_reset();
+	uint8_t magic = nvm_eeprom_read_byte(BOOTLOADER_MAGIC_EEPROM_ADDRESS);
+	magic &= ~BOOTLOADER_APPLICATION_START;
+	nvm_eeprom_write_byte(BOOTLOADER_MAGIC_EEPROM_ADDRESS, magic);
+	delay_ms(4);
+	software_reset();
 }
 
 void validate_temperate(bool *valid_bit, uint8_t *dest, uint8_t src)
@@ -209,46 +212,6 @@ void write_memory(uint8_t mem_addr) //Todo: change memory status set
 	if (data & MEM_SZ_STATUS_MSB_MSK)
 		computer_data.packed.mems |= 0x01 << (index + 1);
 }
-//
-//void read_sig(enum i2c_addr_space sig_address, uint8_t *data)
-//{
-//	switch(sig_address){
-//	case SIG0:
-//		*data = eeprom_read_byte(SIG_FIRST_BYTE_EEPROM_ADDRESS);
-//		break;
-//	case SIG1:
-//		*data = eeprom_read_byte(SIG_SECOND_BYTE_EEPROM_ADDRESS);
-//		break;
-//	case SIG2:
-//		*data = eeprom_read_byte(SIG_THIRD_BYTE_EEPROM_ADDRESS);
-//		break;
-//	case SIG3:
-//		*data = eeprom_read_byte(SIG_FOURTH_BYTE_EEPROM_ADDRESS);
-//		break;
-//	default:
-//		break;
-//	}
-//}
-//
-//void read_revision(enum i2c_addr_space rev_address, uint8_t *data)
-//{
-//	switch (rev_address){
-//	case MAJOR_LSB:
-//		*data = eeprom_read_byte(MAJOR_REVISION_LSB_EEPROM_ADDRESS);
-//		break;
-//	case MAJOR_MSB:
-//		*data = eeprom_read_byte(MAJOR_REVISION_MSB_EEPROM_ADDRESS);
-//		break;
-//	case MINOR_LSB:
-//		*data = eeprom_read_byte(MINOR_REVISION_LSB_EEPROM_ADDRESS);
-//		break;
-//	case MINOR_MSB:
-//		*data = eeprom_read_byte(MINOR_REVISION_MSB_EEPROM_ADDRESS);
-//		break;
-//	default:
-//		break;
-//	}
-//}
 
 void read_bios_post_code(enum i2c_addr_space post_code_address, uint8_t *data)
 {
@@ -351,6 +314,85 @@ int set_direct_string()
 	return 0;
 }
 
+void get_dmi_string(char **str)
+{
+	uint8_t len = eeprom_read_byte(dmi_eeprom_index);
+	(*str) = malloc_locked(sizeof(char) * (len + 1));
+	for (int i = 0; i < len; i++, dmi_eeprom_index++)
+		(*str)[i] = eeprom_read_byte(dmi_eeprom_index);
+	(*str)[len] = '\0';
+	dmi_eeprom_index++;
+}
+
+void dmi_init()
+{
+	dmi_eeprom_index = EEPROM_DMI_START;
+	uint8_t dmi_count = eeprom_read_byte(EEPROM_DMI_COUNT);
+	struct direct_string_item *direct_string;
+
+	while (dmi_count) {
+		while(eeprom_read_byte(dmi_eeprom_index) == '\0')
+			dmi_eeprom_index++;
+		direct_string = malloc_locked(sizeof(struct direct_string_item));
+		if (direct_string == NULL)
+			return;
+
+		direct_string->backup_addr = dmi_eeprom_index + 1;
+		get_dmi_string(&direct_string->type);
+		get_dmi_string(&direct_string->content);
+		if (computer_data.details.direct_string == NULL)
+			computer_data.details.direct_string = direct_string;
+		else
+			computer_data.details.direct_string->next = direct_string;
+		direct_string = NULL;
+		dmi_count--;
+	}
+}
+
+void add_dmi_backup(struct direct_string_item *dmi)
+{
+	uint8_t dmi_count = eeprom_read_byte(EEPROM_DMI_COUNT);
+	dmi->backup_addr = dmi_eeprom_index;
+	dmi_count++;
+	uint16_t writing_index = dmi->backup_addr;
+	eeprom_write_byte(writing_index, strlen(dmi->type) + 1);
+	writing_index++;
+	for (int i = 0; i < strlen(dmi->type); i++, writing_index++)
+		eeprom_write_byte(writing_index, dmi->type[i]);
+	eeprom_write_byte(writing_index, strlen(dmi->content) + 1);
+	writing_index++;
+	for (int i = 0; i < strlen(dmi->content); i++, writing_index++)
+		eeprom_write_byte(writing_index, dmi->content[i]);
+	eeprom_write_byte(EEPROM_DMI_COUNT, dmi_count);
+}
+
+void remove_dmi_backup(struct direct_string_item *dmi)
+{
+	uint8_t dmi_count = eeprom_read_byte(EEPROM_DMI_COUNT);
+	if (dmi_count == 0)
+		return;
+	dmi_count--;
+	uint8_t length = strlen(dmi->type) + strlen(dmi->content) + 1;
+	for (uint8_t i = 0; i < length; i++)
+		eeprom_write_byte(dmi->backup_addr + i, '\0');
+	eeprom_write_byte(EEPROM_DMI_COUNT, dmi_count);
+}
+
+void update_dmi_backup(struct direct_string_item *dmi)
+{
+	uint16_t start_index = dmi->backup_addr + strlen(dmi->type) + 2;
+	uint8_t new_length = strlen(dmi->content);
+	uint8_t old_length = eeprom_read_byte(start_index);
+	if (new_length < old_length) {
+		eeprom_write_byte(start_index, new_length);
+		for (uint16_t blank_index = start_index +  new_length + 1; blank_index < start_index + old_length + 1; blank_index++)
+			eeprom_write_byte(blank_index, '\0');
+	}
+	start_index++;
+	for(uint8_t i = 0; i < new_length; i++, start_index++)
+		eeprom_write_byte(start_index, dmi->content[i]);
+}
+
 void add_direct_string()
 {
 	uart_send_string("direct string added");
@@ -363,10 +405,18 @@ void add_direct_string()
 	}
 
 	if (curr != NULL) { /* change existing DMI string */
-		strdup(direct_string_to_add->content);
+		if (strlen(direct_string_to_add->content) > strlen(curr->content)) {
+			remove_dmi_backup(curr);
+			strdup(direct_string_to_add->content);
+			add_dmi_backup(curr);
+		} else {
+			strdup(direct_string_to_add->content);
+			update_dmi_backup(curr);
+		}
 	} else {
 		direct_string_to_add->next = computer_data.details.direct_string;
 		computer_data.details.direct_string = direct_string_to_add;
+		add_dmi_backup(direct_string_to_add);
 		direct_string_to_add = 0;
 	}
 
