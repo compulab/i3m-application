@@ -11,7 +11,8 @@
 #define UPDATE_MENU_MIN_TICKS	0xafff
 
 enum power_state current_power_state = POWER_ON;
-bool sleep_mode_enabled;
+enum display_state display_state;
+bool screen_saver_mode_enabled;
 char power_value[10];
 uint16_t update_timestamp;
 uint16_t wait_time;
@@ -27,12 +28,12 @@ struct calendar_date computer_date_time = {
 
 void enable_screen_saver_mode()
 {
-	sleep_mode_enabled = true;
+	screen_saver_mode_enabled = true;
 }
 
 void disable_screen_saver_mode()
 {
-	sleep_mode_enabled = false;
+	screen_saver_mode_enabled = false;
 }
 
 void print_work_count()
@@ -181,10 +182,20 @@ void handle_power_on()
 
 void handle_power_state_changed()
 {
-	if (current_power_state != POWER_ON)
-			handle_power_off();
-		else
-			handle_power_on();
+	switch(current_power_state) {
+	case POWER_ON:
+		exit_sleep_mode();
+		handle_power_on();
+		break;
+	case POWER_STR:
+	case POWER_STD:
+		enter_sleep_mode();
+		break;
+	case POWER_OFF:
+		enter_power_off_mode();
+		handle_power_off();
+		break;
+	}
 }
 
 struct work power_state_work = { .do_work = handle_power_state_changed, .data = NULL, .next = NULL };
@@ -192,19 +203,24 @@ struct work power_state_work = { .do_work = handle_power_state_changed, .data = 
 void update_power_state()
 {
 	enum power_state  last_power_state = current_power_state;
-	if (gpio_pin_is_low(FP_S5))
+	if (gpio_pin_is_low(FP_S5)) {
 		current_power_state = POWER_OFF;
-	else if (gpio_pin_is_low(FP_S4))
+	} else if (gpio_pin_is_low(FP_S4)) {
+		if (last_power_state != POWER_ON) /* Hibernate mode can be only after power on*/
+			return;
 		current_power_state = POWER_STD;
-	else if (gpio_pin_is_low(FP_S3))
+	} else if (gpio_pin_is_low(FP_S3)) {
 		current_power_state = POWER_STR;
-	else
+	} else {
 		current_power_state = POWER_ON;
+	}
+
 	if (current_power_state != last_power_state) {
 		layout.l.power_state = current_power_state;
 		if (!insert_work(&power_state_work))
-			insert_to_log('X');
+			insert_to_log('P');
 	}
+
 }
 
 void set_state(char *state)
@@ -917,7 +933,11 @@ void update_info()
 {
 	bool need_to_update = false;
 	uart_send_string("update_info start\n\r");
-	if (!is_screen_saver_on) {
+	switch (display_state) {
+	case DISPLAY_LOGO:
+		break;
+
+	default:
 		if (present_menu->visible) {
 			uart_send_string("check update menu\n\r");
 			if (is_menu_need_update(present_menu))
@@ -928,6 +948,7 @@ void update_info()
 			if (need_to_update)
 				gfx_frame_draw(frame_present, true);
 		}
+		break;
 	}
 }
 

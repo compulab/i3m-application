@@ -42,11 +42,19 @@ enum action_type {
 	ACTION_TYPE_SET_BIOS_STATE
 };
 
-enum power_state{
+enum power_state {
 	POWER_OFF = 0x00,
 	POWER_STD = 0x01,
 	POWER_STR = 0x03,
 	POWER_ON = 0x07,
+};
+
+enum display_state {
+	DISPLAY_MENU,
+	DISPLAY_FRAME,
+	DISPLAY_ACTION_FRAME,
+	DISPLAY_LOGO,
+	DISPLAY_SLEEP,
 };
 
 

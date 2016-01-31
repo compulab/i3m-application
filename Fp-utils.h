@@ -35,6 +35,7 @@
 
 #include "work-queue/work.h"
 #include "debug.h"
+#include "effects.h"
 
 #define AMBIENT_TWI_ADDRESS  		0x4C
 #define AMBIENT_TEMPERATURE_ADDRESS 0x00
@@ -54,11 +55,15 @@
 #define APPLICATION_VER_LSB 1
 #endif
 
+extern enum power_state current_power_state;
+
+extern enum display_state display_state;
+
 extern enum information_type update_information_type;
 
 extern struct calendar_date computer_date_time;
 
-extern bool sleep_mode_enabled;
+extern bool screen_saver_mode_enabled;
 
 void enable_screen_saver_mode();
 
@@ -93,8 +98,6 @@ void update_requests();
 void update_ambient_temp();
 
 void update_adc();
-
-extern enum power_state current_power_state;
 
 void update_brightness();
 

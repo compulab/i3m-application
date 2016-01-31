@@ -17,7 +17,6 @@ uint8_t left_time = 0,
 		right_time = 0,
 		ok_time = 0;
 uint8_t size_of_menus;
-bool is_screen_saver_on;
 
 uint8_t fonts_size;
 
@@ -176,18 +175,22 @@ int load_action(struct gfx_item_action *action, struct cnf_action config_action)
 
 void show_splash()
 {
-	uart_send_string("show_splash\n\r");
-	if (reset_screen_saver_req){
+	if (reset_screen_saver_req) {
 		reset_screen_saver();
 		reset_screen_saver_req = false;
 	} else {
-		if (!is_screen_saver_on && computer_data.details.screen_saver_visible == 1 && sleep_mode_enabled) {
+		switch(display_state) {
+		case DISPLAY_LOGO:
+			break;
+		default:
 			uart_send_string("screen saver on\n\r");
-			is_screen_saver_on = true;
 			clear_screen();
+			frame_present = 0;
 			present_menu->visible = false;
+			display_state = DISPLAY_LOGO;
 			gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 0);
 			gfx_mono_ssd1306_put_framebuffer();
+			break;
 		}
 	}
 }
