@@ -639,7 +639,9 @@ union updatable_info {
 	} packed;
 };
 
-#define SCREEN_SAVER_TYPE_SIZE	2
+#define SCREEN_SAVER_TYPE_SIZE			2
+
+#define SCREEN_SAVER_TIME_UNITS_SIZE	3
 
 enum screen_saver_type {
 	SCREEN_SAVER_SPLASH = 0,

@@ -184,7 +184,6 @@ void handle_power_state_changed()
 {
 	switch(current_power_state) {
 	case POWER_ON:
-		exit_sleep_mode();
 		handle_power_on();
 		break;
 	case POWER_STR:
@@ -427,6 +426,25 @@ void decrese_brightness_level()
 	eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, brightness);
 }
 
+void handle_screen_saver_time_units_buttons(uint8_t key)
+{
+	if (computer_data.details.screen_saver_visible == 1) {
+		switch (key) {
+		case GFX_MONO_MENU_KEYCODE_DOWN:
+			if (computer_data.details.screen_saver_update_time_unit == 0)
+				return ;
+			computer_data.details.screen_saver_update_time_unit--;
+			break;
+		case GFX_MONO_MENU_KEYCODE_UP:
+			if (computer_data.details.screen_saver_update_time_unit == SCREEN_SAVER_TIME_UNITS_SIZE - 1)
+				return ;
+			computer_data.details.screen_saver_update_time_unit++;
+			break;
+		}
+		eeprom_write_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS, computer_data.packed.screen_saver_update_time);
+	}
+}
+
 void handle_screen_saver_type_buttons(uint8_t key)
 {
 	if (computer_data.details.screen_saver_visible == 1) {
@@ -567,7 +585,20 @@ void set_dmi_content(char *output_str, uint8_t string_id)
 	else
 		set_invalid_string(output_str);
 }
+
+const char *screen_saver_time_units_str[SCREEN_SAVER_TIME_UNITS_SIZE] = { "SEC", "MIN", "HOUR"};
+
 const char *screen_saver_type_str[SCREEN_SAVER_TYPE_SIZE] = { "LOGO", "DASHBOARD"};
+
+void set_screen_saver_time_unit(char *str)
+{
+	frame_present->handle_buttons = handle_screen_saver_time_units_buttons;
+	if (computer_data.details.screen_saver_visible == 1) {
+		sprintf(str, screen_saver_time_units_str[computer_data.details.screen_saver_update_time_unit]);
+	} else {
+		sprintf(str, "DISABLED");
+	}
+}
 
 void set_screen_saver_type(char *str)
 {
@@ -665,6 +696,9 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 	case SET_SCREEN_SAVER_TIME:
 		set_screen_saver_time(output_str);
 		break;
+	case SET_SCREEN_SAVER_TIME_UNIT:
+		set_screen_saver_time_unit(output_str);
+		break;
 	case SET_SCREEN_SAVER_TYPE:
 		set_screen_saver_type(output_str);
 		break;
@@ -676,6 +710,7 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 	case SET_BRIGHTNESS:
 	case SET_SCREEN_SAVER_ENABLE:
 	case SET_SCREEN_SAVER_TIME:
+	case SET_SCREEN_SAVER_TIME_UNIT:
 	case SET_SCREEN_SAVER_TYPE:
 		is_active_frame = true;
 		break;

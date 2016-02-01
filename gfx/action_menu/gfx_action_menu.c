@@ -53,6 +53,7 @@ void update_action_visibility(struct gfx_item_action *action)
 			if (!is_valid_mem(info_node->information.info_data))
 				visible = false;
 				break;
+		case SET_SCREEN_SAVER_TIME_UNIT:
 		case SET_SCREEN_SAVER_TIME:
 		case SET_SCREEN_SAVER_TYPE:
 			visible = computer_data.details.screen_saver_visible == 1;
@@ -212,8 +213,6 @@ void set_dmi_content_position(struct gfx_item* pos)
 	pos->width = 0;
 	pos->visible = true;
 }
-
-struct direct_string_item * curr_item = 0;
 
 void set_dmi_name_label(struct gfx_label_node **label_node, struct direct_string_item * direct_item)
 {

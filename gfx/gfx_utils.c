@@ -342,6 +342,10 @@ void insert_graphic_signs(struct gfx_frame *frame)
 			if (computer_data.details.screen_saver_visible == 1)
 				draw_graphic_signs(computer_data.details.screen_saver_type, SCREEN_SAVER_TYPE_SIZE - 1);
 			break;
+		case SET_SCREEN_SAVER_TIME_UNIT:
+			if (computer_data.details.screen_saver_visible == 1)
+				draw_graphic_signs(computer_data.details.screen_saver_update_time_unit, SCREEN_SAVER_TIME_UNITS_SIZE - 1);
+			break;
 		default:
 			draw_graphic_signs((present_menu->menu)->current_selection, (present_menu->menu)->num_elements - 2);
 			break;
