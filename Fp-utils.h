@@ -47,6 +47,11 @@
 #define CPUTR_BIT					2
 #define GPUTR_BIT					3
 
+
+#ifndef APPLICATION_SIZE
+#define APPLICATION_SIZE 0
+#endif
+
 #ifndef APPLICATION_VER_MSB
 #define APPLICATION_VER_MSB 0
 #endif

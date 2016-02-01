@@ -8,6 +8,7 @@
 #include "effects.h"
 #define SLEEP_BRIGHTNESS 	100
 #define SLEEP_MSG 			"SLEEP"
+#define HIBERNATE_MSG		"HIBERNATE"
 #define POWER_OFF_MSG		"OFF"
 #define SLEEP_MSG_X			40
 #define SLEEP_MSG_Y			20
@@ -32,9 +33,19 @@ void enter_sleep_mode()
 	enter_dim_mode(SLEEP_MSG);
 }
 
-void exit_dim_mode()
+void enter_hibernate_mode()
+{
+	enter_dim_mode(HIBERNATE_MSG);
+}
+
+void enter_power_on_mode()
 {
 	ssd1306_set_contrast(eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS));
+	exit_sleep_mode();
+}
+
+void exit_dim_mode()
+{
 	show_current_menu(true);
 }
 

@@ -185,9 +185,12 @@ void handle_power_state_changed()
 	switch(current_power_state) {
 	case POWER_ON:
 		handle_power_on();
+		enter_power_on_mode();
+		break;
+	case POWER_STD:
+		enter_hibernate_mode();
 		break;
 	case POWER_STR:
-	case POWER_STD:
 		enter_sleep_mode();
 		break;
 	case POWER_OFF:
