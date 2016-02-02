@@ -445,6 +445,7 @@ void handle_screen_saver_time_units_buttons(uint8_t key)
 			break;
 		}
 		eeprom_write_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS, computer_data.packed.screen_saver_update_time);
+		gfx_frame_draw(frame_present, true);
 	}
 }
 
@@ -539,6 +540,7 @@ void handle_screen_saver_time_buttons(uint8_t key)
 			return ;
 		}
 		eeprom_write_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS, computer_data.packed.screen_saver_update_time);
+		gfx_frame_draw(frame_present, true);
 	}
 }
 
@@ -557,6 +559,7 @@ void handle_screen_saver_enable_buttons(uint8_t key)
 		break;
 	}
 	eeprom_write_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS, computer_data.packed.screen_saver_config);
+	gfx_frame_draw(frame_present, true);
 }
 
 void handle_brightness_buttons(uint8_t key)
@@ -573,6 +576,7 @@ void handle_brightness_buttons(uint8_t key)
 		break;
 	}
 	update_brightness();
+	gfx_frame_draw(frame_present, true);
 }
 
 void set_dmi_content(char *output_str, uint8_t string_id)
@@ -921,7 +925,7 @@ bool is_information_need_to_change(struct gfx_information *info, bool is_visible
 	case SET_SCREEN_SAVER_TYPE:
 	case SET_SCREEN_SAVER_TIME:
 	case SET_BRIGHTNESS:
-		return !present_menu->visible;
+		return false;
 	default:
 		return false;
 	}
@@ -1025,11 +1029,12 @@ bool is_frame_need_update(struct gfx_frame *frame)
 
 void update_info()
 {
-	bool need_to_update = false;
 	uart_send_string("update_info start\n\r");
 	switch (display_state) {
 	case DISPLAY_LOGO:
-		break;
+	case DISPLAY_DASHBOARD:
+	case DISPLAY_ACTION_FRAME:
+		return;
 
 	default:
 		if (present_menu->visible) {
@@ -1038,8 +1043,7 @@ void update_info()
 				gfx_action_menu_init(present_menu, true);
 		} else {
 			uart_send_string("check update frame\n\r");
-			need_to_update = is_frame_need_update(frame_present);
-			if (need_to_update)
+			if (is_frame_need_update(frame_present))
 				gfx_frame_draw(frame_present, true);
 		}
 		break;

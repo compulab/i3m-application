@@ -10,8 +10,6 @@
 
 #define MAX_AMBIENT_UPDATE_FAIL	2
 
-
-bool update_buttons;
 bool first_ambient_read;
 bool reset_screen_saver_req;
 uint8_t ambient_update_fail_count;
@@ -19,32 +17,17 @@ uint8_t ambient_update_fail_count;
 static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS];
 static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS];
 
-void tc_button_pressed()
-{
-	tc_counter = 0;
-	update_buttons = true;
-}
-
-void tc_no_button_pressed()
-{
-	update_buttons = false;
-}
-
 void reset_ambient()
 {
 	first_ambient_read = false;
 	layout.l.ambs = 0;
 }
 
-enum information_type update_information_type;
-
 void update_ambient_temp()
 {
 	uart_send_string("update_ambient_temp\n\r");
 	if (current_power_state == POWER_ON) {
 		bool valid_update;
-//		uint8_t last_temp = layout.l.ambt;
-//		bool last_valid = layout.l.ambs != 0;
 		if (first_ambient_read) {
 			valid_update = TWI_read_reg(AMBIENT_TWI_ADDRESS, AMBIENT_TEMPERATURE_ADDRESS, &layout.l.ambt, 2);
 			first_ambient_read = !valid_update;
@@ -68,17 +51,6 @@ void time_task()
 {
 	uart_send_string("time_task\n\r");
 	calendar_add_second_to_date(&computer_date_time);
-//	uart_send_string("||||Time update: ");
-//	uart_send_num(computer_date_time.hour, 10);
-//	uart_send_char(':');
-//	uart_send_num(computer_date_time.minute, 10);
-//	uart_send_char(':');
-//	uart_send_num(computer_date_time.second, 10);
-//	uart_send_char(' ');
-//	uart_send_num(computer_date_time.date, 10);
-//	uart_send_string("\\");
-//	uart_send_num(computer_date_time.month, 10);
-//	uart_send_string("\n\n\r");
 }
 
 void tc_handle_init()
@@ -95,8 +67,10 @@ void update_screen_saver()
 			show_splash();
 			break;
 		case SCREEN_SAVER_DASHBOARD:
-			if (current_power_state != POWER_OFF && dashboard != NULL)
+			if (current_power_state != POWER_OFF && dashboard != NULL) {
 				show_frame(dashboard);
+				display_state = DISPLAY_DASHBOARD;
+			}
 			break;
 		}
 	}

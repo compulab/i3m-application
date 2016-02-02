@@ -74,6 +74,8 @@ extern bool reset_screen_saver_req;
 
 void reset_screen_saver(void);
 
+void update_screen_timer();
+
 void tc_button_pressed(void);
 
 void tc_no_button_pressed(void);
