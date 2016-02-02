@@ -245,6 +245,8 @@ int set_infos(struct gfx_frame *frame,	struct cnf_info_node *cnf_info_pgmem)
 		}
 
 		memcpy_config(&cnf_info_node, (void *)cnf_info_pgmem, sizeof(struct cnf_info_node));
+		uart_send_num(cnf_info_node.info.info_type, 16);
+		uart_send_string("\t");
 		if (gfx_information_init(&gfx_information_node->information, cnf_info_node.info.info_type, cnf_info_node.info.information,
 						cnf_info_node.info.max_length, cnf_info_node.info.x, cnf_info_node.info.y, cnf_info_node.font_id) != 0) {
 			uart_send_string("information init fail\n\r");
@@ -264,6 +266,10 @@ int set_infos(struct gfx_frame *frame,	struct cnf_info_node *cnf_info_pgmem)
 
 int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem, bool is_dashboard)
 {
+	if (is_dashboard)
+		uart_send_string("dash:\n\r");
+	else
+		uart_send_string("frame:\n\r");
 	struct cnf_frame cnf_frame;
 	memcpy_config(&cnf_frame, cnf_frame_pgmem, sizeof(cnf_frame));
 	init_frame(frame, is_dashboard);
@@ -356,11 +362,14 @@ void insert_graphic_signs(struct gfx_frame *frame)
 void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
 {
 	if (frame != 0) {
+		update_screen_timer();
 		frame_present = frame;
 		if (present_menu->is_active_frame || !redraw) {
 			clear_screen();
 			gfx_labels_draw(frame->label_head);
 			gfx_images_draw(frame->image_head);
+			if (present_menu->is_active_frame)
+				display_state = DISPLAY_ACTION_FRAME;
 			if (frame->type == FRAME_REGULAR)
 				gfx_mono_generic_draw_horizontal_line(0, 54, GFX_MONO_LCD_WIDTH, GFX_PIXEL_SET);
 		}

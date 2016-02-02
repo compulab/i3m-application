@@ -12,6 +12,10 @@
 
 void enter_sleep_mode();
 
+void enter_power_on_mode();
+
+void enter_hibernate_mode();
+
 void enter_power_off_mode();
 
 void exit_sleep_mode();

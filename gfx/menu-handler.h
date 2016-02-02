@@ -52,6 +52,8 @@ void set_menu_by_id(struct gfx_action_menu **menu, uint8_t index);
 
 void memcpy_config(void *dst, void *src_addr, size_t size);
 
+void hadle_back_to_menu();
+
 void show_splash();
 
 void handle_button_pressed();

@@ -89,6 +89,7 @@ void set_present_menu(struct gfx_action_menu *action_menu)
 void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 {
 	display_state = DISPLAY_MENU;
+	update_screen_timer();
 	if (redraw){
 		clear_screen();
 		set_present_menu(action_menu);
@@ -305,6 +306,7 @@ void set_dmi_menu()
 void show_frame(struct gfx_frame *frame)
 {
 	present_menu->visible = false;
+	display_state = DISPLAY_FRAME;
 	clear_screen();
 	disable_screen_saver_mode();
 	gfx_frame_draw(frame, false);
@@ -361,17 +363,32 @@ void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode
 	}
 }
 
+void handle_button_preesed_by_display_mode()
+{
+	switch (display_state) {
+	case DISPLAY_LOGO:
+	case DISPLAY_DASHBOARD:
+		reset_screen_saver();
+		hadle_back_to_menu();
+//		return show_current_menu(true);
+		break;
+
+	case DISPLAY_DIM:
+		exit_sleep_mode();
+		break;
+	default:
+		break;
+	}
+}
+
 void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
 {
 	reset_screen_saver();
 	enable_screen_saver_mode();
 	switch (display_state) {
 	case DISPLAY_LOGO:
-		return show_current_menu(true);
-
-	case DISPLAY_SLEEP:
-		exit_sleep_mode();
-		gfx_handle_key_pressed(action_menu, keycode, from_frame);
+	case DISPLAY_DIM:
+		handle_button_preesed_by_display_mode();
 		break;
 
 	default:

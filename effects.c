@@ -15,11 +15,11 @@
 
 void enter_dim_mode(char *msg)
 {
-	display_state = DISPLAY_SLEEP;
+	display_state = DISPLAY_DIM;
 	ssd1306_set_contrast(SLEEP_BRIGHTNESS);
 	for (int i=0 ; i < GFX_MONO_LCD_FRAMEBUFFER_SIZE; i++)
 		framebuffer[i] = 0x00;
-	draw_string_in_buffer(SLEEP_MSG, SLEEP_MSG_X, SLEEP_MSG_Y,fonts[1]);
+	draw_string_in_buffer(msg, SLEEP_MSG_X, SLEEP_MSG_Y,fonts[1]);
 	gfx_mono_ssd1306_put_framebuffer();
 }
 

@@ -181,6 +181,7 @@ void show_splash()
 	} else {
 		switch(display_state) {
 		case DISPLAY_LOGO:
+		case DISPLAY_DASHBOARD:
 			break;
 		default:
 			uart_send_string("screen saver on\n\r");
@@ -430,7 +431,6 @@ void hadle_back_to_menu()
 {
 	clear_screen();
 	frame_present = 0;
-//	information_present = 0;
 	enable_screen_saver_mode();
 	gfx_action_menu_init(present_menu, true);
 }
@@ -465,12 +465,20 @@ void handle_buttons_update()
 	switch (left_button){
 	case BUTTON_HOLD:
 	case BUTTON_CLICK:
-//		tc_button_pressed();
-		if (present_menu->is_active_frame) {
-			frame_present->handle_buttons(GFX_MONO_MENU_KEYCODE_DOWN);
-			update_info();
-		} else {
-			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN, !present_menu->visible);
+		switch(display_state) {
+		case DISPLAY_DIM:
+		case DISPLAY_LOGO:
+		case DISPLAY_DASHBOARD:
+			handle_button_preesed_by_display_mode();
+			break;
+		default:
+			if (present_menu->is_active_frame) {
+				frame_present->handle_buttons(GFX_MONO_MENU_KEYCODE_DOWN);
+//				update_info();
+			} else {
+				gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN, !present_menu->visible);
+			}
+			break;
 		}
 		break;
 	default:
@@ -479,12 +487,20 @@ void handle_buttons_update()
 	switch (right_button){
 	case BUTTON_HOLD:
 	case BUTTON_CLICK:
-//		tc_button_pressed();
-		if (present_menu->is_active_frame) {
-			frame_present->handle_buttons(GFX_MONO_MENU_KEYCODE_UP);
-			update_info();
-		} else {
-			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP, !present_menu->visible);
+		switch(display_state) {
+			case DISPLAY_DIM:
+			case DISPLAY_LOGO:
+			case DISPLAY_DASHBOARD:
+				handle_button_preesed_by_display_mode();
+				break;
+			default:
+				if (present_menu->is_active_frame) {
+					frame_present->handle_buttons(GFX_MONO_MENU_KEYCODE_UP);
+//					update_info();
+				} else {
+					gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP, !present_menu->visible);
+				}
+			break;
 		}
 		break;
 	default:

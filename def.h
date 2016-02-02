@@ -8,7 +8,7 @@
 #ifndef DEF_H_
 #define DEF_H_
 
-enum information_type{
+enum information_type {
 	SET_BRIGHTNESS,
 	SET_SCREEN_SAVER_ENABLE,
 	SET_SCREEN_SAVER_TIME,
@@ -61,7 +61,8 @@ enum display_state {
 	DISPLAY_FRAME,
 	DISPLAY_ACTION_FRAME,
 	DISPLAY_LOGO,
-	DISPLAY_SLEEP,
+	DISPLAY_DASHBOARD,
+	DISPLAY_DIM,
 };
 
 
