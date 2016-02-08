@@ -14,7 +14,7 @@
 
 long current_power;
 char current_power_str[7];
-float gain = 0.5;
+float gain = 0;
 float vcc = 3.3;
 
 void adc_init()
@@ -30,7 +30,7 @@ void adc_init()
 	adc_set_conversion_trigger(&adc_conf, ADC_TRIG_EVENT_SINGLE, 1, 0);
 	adc_set_clock_rate(&adc_conf, 100000UL); // 100KHz. Up to 200000UL=200KHz
 
-	adcch_set_input(&adcch_conf, ADCCH_POS_PIN1, ADCCH_NEG_INTERNAL_GND, gain); // GAIN = 1
+	adcch_set_input(&adcch_conf, ADCCH_POS_PIN1, ADCCH_NEG_PAD_GND, gain); // GAIN = 0.5
 	adc_write_configuration(&MY_ADC, &adc_conf);
 	adcch_write_configuration(&MY_ADC, MY_ADC_CH, &adcch_conf);
 	adc_enable(&MY_ADC);
@@ -38,14 +38,16 @@ void adc_init()
 
 long adc_avg()
 {
-	int i;
-	long power_avg =0;
-	for (i=0; i < 1000 ;i++){
+	uint32_t i;
+	uint16_t adca1_result = 0;
+	uint32_t power_sum = 0;
+	for (i=0; i < 1000 ;i++) {
 		adc_start_conversion(&MY_ADC, MY_ADC_CH);  //one conversion begins
-		int adca1_result = adc_get_result(&MY_ADC, MY_ADC_CH);
-		power_avg = power_avg+adca1_result;
+		adca1_result = adc_get_result(&MY_ADC, MY_ADC_CH) & 0x3FFF;
+		power_sum = power_sum + adca1_result;
 	}
-	return power_avg / (i);
+
+	return power_sum / (i);
 }
 
 void set_power_data(char *str)
@@ -53,7 +55,8 @@ void set_power_data(char *str)
 	if (current_power_state != POWER_ON) {
 		sprintf(str, "0 W");
 	} else {
-		current_power = adc_avg() * 0.127 ; /// (gain * gain);// * 158.34);//* 0.177; //*0.07731r P =79.17 * V_adc , P/GAIN = 158.34
+		current_power = adc_avg() * 0.06378 * 2; //0.06378 /// (gain * gain);// * 158.34);//* 0.177; //*0.07731r P =79.17 * V_adc , P/GAIN = 158.34 //
+		current_power = current_power * 0.778 + 15.8;
 		sprintf(str, "%ld W  ", current_power);
 	}
 	strcpy(current_power_str, str);
