@@ -9,12 +9,35 @@
 
 #define PAGE_ADDRESS(y) floor (y/8)
 
+/*Sign symbols*/
 PROGMEM_DECLARE(gfx_mono_color_t, right [5]) = {
-0x00, 0x7E, 0x3C, 0x18, 0x00,
+		0x00, 0x7E, 0x3C, 0x18, 0x00,
 };
 
 PROGMEM_DECLARE(gfx_mono_color_t, left [5]) = {
-0x00, 0x18, 0x3C, 0x7E, 0x00,
+		0x00, 0x18, 0x3C, 0x7E, 0x00,
+};
+
+PROGMEM_DECLARE(gfx_mono_color_t, plus [5]) = {
+		0x18, 0x18, 0xFF, 0x18, 0x18,
+};
+
+PROGMEM_DECLARE(gfx_mono_color_t, minus [5]) = {
+		0x18, 0x18, 0x18, 0x18, 0x18,
+};
+
+static struct gfx_mono_bitmap minus_bitmap = {
+		.width = 5,
+		.height = 8,
+		.data.progmem = minus,
+		.type = GFX_MONO_BITMAP_PROGMEM
+};
+
+static struct gfx_mono_bitmap plus_bitmap = {
+		.width = 5,
+		.height = 8,
+		.data.progmem = plus,
+		.type = GFX_MONO_BITMAP_PROGMEM
 };
 
 static struct gfx_mono_bitmap left_bitmap = {
@@ -33,7 +56,7 @@ static struct gfx_mono_bitmap right_bitmap = {
 
 static struct gfx_image left_sign_image = {
 	.postion = {
-		.x = 0,
+		.x = 3,
 		.y = 57,
 	},
 	.bitmap = &left_bitmap,
@@ -41,11 +64,28 @@ static struct gfx_image left_sign_image = {
 
 static struct gfx_image right_sign_image = {
 	.postion = {
-		.x = 115,
+		.x = 120,
 		.y = 57,
 	},
 	.bitmap = &right_bitmap,
 };
+
+static struct gfx_image minus_sign_image = {
+	.postion = {
+		.x = 3,
+		.y = 57,
+	},
+	.bitmap = &minus_bitmap,
+};
+
+static struct gfx_image plus_sign_image = {
+	.postion = {
+		.x = 120,
+		.y = 57,
+	},
+	.bitmap = &plus_bitmap,
+};
+
 void print_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
 {
 	gfx_mono_draw_line(x, y, x + length, y, GFX_PIXEL_SET);
@@ -303,23 +343,29 @@ void gfx_images_draw(struct gfx_image_node *curr_image_node)
 	}
 }
 
-void draw_left_sign()
+void draw_left_sign(bool is_numeric)
 {
-	gfx_mono_put_bitmap(left_sign_image.bitmap, left_sign_image.postion.x, left_sign_image.postion.y);
+	if (is_numeric)
+		gfx_mono_put_bitmap(minus_sign_image.bitmap, minus_sign_image.postion.x, left_sign_image.postion.y);
+	else
+		gfx_mono_put_bitmap(left_sign_image.bitmap, left_sign_image.postion.x, left_sign_image.postion.y);
 }
 
-void draw_right_sign()
+void draw_right_sign(bool is_numeric)
 {
-	gfx_mono_put_bitmap(right_sign_image.bitmap, right_sign_image.postion.x, right_sign_image.postion.y);
+	if (is_numeric)
+		gfx_mono_put_bitmap(plus_sign_image.bitmap, plus_sign_image.postion.x, left_sign_image.postion.y);
+	else
+		gfx_mono_put_bitmap(right_sign_image.bitmap, right_sign_image.postion.x, right_sign_image.postion.y);
 }
 
-void draw_graphic_signs(uint8_t selection, uint8_t min_index, uint8_t max_index)
+void draw_graphic_signs(uint8_t selection, uint8_t min_index, uint8_t max_index, bool is_numeric)
 {
 	if (selection > min_index)
-		draw_left_sign();
+		draw_left_sign(is_numeric);
 
 	if (selection < max_index)
-		draw_right_sign();
+		draw_right_sign(is_numeric);
 }
 
 void insert_graphic_signs(struct gfx_frame *frame)
@@ -331,10 +377,10 @@ void insert_graphic_signs(struct gfx_frame *frame)
 	if (frame->information_head != NULL) {
 		switch (frame->information_head->information.info_type) {
 		case SET_BRIGHTNESS:
-			draw_graphic_signs(get_brightness_level(), MIN_BRIGHTNESS_LEVEL, MAX_BRIGHTNESS_LEVEL);
+			draw_graphic_signs(get_brightness_level(), MIN_BRIGHTNESS_LEVEL, MAX_BRIGHTNESS_LEVEL, true);
 			break;
 		case SET_SCREEN_SAVER_ENABLE:
-			draw_graphic_signs(computer_data.details.screen_saver_visible, 0, 1);
+			draw_graphic_signs(computer_data.details.screen_saver_visible, 0, 1, false);
 			break;
 		case SET_SCREEN_SAVER_TIME:
 			if (computer_data.details.screen_saver_visible == 1)
@@ -356,18 +402,18 @@ void insert_graphic_signs(struct gfx_frame *frame)
 				default:
 					return ;
 				}
-				draw_graphic_signs(computer_data.details.screen_saver_update_time, min_value, max_value);
+				draw_graphic_signs(computer_data.details.screen_saver_update_time, min_value, max_value, true);
 			break;
 		case SET_SCREEN_SAVER_TYPE:
 			if (computer_data.details.screen_saver_visible == 1)
-				draw_graphic_signs(computer_data.details.screen_saver_type, 0, SCREEN_SAVER_TYPE_SIZE - 1);
+				draw_graphic_signs(computer_data.details.screen_saver_type, 0, SCREEN_SAVER_TYPE_SIZE - 1, false);
 			break;
 		case SET_SCREEN_SAVER_TIME_UNIT:
 			if (computer_data.details.screen_saver_visible == 1)
-				draw_graphic_signs(computer_data.details.screen_saver_update_time_unit, 0, SCREEN_SAVER_TIME_UNITS_SIZE - 1);
+				draw_graphic_signs(computer_data.details.screen_saver_update_time_unit, 0, SCREEN_SAVER_TIME_UNITS_SIZE - 1, true);
 			break;
 		default:
-			draw_graphic_signs((present_menu->menu)->current_selection, 0, (present_menu->menu)->num_elements - 2);
+			draw_graphic_signs((present_menu->menu)->current_selection, 0, (present_menu->menu)->num_elements - 2, false);
 			break;
 		}
 	}
@@ -387,6 +433,7 @@ void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
 			if (frame->type == FRAME_REGULAR)
 				gfx_mono_generic_draw_horizontal_line(0, 54, GFX_MONO_LCD_WIDTH, GFX_PIXEL_SET);
 		}
+
 		gfx_infos_draw(frame->information_head, true);
 		insert_graphic_signs(frame);
 		gfx_mono_ssd1306_put_framebuffer();
