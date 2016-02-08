@@ -24,15 +24,6 @@ enum button_state ok_button = BUTTON_NOT_PRESSED,
 		left_button = BUTTON_NOT_PRESSED,
 		right_button = BUTTON_NOT_PRESSED;
 
-//TODO: enter bootloader through SW
-void enter_to_bootloader(){
-    asm ("ldi r30, 0xFE\n"  /* Low byte to ZL */
-            "ldi r31, 0x00\n" /* mid byte to ZH */
-            "ldi r24, 0x01\n" /* high byte to EIND which lives */
-            "out 0x3c, r24\n" /* at addr 0x3c in I/O space */
-            "eijmp":  :: "r24", "r30", "r31");
-}
-
 void free_images(struct gfx_image_node *images_head)
 {
 	struct gfx_image_node *curr_graphic = images_head;
