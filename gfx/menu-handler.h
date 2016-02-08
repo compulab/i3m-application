@@ -54,7 +54,7 @@ void memcpy_config(void *dst, void *src_addr, size_t size);
 
 void hadle_back_to_menu();
 
-void show_splash();
+void show_logo();
 
 void handle_button_pressed();
 

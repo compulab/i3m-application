@@ -64,8 +64,9 @@ void update_screen_saver()
 	if (screen_saver_mode_enabled && computer_data.details.screen_saver_visible == 1) {
 		switch(computer_data.details.screen_saver_type) {
 		case SCREEN_SAVER_SPLASH:
-			show_splash();
+			show_logo();
 			break;
+
 		case SCREEN_SAVER_DASHBOARD:
 			if (current_power_state != POWER_OFF && dashboard != NULL) {
 				show_frame(dashboard);
@@ -84,8 +85,6 @@ static struct work print_works_count_work = { .do_work = print_work_count, .data
 //static struct work buttons_clear_work = { .do_work = handle_button_pressed, .data = NULL, .next = NULL, };
 static struct work screen_saver_work = { .do_work = update_screen_saver, .data = NULL, .next = NULL, };
 static struct work time_work = { .do_work = time_task , .data = NULL, .next = NULL, };
-
-
 
 uint32_t get_ticks_in_sec()
 {
@@ -218,8 +217,6 @@ static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS] = {
 				.set_new_timer = update_screen_timer,
 		},
 };
-
-
 
 static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = {
 		{

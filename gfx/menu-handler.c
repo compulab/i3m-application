@@ -164,7 +164,7 @@ int load_action(struct gfx_item_action *action, struct cnf_action config_action)
 	return 0;
 }
 
-void show_splash()
+void show_logo()
 {
 	if (reset_screen_saver_req) {
 		reset_screen_saver();
@@ -175,7 +175,6 @@ void show_splash()
 		case DISPLAY_DASHBOARD:
 			break;
 		default:
-			uart_send_string("screen saver on\n\r");
 			clear_screen();
 			frame_present = 0;
 			present_menu->visible = false;
@@ -221,12 +220,12 @@ int load_fonts(struct cnf_font_node *cnf_font_node)
 	}
 	while (cnf_font_node != 0) {
 		memcpy_config(&font_node, cnf_font_node, sizeof(struct cnf_font_node));
-//		memcpy_P(&font_node, cnf_font_node, sizeof(struct cnf_font_node));
 		font = malloc_locked(sizeof(struct gfx_font));
 		if (font == NULL) {
 			uart_send_string("font failed\n\r");
 			return -1;
 		}
+
 		font->source = font_node.font.source;
 		font->width = font_node.font.width;
 		font->height = font_node.font.height;

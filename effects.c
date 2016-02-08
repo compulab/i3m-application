@@ -10,8 +10,8 @@
 #define SLEEP_MSG 			"SLEEP"
 #define HIBERNATE_MSG		"HIBERNATE"
 #define POWER_OFF_MSG		"OFF"
-#define SLEEP_MSG_X			40
-#define SLEEP_MSG_Y			20
+#define MSG_X				GFX_MONO_LCD_WIDTH / 2
+#define MSG_Y				20
 
 void enter_dim_mode(char *msg)
 {
@@ -19,7 +19,8 @@ void enter_dim_mode(char *msg)
 	ssd1306_set_contrast(SLEEP_BRIGHTNESS);
 	for (int i=0 ; i < GFX_MONO_LCD_FRAMEBUFFER_SIZE; i++)
 		framebuffer[i] = 0x00;
-	draw_string_in_buffer(msg, SLEEP_MSG_X, SLEEP_MSG_Y,fonts[1], 0);
+	uint8_t msg_x = MSG_X - ((strlen(msg) * fonts[1]->width) / 2);
+	draw_string_in_buffer(msg, msg_x, MSG_Y,fonts[1], 0);
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
@@ -41,7 +42,7 @@ void enter_hibernate_mode()
 void enter_power_on_mode()
 {
 	ssd1306_set_contrast(eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS));
-	show_splash();
+	show_logo();
 }
 
 void exit_dim_mode()
