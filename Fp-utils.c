@@ -465,6 +465,7 @@ void handle_screen_saver_type_buttons(uint8_t key)
 			break;
 		}
 		eeprom_write_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS, computer_data.packed.screen_saver_config);
+		gfx_frame_draw(frame_present, true);
 	}
 }
 
@@ -1032,20 +1033,28 @@ void update_info()
 	uart_send_string("update_info start\n\r");
 	switch (display_state) {
 	case DISPLAY_LOGO:
-	case DISPLAY_DASHBOARD:
 	case DISPLAY_ACTION_FRAME:
+	case DISPLAY_DIM:
 		return;
 
+	case DISPLAY_MENU:
+		uart_send_string("check update menu\n\r");
+		if (is_menu_need_update(present_menu))
+			gfx_action_menu_init(present_menu, true);
+		break;
+
+	case DISPLAY_FRAME:
+		uart_send_string("check update frame\n\r");
+		if (is_frame_need_update(frame_present))
+			gfx_frame_draw(frame_present, true);
+	break;
+
+	case DISPLAY_DASHBOARD:
+		uart_send_string("check update dashboard**********\n\r");
+		if (is_frame_need_update(dashboard))
+			gfx_frame_draw(dashboard, true);
+		break;
 	default:
-		if (present_menu->visible) {
-			uart_send_string("check update menu\n\r");
-			if (is_menu_need_update(present_menu))
-				gfx_action_menu_init(present_menu, true);
-		} else {
-			uart_send_string("check update frame\n\r");
-			if (is_frame_need_update(frame_present))
-				gfx_frame_draw(frame_present, true);
-		}
 		break;
 	}
 }

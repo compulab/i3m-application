@@ -41,6 +41,7 @@
 #define AMBIENT_TEMPERATURE_ADDRESS 0x00
 #define EMPTY_SLOT "Empty Slot"
 #define BRIGHTNESS_STEP				25
+#define MIN_BRIGHTNESS_LEVEL		0
 #define MAX_BRIGHTNESS_LEVEL		10
 #define HDDTR_BIT					0
 #define CPUFR_BIT					1
