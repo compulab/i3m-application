@@ -91,6 +91,7 @@ int gfx_information_init(struct gfx_information *info,
 {
 	info->info_type = info_type;
 	info->info_data = info_data;
+	info->last_length = 0;
 	info->text.is_progmem = false;
 	info->text.max_text_size = max_length;
 	gfx_item_init(&info->postion, x, y, 0, 0);
@@ -104,9 +105,10 @@ void print_data_P(char *text, struct gfx_font *font, uint8_t x, uint8_t y)
 	draw_string_in_buffer_P(text, x, y, font);
 
 }
-void print_data(char *text, struct gfx_font *font, uint8_t x, uint8_t y)
+
+uint8_t print_data(char *text, struct gfx_font *font, uint8_t x, uint8_t y, uint8_t old_len)
 {
-	draw_string_in_buffer(text, x, y, font);
+	return draw_string_in_buffer(text, x, y, font, old_len);
 }
 
 void draw_screen_saver_enable_status(struct gfx_information *info)
@@ -131,13 +133,14 @@ void print_info(struct gfx_information *info)
 	}
 }
 
-void gfx_information_draw(struct gfx_information *info)
+void gfx_information_draw(struct gfx_information *info, bool redraw)
 {
 	char *text_to_draw = malloc_locked(MAX_TEMPERATURE_LENGTH);
 	if (text_to_draw == NULL)
 		return ;
+
 	update_data_by_type(info->info_type, text_to_draw, info->info_data);
-	print_data(text_to_draw, info->text.font, info->postion.x, info->postion.y);
+	info->last_length = print_data(text_to_draw, info->text.font, info->postion.x, info->postion.y, info->last_length);
 	print_info(info);
 	free(text_to_draw);
 }
@@ -147,7 +150,7 @@ void gfx_label_draw(struct gfx_label *label)
 	if (label->text.textP != NULL)
 		print_data_P(label->text.textP, label->text.font, label->postion.x, label->postion.y);
 	else
-		print_data(label->text.text, label->text.font, label->postion.x, label->postion.y);
+		print_data(label->text.text, label->text.font, label->postion.x, label->postion.y, 0); /* same len every time*/
 }
 
 int gfx_image_init(struct gfx_image *image, gfx_mono_color_t PROGMEM_T *bitmap_progmem,
@@ -284,10 +287,10 @@ void gfx_labels_draw(struct gfx_label_node *curr_label_node)
 	}
 }
 
-void gfx_infos_draw(struct gfx_information_node *curr_info_node)
+void gfx_infos_draw(struct gfx_information_node *curr_info_node, bool redraw)
 {
 	while (curr_info_node != 0){
-		gfx_information_draw(&curr_info_node->information);
+		gfx_information_draw(&curr_info_node->information, redraw);
 		curr_info_node = curr_info_node->next;
 	}
 }
@@ -300,12 +303,6 @@ void gfx_images_draw(struct gfx_image_node *curr_image_node)
 	}
 }
 
-void clr_old_signs()
-{
-	gfx_mono_draw_filled_rect(left_sign_image.postion.x, left_sign_image.postion.y, left_sign_image.bitmap->width, left_sign_image.bitmap->height, GFX_PIXEL_CLR);
-	gfx_mono_draw_filled_rect(right_sign_image.postion.x, right_sign_image.postion.y, right_sign_image.bitmap->width, right_sign_image.bitmap->height, GFX_PIXEL_CLR);
-}
-
 void draw_left_sign()
 {
 	gfx_mono_put_bitmap(left_sign_image.bitmap, left_sign_image.postion.x, left_sign_image.postion.y);
@@ -316,47 +313,65 @@ void draw_right_sign()
 	gfx_mono_put_bitmap(right_sign_image.bitmap, right_sign_image.postion.x, right_sign_image.postion.y);
 }
 
-void draw_graphic_signs(uint8_t selection, uint8_t max_index)
+void draw_graphic_signs(uint8_t selection, uint8_t min_index, uint8_t max_index)
 {
-	clr_old_signs();
-
-	if (selection != 0)
+	if (selection > min_index)
 		draw_left_sign();
 
-	if (selection != max_index)
+	if (selection < max_index)
 		draw_right_sign();
 }
 
 void insert_graphic_signs(struct gfx_frame *frame)
 {
+	uint8_t min_value = 0, max_value = 0;
 	if (frame->type == FRAME_DASHBOARD)
 		return ;
 
 	if (frame->information_head != NULL) {
 		switch (frame->information_head->information.info_type) {
 		case SET_BRIGHTNESS:
-			draw_graphic_signs(get_brightness_level(), MAX_BRIGHTNESS_LEVEL);
+			draw_graphic_signs(get_brightness_level(), MIN_BRIGHTNESS_LEVEL, MAX_BRIGHTNESS_LEVEL);
 			break;
 		case SET_SCREEN_SAVER_ENABLE:
-			draw_graphic_signs(computer_data.details.screen_saver_visible, 1);
+			draw_graphic_signs(computer_data.details.screen_saver_visible, 0, 1);
 			break;
 		case SET_SCREEN_SAVER_TIME:
 			if (computer_data.details.screen_saver_visible == 1)
-				draw_graphic_signs((computer_data.details.screen_saver_update_time / 2) - 1, 4);
+				switch(computer_data.details.screen_saver_update_time_unit) {
+				case SCREEN_SAVER_SECOND_UNIT:
+					min_value = SCREEN_SAVER_SECOND_MIN_VALUE;
+					max_value = SCREEN_SAVER_SECOND_MAX_VALUE;
+					break;
+
+				case SCREEN_SAVER_MINUTE_UNIT:
+					min_value = SCREEN_SAVER_MINUTE_MIN_VALUE;
+					max_value = SCREEN_SAVER_MINUTE_MAX_VALUE;
+					break;
+
+				case SCREEN_SAVER_HOUR_UNIT:
+					min_value = SCREEN_SAVER_HOUR_MIN_VALUE;
+					max_value = SCREEN_SAVER_HOUR_MAX_VALUE;
+					break;
+				default:
+					return ;
+				}
+				draw_graphic_signs(computer_data.details.screen_saver_update_time, min_value, max_value);
 			break;
 		case SET_SCREEN_SAVER_TYPE:
 			if (computer_data.details.screen_saver_visible == 1)
-				draw_graphic_signs(computer_data.details.screen_saver_type, SCREEN_SAVER_TYPE_SIZE - 1);
+				draw_graphic_signs(computer_data.details.screen_saver_type, 0, SCREEN_SAVER_TYPE_SIZE - 1);
 			break;
 		case SET_SCREEN_SAVER_TIME_UNIT:
 			if (computer_data.details.screen_saver_visible == 1)
-				draw_graphic_signs(computer_data.details.screen_saver_update_time_unit, SCREEN_SAVER_TIME_UNITS_SIZE - 1);
+				draw_graphic_signs(computer_data.details.screen_saver_update_time_unit, 0, SCREEN_SAVER_TIME_UNITS_SIZE - 1);
 			break;
 		default:
-			draw_graphic_signs((present_menu->menu)->current_selection, (present_menu->menu)->num_elements - 2);
+			draw_graphic_signs((present_menu->menu)->current_selection, 0, (present_menu->menu)->num_elements - 2);
 			break;
 		}
 	}
+
 }
 
 void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
@@ -368,12 +383,11 @@ void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
 			clear_screen();
 			gfx_labels_draw(frame->label_head);
 			gfx_images_draw(frame->image_head);
-			if (present_menu->is_active_frame)
-				display_state = DISPLAY_ACTION_FRAME;
+			if (present_menu->is_active_frame) display_state = DISPLAY_ACTION_FRAME;
 			if (frame->type == FRAME_REGULAR)
 				gfx_mono_generic_draw_horizontal_line(0, 54, GFX_MONO_LCD_WIDTH, GFX_PIXEL_SET);
 		}
-		gfx_infos_draw(frame->information_head);
+		gfx_infos_draw(frame->information_head, true);
 		insert_graphic_signs(frame);
 		gfx_mono_ssd1306_put_framebuffer();
 	}
