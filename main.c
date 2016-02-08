@@ -5,6 +5,8 @@
 #include "uart/uart.h"
 #include "rtc/rtc.h"
 
+const uint32_t ProgramLength __attribute__ ((section (".length"))) = 0;
+
 ISR(TWIE_TWIS_vect)
 {
 	twi_slave_interrupt_handler();
@@ -71,12 +73,22 @@ void power_state_init()
 	update_power_state();
 }
 
-void update_fp_info()
+void reset_screen_saver_config()
 {
-	eeprom_write_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS, 0x02);
-	eeprom_write_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS, 0x02);
+	eeprom_write_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS, 0x01);
+	eeprom_write_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS, 0x0a);
 	computer_data.packed.screen_saver_config = eeprom_read_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS);
 	computer_data.packed.screen_saver_update_time = eeprom_read_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS);
+}
+
+void update_fp_info()
+{
+	computer_data.packed.screen_saver_config = eeprom_read_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS);
+
+	if (computer_data.packed.screen_saver_config == 0xff)
+		reset_screen_saver_config();
+	else
+		computer_data.packed.screen_saver_update_time = eeprom_read_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS);
 
 	reset_ambient();
 	if (eeprom_read_byte(APPLICATION_VER_MSB_EEPROM_ADDRESS) != APPLICATION_VER_MSB)
@@ -93,7 +105,8 @@ void updated_info_init()
 	uint8_t *p_computer_data = (uint8_t *)&computer_data;
 	for (uint8_t i = 0; i < (sizeof(computer_data) / 8); i++)
 		p_computer_data[i] = 0;
-	dmi_init();
+//	eeprom_write_byte(EEPROM_DMI_COUNT, 0);
+//	dmi_init();
 }
 
 void init()
