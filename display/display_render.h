@@ -13,10 +13,13 @@
 	#include "../gfx/gfx_components.h"
 #endif
 
+#include "../gfx/menu-handler.h"
+
 struct gfx_font {
 	PROGMEM_BYTE_ARRAY_T source;
 	uint8_t width;
 	uint8_t height;
+	bool is_numeric_only;
 };
 
 void clear_string_background(uint8_t length, uint8_t x, uint8_t y, struct gfx_font *font);

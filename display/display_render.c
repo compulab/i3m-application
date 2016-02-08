@@ -6,7 +6,6 @@
  */
 
 #include "display_render.h"
-#include "../debug.h"
 
 bool is_valid_char(char ch)
 {
@@ -23,6 +22,13 @@ void draw_char(char ch, uint8_t x, uint8_t y, struct gfx_font *font)
 			for (uint8_t i = 0; i < font->width; i++)
 			{
 				inc_y = y + 8 + l;
+//				if (font->is_numeric_only) {  /* set offset for numeric number */
+//					if (ch >= '0' &&ch <= '9')
+//						c = ch - '0';
+//					else
+//						font = fonts[1];
+//				}
+
 				glyph_byte = PROGMEM_READ_FAR_BYTE((uint16_t)font->source + (c * font->height + i + l));
 
 				for (uint8_t z = 0; z < 8 ; z++){

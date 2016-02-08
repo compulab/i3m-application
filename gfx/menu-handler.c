@@ -229,6 +229,7 @@ int load_fonts(struct cnf_font_node *cnf_font_node)
 		font->source = font_node.font.source;
 		font->width = font_node.font.width;
 		font->height = font_node.font.height;
+		font->is_numeric_only = font_node.font.is_numeric_only;
 		fonts[font_node.id] = font;
 		cnf_font_node = font_node.next;
 	}
