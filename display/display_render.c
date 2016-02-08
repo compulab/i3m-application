@@ -38,7 +38,6 @@ void draw_char(char ch, uint8_t x, uint8_t y, struct gfx_font *font)
 	}
 }
 
-
 void clear_string_background(uint8_t length, uint8_t x, uint8_t y, struct gfx_font *font)
 {
 	gfx_mono_draw_filled_rect(x, y, length, font->height + 3, GFX_PIXEL_CLR);
@@ -55,14 +54,15 @@ uint8_t length_P(char *str)
 	return count;
 }
 
-void draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct gfx_font *font)
+uint8_t draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct gfx_font *font)
 {
+	uint8_t print_length = 0;
 	uint8_t length = length_P(str) * font->width;
 	if (length >= GFX_MONO_LCD_WIDTH) {
 			gfx_mono_draw_string(str, 0, y, &sysfont);
 	} else {
 		if (x == 0)
-			x = (GFX_MONO_LCD_WIDTH - length - 10) / 4;
+			x = (GFX_MONO_LCD_WIDTH - length - 30) / 2;
 
 		clear_string_background(length, x, y, font);
 		uint8_t temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)(str++));
@@ -73,23 +73,26 @@ void draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct gfx_font *f
 				break;
 			}
 			if (x > 120)
-			{
 				break;
-			}
+
 			draw_char(temp_char, x, y, font);
 			x += 8;
+			print_length += 8;
 			temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)(str++));
 		}
 	}
+	return print_length;
 }
 
-
-void draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct gfx_font *font)
+uint8_t draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct gfx_font *font, uint8_t old_len)
 {
+	uint8_t print_length = 0;
 	uint8_t j = 0;
 	uint8_t length = strlen(str) * font->width;
+	if (length < old_len)
+		length = old_len;
 	if (length >= GFX_MONO_LCD_WIDTH) {
-		gfx_mono_draw_string(str, 0, y, &sysfont);
+		gfx_mono_draw_string(str, 0, y, &sysfont); /* clear all line */
 	} else {
 		if (x == 0)
 			x = (GFX_MONO_LCD_WIDTH - length - 10) / 4;
@@ -105,8 +108,10 @@ void draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct gfx_font *fon
 				continue;
 			}
 			draw_char(str[j], x, y, font);
+			print_length += 8;
 			x += 8;
 			j++;
 		}
 	}
+	return print_length;
 }
