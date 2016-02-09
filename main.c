@@ -4,6 +4,7 @@
 #include "wdt/wdt.h"
 #include "uart/uart.h"
 #include "rtc/rtc.h"
+#include "display/glcd-0.5.2/glcd.h"
 
 const uint32_t ProgramLength __attribute__ ((section (".length"))) = 0;
 
@@ -119,6 +120,7 @@ void init()
 	load_config_block();
 	cli();
 	gfx_mono_init();
+	glcd_init();
 	sram_handle_init();
 	updated_info_init();
 	adc_init();
@@ -177,6 +179,7 @@ int main(int argc, char *argv[])
 	init();
 
 	wdt_reset();
+
 	while (true) {
 //		debug_print_log();
 		wakeup = false;

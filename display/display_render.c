@@ -44,6 +44,13 @@ void draw_char(char ch, uint8_t x, uint8_t y, struct gfx_font *font)
 	}
 }
 
+#include "glcd-0.5.2/fonts/arial_black_32_to_127_11X11.h"
+#include "glcd-0.5.2/fonts/font5x7.h"
+#include "glcd-0.5.2/fonts/times_new_roman_32_to_127_11X12.h"
+#include "glcd-0.5.2/fonts/Liberation_Sans17x17_Alpha.h"
+#include "glcd-0.5.2/glcd.h"
+
+
 void clear_string_background(uint8_t length, uint8_t x, uint8_t y, struct gfx_font *font)
 {
 	gfx_mono_draw_filled_rect(x, y, length, font->height + 3, GFX_PIXEL_CLR);
@@ -73,6 +80,15 @@ uint8_t draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct gfx_font
 		clear_string_background(length, x, y, font);
 		uint8_t temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)(str++));
 
+		if (font->width < 7)
+			glcd_tiny_set_font(Font5x7,5,7,32,127);
+		else
+			glcd_set_font(Arial_Black_32_to_127_11x11,11,11,32,127);
+
+//		glcd_set_font(&arial_black_11x11_font);
+
+//		glcd_clear_buffer();
+
 		while (temp_char){
 			if (temp_char == '\n'){
 				draw_string_in_buffer_P(str, x, y + 8, font);
@@ -81,11 +97,15 @@ uint8_t draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct gfx_font
 			if (x > 120)
 				break;
 
-			draw_char(temp_char, x, y, font);
+			glcd_draw_char_xy(x, y, temp_char);
+
+//			draw_char(temp_char, x, y, font);
 			x += 8;
 			print_length += 8;
 			temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)(str++));
 		}
+
+		glcd_write();
 	}
 	return print_length;
 }
@@ -103,6 +123,11 @@ uint8_t draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct gfx_font *
 		if (x == 0)
 			x = (GFX_MONO_LCD_WIDTH - length - 10) / 4;
 		clear_string_background(length, x, y, font);
+		if (font->width < 7)
+				glcd_tiny_set_font(Font5x7,5,7,32,127);
+			else
+				glcd_set_font(Times_New_Roman11x12,11,11,32,127);
+
 		while (str[j] != '\0')
 		{
 			if (x > 120 || str[j] == '\n')
@@ -113,7 +138,10 @@ uint8_t draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct gfx_font *
 					j ++;
 				continue;
 			}
-			draw_char(str[j], x, y, font);
+
+			glcd_draw_char_xy(x, y, str[j]);
+
+//			draw_char(str[j], x, y, font);
 			print_length += 8;
 			x += 8;
 			j++;
