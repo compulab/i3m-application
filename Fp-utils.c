@@ -388,13 +388,6 @@ void set_part_number(char *output_str)
 	for (int j = 1; j < 4; j++) {
 		for (int i = 0; i < PART_NUMBER_OPT_LENGTH; i++) {
 			info = eeprom_read_byte(PART_NUMBER_EEPROM_ADDRESS + i + j * PART_NUMBER_OPT_LENGTH);
-			if (option_index % 15 == 0) {
-				part_number[index] = '\n';
-				option_index = 1;
-				index++;
-				if (info == '-')
-					continue;
-			}
 			if (info == '\0')
 				break;
 			part_number[index] = info;
