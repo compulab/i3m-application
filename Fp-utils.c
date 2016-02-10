@@ -368,6 +368,27 @@ void set_serial_number(char *output_str)
 	sprintf(output_str, "%d%d%d%d%d%d%d%d% d%d%d%d", serial[0], serial[1], serial[2], serial[3], serial[4], serial[5], serial[6], serial[7], serial[8], serial[9], serial[10], serial[11] );
 }
 
+void set_app_version(char *output_str, uint8_t type)
+{
+	switch(type) {
+	case 0:
+		strcpy(output_str, BUILD_TIME);
+		break;
+
+	case 1:
+		strcpy(output_str, BUILD_DATE);
+		break;
+
+	case 2:
+		strcpy(output_str,"VER: " VERSION);
+		break;
+
+	default:
+		strcpy(output_str, "-");
+		break;
+	}
+}
+
 void set_part_number(char *output_str)
 {
 	char part_number[PART_NUMBER_LENGTH];
@@ -706,6 +727,9 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 		break;
 	case SHOW_SERIAL_NUMBER:
 		set_serial_number(output_str);
+		break;
+	case SHOW_APP_VERSION:
+		set_app_version(output_str, info);
 		break;
 	case SHOW_PART_NUMBER:
 		set_part_number(output_str);
