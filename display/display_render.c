@@ -132,7 +132,7 @@ uint8_t draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct gfx_font *
 		{
 			if (x > 120 || str[j] == '\n')
 			{
-				y += font->height;
+				y += font->height + 2;
 				x = 0;
 				if (str[j] == '\n')
 					j ++;
