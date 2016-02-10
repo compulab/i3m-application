@@ -21,14 +21,16 @@ VERSION = 0
 PATCHLEVEL = 6
 FRONT_PANEL_APP_VERSION = $(VERSION).$(PATCHLEVEL)
 
+AUTO_GENERATED_FILE = auto_generated.h
+
+auto: $(AUTO_GENERATED_FILE)
 
 CROSS_COMPILE ?=
 
-AUTO_GENERATED_FILE = auto_generated.hUTO_GENERATED_FILE):
-	@( printf '#define VERSION "%s%s"\n' "$(EEPROM_UTIL_VERSION)" \
+$(AUTO_GENERATED_FILE): 
+	@( printf '#define VERSION "%s%s"\n' "$(FRONT_PANEL_APP_VERSION)" \
 	'$(shell ./setversion)' ) > $@
 	@date +'#define BUILD_DATE "%d %b %C%y"' >> $@
 	@date +'#define BUILD_TIME "%T"' >> $@
-
 
 
