@@ -53,7 +53,7 @@ Change Activity:
 
 glcd_FontConfig_t font_current;
 
-#if defined( GLCD_DEVICE_AVR8 ) || defined( GLCD_DEVICE_XPLAINED_XMEGA_A3BU )
+#if defined( GLCD_DEVICE_AVR8 ) || defined( GLCD_DEVICE_XPLAINED_XMEGA_A3BU ) || defined(FP_XMEGA)
 void glcd_set_font(PGM_P font_table, uint8_t width, uint8_t height, char start_char, char end_char)
 #else
 void glcd_set_font(const char * font_table, uint8_t width, uint8_t height, char start_char, char end_char)
@@ -68,7 +68,7 @@ void glcd_set_font(const char * font_table, uint8_t width, uint8_t height, char 
 	font_current.table_type = MIKRO; /* Only supports MikroElektronika generated format at the moment */
 }
 
-#if defined( GLCD_DEVICE_AVR8 ) || defined( GLCD_DEVICE_XPLAINED_XMEGA_A3BU )
+#if defined( GLCD_DEVICE_AVR8 ) || defined( GLCD_DEVICE_XPLAINED_XMEGA_A3BU ) || defined(FP_XMEGA)
 void glcd_font(PGM_P font_table, uint8_t width, uint8_t height, char start_char, char end_char, font_table_type_t type)
 #else
 void glcd_font(const char * font_table, uint8_t width, uint8_t height, char start_char, char end_char, font_table_type_t type)
@@ -95,7 +95,7 @@ uint8_t glcd_draw_char_xy(uint8_t x, uint8_t y, char c)
 			
 		uint8_t i;
 		for ( i = 0; i < font_current.width; i++ ) {
-#if defined( GLCD_DEVICE_AVR8 ) || defined( GLCD_DEVICE_XPLAINED_XMEGA_A3BU )
+#if defined( GLCD_DEVICE_AVR8 ) || defined( GLCD_DEVICE_XPLAINED_XMEGA_A3BU ) || defined(FP_XMEGA)
 			uint8_t dat = pgm_read_byte( font_current.font_table + ((c - font_current.start_char) * (font_current.width)) + i );
 #else
 			uint8_t dat = *( font_current.font_table + ((c - font_current.start_char) * (font_current.width)) + i );
@@ -135,7 +135,7 @@ uint8_t glcd_draw_char_xy(uint8_t x, uint8_t y, char c)
 		p = font_current.font_table + (c - font_current.start_char) * bytes_per_char;
 
 		/* The first byte per character is always the width of the character */
-#if defined( GLCD_DEVICE_AVR8 ) || defined( GLCD_DEVICE_XPLAINED_XMEGA_A3BU )
+#if defined( GLCD_DEVICE_AVR8 ) || defined( GLCD_DEVICE_XPLAINED_XMEGA_A3BU ) || defined(FP_XMEGA)
 		var_width = pgm_read_byte(p);
 #else
 		var_width = *p;
@@ -151,7 +151,7 @@ uint8_t glcd_draw_char_xy(uint8_t x, uint8_t y, char c)
 		for ( i = 0; i < var_width; i++ ) {
 			uint8_t j;
 			for ( j = 0; j < bytes_high; j++ ) {
-#if defined( GLCD_DEVICE_AVR8 ) || defined( GLCD_DEVICE_XPLAINED_XMEGA_A3BU )
+#if defined( GLCD_DEVICE_AVR8 ) || defined( GLCD_DEVICE_XPLAINED_XMEGA_A3BU ) || defined(FP_XMEGA)
 				uint8_t dat = pgm_read_byte( p + i*bytes_high + j );
 #else
 				uint8_t dat = *( p + i*bytes_high + j );
@@ -237,7 +237,7 @@ uint8_t glcd_draw_char_xy(uint8_t x, uint8_t y, char c)
 				
 				uint8_t dat, bit;
 				
-#if defined( GLCD_DEVICE_AVR8 ) || defined( GLCD_DEVICE_XPLAINED_XMEGA_A3BU )
+#if defined( GLCD_DEVICE_AVR8 ) || defined( GLCD_DEVICE_XPLAINED_XMEGA_A3BU ) || defined(FP_XMEGA)
 				dat = pgm_read_byte( p + j*font_current.width + i );
 #else
 				dat = *( p + j*font_current.width + i );
@@ -301,7 +301,7 @@ void glcd_draw_string_xy_P(uint8_t x, uint8_t y, const char *str)
 	}
 
 	while (1) {
-#if defined( GLCD_DEVICE_AVR8 ) || defined( GLCD_DEVICE_XPLAINED_XMEGA_A3BU )
+#if defined( GLCD_DEVICE_AVR8 ) || defined( GLCD_DEVICE_XPLAINED_XMEGA_A3BU ) || defined(FP_XMEGA)
 		char c = pgm_read_byte(str++);
 #else
 		char c = *(str++);

@@ -70,7 +70,8 @@ Change Activity:
  *  \see glcd_tiny_set_font()
  */
 #if defined( FP_XMEGA )
-void glcd_set_font(struct glcd_FontConfig_t *font);
+//void glcd_set_font(struct glcd_FontConfig_t *font);
+void glcd_set_font(PGM_P font_table, uint8_t width, uint8_t height, char start_char, char end_char);
 #elif defined( GLCD_DEVICE_AVR8 ) || defined( GLCD_DEVICE_XPLAINED_XMEGA_A3BU )
 void glcd_set_font(PGM_P font_table, uint8_t width, uint8_t height, char start_char, char end_char);
 #else

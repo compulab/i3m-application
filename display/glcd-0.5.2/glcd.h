@@ -49,8 +49,8 @@ Change Activity:
 #ifndef _GLCD_H
 #define _GLCD_H
 
-#define GLCD_DEVICE_XPLAINED_XMEGA_A3BU
-//#define FP_XMEGA
+//#define GLCD_DEVICE_XPLAINED_XMEGA_A3BU
+#define FP_XMEGA
 
 #if defined(GLCD_DEVICE_AVR8)
 	#include <avr/pgmspace.h>
@@ -65,7 +65,17 @@ Change Activity:
 		#include <util/delay.h>
 		#define delay_ms(t) _delay_ms(t)
 	#endif
-
+#elif defined( FP_XMEGA )
+	#include <avr/pgmspace.h>
+	#include <avr/io.h>
+	#include <avr/interrupt.h>
+#if !defined(GLCD_USE_AVR_DELAY)
+//		extern void delay_ms(uint32_t ms);
+#else
+		/* Use AVR __delay_ms() function */
+		#include <util/delay.h>
+		#define delay_ms(t) _delay_ms(t)
+#endif
 #elif defined( GLCD_DEVICE_XPLAINED_XMEGA_A3BU )
 	#include <avr/pgmspace.h>
 	#include <avr/io.h>
@@ -121,7 +131,7 @@ Change Activity:
 	
 #elif defined(GLCD_CONTROLLER_NT75451)
 	#include "controllers/NT75451.h"
-		
+#elif defined(FP_XMEGA)
 #else
 	#error "Controller not supported or defined"
 	
