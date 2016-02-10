@@ -8,11 +8,13 @@
 #ifndef LAYOUT_H_
 #define LAYOUT_H_
 
+#include "auto_generated.h"
+
 #include <stdbool.h>
 #include <stdint.h>
 
 #ifndef VERSION
-#define VERSION "0.6-dirty"
+#define VERSION "0.8"
 #endif
 
 #ifndef BUILD_DATE
@@ -20,7 +22,7 @@
 #endif
 
 #ifndef BUILD_TIME
-#define BUILD_TIME "11:32:42"
+#define BUILD_TIME "11:39:18"
 #endif
 
 #define MAJOR_REVISION_LSB_EEPROM_ADDRESS 	0x00
