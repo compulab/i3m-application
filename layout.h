@@ -11,6 +11,18 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#ifndef VERSION
+#define VERSION "0.6-dirty"
+#endif
+
+#ifndef BUILD_DATE
+#define BUILD_DATE "10 Feb 2016"
+#endif
+
+#ifndef BUILD_TIME
+#define BUILD_TIME "11:32:42"
+#endif
+
 #define MAJOR_REVISION_LSB_EEPROM_ADDRESS 	0x00
 #define MAJOR_REVISION_MSB_EEPROM_ADDRESS 	0x01
 #define MINOR_REVISION_LSB_EEPROM_ADDRESS 	0x02
