@@ -361,28 +361,59 @@ void set_updated_gpu_temp(char *output_str)
 
 void set_serial_number(char *output_str)
 {
-	char serial[SERIAL_NUMBER_LENGTH + 1];
+	uint8_t serial[SERIAL_NUMBER_LENGTH];
 	for (int i=0; i < SERIAL_NUMBER_LENGTH; i++)
 		serial[i] = eeprom_read_byte(SERIAL_NUMBER_EEPROM_ADDRESS + i);
-	serial[SERIAL_NUMBER_LENGTH] = '\0';
-	sprintf(output_str, "%d", atoi(serial));
+//	serial[SERIAL_NUMBER_LENGTH] = '\0';
+	sprintf(output_str, "%d%d%d%d%d%d%d%d% d%d%d%d", serial[0], serial[1], serial[2], serial[3], serial[4], serial[5], serial[6], serial[7], serial[8], serial[9], serial[10], serial[11] );
 }
 
 void set_part_number(char *output_str)
 {
-	char part_number[PRODUCT_NAME_LENGTH + 1];
-	for (int i = 0; i < PRODUCT_NAME_LENGTH; i++)
-		part_number[i] = eeprom_read_byte(PRODUCT_NAME_EEPROM_ADDRESS + i);
-	part_number[PRODUCT_NAME_LENGTH] = '\0';
+	char part_number[PART_NUMBER_LENGTH];
+	uint8_t index = 0;
+	uint8_t option_index = 1;
+	uint8_t info;
+	for (int i = 0; i < PART_NUMBER_OPT_LENGTH; i++) {
+			info = eeprom_read_byte(PART_NUMBER_EEPROM_ADDRESS + i);
+			part_number[index] = info;
+			if (info == '\0') {
+				part_number[index] = '\n';
+				index++;
+				break;
+			}
+			index++;
+		}
+
+	for (int j = 1; j < 4; j++) {
+		for (int i = 0; i < PART_NUMBER_OPT_LENGTH; i++) {
+			info = eeprom_read_byte(PART_NUMBER_EEPROM_ADDRESS + i + j * PART_NUMBER_OPT_LENGTH);
+			if (option_index % 15 == 0) {
+				part_number[index] = '\n';
+				option_index = 1;
+				index++;
+				if (info == '-')
+					continue;
+			}
+			if (info == '\0')
+				break;
+			part_number[index] = info;
+			index++;
+			option_index++;
+		}
+	}
+
+	part_number[index] = '\0';
 	strcpy(output_str, part_number);
 }
 
-void set_mac_address(char *output_str)
+void set_mac_address(char *output_str, uint8_t info)
 {
+	uint8_t eeprom_addr = info * MAC_ADDRESS_LENGTH + MAC_ADDRESS_EEPROM_ADDRESS;
 	uint8_t mac_address[MAC_ADDRESS_LENGTH];
 	for (int i = 0; i < MAC_ADDRESS_LENGTH; i++)
-		mac_address[i] = eeprom_read_byte(MAC_ADDRESS_EEPROM_ADDRESS + i);
-	sprintf(output_str, "%02X:%02X:%02X:%02X:%02X:%02X", mac_address[0], mac_address[1], mac_address[2], mac_address[3], mac_address[4], mac_address[5]);
+		mac_address[i] = eeprom_read_byte(eeprom_addr + i);
+	sprintf(output_str, "[%d] %02X:%02X:%02X:%02X:%02X:%02X", (info + 1),  mac_address[0], mac_address[1], mac_address[2], mac_address[3], mac_address[4], mac_address[5]);
 }
 
 void set_update_hdd_temp(char *output_str, uint8_t hdd_id)
@@ -687,7 +718,7 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 		set_part_number(output_str);
 		break;
 	case SHOW_MAC_ADDRESS:
-		set_mac_address(output_str);
+		set_mac_address(output_str, info);
 		break;
 	case SHOW_POWER_STATE:
 		set_state(output_str);
