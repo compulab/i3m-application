@@ -14,9 +14,7 @@
 
 #define POWER_COUNT		1000
 
-//int16_t power_log[POWER_COUNT];
 long current_power;
-//char current_power_str[7];
 int32_t power_sum;
 float gain = 0;
 float vcc = 3.3;
