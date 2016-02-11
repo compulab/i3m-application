@@ -13,8 +13,6 @@
 #include "../asf.h"
 #include "../Fp-utils.h"
 
-extern char current_power_str[7];
-
 void adc_init(void);
 
 void set_power_data(char *str);
