@@ -408,7 +408,7 @@ void add_direct_string()
 		if (strlen(direct_string_to_add->content) > strlen(curr->content)) {
 			remove_dmi_backup(curr);
 			strdup(direct_string_to_add->content);
-			add_dmi_backup(curr);
+//			add_dmi_backup(curr);
 		} else {
 			strdup(direct_string_to_add->content);
 			update_dmi_backup(curr);
@@ -416,7 +416,7 @@ void add_direct_string()
 	} else {
 		direct_string_to_add->next = computer_data.details.direct_string;
 		computer_data.details.direct_string = direct_string_to_add;
-		add_dmi_backup(direct_string_to_add);
+//		add_dmi_backup(direct_string_to_add);
 		direct_string_to_add = 0;
 	}
 
