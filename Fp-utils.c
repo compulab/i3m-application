@@ -212,6 +212,8 @@ void update_power_state()
 			return;
 		current_power_state = POWER_STD;
 	} else if (gpio_pin_is_low(FP_S3)) {
+		if (last_power_state != POWER_ON) /* Sleep mode can be only after power on*/
+			return;
 		current_power_state = POWER_STR;
 	} else {
 		current_power_state = POWER_ON;
@@ -411,7 +413,7 @@ void set_part_number(char *output_str)
 			info = eeprom_read_byte(PART_NUMBER_EEPROM_ADDRESS + i + j * PART_NUMBER_OPT_LENGTH);
 				if (info == '-')
 					continue;
-			}
+
 			if (info == '\0')
 				break;
 			part_number[index] = info;
@@ -423,6 +425,7 @@ void set_part_number(char *output_str)
 	part_number[index] = '\0';
 	strcpy(output_str, part_number);
 }
+
 
 void set_mac_address(char *output_str, uint8_t info)
 {
