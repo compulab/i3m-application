@@ -46,12 +46,12 @@ Change Activity:
 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "glcd.h"
+#include "glcd_text.h"
 
 //extern uint8_t *glcd_buffer_selected;
 //extern glcd_BoundingBox_t *glcd_bbox_selected;
 
-glcd_FontConfig_t font_current;
+struct glcd_FontConfig_t font_current;
 
 #if defined( GLCD_DEVICE_AVR8 ) || defined( GLCD_DEVICE_XPLAINED_XMEGA_A3BU ) || defined(FP_XMEGA)
 void glcd_set_font(PGM_P font_table, uint8_t width, uint8_t height, char start_char, char end_char)
@@ -68,8 +68,18 @@ void glcd_set_font(const char * font_table, uint8_t width, uint8_t height, char 
 	font_current.table_type = MIKRO; /* Only supports MikroElektronika generated format at the moment */
 }
 
+#if defined(FP_XMEGA)
+void glcd_set_font_from_font(struct glcd_FontConfig_t *font)
+{
+	if (font->width < 8)
+		glcd_tiny_set_font(font->font_table, font->width, font->height, font->start_char, font->end_char);
+	else
+		glcd_set_font(font->font_table, font->width, font->height, font->start_char, font->end_char);
+}
+#endif
+
 #if defined( GLCD_DEVICE_AVR8 ) || defined( GLCD_DEVICE_XPLAINED_XMEGA_A3BU ) || defined(FP_XMEGA)
-void glcd_font(PGM_P font_table, uint8_t width, uint8_t height, char start_char, char end_char, font_table_type_t type)
+void glcd_font(PGM_P font_table, uint8_t width, uint8_t height, char start_char, char end_char, enum font_table_type_t type)
 #else
 void glcd_font(const char * font_table, uint8_t width, uint8_t height, char start_char, char end_char, font_table_type_t type)
 #endif

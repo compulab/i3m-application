@@ -69,6 +69,9 @@ Change Activity:
  *        glcd_tiny_set_font()
  *  \see glcd_tiny_set_font()
  */
+
+#include "glcd.h"
+
 #if defined( FP_XMEGA )
 //void glcd_set_font(struct glcd_FontConfig_t *font);
 void glcd_set_font(PGM_P font_table, uint8_t width, uint8_t height, char start_char, char end_char);
@@ -76,6 +79,11 @@ void glcd_set_font(PGM_P font_table, uint8_t width, uint8_t height, char start_c
 void glcd_set_font(PGM_P font_table, uint8_t width, uint8_t height, char start_char, char end_char);
 #else
 void glcd_set_font(const char * font_table, uint8_t width, uint8_t height, char start_char, char end_char);
+#endif
+
+
+#if defined(FP_XMEGA)
+void glcd_set_font_from_font(struct glcd_FontConfig_t *font);
 #endif
 
 /** Set GLCD font to predefined font table. Suitable for different different types of font tables.
@@ -91,7 +99,7 @@ void glcd_set_font(const char * font_table, uint8_t width, uint8_t height, char 
  *  \see glcd_tiny_set_font()
  */
 #if defined( GLCD_DEVICE_AVR8 ) || defined( GLCD_DEVICE_XPLAINED_XMEGA_A3BU )
-void glcd_font(PGM_P font_table, uint8_t width, uint8_t height, char start_char, char end_char, font_table_type_t type);
+void glcd_font(PGM_P font_table, uint8_t width, uint8_t height, char start_char, char end_char, enum font_table_type_t type);
 #else
 void glcd_font(const char * font_table, uint8_t width, uint8_t height, char start_char, char end_char, font_table_type_t type);
 #endif

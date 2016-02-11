@@ -50,6 +50,7 @@ Change Activity:
 #include <stdlib.h>
 #include "glcd.h"
 #include "unit_tests.h"
+#include "glcd_text.h"
 
 /** Fonts */
 #include "fonts/font5x7.h"
@@ -116,22 +117,23 @@ void glcd_test_counter_and_graph(void)
 {
 	uint8_t count = 0;
 	char string[8] = "";
+	glcd_init();
 	while(1) {
 		glcd_clear_buffer();
 
-		//glcd_tiny_set_font(Font5x7,5,7,32,127);
-		//glcd_draw_string_xy(0,40,(char *)utoa(count,string,10));
+//		glcd_tiny_set_font(Font5x7,5,7,32,127);
+		glcd_draw_string_xy(0,40,(char *)utoa(count,string,10));
 
 //		glcd_set_font(Liberation_Sans15x21_Numbers,15,21,46,57);
-		//glcd_set_font(Liberation_Sans27x36_Numbers,27,36,46,57);
-		//glcd_set_font(Bebas_Neue20x36_Bold_Numbers,20,36,46,57);
-		//glcd_set_font(Bebas_Neue18x36_Numbers,18,36,46,57);
-		//glcd_set_font(HelveticaNeueLT_Com_57_Cn23x35_Numbers,23,35,46,57); // commercial font - not for public distribution
+//		glcd_set_font(Liberation_Sans27x36_Numbers,27,36,46,57);
+//		glcd_set_font(Bebas_Neue20x36_Bold_Numbers,20,36,46,57);
+//		glcd_set_font(Bebas_Neue18x36_Numbers,18,36,46,57);
+//		glcd_set_font(HelveticaNeueLT_Com_57_Cn23x35_Numbers,23,35,46,57); // commercial font - not for public distribution
 
 		sprintf(string,"%d",count);
-		glcd_draw_string_xy(0,0,string);
-		glcd_bar_graph_horizontal(10,38,30,6,count*4);
-		glcd_bar_graph_vertical(70,0,8,30,count*2);
+		glcd_draw_string_xy(0, 0, string);
+		glcd_bar_graph_horizontal(10, 38, 30, 6, count * 4);
+		glcd_bar_graph_vertical(70, 0, 8, 30, count * 2);
 
 		glcd_write();
 		count += 1;
@@ -151,7 +153,7 @@ void glcd_test_glcdutils(void)
 		glcd_clear_buffer();
 
 		/* Set the font */
-		glcd_font(font_Earthbound_12x19_48to57,12,19,48,57,GLCD_UTILS);
+		glcd_font(font_Earthbound_12x19_48to57, 12, 19, 48, 57, GLCD_UTILS);
 
 		sprintf(string,"%d",count);
 		glcd_draw_string_xy(0,0,string);

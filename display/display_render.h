@@ -15,13 +15,21 @@
 
 #include "../gfx/menu-handler.h"
 
+#ifndef GLCD_FONT_SUPPORT
 struct gfx_font {
 	PROGMEM_BYTE_ARRAY_T source;
 	uint8_t width;
 	uint8_t height;
 	bool is_numeric_only;
 };
-
+#else
+struct gfx_font {
+	PROGMEM_BYTE_ARRAY_T source;
+	uint8_t width;
+	uint8_t height;
+	bool is_numeric_only;
+};
+#endif
 void clear_string_background(uint8_t length, uint8_t x, uint8_t y, struct gfx_font *font);
 
 uint8_t draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct gfx_font *font);

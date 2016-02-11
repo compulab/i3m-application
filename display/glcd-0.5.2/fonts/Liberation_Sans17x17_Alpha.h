@@ -49,6 +49,4 @@ static const char PROGMEM Liberation_Sans17x17_Alpha[]  = {
         };
 
 
-
-
 #endif /* LIBERATION_SANS17X17_ALPHA_H_ */

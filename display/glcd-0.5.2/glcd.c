@@ -53,7 +53,7 @@ uint8_t* glcd_buffer = framebuffer;
  * Keeps track of bounding box of area on LCD which need to be
  * updated next reresh cycle
  */
-glcd_BoundingBox_t glcd_bbox;
+struct glcd_BoundingBox_t glcd_bbox;
 
 /**
  * Pointer to screen buffer currently in use.
@@ -63,7 +63,7 @@ uint8_t *glcd_buffer_selected;
 /**
  * Pointer to bounding box currently in use.
  */
-glcd_BoundingBox_t *glcd_bbox_selected;
+struct glcd_BoundingBox_t *glcd_bbox_selected;
 
 /** @} */
 
@@ -131,7 +131,7 @@ void glcd_clear_buffer(void) {
 	glcd_update_bbox(0,0,GLCD_LCD_WIDTH - 1,GLCD_LCD_HEIGHT - 1);
 }
 
-void glcd_select_screen(uint8_t *buffer, glcd_BoundingBox_t *bbox)
+void glcd_select_screen(uint8_t *buffer, struct glcd_BoundingBox_t *bbox)
 {
 	glcd_buffer_selected = buffer;
 	glcd_bbox_selected = bbox;

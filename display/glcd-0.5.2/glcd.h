@@ -146,21 +146,21 @@ Change Activity:
 /**
  * Font table type
  */
-typedef enum {
+enum font_table_type_t {
 	STANG,
 	MIKRO,
 	GLCD_UTILS
-} font_table_type_t;
+};
 
 /**
  * Bounding box for pixels that need to be updated
  */
-typedef struct {
+struct glcd_BoundingBox_t {
 	uint8_t x_min;
 	uint8_t y_min;
 	uint8_t x_max;
 	uint8_t y_max;
-} glcd_BoundingBox_t;
+};
 
 #include <stdint.h>
 #include "glcd_devices.h"
@@ -168,7 +168,7 @@ typedef struct {
 #include "glcd_graphics.h"
 #include "glcd_graphs.h"
 #include "glcd_text_tiny.h"
-#include "glcd_text.h"
+//#include "glcd_text.h"
 #include "unit_tests.h"
 
 /**
@@ -240,9 +240,9 @@ typedef struct {
 
 /* Global variables used for GLCD library */
 extern uint8_t* glcd_buffer;
-extern glcd_BoundingBox_t glcd_bbox;
+extern struct glcd_BoundingBox_t glcd_bbox;
 extern uint8_t *glcd_buffer_selected;
-extern glcd_BoundingBox_t *glcd_bbox_selected;
+extern struct glcd_BoundingBox_t *glcd_bbox_selected;
 
 /** \name Base Functions 
  *  @{
@@ -305,7 +305,7 @@ void glcd_clear_buffer(void);
  * \param bbox   Pointer to bounding box object.
  * \see glcd_BoundingBox_t
  */
-void glcd_select_screen(uint8_t *buffer, glcd_BoundingBox_t *bbox);
+void glcd_select_screen(uint8_t *buffer, struct glcd_BoundingBox_t *bbox);
 
 /**
  * Scroll entire screne buffer by x and y pixels. (not implemented yet)
@@ -325,17 +325,17 @@ void glcd_scroll_line(void);
 
 /** @}*/
 
-typedef struct {
+struct glcd_FontConfig_t {
 	const char *font_table;
 	uint8_t width;
 	uint8_t height;
 	char start_char;
 	char end_char;
-	font_table_type_t table_type;
-}glcd_FontConfig_t;
+	enum font_table_type_t table_type;
+};
 
 extern uint8_t *glcd_buffer_selected;
-extern glcd_BoundingBox_t *glcd_bbox_selected;
-extern glcd_FontConfig_t font_current;
+extern struct glcd_BoundingBox_t *glcd_bbox_selected;
+extern struct glcd_FontConfig_t font_current;
 
 #endif
