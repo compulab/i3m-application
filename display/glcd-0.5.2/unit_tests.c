@@ -51,12 +51,13 @@ Change Activity:
 #include "glcd.h"
 #include "unit_tests.h"
 #include "glcd_text.h"
+#include "glcd_font.h"
 
 /** Fonts */
-#include "fonts/font5x7.h"
-//#include "fonts/Liberation_Sans11x14_Numbers.h"
-#include "fonts/Liberation_Sans15x21_Numbers.h"
-#include "fonts/Liberation_Sans17x17_Alpha.h"
+//#include "fonts/font5x7.h"
+////#include "fonts/Liberation_Sans11x14_Numbers.h"
+//#include "fonts/Liberation_Sans15x21_Numbers.h"
+//#include "fonts/Liberation_Sans17x17_Alpha.h"
 //#include "fonts/Liberation_Sans27x36_Numbers.h"
 //#include "fonts/Bebas_Neue20x36_Bold_Numbers.h"
 
@@ -153,7 +154,8 @@ void glcd_test_glcdutils(void)
 		glcd_clear_buffer();
 
 		/* Set the font */
-		glcd_font(font_Earthbound_12x19_48to57, 12, 19, 48, 57, GLCD_UTILS);
+//		glcd_font( font_Earthbound_12x19_48to57, 12, 19, 48, 57, GLCD_UTILS);
+//		set_font_by_type(GLCD_FONT_EARTHBOUND_12X19_NUM);
 
 		sprintf(string,"%d",count);
 		glcd_draw_string_xy(0,0,string);

@@ -7,6 +7,10 @@
 
 #include "glcd_font.h"
 
+static struct glcd_FontConfig_t **fonts;
+static uint16_t font_size;
+static uint16_t insert_index;
+
 static  struct glcd_FontConfig_t arial_black_11x11_font = {
 		.font_table = Arial_Black_32_to_127_11x11,
 		.width = 11,
@@ -107,7 +111,7 @@ static  struct glcd_FontConfig_t sysfont_5x7_font = {
 		.table_type = MIKRO,
 };
 
-void set_font_by_type(enum glcd_font_type type)
+struct glcd_FontConfig_t *get_font_by_type(enum glcd_font_type type)
 {
 	struct glcd_FontConfig_t *font;
 	switch (type) {
@@ -148,7 +152,22 @@ void set_font_by_type(enum glcd_font_type type)
 		font = &sysfont_5x7_font;
 		break;
 	}
-	if (font != NULL)
-		glcd_set_font_from_font(font);
-//	return font;
+//	if (font != NULL)
+//		glcd_set_font_from_font(font);
+	return font;
+}
+
+void glcd_add_font(struct glcd_FontConfig_t *new_font, uint16_t font_id)
+{
+	if (font_id >= NUM_DEFAULT_FONTS && font_id < font_size)
+		fonts[font_id] = new_font;
+}
+
+void glcd_fonts_init(uint8_t fonts_add_size)
+{
+	font_size = fonts_add_size + NUM_DEFAULT_FONTS;
+	fonts = malloc_locked(sizeof(struct glcd_FontConfig_t *) * font_size);
+	for (insert_index = 0; insert_index < NUM_DEFAULT_FONTS; insert_index++)
+		fonts[insert_index] = get_font_by_type(insert_index);
+
 }

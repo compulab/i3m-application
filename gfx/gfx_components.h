@@ -39,7 +39,7 @@ struct gfx_text {
 	char *textP;
 	uint8_t max_text_size;
 	bool is_progmem;
-	struct gfx_font *font;
+	struct glcd_FontConfig_t *font;
 };
 
 struct gfx_label {

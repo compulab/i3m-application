@@ -218,7 +218,7 @@ void set_dmi_content_position(struct gfx_item* pos)
 void set_dmi_name_label(struct gfx_label_node **label_node, struct direct_string_item * direct_item)
 {
 	set_dmi_name_position(&(*label_node)->label.postion);
-	(*label_node)->label.text.font = fonts[0];
+	(*label_node)->label.text.font = get_font_by_type(GLCD_FONT_SYSFONT_5X7);
 	(*label_node)->label.text.is_progmem = false;
 	(*label_node)->label.text.text = direct_item->content;
 }
@@ -226,7 +226,7 @@ void set_dmi_name_label(struct gfx_label_node **label_node, struct direct_string
 void set_dmi_content_label(struct gfx_label_node *label_node, struct direct_string_item * direct_item)
 {
 	set_dmi_content_position(&label_node->label.postion);
-	label_node->label.text.font = fonts[0];
+	label_node->label.text.font = get_font_by_type(GLCD_FONT_SYSFONT_5X7);
 	label_node->label.text.is_progmem = false;
 	label_node->label.text.text = direct_item->type;
 }

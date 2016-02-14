@@ -12,43 +12,43 @@ bool is_valid_char(char ch)
 	return ch != '\0' && ch != '\n';
 }
 
-void draw_char(char ch, uint8_t x, uint8_t y, struct gfx_font *font)
+void draw_char(char ch, uint8_t x, uint8_t y, struct glcd_FontConfig_t *font)
 {
-	if (is_valid_char(ch)) {
-		uint8_t inc_y,
-				glyph_byte,
-				c = ch - ' ';
-		for (uint8_t l = 0; l < font->height; l += 8){
-			for (uint8_t i = 0; i < font->width; i++)
-			{
-				inc_y = y + 8 + l;
-//				if (font->is_numeric_only) {  /* set offset for numeric number */
-//					if (ch >= '0' &&ch <= '9')
-//						c = ch - '0';
-//					else
-//						font = fonts[1];
+//	if (is_valid_char(ch)) {
+//		uint8_t inc_y,
+//				glyph_byte,
+//				c = ch - ' ';
+//		for (uint8_t l = 0; l < font->height; l += 8){
+//			for (uint8_t i = 0; i < font->width; i++)
+//			{
+//				inc_y = y + 8 + l;
+////				if (font->is_numeric_only) {  /* set offset for numeric number */
+////					if (ch >= '0' &&ch <= '9')
+////						c = ch - '0';
+////					else
+////						font = fonts[1];
+////				}
+//
+////				glyph_byte = PROGMEM_READ_FAR_BYTE((uint16_t)font-> + (c * font->height + i + l));
+//
+//				for (uint8_t z = 0; z < 8 ; z++){
+//					if ((glyph_byte & 0x80)) {
+//						gfx_mono_draw_pixel(x + i, inc_y,
+//								GFX_PIXEL_SET);
+//					}
+//					inc_y--;
+//					glyph_byte <<= 1;
 //				}
-
-				glyph_byte = PROGMEM_READ_FAR_BYTE((uint16_t)font->source + (c * font->height + i + l));
-
-				for (uint8_t z = 0; z < 8 ; z++){
-					if ((glyph_byte & 0x80)) {
-						gfx_mono_draw_pixel(x + i, inc_y,
-								GFX_PIXEL_SET);
-					}
-					inc_y--;
-					glyph_byte <<= 1;
-				}
-			}
-		}
-	}
+//			}
+//		}
+//	}
 }
 
 #include "glcd-0.5.2/glcd_text.h"
 #include "glcd-0.5.2/glcd_font.h"
 
 
-void clear_string_background(uint8_t length, uint8_t x, uint8_t y, struct gfx_font *font)
+void clear_string_background(uint8_t length, uint8_t x, uint8_t y, struct glcd_FontConfig_t *font)
 {
 	gfx_mono_draw_filled_rect(x, y, length, font->height + 3, GFX_PIXEL_CLR);
 }
@@ -64,7 +64,7 @@ uint8_t length_P(char *str)
 	return count;
 }
 
-uint8_t draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct gfx_font *font)
+uint8_t draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct glcd_FontConfig_t *font)
 {
 	uint8_t print_length = 0;
 	uint8_t length = length_P(str) * font->width;
@@ -74,20 +74,10 @@ uint8_t draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct gfx_font
 		if (x == 0)
 			x = (GFX_MONO_LCD_WIDTH - length - 30) / 2;
 
-		clear_string_background(length, x, y, font);
+//		clear_string_background(length, x, y, font);
 		uint8_t temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)(str++));
-//		struct glcd_FontConfig_t font_config;
-		if (font->width < 7)
-//			glcd_tiny_set_font(Font5x7,5,7,32,127);
-			set_font_by_type(GLCD_FONT_SYSFONT_5X7);
-		else
-//			glcd_set_font(Arial_Black_32_to_127_11x11,11,11,32,127);
-			set_font_by_type(GLCD_FONT_ARIAL_11X11_BOLD);
 
-//		glcd_set_font_from_font(&font_config);
-//		glcd_set_font(&arial_black_11x11_font);
-
-//		glcd_clear_buffer();
+		glcd_set_font_from_font(font);
 
 		while (temp_char){
 			if (temp_char == '\n'){
@@ -99,7 +89,6 @@ uint8_t draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct gfx_font
 
 			glcd_draw_char_xy(x, y, temp_char);
 
-//			draw_char(temp_char, x, y, font);
 			x += 8;
 			print_length += 8;
 			temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)(str++));
@@ -110,7 +99,7 @@ uint8_t draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct gfx_font
 	return print_length;
 }
 
-uint8_t draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct gfx_font *font, uint8_t old_len)
+uint8_t draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct glcd_FontConfig_t *font, uint8_t old_len)
 {
 	uint8_t print_length = 0;
 	uint8_t j = 0;
@@ -123,15 +112,17 @@ uint8_t draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct gfx_font *
 		if (x == 0)
 			x = (GFX_MONO_LCD_WIDTH - length - 10) / 4;
 		clear_string_background(length, x, y, font);
-//
-				if (font->width < 7)
-		//			glcd_tiny_set_font(Font5x7,5,7,32,127);
-					set_font_by_type(GLCD_FONT_SYSFONT_5X7);
-				else
-		//			glcd_set_font(Arial_Black_32_to_127_11x11,11,11,32,127);
-					set_font_by_type(GLCD_FONT_ARIAL_11X11_BOLD);
 
-//				glcd_set_font_from_font(*font_config);
+//		struct glcd_FontConfig_t *font_config;
+//		if (font->width < 7)
+////			glcd_tiny_set_font(Font5x7,5,7,32,127);
+//			font_config = get_font_by_type(GLCD_FONT_SYSFONT_5X7);
+//		else
+////			glcd_set_font(Arial_Black_32_to_127_11x11,11,11,32,127);
+//			font_config = get_font_by_type(GLCD_FONT_ARIAL_11X11_BOLD);
+
+		glcd_set_font_from_font(font);
+
 		while (str[j] != '\0')
 		{
 			if (x > 120 || str[j] == '\n')

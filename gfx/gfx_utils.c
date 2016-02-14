@@ -115,7 +115,7 @@ void gfx_label_init(struct gfx_label *label, char *text,
 		gfx_item_init(&label ->postion, x, y, 0, 0);
 		label->text.is_progmem = true;
 		label->text.textP = text;
-		label->text.font = fonts[font_id];
+		label->text.font = get_font_by_type(font_id);
 }
 
 void set_size_by_text(char *text, struct font *font, struct gfx_item *item)
@@ -135,18 +135,17 @@ int gfx_information_init(struct gfx_information *info,
 	info->text.is_progmem = false;
 	info->text.max_text_size = max_length;
 	gfx_item_init(&info->postion, x, y, 0, 0);
-	info->text.font = fonts[font_id];
+	info->text.font = get_font_by_type(font_id);
 	return 0;
 }
 
 
-void print_data_P(char *text, struct gfx_font *font, uint8_t x, uint8_t y)
+void print_data_P(char *text, struct glcd_FontConfig_t *font, uint8_t x, uint8_t y)
 {
 	draw_string_in_buffer_P(text, x, y, font);
-
 }
 
-uint8_t print_data(char *text, struct gfx_font *font, uint8_t x, uint8_t y, uint8_t old_len)
+uint8_t print_data(char *text, struct glcd_FontConfig_t *font, uint8_t x, uint8_t y, uint8_t old_len)
 {
 	return draw_string_in_buffer(text, x, y, font, old_len);
 }
@@ -189,8 +188,8 @@ void gfx_label_draw(struct gfx_label *label)
 {
 	if (label->text.textP != NULL)
 		print_data_P(label->text.textP, label->text.font, label->postion.x, label->postion.y);
-	else
-		print_data(label->text.text, label->text.font, label->postion.x, label->postion.y, 0); /* same len every time*/
+//	else
+//		print_data(label->text.text, label->text.font, label->postion.x, label->postion.y, 0); /* same len every time*/
 }
 
 int gfx_image_init(struct gfx_image *image, gfx_mono_color_t PROGMEM_T *bitmap_progmem,

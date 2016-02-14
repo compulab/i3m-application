@@ -10,6 +10,7 @@
 #define SLEEP_MSG 			"SLEEP"
 #define HIBERNATE_MSG		"HIBERNATE"
 #define POWER_OFF_MSG		"OFF"
+#define DIM_FONT_ID			GLCD_FONT_SYSFONT_5X7
 #define MSG_X				GFX_MONO_LCD_WIDTH / 2
 #define MSG_Y				20
 
@@ -19,8 +20,8 @@ void enter_dim_mode(char *msg)
 	ssd1306_set_contrast(SLEEP_BRIGHTNESS);
 	for (int i=0 ; i < GFX_MONO_LCD_FRAMEBUFFER_SIZE; i++)
 		framebuffer[i] = 0x00;
-	uint8_t msg_x = MSG_X - ((strlen(msg) * fonts[1]->width) / 2);
-	draw_string_in_buffer(msg, msg_x, MSG_Y,fonts[1], 0);
+	uint8_t msg_x = MSG_X - ((strlen(msg) * (get_font_by_type(DIM_FONT_ID))->width) / 2);
+	draw_string_in_buffer(msg, msg_x, MSG_Y, get_font_by_type(DIM_FONT_ID), 0);
 	gfx_mono_ssd1306_put_framebuffer();
 }
 

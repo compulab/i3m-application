@@ -18,7 +18,7 @@ uint8_t left_time = 0,
 		ok_time = 0;
 uint8_t size_of_menus;
 
-uint8_t fonts_size;
+uint8_t new_fonts_size;
 
 enum button_state ok_button = BUTTON_NOT_PRESSED,
 		left_button = BUTTON_NOT_PRESSED,
@@ -70,7 +70,7 @@ void free_labels(struct gfx_label_node *labels_head)
 void free_menus()
 {
 	if (fonts != NULL) {
-		for (int i = 0; i < fonts_size; i++) {
+		for (int i = 0; i < new_fonts_size; i++) {
 			if (fonts[i] != NULL)
 				free(fonts[i]);
 			else
@@ -212,25 +212,26 @@ void splash_init(struct cnf_blk config_block)
 int load_fonts(struct cnf_font_node *cnf_font_node)
 {
 	struct cnf_font_node font_node;
-	struct gfx_font *font;
-	fonts = malloc_locked(sizeof(struct gfx_font *) * fonts_size);
+	struct glcd_FontConfig_t *font;
 	if (fonts == NULL) {
 		uart_send_string("fonts array failed\n\r");
 		return -1;
 	}
 	while (cnf_font_node != 0) {
 		memcpy_config(&font_node, cnf_font_node, sizeof(struct cnf_font_node));
-		font = malloc_locked(sizeof(struct gfx_font));
+		font = malloc_locked(sizeof(struct glcd_FontConfig_t));
 		if (font == NULL) {
 			uart_send_string("font failed\n\r");
 			return -1;
 		}
 
-		font->source = font_node.font.source;
+		font->font_table = font_node.font.font_table;
 		font->width = font_node.font.width;
 		font->height = font_node.font.height;
-		font->is_numeric_only = font_node.font.is_numeric_only;
-		fonts[font_node.id] = font;
+		font->start_char = font_node.font.start_char;
+		font->end_char = font_node.font.end_char;
+		font->table_type = font_node.font.table_type;
+		glcd_add_font(font, font_node.id);
 		cnf_font_node = font_node.next;
 	}
 	return 0;
@@ -322,12 +323,11 @@ int load_config_block()
 	uart_send_string("start load config\n\r");
 	memcpy_config(&config_block, (void *)CONFIG_SECTION_ADDRESS, sizeof(struct cnf_blk));
 	size_of_menus = config_block.size;
-	fonts_size = config_block.font_size;
-	if (config_block.fonts_head != 0)
-		if (load_fonts(config_block.fonts_head) != 0) {
-			uart_send_string("load fonts error \n\r");
+	new_fonts_size = config_block.font_size;
+	glcd_fonts_init(new_fonts_size);
+
+	if (new_fonts_size > 0 && config_block.fonts_head != 0 && load_fonts(config_block.fonts_head) != 0)
 			return config_block_error();
-		}
 	if (config_block.dashboard != NULL) {
 		dashboard = malloc_locked(sizeof(struct gfx_frame));
 		if (dashboard == NULL)

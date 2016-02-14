@@ -15,6 +15,8 @@
 #include "../def.h"
 #endif
 
+#include "../display/glcd-0.5.2/glcd_font.h"
+
 # define PROGMEM_BYTE_ARRAY_T uint8_t*
 
 typedef uint8_t gfx_mono_color_t;
@@ -83,15 +85,15 @@ struct cnf_menu_node {
 	struct cnf_menu_node *next;
 };
 
-struct cnf_font {
-	PROGMEM_BYTE_ARRAY_T source;
-	uint8_t width;
-	uint8_t height;
-	bool is_numeric_only;
-};
+//struct cnf_font {
+//	PROGMEM_BYTE_ARRAY_T source;
+//	uint8_t width;
+//	uint8_t height;
+//	bool is_numeric_only;
+//};
 
 struct cnf_font_node {
-	struct cnf_font font;
+	struct glcd_FontConfig_t font;
 	uint8_t id;
 	struct cnf_font_node *next;
 };
