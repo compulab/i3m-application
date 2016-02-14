@@ -83,6 +83,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
 static int index = 0;
 static uint8_t slave_address = UNSET_ADDRESS;
 static uint8_t reg_address = UNSET_ADDRESS;
+static bool set_address;
 static bool data_sent;
 static bool is_read_request;
 bool is_twi_busy;
@@ -120,7 +121,7 @@ void clear()
 void clear_addresses()
 {
 	 slave_address = UNSET_ADDRESS;
-	 reg_address = UNSET_ADDRESS;
+	 set_address = false;
 }
 
 void twi_ack()
@@ -158,8 +159,10 @@ void twi_handle_read(uint8_t address)
 	uint8_t data = 0xff;
 	if (slave_address == TWI_EEPROM_ADDRESS)
 		 data = eeprom_read_byte(address);
-	else if (slave_address == TWI_REAL_TIME_ADDRESS)
+	else if (slave_address == TWI_EXTEND_DATA_ADDRESS)
 		handle_sram_read_request(address, &data);
+	else
+		data = 0xff;
 
 	TWI_SLAVE_BASE.DATA = data;
 	++reg_address;
@@ -167,14 +170,12 @@ void twi_handle_read(uint8_t address)
 
 int twi_handle_write(uint8_t data)
 {
-	if (slave_address == TWI_EEPROM_ADDRESS)
+	if (slave_address == TWI_EEPROM_ADDRESS) {
 		eeprom_write_byte(reg_address, data);
-	else if (slave_address == TWI_REAL_TIME_ADDRESS) {
+	} else if (slave_address == TWI_EXTEND_DATA_ADDRESS) {
 		int res = handle_sram_write_request(reg_address, data);
-		if (res != 0) {
-			insert_to_log('W');
+		if (res != 0)
 			return res;
-		}
 	}
 
 	enum i2c_addr_space i2c_addr = reg_address;
@@ -193,15 +194,9 @@ void twi_slave_address_match_handler()
 		is_read_request = (TWI_SLAVE_BASE.STATUS & TWI_SLAVE_DIR_bm) == TWI_SLAVE_DIR_bm;
 		data_sent = false;
 		uint8_t address = (TWI_SLAVE_BASE.DATA >>1);
-		if (address != slave_address || !is_read_request){
-			if (address != slave_address)
-//				insert_to_log('I');
-			if (!is_read_request)
-//				insert_to_log('J');
+		if (address != slave_address || !is_read_request)
 			clear_addresses();
-		} else {
-//			insert_to_log('W');
-		}
+
 		slave_address = address;
 		twi_clear_apif();
 		twi_ack();
@@ -245,6 +240,7 @@ void twi_slave_write_data_handler()
 
 void twi_save_address()
 {
+	set_address = true;
 	reg_address = TWI_SLAVE_BASE.DATA;
 	if (is_read_request)
 		twi_slave_read_data_handler();
@@ -257,31 +253,23 @@ void twi_slave_interrupt_handler()
 {
 	uint8_t current_status = TWI_SLAVE_BASE.STATUS;
 	if (current_status & TWI_SLAVE_BUSERR_bm) {    		/* If bus error. */
-//		insert_to_log('A');
 		twi_end_transmission();
 	} else if (current_status & TWI_SLAVE_COLL_bm) { 		/* If transmit collision. */
-//		insert_to_log('B');
 		twi_end_transmission();
 	} else if ((current_status & TWI_SLAVE_APIF_bm) && 	/* If address match. */
 			(current_status & TWI_SLAVE_AP_bm)) {
-//		insert_to_log('C');
 		twi_slave_address_match_handler();
 	} else if (current_status & TWI_SLAVE_APIF_bm) {		/* If stop (only enabled through slave read transaction). */
-//		insert_to_log('D');
 		twi_slave_stop_handler();
 	} else if (current_status & TWI_SLAVE_DIF_bm) {		/* If data interrupt. */
 		if (current_status & TWI_SLAVE_DIR_bm) {
-//			insert_to_log('E');
 			twi_slave_read_data_handler();
-		} else if (reg_address == UNSET_ADDRESS) {
-//			insert_to_log('F');
+		} else if (!set_address) {
 			twi_save_address();
 		} else {
-//			insert_to_log('G');
 			twi_slave_write_data_handler();
 		}
 	} else { 												/* If unexpected state. */
-//		insert_to_log('H');
 		twi_end_transmission();
 	}
 }

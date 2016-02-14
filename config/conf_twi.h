@@ -24,7 +24,7 @@
 
 #define TWI_SLAVE_ADDRESS  		(0x20)
 #define TWI_EEPROM_ADDRESS		(0x20)
-#define TWI_REAL_TIME_ADDRESS	(0x21)
+#define TWI_EXTEND_DATA_ADDRESS	(0x21)
 #define TWI_SLAVE_MSK		 	(0x03)
 #define TWI_SLAVE_BASE        	(TWIE.SLAVE)
 #define TWI_MASTER_BASE 	  	(TWIC.MASTER)
