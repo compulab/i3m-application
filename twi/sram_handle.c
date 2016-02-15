@@ -139,7 +139,7 @@ void reset_to_bootloader()
 	uint8_t magic = nvm_eeprom_read_byte(BOOTLOADER_MAGIC_EEPROM_ADDRESS);
 	magic &= ~BOOTLOADER_APPLICATION_START;
 	nvm_eeprom_write_byte(BOOTLOADER_MAGIC_EEPROM_ADDRESS, magic);
-	delay_ms(4);
+	delay_ms(200);
 	software_reset();
 }
 
