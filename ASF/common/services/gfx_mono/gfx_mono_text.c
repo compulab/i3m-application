@@ -269,9 +269,15 @@ void gfx_mono_draw_string(const char *str, gfx_coord_t x, gfx_coord_t y,
 	/* Draw characters until trailing null byte */
 	do {
 		/* Handle '\n' as newline, draw normal characters. */
-		if (*str == '\n') {
+		if (*str == '\0') {
+			break;
+		} else if (*str == '\n' || x >= GFX_MONO_LCD_WIDTH - font->width) {
 			x = start_of_string_position_x;
 			y += font->height + 1;
+			if (*str != '\n') {
+				gfx_mono_draw_char(*str, x, y, font);
+				x += font->width;
+			}
 		} else if (*str == '\r') {
 			/* Skip '\r' characters. */
 		} else {

@@ -80,12 +80,10 @@ uint8_t draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct glcd_Fon
 		glcd_set_font_from_font(font);
 
 		while (temp_char){
-			if (temp_char == '\n'){
-				draw_string_in_buffer_P(str, x, y + 8, font);
+			if (temp_char == '\n' || x > 120){
+				draw_string_in_buffer_P(str, x, y + font->height + 2, font);
 				break;
 			}
-			if (x > 120)
-				break;
 
 			glcd_draw_char_xy(x, y, temp_char);
 

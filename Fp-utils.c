@@ -363,11 +363,17 @@ void set_updated_gpu_temp(char *output_str)
 
 void set_serial_number(char *output_str)
 {
-	uint8_t serial[SERIAL_NUMBER_LENGTH];
-	for (int i=0; i < SERIAL_NUMBER_LENGTH; i++)
-		serial[i] = eeprom_read_byte(SERIAL_NUMBER_EEPROM_ADDRESS + i);
-//	serial[SERIAL_NUMBER_LENGTH] = '\0';
-	sprintf(output_str, "%d%d%d%d%d%d%d%d% d%d%d%d", serial[0], serial[1], serial[2], serial[3], serial[4], serial[5], serial[6], serial[7], serial[8], serial[9], serial[10], serial[11] );
+	char serial[SERIAL_NUMBER_LENGTH * 2 + 1];
+	long serial_number;
+	int j = 0;
+	for (int i = SERIAL_NUMBER_LENGTH - 1; i >= 0 ; i--) {
+		sprintf(&serial[j], "%02x", eeprom_read_byte(SERIAL_NUMBER_EEPROM_ADDRESS + i));
+		j += 2;
+	}
+	serial[SERIAL_NUMBER_LENGTH * 2] = '\0';
+
+	serial_number = atol(serial);
+	sprintf(output_str, "%ld-%05ld", serial_number / 100000, serial_number % 100000);
 }
 
 void set_app_version(char *output_str, uint8_t type)
@@ -393,20 +399,20 @@ void set_app_version(char *output_str, uint8_t type)
 
 void set_part_number(char *output_str)
 {
-	char part_number[PART_NUMBER_LENGTH];
+	char part_number[PART_NUMBER_LENGTH + 1];
 	uint8_t index = 0;
-	uint8_t option_index = 1;
 	uint8_t info;
 	for (int i = 0; i < PART_NUMBER_OPT_LENGTH; i++) {
-			info = eeprom_read_byte(PART_NUMBER_EEPROM_ADDRESS + i);
-			part_number[index] = info;
-			if (info == '\0') {
-				part_number[index] = '\n';
-				index++;
-				break;
-			}
-			index++;
-		}
+		info = eeprom_read_byte(PART_NUMBER_EEPROM_ADDRESS + i);
+		if (info == '\0')
+			break;
+		part_number[index] = info;
+		index++;
+	}
+
+	part_number[index] = '\n';
+	index++;
+
 
 	for (int j = 1; j < 4; j++) {
 		for (int i = 0; i < PART_NUMBER_OPT_LENGTH; i++) {
@@ -418,7 +424,6 @@ void set_part_number(char *output_str)
 				break;
 			part_number[index] = info;
 			index++;
-			option_index++;
 		}
 	}
 
