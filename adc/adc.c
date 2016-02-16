@@ -49,29 +49,10 @@ double adc_avg()
 		adc_start_conversion(&MY_ADC, MY_ADC_CH);  //one conversion begins
 		adc_wait_for_interrupt_flag(&MY_ADC, MY_ADC_CH);
 		adca1_result = adc_get_result(&MY_ADC, MY_ADC_CH); // & 0x0FFF;
-//		power_log[i] = adca1_result;
 		power_sum = power_sum + adca1_result;
 	}
 
 	return power_sum / (i);
-}
-
-void print_adc_log(long adc_avg)
-{
-//	uart_send_string_working("\n\r======== ADC log =====\n\r");
-//	uart_send_num_working(POWER_COUNT, 10);
-//	uart_send_string_working(" samples:\n\r");
-//	for (uint32_t i = 0; i < POWER_COUNT; i++) {
-//		uart_send_num_working(power_log[i], 10);
-//		uart_send_string_working(", ");
-//	}
-//
-//	uart_send_string_working("\n\r adc sum: ");
-//	uart_send_num_working(power_sum, 10);
-//	uart_send_string_working("\n\r adc avg: ");
-//	uart_send_num_working(adc_avg, 10);
-//	uart_send_string_working(" adc result: ");
-//	uart_send_num_working(current_power, 10);
 }
 
 void set_power_data(char *str)
@@ -79,10 +60,10 @@ void set_power_data(char *str)
 	double avg = adc_avg();
 	long power = avg * 0.10137 + 2.9;
 
-	if (power >= 1 && power <= 300) {
+	if (power >= 6 && power <= 300) {
 		current_power = power;
-//		print_adc_log(avg);
 		sprintf(str, "%ld W", current_power);
-//		strcpy(current_power_str, str);
+	} else {
+		sprintf(str, "LOW");
 	}
 }
