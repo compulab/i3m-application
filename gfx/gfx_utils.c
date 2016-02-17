@@ -430,7 +430,7 @@ void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
 			gfx_images_draw(frame->image_head);
 			if (present_menu->is_active_frame) display_state = DISPLAY_ACTION_FRAME;
 			if (frame->type == FRAME_REGULAR)
-				gfx_mono_generic_draw_horizontal_line(0, 54, GFX_MONO_LCD_WIDTH, GFX_PIXEL_SET);
+				gfx_mono_generic_draw_horizontal_line(0, SEPERATE_LINE_Y, GFX_MONO_LCD_WIDTH, GFX_PIXEL_SET);
 		}
 
 		gfx_infos_draw(frame->information_head, true);

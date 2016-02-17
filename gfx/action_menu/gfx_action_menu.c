@@ -99,7 +99,7 @@ void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 		graphic_menu_init(action_menu, redraw);
 	else
 		gfx_mono_menu_init(action_menu->menu, redraw, action_menu->is_progmem);
-	gfx_mono_generic_draw_horizontal_line(0, 51, GFX_MONO_LCD_WIDTH, GFX_PIXEL_SET);
+	gfx_mono_generic_draw_horizontal_line(0, SEPERATE_LINE_Y, GFX_MONO_LCD_WIDTH, GFX_PIXEL_SET);
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
