@@ -352,7 +352,7 @@ void dmi_init()
 void add_dmi_backup(struct direct_string_item *dmi)
 {
 	uint8_t dmi_count = eeprom_read_byte(EEPROM_DMI_COUNT);
-	dmi->backup_addr = dmi_eeprom_index;
+	dmi->backup_addr = max(dmi_eeprom_index, EEPROM_DMI_START);
 	dmi_count++;
 	uint16_t writing_index = dmi->backup_addr;
 	eeprom_write_byte(writing_index, strlen(dmi->type) + 1);
