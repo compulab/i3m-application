@@ -363,17 +363,29 @@ void set_updated_gpu_temp(char *output_str)
 
 void set_serial_number(char *output_str)
 {
-	char serial[SERIAL_NUMBER_LENGTH * 2 + 1];
-	long serial_number;
+	char serial[SERIAL_NUMBER_LENGTH * 2  + 1];
+	bool start_adding = false;
+//	long serial_number;
+	uint8_t byte;
 	int j = 0;
 	for (int i = SERIAL_NUMBER_LENGTH - 1; i >= 0 ; i--) {
-		sprintf(&serial[j], "%02x", eeprom_read_byte(SERIAL_NUMBER_EEPROM_ADDRESS + i));
+		byte = eeprom_read_byte(SERIAL_NUMBER_EEPROM_ADDRESS + i);
+		if (!start_adding) {
+			if (byte != 0x00)
+				start_adding = true;
+			 else
+				continue;
+		}
+		sprintf(&serial[j], "%02x", byte);
 		j += 2;
 	}
-	serial[SERIAL_NUMBER_LENGTH * 2] = '\0';
 
-	serial_number = atol(serial);
-	sprintf(output_str, "%ld-%05ld", serial_number / 100000, serial_number % 100000);
+	for (int i = j; i > j - 6; i--)
+		serial[i] = serial[i - 1];
+	serial[j - 5] = '-';
+	serial[j + 1] = '\0';
+
+	sprintf(output_str, serial);
 }
 
 void set_app_version(char *output_str, uint8_t type)
