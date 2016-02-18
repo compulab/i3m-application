@@ -16,6 +16,8 @@
 #include "gfx_utils.h"
 #endif
 
+#include "../display/glcd-0.5.2/glcd_font.h"
+
 #include "../work-queue/work.h"
 
 #include "../timer/timer.h"
@@ -44,7 +46,7 @@ extern bool is_screen_saver_on;
 
 struct gfx_action_menu **action_menus;
 
-struct gfx_font** fonts;
+//struct gfx_font** fonts;
 
 int load_config_block();
 

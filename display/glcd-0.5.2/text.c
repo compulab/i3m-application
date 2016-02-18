@@ -92,13 +92,14 @@ void glcd_font(const char * font_table, uint8_t width, uint8_t height, char star
 	font_current.end_char = end_char;
 	font_current.table_type = type; /* Only supports MikroElektronika generated format at the moment */
 }
+#include "../../uart/uart.h"
 
 uint8_t glcd_draw_char_xy(uint8_t x, uint8_t y, char c)
 {
 	if (c < font_current.start_char || c > font_current.end_char) {
-		c = '.';
+		return font_current.width;
 	}
-	
+
 	if (font_current.table_type == STANG) {
 		/* Font table in Pascal Stang format (single byte height with with no width specifier) */
 		/* Maximum height of 8 bits only */
@@ -146,7 +147,7 @@ uint8_t glcd_draw_char_xy(uint8_t x, uint8_t y, char c)
 
 		/* The first byte per character is always the width of the character */
 #if defined( GLCD_DEVICE_AVR8 ) || defined( GLCD_DEVICE_XPLAINED_XMEGA_A3BU ) || defined(FP_XMEGA)
-		var_width = pgm_read_byte(p);
+		var_width = PROGMEM_READ_FAR_BYTE(p);
 #else
 		var_width = *p;
 #endif
@@ -162,7 +163,7 @@ uint8_t glcd_draw_char_xy(uint8_t x, uint8_t y, char c)
 			uint8_t j;
 			for ( j = 0; j < bytes_high; j++ ) {
 #if defined( GLCD_DEVICE_AVR8 ) || defined( GLCD_DEVICE_XPLAINED_XMEGA_A3BU ) || defined(FP_XMEGA)
-				uint8_t dat = pgm_read_byte( p + i*bytes_high + j );
+				uint8_t dat = PROGMEM_READ_FAR_BYTE( p + i*bytes_high + j );
 #else
 				uint8_t dat = *( p + i*bytes_high + j );
 #endif

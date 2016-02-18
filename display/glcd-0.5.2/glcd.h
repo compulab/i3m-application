@@ -69,6 +69,8 @@ Change Activity:
 	#include <avr/pgmspace.h>
 	#include <avr/io.h>
 	#include <avr/interrupt.h>
+	#include "../../ASF/common/services/delay/delay.h"
+
 #if !defined(GLCD_USE_AVR_DELAY)
 //		extern void delay_ms(uint32_t ms);
 #else
@@ -169,7 +171,6 @@ struct glcd_BoundingBox_t {
 #include "glcd_graphs.h"
 #include "glcd_text_tiny.h"
 //#include "glcd_text.h"
-#include "unit_tests.h"
 
 /**
  * \name Colour Constants

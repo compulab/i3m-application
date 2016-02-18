@@ -12,19 +12,18 @@
 
 //#include "glcd.h"
 #include "glcd_text.h"
-#include "fonts/Courier_New_32_to_127_8X13.h"
 #include "fonts/Courier_New_48_to_57_14X18_Num.h"
-#include "fonts/arial_black_32_to_127_11X11.h"
+#include "fonts/Consolas_48_to_57_18X28_Num.h"
+#include "fonts/Courier_New_32_to_127_8x13.h"
 #include "fonts/font5x7.h"
 
-#define NUM_DEFAULT_FONTS		4
+#define NUM_DEFAULT_FONTS		1
 
 enum glcd_font_type {
-	GLCD_FONT_SYSFONT_5X7,
-	GLCD_FONT_COURIER_NEW_8X13_BOLD,
-	GLCD_FONT_COURIER_NEW_14X18_NUM,
-	GLCD_FONT_ARIAL_11X11_BOLD,
+	GLCD_FONT_SYSFONT_5X7 = 0,
 };
+
+extern struct glcd_FontConfig_t **fonts;
 
 struct glcd_FontConfig_t *get_font_by_type(uint8_t font_id);
 
