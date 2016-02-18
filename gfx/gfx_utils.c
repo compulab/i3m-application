@@ -152,13 +152,13 @@ uint8_t print_data(char *text, struct glcd_FontConfig_t *font, uint8_t x, uint8_
 
 void draw_screen_saver_enable_status(struct gfx_information *info)
 {
-	uint8_t set_x = computer_data.details.screen_saver_visible ? 64 : 0,
-			clear_x = computer_data.details.screen_saver_visible ? 0 : 64,
-			length_set = computer_data.details.screen_saver_visible ? 6 * info->text.font->width : 7 * info->text.font->width,
-			length_clr = computer_data.details.screen_saver_visible ? 7 * info->text.font->width : 6 * info->text.font->width;
+	uint8_t set_x = computer_data.details.screen_saver_visible ? 9 * info->text.font->width : 0,
+			clear_x = computer_data.details.screen_saver_visible ? 0 : 8 * info->text.font->width,
+			length_set = computer_data.details.screen_saver_visible ? 7 * info->text.font->width : 8 * info->text.font->width,
+			length_clr = computer_data.details.screen_saver_visible ? 8 * info->text.font->width : 7 * info->text.font->width;
 
-	gfx_mono_generic_draw_horizontal_line(set_x, info->postion.y + info->text.font->height, length_set, GFX_PIXEL_SET);
-	gfx_mono_generic_draw_horizontal_line(clear_x, info->postion.y + info->text.font->height, length_clr, GFX_PIXEL_CLR);
+	gfx_mono_generic_draw_horizontal_line(set_x, info->postion.y + 2 * info->text.font->height, length_set, GFX_PIXEL_SET);
+	gfx_mono_generic_draw_horizontal_line(clear_x, info->postion.y + 2 * info->text.font->height, length_clr, GFX_PIXEL_CLR);
 }
 
 void print_info(struct gfx_information *info)
