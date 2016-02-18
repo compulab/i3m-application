@@ -85,7 +85,7 @@ void fp_init()
 }
 
 void set_invalid_string(char *str){
-	sprintf(str, "N/A");
+	sprintf(str, "-");
 }
 
 bool is_type_in_frame(enum information_type info_type, struct gfx_information_node *info_node)
@@ -302,7 +302,7 @@ void set_fq_string(char *str, uint16_t fq)
 
 void set_temp_string(char *str, int8_t temperature)
 {
-	sprintf(str,"%d C",temperature);
+	sprintf(str,"%d",temperature);
 }
 
 
@@ -417,8 +417,8 @@ void set_part_number(char *output_str)
 	for (int j = 1; j < 4; j++) {
 		for (int i = 0; i < PART_NUMBER_OPT_LENGTH; i++) {
 			info = eeprom_read_byte(PART_NUMBER_EEPROM_ADDRESS + i + j * PART_NUMBER_OPT_LENGTH);
-				if (info == '-')
-					continue;
+//				if (info == '-')
+//					continue;
 
 			if (info == '\0')
 				break;
