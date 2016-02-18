@@ -14,6 +14,7 @@
 #endif
 
 #include "glcd-0.5.2/glcd_font.h"
+#include "glcd-0.5.2/glcd_text.h"
 
 #include "../gfx/menu-handler.h"
 
