@@ -364,26 +364,26 @@ void set_updated_gpu_temp(char *output_str)
 void set_serial_number(char *output_str)
 {
 	char serial[SERIAL_NUMBER_LENGTH * 2  + 1];
-	bool start_adding = false;
-//	long serial_number;
-	uint8_t byte;
-	int j = 0;
-	for (int i = SERIAL_NUMBER_LENGTH - 1; i >= 0 ; i--) {
-		byte = eeprom_read_byte(SERIAL_NUMBER_EEPROM_ADDRESS + i);
-		if (!start_adding) {
-			if (byte != 0x00)
-				start_adding = true;
+	bool start_parsing = false;
+	uint8_t index, serial_index = 0;;
+	uint8_t serial_byte;
+
+	for (index = SERIAL_NUMBER_LENGTH; index > 0 ; index--) {
+		serial_byte = eeprom_read_byte(SERIAL_NUMBER_EEPROM_ADDRESS + index - 1);
+		if (!start_parsing) {
+			if (serial_byte != 0x00)
+				start_parsing = true;
 			 else
 				continue;
 		}
-		sprintf(&serial[j], "%02x", byte);
-		j += 2;
+		sprintf(&serial[serial_index], "%02x", serial_byte);
+		serial_index += 2;
 	}
 
-	for (int i = j; i > j - 6; i--)
-		serial[i] = serial[i - 1];
-	serial[j - 5] = '-';
-	serial[j + 1] = '\0';
+	for (index = serial_index; index > serial_index - 6; index--)
+		serial[index] = serial[index - 1];
+	serial[serial_index - 5] = '-';
+	serial[serial_index] = '\0';
 
 	sprintf(output_str, serial);
 }

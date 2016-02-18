@@ -32,15 +32,16 @@ uint8_t draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct glcd_FontC
 {
 	uint8_t print_length = 0;
 	uint8_t j = 0;
-	uint8_t length = strlen(str + 1) * (font->width + 1);
+	uint8_t length = strlen(str) * (font->width + 1);
 
 	if (length >= GFX_MONO_LCD_WIDTH) {
 		gfx_mono_draw_string(str, 0, y, &sysfont); /* clear all line */
 	} else {
 
-		clear_string_background(max(old_len, length), x, y, font);
-
 		glcd_set_font_from_font(font);
+
+		length += font->width * 2;
+		clear_string_background(max(old_len, length), x, y, font);
 
 		while (str[j] != '\0')
 		{
