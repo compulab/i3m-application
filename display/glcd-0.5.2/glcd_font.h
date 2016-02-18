@@ -12,9 +12,6 @@
 
 //#include "glcd.h"
 #include "glcd_text.h"
-#include "fonts/Courier_New_48_to_57_14X18_Num.h"
-#include "fonts/Consolas_48_to_57_18X28_Num.h"
-#include "fonts/Courier_New_32_to_127_8x13.h"
 #include "fonts/font5x7.h"
 
 #define NUM_DEFAULT_FONTS		1
@@ -24,6 +21,8 @@ enum glcd_font_type {
 };
 
 extern struct glcd_FontConfig_t **fonts;
+
+extern uint16_t fonts_size;
 
 struct glcd_FontConfig_t *get_font_by_type(uint8_t font_id);
 
