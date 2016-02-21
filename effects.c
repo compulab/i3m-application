@@ -16,7 +16,7 @@
 
 void enter_dim_mode(char *msg)
 {
-	uint16_t font_id = fonts_size > 1 ? 3 : GLCD_FONT_SYSFONT_5X7;
+	uint16_t font_id = fonts_size > 1 ? 2 : GLCD_FONT_SYSFONT_5X7;
 	display_state = DISPLAY_DIM;
 	ssd1306_set_contrast(SLEEP_BRIGHTNESS);
 	for (int i=0 ; i < GFX_MONO_LCD_FRAMEBUFFER_SIZE; i++)
