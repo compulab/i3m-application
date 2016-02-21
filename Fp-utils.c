@@ -162,7 +162,7 @@ void clear_regs(uint8_t *beg_addr, uint8_t *end_addr)
 void reset_temperatures()
 {
 	uint8_t *p_computer_data = (uint8_t *)&computer_data;
-	for (int i = 0; i < sizeof(computer_data); i++)
+	for (int i = 0; i < ((uint16_t)&computer_data.details.direct_string - (uint16_t)&computer_data); i++)
 		p_computer_data[i] = 0x00;
 	clear_regs((uint8_t *)&layout.direct.i2c[CPU0T], (uint8_t *)&layout.direct.i2c[RESERVED42]);
 	clear_regs((uint8_t *)&layout.direct.i2c[CPU0F_LSB], (uint8_t *)&layout.direct.i2c[RESERVED83]);
