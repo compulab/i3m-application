@@ -382,7 +382,7 @@ void set_serial_number(char *output_str)
 	for (index = serial_index; index > serial_index - 6; index--)
 		serial[index] = serial[index - 1];
 	serial[serial_index - 5] = '-';
-	serial[serial_index] = '\0';
+	serial[serial_index + 1] = '\0';
 
 	sprintf(output_str, serial);
 }
