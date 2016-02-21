@@ -152,11 +152,11 @@ uint8_t print_data(char *text, struct glcd_FontConfig_t *font, uint8_t x, uint8_
 
 void draw_screen_saver_enable_status(struct gfx_information *info)
 {
-	uint8_t enable_x = 0 + info->postion.x, disable_x = 48 + info->postion.x, enable_len = 8 * info->text.font->width, disable_len = 8 * info->text.font->width;
-	uint8_t set_x = computer_data.details.screen_saver_visible ? disable_x : enable_x,
-			clear_x = computer_data.details.screen_saver_visible ? enable_x : disable_x,
-			length_set = computer_data.details.screen_saver_visible ? disable_len : enable_len,
-			length_clr = computer_data.details.screen_saver_visible ? enable_len : disable_len;
+	uint8_t enable_len = 7 * info->text.font->width, disable_len = 8 * info->text.font->width, enable_x = disable_len + info->text.font->width + info->postion.x, disable_x = info->postion.x;
+	uint8_t set_x = computer_data.details.screen_saver_visible ? enable_x : disable_x,
+			clear_x = computer_data.details.screen_saver_visible ? disable_x : enable_x,
+			length_set = computer_data.details.screen_saver_visible ? enable_len : disable_len,
+			length_clr = computer_data.details.screen_saver_visible ? disable_len : enable_len;
 
 	gfx_mono_generic_draw_horizontal_line(set_x, info->postion.y + info->text.font->height + 2, length_set, GFX_PIXEL_SET);
 	gfx_mono_generic_draw_horizontal_line(clear_x, info->postion.y + info->text.font->height + 2, length_clr, GFX_PIXEL_CLR);
@@ -402,14 +402,15 @@ void insert_graphic_signs(struct gfx_frame *frame)
 				default:
 					return ;
 				}
+			if (computer_data.details.screen_saver_visible)
 				draw_graphic_signs(computer_data.details.screen_saver_update_time, min_value, max_value, true);
 			break;
 		case SET_SCREEN_SAVER_TYPE:
-			if (computer_data.details.screen_saver_visible == 1)
+			if (computer_data.details.screen_saver_visible)
 				draw_graphic_signs(computer_data.details.screen_saver_type, 0, SCREEN_SAVER_TYPE_SIZE - 1, false);
 			break;
 		case SET_SCREEN_SAVER_TIME_UNIT:
-			if (computer_data.details.screen_saver_visible == 1)
+			if (computer_data.details.screen_saver_visible)
 				draw_graphic_signs(computer_data.details.screen_saver_update_time_unit, 0, SCREEN_SAVER_TIME_UNITS_SIZE - 1, true);
 			break;
 		default:
