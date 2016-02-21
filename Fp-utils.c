@@ -302,9 +302,8 @@ void set_fq_string(char *str, uint16_t fq)
 
 void set_temp_string(char *str, int8_t temperature)
 {
-	sprintf(str,"%d",temperature);
+	sprintf(str,"%d%c",temperature ,(uint8_t)128);
 }
-
 
 void set_cpu_updated_temp(char *data, uint8_t cpu_id)
 {
