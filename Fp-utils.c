@@ -666,34 +666,36 @@ const char *screen_saver_time_units_str[SCREEN_SAVER_TIME_UNITS_SIZE] = { "SEC",
 
 const char *screen_saver_type_str[SCREEN_SAVER_TYPE_SIZE] = { "LOGO", "DASHBOARD"};
 
+void set_disabled(char *str)
+{
+	sprintf(str, "DISABLED");
+}
+
 void set_screen_saver_time_unit(char *str)
 {
 	frame_present->handle_buttons = handle_screen_saver_time_units_buttons;
-	if (computer_data.details.screen_saver_visible == 1) {
+	if (computer_data.details.screen_saver_visible == 1)
 		sprintf(str, screen_saver_time_units_str[computer_data.details.screen_saver_update_time_unit]);
-	} else {
-		sprintf(str, "DISABLED");
-	}
+	else
+		set_disabled(str);
 }
 
 void set_screen_saver_type(char *str)
 {
 	frame_present->handle_buttons = handle_screen_saver_type_buttons;
-	if (computer_data.details.screen_saver_visible == 1) {
+	if (computer_data.details.screen_saver_visible == 1)
 		sprintf(str, screen_saver_type_str[computer_data.details.screen_saver_type]);
-	} else {
-		sprintf(str, "DISABLED");
-	}
+	else
+		set_disabled(str);
 }
 
 void set_screen_saver_time(char *str)
 {
 	frame_present->handle_buttons = handle_screen_saver_time_buttons;
-	if (computer_data.details.screen_saver_visible == 1) {
+	if (computer_data.details.screen_saver_visible == 1)
 		sprintf(str, "%d" , computer_data.details.screen_saver_update_time);
-	} else {
-		sprintf(str, "DISABLED");
-	}
+	else
+		set_disabled(str);
 }
 
 void set_screen_saver_enable(char *str)
