@@ -47,7 +47,9 @@ Change Activity:
 */
 
 #include "glcd_text.h"
-
+#if defined(FP_XMEGA)
+#include "glcd_font.h"
+#endif
 //extern uint8_t *glcd_buffer_selected;
 //extern glcd_BoundingBox_t *glcd_bbox_selected;
 
@@ -69,9 +71,26 @@ void glcd_set_font(const char * font_table, uint8_t width, uint8_t height, char 
 }
 
 #if defined(FP_XMEGA)
+
+struct glcd_FontConfig_t *glcd_get_best_font(struct glcd_FontConfig_t *src_font, uint16_t str_len, uint8_t size)
+{
+	if (str_len > GFX_MONO_LCD_WIDTH)
+		return NULL;
+
+	uint8_t draw_len;
+	for (int i = fonts_size - 1; i >= 0; i--) {
+		if (fonts[i]->width > src_font->width)
+			continue;
+		draw_len = str_len * fonts[i]->width;
+		if (draw_len <= size)
+			return fonts[i];
+	}
+	return NULL;
+}
+
 void glcd_set_font_from_font(struct glcd_FontConfig_t *font)
 {
-	if (font->width < 8)
+	if (font->width < 8 && font->height < 8)
 		glcd_tiny_set_font(font->font_table, font->width, font->height, font->start_char, font->end_char);
 	else
 		glcd_set_font(font->font_table, font->width, font->height, font->start_char, font->end_char);

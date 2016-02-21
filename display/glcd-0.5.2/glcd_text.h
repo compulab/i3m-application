@@ -83,6 +83,8 @@ void glcd_set_font(const char * font_table, uint8_t width, uint8_t height, char 
 
 
 #if defined(FP_XMEGA)
+struct glcd_FontConfig_t *glcd_get_best_font(struct glcd_FontConfig_t *src_font, uint16_t length, uint8_t size);
+
 void glcd_set_font_from_font(struct glcd_FontConfig_t *font);
 #endif
 
