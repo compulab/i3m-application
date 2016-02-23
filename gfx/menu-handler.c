@@ -8,6 +8,8 @@ struct gfx_mono_bitmap splash_bitmap;
 
 struct gfx_frame *dashboard;
 
+struct gfx_frame *clock;
+
 enum key_state selected_Key;
 
 bool left_pressed = false,
@@ -178,6 +180,7 @@ void show_logo()
 		switch(display_state) {
 		case DISPLAY_LOGO:
 		case DISPLAY_DASHBOARD:
+		case DISPLAY_CLOCK:
 			break;
 		default:
 			clear_screen();
@@ -327,12 +330,13 @@ int load_config_block()
 	struct cnf_menu_node cnf_menu;
 	uart_send_string("start load config\n\r");
 	memcpy_config(&config_block, (void *)CONFIG_SECTION_ADDRESS, sizeof(struct cnf_blk));
-	size_of_menus = config_block.size;
+	size_of_menus = config_block.menu_size;
 	new_fonts_size = config_block.font_size;
 	glcd_fonts_init(new_fonts_size);
 
 	if (new_fonts_size > 0 && config_block.fonts_head != 0 && load_fonts(config_block.fonts_head) != 0)
 			return config_block_error();
+
 	if (config_block.dashboard != NULL) {
 		dashboard = malloc_locked(sizeof(struct gfx_frame));
 		if (dashboard == NULL)
@@ -340,6 +344,15 @@ int load_config_block()
 		gfx_frame_init(dashboard, config_block.dashboard, true);
 	} else {
 		dashboard = NULL;
+	}
+
+	if (config_block.clock != NULL) {
+		clock = malloc_locked(sizeof(struct gfx_frame));
+		if (clock == NULL)
+			return config_block_error();
+		gfx_frame_init(clock, config_block.clock, true);
+	} else {
+		clock = NULL;
 	}
 
 	splash_init(config_block);
@@ -465,6 +478,7 @@ void handle_buttons_update()
 		case DISPLAY_DIM:
 		case DISPLAY_LOGO:
 		case DISPLAY_DASHBOARD:
+		case DISPLAY_CLOCK:
 			handle_button_preesed_by_display_mode();
 			break;
 		default:
@@ -486,6 +500,7 @@ void handle_buttons_update()
 		switch(display_state) {
 			case DISPLAY_DIM:
 			case DISPLAY_LOGO:
+			case DISPLAY_CLOCK:
 			case DISPLAY_DASHBOARD:
 				handle_button_preesed_by_display_mode();
 				break;

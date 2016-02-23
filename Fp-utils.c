@@ -19,8 +19,8 @@ uint16_t wait_time;
 
 struct calendar_date computer_date_time = {
     .second = 40,
-    .minute = 03,
-    .hour = 17,
+    .minute = 02,
+    .hour = 11,
     .date = 26,
     .month = 11,
     .year = 2015
@@ -666,7 +666,7 @@ void set_dmi_content(char *output_str, uint8_t string_id)
 
 const char *screen_saver_time_units_str[SCREEN_SAVER_TIME_UNITS_SIZE] = { "SEC", "MIN", "HOUR"};
 
-const char *screen_saver_type_str[SCREEN_SAVER_TYPE_SIZE] = { "LOGO", "DASHBOARD"};
+const char *screen_saver_type_str[SCREEN_SAVER_TYPE_SIZE] = { "LOGO", "DASHBOARD", "CLOCK"};
 
 void set_disabled(char *str)
 {
@@ -680,6 +680,29 @@ void set_screen_saver_time_unit(char *str)
 		sprintf(str, screen_saver_time_units_str[computer_data.details.screen_saver_update_time_unit]);
 	else
 		set_disabled(str);
+}
+void set_rtc_hour(char *str)
+{
+	if (calendar_is_date_valid(&computer_date_time))
+		sprintf(str, "%d" ,computer_date_time.hour);
+	else
+		set_invalid_string(str);
+}
+
+void set_rtc_min(char *str)
+{
+	if (calendar_is_date_valid(&computer_date_time))
+		sprintf(str, "%02d" ,computer_date_time.minute);
+	else
+		set_invalid_string(str);
+}
+
+void set_rtc_sec(char *str)
+{
+	if (calendar_is_date_valid(&computer_date_time) && computer_date_time.second % 2)
+		sprintf(str, ":");
+	else
+		str = "";
 }
 
 void set_screen_saver_type(char *str)
@@ -784,6 +807,15 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 		break;
 	case SET_SCREEN_SAVER_TYPE:
 		set_screen_saver_type(output_str);
+		break;
+	case SHOW_RTC_HOUR:
+		set_rtc_hour(output_str);
+		break;
+	case SHOW_RTC_MIN:
+		set_rtc_min(output_str);
+		break;
+	case SHOW_RTC_SEC:
+		set_rtc_sec(output_str);
 		break;
 	default:
 		break;
@@ -1002,6 +1034,13 @@ bool is_information_need_to_change(struct gfx_information *info, bool is_visible
 	case SET_SCREEN_SAVER_TIME:
 	case SET_BRIGHTNESS:
 		return false;
+	case SHOW_RTC_DAY:
+	case SHOW_RTC_MONTH:
+	case SHOW_RTC_YEAR:
+	case SHOW_RTC_HOUR:
+	case SHOW_RTC_SEC:
+	case SHOW_RTC_MIN:
+		return true;
 	default:
 		return false;
 	}
@@ -1130,6 +1169,10 @@ void update_info()
 		uart_send_string("check update menu\n\r");
 		if (is_menu_need_update(present_menu))
 			gfx_action_menu_init(present_menu, true);
+		break;
+
+	case DISPLAY_CLOCK:
+		gfx_frame_draw(frame_present, true);
 		break;
 
 	case DISPLAY_FRAME:

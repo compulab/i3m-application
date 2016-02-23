@@ -106,10 +106,11 @@ struct cnf_blk {
 	struct cnf_frame *dashboard;
 	uint8_t font_size;
 	uint8_t signature;
-	uint8_t size;
+	uint8_t menu_size;
 	uint8_t *splash;
 	uint8_t splash_height;
 	uint8_t splash_width;
+	struct cnf_frame *clock;
 };
 
 #endif /* CONFIG_CNF_BLK_COMPONENTS_H_ */

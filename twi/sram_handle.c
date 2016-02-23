@@ -174,7 +174,105 @@ void write_post_code_lsb()
 	update_computer_state();
 }
 
-void write_memory(uint8_t mem_addr)
+void write_rtc_day()
+{
+	uint8_t old_date = computer_date_time.date;
+	uint8_t new_date = layout.direct.i2c[RTCD] & 0x1f;
+
+	if (new_date > 30)
+		return;
+	computer_date_time.date = new_date;
+	if (!calendar_is_date_valid(&computer_date_time))
+		computer_date_time.date = old_date;
+}
+
+void write_rtc_month()
+{
+	uint8_t old_month = computer_date_time.month;
+	uint8_t new_month = layout.direct.i2c[RTCD] & 0x0f;
+
+	if (new_month > 11)
+		return;
+	computer_date_time.month = new_month;
+	if (!calendar_is_date_valid(&computer_date_time))
+		computer_date_time.month = old_month;
+}
+
+void write_rtc_year()
+{
+	uint16_t new_year = (layout.direct.i2c[RTCD] & 0x7f) + 2000;
+	computer_date_time.year = new_year;
+}
+
+void write_rtc_date()
+{
+	switch (layout.l.rtcdc) {
+	case RTC_DATE_DAY:
+		write_rtc_day();
+		break;
+	case RTC_DATE_MONTH:
+		write_rtc_month();
+		break;
+	default:
+		write_rtc_year();
+		break;
+	}
+}
+
+void write_rtc_hour()
+{
+	uint8_t old_hour = computer_date_time.hour;
+	uint8_t new_hour = layout.direct.i2c[RTCT] & 0x1f;
+
+	if (new_hour > 23)
+		return;
+	computer_date_time.hour = new_hour;
+	if (!calendar_is_date_valid(&computer_date_time))
+		computer_date_time.hour = old_hour;
+}
+
+void write_rtc_min()
+{
+	uint8_t old_min = computer_date_time.minute;
+	uint8_t new_min = layout.direct.i2c[RTCT] & 0x3f;
+
+	if (new_min > 59)
+		return;
+	computer_date_time.minute = new_min;
+	if (!calendar_is_date_valid(&computer_date_time))
+		computer_date_time.minute = old_min;
+}
+
+void write_rtc_sec()
+{
+	uint8_t old_sec = computer_date_time.second;
+	uint8_t new_sec = layout.direct.i2c[RTCT] & 0x1f;
+
+	if (new_sec > 23)
+		return;
+	computer_date_time.second = new_sec;
+	if (!calendar_is_date_valid(&computer_date_time))
+		computer_date_time.second = old_sec;
+}
+
+void write_rtc_time()
+{
+	switch (layout.l.rtctc) {
+	case RTC_TIME_HOUR:
+		write_rtc_hour();
+		break;
+	case RTC_TIME_MIN:
+		write_rtc_min();
+		break;
+	case RTC_TIME_SEC:
+		write_rtc_sec();
+		break;
+	default:
+		break;
+	}
+}
+
+void write_memory(uint8_t mem_addr) //Todo: change memory status set
 {
 	uint8_t index = (mem_addr - MEM_LSB ) * 2;
 	uint8_t data = layout.direct.i2c[mem_addr];
@@ -632,8 +730,6 @@ void write_gpu_temp()
 void update_data(void *write_address)
 {
 	uint8_t addr = (uint16_t)write_address;
-//	uart_send_num(addr, 16);
-//	uart_send_string("update sram\n\r");
 	switch (addr){
 		case GPUT:
 			write_gpu_temp();
@@ -657,6 +753,12 @@ void update_data(void *write_address)
 		case MEM_LSB :
 		case MEM_MSB:
 			write_memory(addr);
+			break;
+		case RTCT:
+			write_rtc_time();
+			break;
+		case RTCD:
+			write_rtc_date();
 			break;
 		case SENSORT:
 			write_temp_control();

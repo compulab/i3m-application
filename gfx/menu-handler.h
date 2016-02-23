@@ -42,6 +42,8 @@ enum key_state {
 
 extern struct gfx_frame *dashboard;
 
+extern struct gfx_frame *clock;
+
 extern bool is_screen_saver_on;
 
 struct gfx_action_menu **action_menus;

@@ -71,6 +71,12 @@ void update_screen_saver()
 			if (current_power_state != POWER_OFF && dashboard != NULL)
 				show_frame(dashboard);
 			break;
+
+		case SCREEN_SAVER_CLOCK:
+			if (clock != NULL && calendar_is_date_valid(&computer_date_time)) {
+				show_frame(clock);
+				display_state = DISPLAY_CLOCK;
+			}
 		}
 	}
 }
