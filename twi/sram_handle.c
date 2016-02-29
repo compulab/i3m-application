@@ -648,11 +648,13 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 	case SENSORT:
 		read_temp_control(data);
 		break;
+	case LAYOUT_VER:
+		read_layout(data);
+		break;
 	case SIG0:
 	case SIG1:
 	case SIG2:
 	case SIG3:
-	case LAYOUT_VER:
 	case MAJOR_LSB:
 	case MAJOR_MSB:
 	case MINOR_LSB:
