@@ -748,6 +748,11 @@ void set_curr_str(char *str, enum information_type type)
 	}
 }
 
+void set_update_post_code(char *str)
+{
+	sprintf(str, "%04X", layout.l.bios_post_code);
+}
+
 void update_data_by_type(enum information_type type, char *output_str, uint8_t info)
 {
 	bool is_active_frame;
@@ -771,6 +776,9 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 		break;
 	case SHOW_HDD_TEMPERTURE:
 		set_update_hdd_temp(output_str, info);
+		break;
+	case SHOW_POST_CODE:
+		set_update_post_code(output_str);
 		break;
 	case SHOW_COMPUTER_POWER:
 		set_power_data(output_str);
@@ -1034,6 +1042,7 @@ bool is_information_need_to_change(struct gfx_information *info, bool is_visible
 	case SET_SCREEN_SAVER_TIME:
 	case SET_BRIGHTNESS:
 		return false;
+	case SHOW_POST_CODE:
 	case SHOW_RTC_DAY:
 	case SHOW_RTC_MONTH:
 	case SHOW_RTC_YEAR:

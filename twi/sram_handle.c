@@ -630,6 +630,10 @@ void write_direct(enum i2c_addr_space write_address)
 void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 {
 	switch (addr) {
+	case POST_CODE_LSB:
+	case POST_CODE_MSB:
+		read_bios_post_code(addr, data);
+		break;
 	case SIG0:
 	case SIG1:
 	case SIG2:
@@ -645,8 +649,6 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 	case ADC_MSB:
 	case AMBT:
 	case SENSORT:
-	case POST_CODE_LSB:
-	case POST_CODE_MSB:
 	case FPCTRL:
 	case REQ:
 	case PENDR0:
