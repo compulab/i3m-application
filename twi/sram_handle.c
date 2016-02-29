@@ -651,6 +651,9 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 	case LAYOUT_VER:
 		read_layout(data);
 		break;
+	case POWER_STATE:
+		read_power_state(data);
+		break;
 	case SIG0:
 	case SIG1:
 	case SIG2:
@@ -664,7 +667,6 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 	case FPCTRL:
 	case REQ:
 	case PENDR0:
-	case POWER_STATE:
 		*data = layout.direct.i2c[addr];
 		break;
 	case HDD0T:
