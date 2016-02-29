@@ -25,7 +25,6 @@ void init_ambient()
 
 void update_ambient_temp()
 {
-	uart_send_string("update_ambient_temp\n\r");
 	if (current_power_state == POWER_ON) {
 		bool valid_update;
 		if (first_ambient_read) {
@@ -44,6 +43,8 @@ void update_ambient_temp()
 			ambient_update_fail_count++;
 			update_ambient_temp();
 		}
+		computer_data.details.ambs = layout.l.ambs;
+		computer_data.details.ambt = layout.l.ambt;
 	}
 }
 
