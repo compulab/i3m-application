@@ -62,7 +62,6 @@ void write_cpu_fq_msb(uint8_t cpu_addr)
 			computer_data.packed.cpufs |= (0x01) << index;
 		else
 			computer_data.packed.cpufs &= ~((0x01) << index);
-		computer_data.packed.cpufq_update |= (0x01) << index;
 	}
 	layout.l.cpufr = 0;
 	clear_req();
@@ -134,7 +133,6 @@ void write_cpu_status()
 			if (layout.direct.i2c[CPUTS] & bit) {
 				if (computer_data.packed.cput[i] != layout.direct.i2c[CPU0T + i]) {
 					computer_data.packed.cput[i] = layout.direct.i2c[CPU0T + i];
-					computer_data.packed.cput_update |= bit;
 				}
 			}
 			bit = bit << 1;
@@ -335,20 +333,6 @@ void read_ambient(uint8_t *data)
 		*data = layout.l.ambt;
 	else
 		*data = DEFAULT_DATA;
-}
-
-void read_adc(enum i2c_addr_space adc_address, uint8_t *data)
-{
-	switch (adc_address){
-	case ADC_LSB:
-		//TODO
-		break;
-	case ADC_MSB:
-		//TODO
-		break;
-	default:
-		break;
-	}
 }
 
 void free_direct_string(void)
@@ -672,6 +656,7 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 	case MINOR_MSB:
 	case RTCT:
 	case RTCD:
+
 	case SENSORT:
 	case FPCTRL:
 	case REQ:

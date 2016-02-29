@@ -851,10 +851,6 @@ bool is_cpu_fq_need_update(struct gfx_information *info, bool is_visible)
 					((computer_data.packed.cpufs & (0x01 << info->info_data)) != 0x00);
 		}
 
-	if ((computer_data.packed.cpufq_update & (1 << info->info_data))  != 0x00) {
-			computer_data.packed.cpufq_update = computer_data.packed.cpufq_update & ~(1 << info->info_data);
-			return true;
-		}
 	return false;
 }
 
@@ -983,11 +979,6 @@ bool is_cpu_temp_need_update(struct gfx_information *info, bool is_visible)
 	if (is_visible) {
 		return present_menu->visible ? ((computer_data.packed.cputs & (0x01 << info->info_data)) == 0x00) :
 				((computer_data.packed.cputs & (0x01 << info->info_data)) != 0x00);
-	}
-
-	if ((computer_data.packed.cput_update & (1 << info->info_data))  != 0x00) {
-		computer_data.packed.cput_update = computer_data.packed.cput_update & ~(1 << info->info_data);
-		return true;
 	}
 	return false;
 }
