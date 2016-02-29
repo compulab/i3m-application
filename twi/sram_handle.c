@@ -645,6 +645,9 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 	case AMBT:
 		read_ambient(data);
 		break;
+	case SENSORT:
+		read_temp_control(data);
+		break;
 	case SIG0:
 	case SIG1:
 	case SIG2:
@@ -656,8 +659,6 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 	case MINOR_MSB:
 	case RTCT:
 	case RTCD:
-
-	case SENSORT:
 	case FPCTRL:
 	case REQ:
 	case PENDR0:
