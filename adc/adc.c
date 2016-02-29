@@ -59,11 +59,17 @@ void set_power_data(char *str)
 {
 	double avg = adc_avg();
 	long power = avg * 0.10137 + 2.9;
-
 	if (power >= 6 && power <= 300) {
+		computer_data.details.adc = avg;
+		computer_data.details.adcs = 1;
 		current_power = power;
 		sprintf(str, "%ld W", current_power);
-	} else {
+	} else if (power > 0) {
+		computer_data.details.adcs = 1;
+		computer_data.details.adc = 0;
 		sprintf(str, "LOW");
+	} else {
+		computer_data.details.adcs = 0;
+		sprintf(str, "-");
 	}
 }

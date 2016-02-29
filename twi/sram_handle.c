@@ -382,6 +382,26 @@ void read_pending_requests(uint8_t *data)
 	*data = 0x0f & computer_data.packed.pending_req;
 }
 
+void read_adc(enum i2c_addr_space adc_address, uint8_t *data)
+{
+	switch (adc_address) {
+	case ADC_LSB:
+		if (computer_data.details.adcs)
+				*data = LSB(computer_data.packed.adc);
+		else
+				*data = 0xff;
+		break;
+	case ADC_MSB:
+		if (computer_data.details.adcs)
+				*data = MSB(computer_data.packed.adc);
+		else
+				*data = 0xff;
+		break;
+	default:
+		break;
+	}
+}
+
 int set_direct_string()
 {
 	direct_string_to_add = malloc_locked(sizeof(struct direct_string_item));
@@ -634,6 +654,10 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 	case POST_CODE_MSB:
 		read_bios_post_code(addr, data);
 		break;
+    case ADC_LSB:
+	case ADC_MSB:
+		 read_adc(addr, data);
+		 break;
 	case SIG0:
 	case SIG1:
 	case SIG2:
