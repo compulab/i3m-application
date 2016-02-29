@@ -366,6 +366,11 @@ void read_pending_requests(uint8_t *data)
 	*data = 0x0f & computer_data.packed.pending_req;
 }
 
+void read_fp_control(uint8_t *data)
+{
+        *data = layout.l.iwren << 7;
+}
+
 void read_adc(enum i2c_addr_space adc_address, uint8_t *data)
 {
 	switch (adc_address) {
@@ -654,6 +659,9 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 	case POWER_STATE:
 		read_power_state(data);
 		break;
+	case FPCTRL:
+		read_fp_control(data);
+		break;
 	case SIG0:
 	case SIG1:
 	case SIG2:
@@ -664,7 +672,6 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 	case MINOR_MSB:
 	case RTCT:
 	case RTCD:
-	case FPCTRL:
 	case REQ:
 	case PENDR0:
 		*data = layout.direct.i2c[addr];
