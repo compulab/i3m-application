@@ -182,6 +182,10 @@ int main(int argc, char *argv[])
 	log_twi.bottom = log_twi.top = 0;
 	computer_data.details.error_count = 0;
 	works_count = 0;
+	if (USB.CTRLB & USB_ATTACH_bm) {
+		USB.CTRLB &= ~USB_ATTACH_bm;
+		ccp_write_io((uint8_t *)&RST.CTRL, RST.CTRL | RST_SWRST_bm);
+	}
 
 	init();
 
