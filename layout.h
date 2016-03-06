@@ -8,7 +8,7 @@
 #ifndef LAYOUT_H_
 #define LAYOUT_H_
 
-#include "auto_generated.h"
+#include "Release/auto_generated.h"
 
 #include <stdbool.h>
 #include <stdint.h>
