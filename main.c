@@ -8,41 +8,66 @@
 
 const uint32_t ProgramLength __attribute__ ((section (".length"))) = 0;
 
+/*
+ * Managing I2C requests as described in
+ * http://droid/mirror/mediawiki/index.php/Airtop_FrontPanel_I2C_Registers_Layout
+ */
 ISR(TWIE_TWIS_vect)
 {
 	twi_slave_interrupt_handler();
 }
 
-ISR(RTC_OVF_vect)
-{
-	rtc_handle_sec_update();
-}
-
-ISR(PORTF_INT0_vect)
-{
-	update_power_state();
-}
-
-ISR(PORTF_INT1_vect)
-{
-	handle_button_pressed();
-}
-
-ISR(TCC0_OVF_vect)
-{
-	tc_handle_overflow_interrupt();
-}
-
-ISR(TCC0_CCA_vect)
-{
-	tc_handle_cmp_interrupt();
-}
-
+/*
+ * Communication with I2C as master. used for getting the ambient temp
+ */
 ISR(TWIC_TWIM_vect)
 {
 	handle_twi_master();
 }
 
+/*
+ * Updating the time of tasks (By seconds) to start
+ */
+ISR(RTC_OVF_vect)
+{
+	update_tasks_timeout();
+}
+
+/*
+ * Updating the time of tasks (By ticks) to start
+ */
+ISR(TCC0_CCA_vect)
+{
+	ticks_task_update_work();
+}
+
+/*
+ * Updating the overlaps of tick tasks
+ */
+ISR(TCC0_OVF_vect)
+{
+	ticks_task_update_overlap();
+}
+
+/*
+ * Power state GPIO change
+ */
+ISR(PORTF_INT0_vect)
+{
+	update_power_state();
+}
+
+/*
+ * Buttons GPIO change
+ */
+ISR(PORTF_INT1_vect)
+{
+	handle_button_pressed();
+}
+
+/*
+ * PORTF contains the UI buttons and the power states
+ */
 void portf_init()
 {
 	uint8_t sreg = SREG;
@@ -62,6 +87,9 @@ void portf_init()
 	PORTF.INT1MASK = buttons_pin_cfg;
 }
 
+/*
+ * Init first menu shown
+ */
 void init_menu()
 {
 	set_menu_by_id(&present_menu, 0);
@@ -69,25 +97,40 @@ void init_menu()
 	enable_screen_saver_mode();
 }
 
+/*
+ * Init current power state
+ */
 void power_state_init()
 {
 	update_power_state();
 }
 
+/*
+ * Update screen saver configuration as they saved in EEPROM
+ */
 void update_screen_saver_from_eeprom()
 {
 	computer_data.packed.screen_saver_config = eeprom_read_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS);
 	computer_data.packed.screen_saver_update_time = eeprom_read_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS);
 }
 
+/*
+ * Reset screen saver configuration to default values
+ */
 void reset_screen_saver_config()
 {
-	eeprom_write_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS, 0x01);
-	eeprom_write_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS, 0x0a);
+	eeprom_write_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS, SCREEN_SAVER_CONFIGURATION_DEFAULT);
+	eeprom_write_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS, SCREEN_SAVER_TIME_DEFAULT);
 	update_screen_saver_from_eeprom();
 }
 
-void update_fp_info()
+/*
+ * Initialize and validate Screen Saver configuration
+ * Initialize ambient sensor
+ * validate application version
+ * validate screen brightness
+ */
+void init_information()
 {
 	update_screen_saver_from_eeprom();
 
@@ -98,23 +141,24 @@ void update_fp_info()
 	else
 		computer_data.packed.screen_saver_update_time = eeprom_read_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS);
 
-	reset_ambient();
+	init_ambient();
 	if (eeprom_read_byte(APPLICATION_VER_MSB_EEPROM_ADDRESS) != APPLICATION_VER_MSB)
 		eeprom_write_byte(APPLICATION_VER_MSB_EEPROM_ADDRESS, APPLICATION_VER_MSB);
 	if (eeprom_read_byte(APPLICATION_VER_LSB_EEPROM_ADDRESS) != APPLICATION_VER_LSB)
 		eeprom_write_byte(APPLICATION_VER_LSB_EEPROM_ADDRESS, APPLICATION_VER_LSB);
 	if (eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS) == 0x00)
-		eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, 0xee);
+		eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, BRIGHTNESS_DEFAULT);
 }
 
-void updated_info_init()
+/*
+ * Initializing of computer data struct for new data
+ */
+void init_updateable_data()
 {
-	update_fp_info();
+	init_information();
 	uint8_t *p_computer_data = (uint8_t *)&computer_data;
 	for (uint8_t i = 0; i < (sizeof(computer_data) / 8); i++)
 		p_computer_data[i] = 0;
-//	eeprom_write_byte(EEPROM_DMI_COUNT, 0);
-//	dmi_init();
 }
 
 void init()
@@ -129,7 +173,7 @@ void init()
 	gfx_mono_init();
 	glcd_init();
 	sram_handle_init();
-	updated_info_init();
+	init_updateable_data();
 	adc_init();
 	pmic_init();
 	portf_init();
@@ -140,11 +184,12 @@ void init()
 	sei();
 	tc_init();
 	rtc_init();
-	insert_to_log('P');
 	tasks_init();
-	insert_to_log('U');
 }
 
+/*
+ * Sleep function makes the system Idle for timeout_us microseconds or until wakeup flag will be set
+ */
 bool sleep_interuptable(uint32_t timeout_us)
 {
 	uint32_t us = 0;
@@ -157,11 +202,14 @@ bool sleep_interuptable(uint32_t timeout_us)
 	return wakeup;
 }
 
+/*
+ * Debug method for printing debug log
+ */
 void debug_print_log()
 {
 	bool is_changed = false;
 	if (log_twi.bottom != log_twi.top) {
-		for (; log_twi.bottom < log_twi.top; log_twi.bottom++){
+		for (; log_twi.bottom < log_twi.top; log_twi.bottom++) {
 			uart_send_char(log_twi.data[log_twi.bottom]);
 			uart_send_string(", ");
 			is_changed = true;
@@ -179,18 +227,18 @@ void debug_print_log()
 
 int main(int argc, char *argv[])
 {
+
 	log_twi.bottom = log_twi.top = 0;
 	computer_data.details.error_count = 0;
 	works_count = 0;
+
 	if (USB.CTRLB & USB_ATTACH_bm) {
 		USB.CTRLB &= ~USB_ATTACH_bm;
 		ccp_write_io((uint8_t *)&RST.CTRL, RST.CTRL | RST_SWRST_bm);
 	}
 
 	init();
-
 	wdt_reset();
-
 	while (true) {
 //		debug_print_log();
 		wakeup = false;

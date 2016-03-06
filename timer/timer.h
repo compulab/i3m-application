@@ -80,13 +80,13 @@ void tc_button_pressed(void);
 
 void tc_no_button_pressed(void);
 
-void reset_ambient(void);
+void init_ambient(void);
 
-void rtc_handle_sec_update(void);
+void update_tasks_timeout(void);
 
-void tc_handle_overflow_interrupt(void);
+void ticks_task_update_overlap(void);
 
-void tc_handle_cmp_interrupt(void);
+void ticks_task_update_work(void);
 
 void tasks_init(void);
 

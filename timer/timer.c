@@ -17,7 +17,7 @@ uint8_t ambient_update_fail_count;
 static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS];
 static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS];
 
-void reset_ambient()
+void init_ambient()
 {
 	first_ambient_read = false;
 	layout.l.ambs = 0;
@@ -276,7 +276,7 @@ void tasks_init(void)
 	find_next_task();
 }
 
-void rtc_handle_sec_update(void)
+void update_tasks_timeout(void)
 {
 	for (int i = 0; i < NUMBER_OF_SEC_TASKS; i ++) {
 		if (sec_tasks_to_do[i].secs_left > 0)
@@ -292,7 +292,7 @@ void rtc_handle_sec_update(void)
 	}
 }
 
-void tc_handle_overflow_interrupt(void)
+void ticks_task_update_overlap(void)
 {
 	for (uint8_t i = 0; i < NUMBER_OF_TICK_TASKS; i++) {
 		if (tick_tasks_to_do[i].overlaps_count <= 0)
@@ -305,7 +305,7 @@ void tc_handle_overflow_interrupt(void)
 }
 
 
-void tc_handle_cmp_interrupt(void)
+void ticks_task_update_work(void)
 {
 	/* Find expired task and add it to the work queue */
 	for (uint8_t i = 0; i < NUMBER_OF_TICK_TASKS; i++) {
