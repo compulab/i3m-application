@@ -154,42 +154,65 @@ void set_tick_task_timer(double sec_to_update, enum TYPE_OF_TICK_TASK type)
 	}
 }
 
-
+/*
+ * Set timer for new work of updating works count - Debug
+ */
 void print_works_count_timer()
 {
 	set_sec_task_timer(1, PRINT_WORKS_COUNT_TASK);
 }
 
+/*
+ * Set timer for new work of updating RTC time
+ */
 void time_set_timer()
 {
 	set_sec_task_timer(1 , TIME_TASK);
 }
 
+/*
+ * Set timer for new work of updating screen saver
+ */
 void screen_saver_set_timer()
 {
 	set_sec_task_timer(computer_data.details.screen_saver_update_time , SCREEN_SAVER_TASK);
 }
 
+/*
+ * Set timer for new work of updating ambient temp
+ */
 void ambient_set_timer()
 {
 	set_tick_task_timer(UPDATE_AMBIENT_SEC, AMBIENT_TASK);
 }
 
+/*
+ * Set timer for new work of updating ADC
+ */
 void adc_set_timer()
 {
 	set_tick_task_timer(UPDATE_ADC_SEC, ADC_TASK);
 }
 
+/*
+ * Set timer for new work of screen information
+ */
 void update_screen_timer()
 {
 	set_sec_task_timer(UPDATE_SCREEN_TIME, UPDATE_SCREEN_TASK);
 }
 
+/*
+ * Set timer for new work of updating pending requests
+ */
 void pending_req_set_timer()
 {
 	set_tick_task_timer(UPDATE_REQ_SEC, PENDING_REQ_TASK);
 }
 
+/*
+ * Reset screen saver timer
+ */
 void reset_screen_saver()
 {
 	screen_saver_set_timer();
