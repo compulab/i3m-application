@@ -15,6 +15,9 @@ static struct work_queue work_to_do = {
 		.last =  NULL,
 };
 
+/*
+ * Implemented with disabling interrupts.
+ */
 void *malloc_locked(size_t size)
 {
 	cli();
@@ -23,7 +26,9 @@ void *malloc_locked(size_t size)
 	return ret;
 }
 
-
+/*
+ * Adding new work to the queue
+ */
 int insert_work(struct work *work)
 {
 	struct work *new_work = malloc_locked(sizeof(struct work));
@@ -48,15 +53,15 @@ int insert_work(struct work *work)
 	return 0;
 }
 
+/*
+ * If the work queue is not empty, removing work and handling it
+ */
 bool work_handler(void)
 {
 	if (work_to_do.last == NULL) {
 		return false;
 	}
-//	uart_send_string("first: ");
-//	uart_send_num((uint32_t)work_to_do.first, 16);
-//	uart_send_string(" last: ");
-//	uart_send_num((uint32_t)work_to_do.last, 16);
+
 	cli();
 	struct work* work = work_to_do.first;
 	if (work_to_do.first == work_to_do.last) {
@@ -66,20 +71,13 @@ bool work_handler(void)
 		work_to_do.first = work_to_do.first->next;
 	}
 	sei();
-//	uart_send_string(" curr: ");
-//	uart_send_num((uint32_t)work, 16);
-//	if (work_to_do.first == NULL)
-//		uart_send_string(" last work");
-//	uart_send_string("\n\r");
 	work->do_work(work->data);
 	cli();
 	free(work);
 	works_count--;
 	sei();
-	if (computer_data.details.error_count > 0) {
+	if (computer_data.details.error_count > 0)
 			computer_data.details.error_count--;
-			insert_to_log('O');
-		}
 	return true;
 }
 

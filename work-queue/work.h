@@ -8,10 +8,7 @@
 #ifndef WORK_QUEUE_WORK_H_
 #define WORK_QUEUE_WORK_H_
 
-#include "../asf.h"
-#include "../debug.h"
-#include "../uart/uart.h"
-//#include "../Fp-utils.h"
+#include "../Fp-utils.h"
 
 struct work {
 	void (*do_work)(void *);
@@ -27,7 +24,7 @@ struct work_queue {
 extern uint16_t works_count;
 extern bool wakeup;
 
-void * malloc_locked(size_t size);
+void *malloc_locked(size_t size);
 
 int insert_work(struct work *work);
 
