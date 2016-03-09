@@ -261,6 +261,7 @@ void set_mem_size_str(char *str, uint8_t mem)
 {
 	uint8_t size;
 	switch (mem){
+	case 0x00:
 	case 0x01:
 	case 0x02:
 		size = mem;
@@ -275,14 +276,15 @@ void set_mem_size_str(char *str, uint8_t mem)
 		size = 16;
 		break;
 	default:
-		size = 0;
+		size = -1;
 		break;
 	}
-	if (size == 0){
-		str = EMPTY_SLOT;
-	} else {
+	if (size < 0)
+		sprintf(str, "-");
+	else if (size == 0)
+		sprintf(str, EMPTY_SLOT);
+	else
 		sprintf(str,"%d GB",size);
-	}
 }
 
 void set_hdd_size_str(char *str, uint16_t size, bool is_tera)

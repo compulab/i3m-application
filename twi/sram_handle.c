@@ -9,37 +9,6 @@
 #define SRAM_DEBUG
 #include "sram_handle.h"
 
-#define CPU_FQ_MSK 				0x1f00
-#define CPU_FQ_MSB_MSK 			0x1f
-#define CPU_FQ_LSB_MSK 			0xff
-#define VALID_CPU_FQ_MSK		0x80
-#define VALID_AMBIENT_MASK 		0x02
-#define VALID_GPU_MASK 			0x01
-#define LSB_MSK 				0x00ff
-#define MSB_MSK 				0x0300
-#define HDD_SZ_MSK				0x03
-#define HDD_SZ_UNIT_MSK			0x04
-#define HDD_SZ_STATUS_MSK		0x80
-#define MEM_SZ_STATUS_LSB_MSK	0x08
-#define MEM_SZ_STATUS_MSB_MSK	0x80
-#define MEM_SZ_LSB_MSK			0x07
-#define MEM_SZ_MSB_MSK			0x70
-#define RSTUSB_MSK 				0x02
-#define RST_MSK 				0x01
-#define RST_MSK 				0x01
-#define WEN_MSK 				0x80
-#define DEFAULT_DATA			0x00
-#define POWER_ON_BM				0x07
-#define POWER_STR_BM			0x03
-#define POWER_STD_BM			0x01
-#define POWER_OFF_BM			0x00
-#define REQUEST_ENABLE			0x01
-#define REQUEST_CPUF			0x02
-#define REQUEST_CPUT			0x04
-#define REQUEST_GPUT			0x08
-
-
-
 uint8_t direct_write_length;
 uint8_t direct_write_index;
 uint16_t dmi_eeprom_index;
@@ -51,7 +20,6 @@ enum dmi_state_t dmi_curr_state;
 
 void clear_direct_help_vars()
 {
-//	uart_send_string("direct string clear");
 	direct_write_index = 0;
 	direct_write_length = 0;
 	is_length_set = false;
@@ -59,7 +27,6 @@ void clear_direct_help_vars()
 
 void init_direct_write_vars()
 {
-//	uart_send_string("direct string init");
 	direct_string_to_add = 0;
 	dmi_curr_state = DMI_IDLE;
 	clear_direct_help_vars();
@@ -114,12 +81,14 @@ void write_hd_sz_msb(uint8_t hdd_addr)
 {
 	int8_t index = (hdd_addr - HDD0_SZ_MSB) / 2;
 	if (!is_valid_register(index, MAX_HDD))
-		return ;//////////
+		return ;
 	if (layout.direct.i2c[hdd_addr] & HDD_SZ_STATUS_MSK) {
 		computer_data.packed.hddsz[index] = (layout.direct.i2c[hdd_addr - 1] & ~ MSB_MSK) | ((layout.direct.i2c[hdd_addr] & HDD_SZ_MSK) << 8);
 		computer_data.packed.hdds |= (0x01 << index);
 		uint8_t factor = (layout.direct.i2c[hdd_addr] & HDD_SZ_UNIT_MSK) != 0 ? 1 : 0;
 		computer_data.packed.hddf |= (0x01 << index) & factor;
+	} else {
+		computer_data.packed.hdds &= ~(0x01 << index);
 	}
 }
 
@@ -205,12 +174,20 @@ void write_memory(uint8_t mem_addr) //Todo: change memory status set
 {
 	uint8_t index = (mem_addr - MEM_LSB ) * 2;
 	uint8_t data = layout.direct.i2c[mem_addr];
-	computer_data.packed.memsz[index] = data & MEM_SZ_LSB_MSK;
-	if (data & MEM_SZ_STATUS_LSB_MSK)
+	if (data & MEM_SZ_STATUS_LSB_MSK) {
+		computer_data.packed.memsz[index] = (data & MEM_SZ_LSB_MSK) >> 4;
 		computer_data.packed.mems |= 0x01 << index;
-	computer_data.packed.memsz[index + 1] = (data & MEM_SZ_MSB_MSK) >> 4;
-	if (data & MEM_SZ_STATUS_MSB_MSK)
+	} else {
+		computer_data.packed.mems &= ~(0x01 << index);
+		computer_data.packed.memsz[index] = 0;
+	}
+	if (data & MEM_SZ_STATUS_MSB_MSK) {
 		computer_data.packed.mems |= 0x01 << (index + 1);
+		computer_data.packed.memsz[index + 1] = data & MEM_SZ_MSB_MSK;
+	} else {
+		computer_data.packed.mems &= ~(0x01 << (index + 1));
+		computer_data.packed.memsz[index + 1] = 0;
+	}
 }
 
 void read_bios_post_code(enum i2c_addr_space post_code_address, uint8_t *data)
