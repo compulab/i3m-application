@@ -44,6 +44,9 @@ bool is_valid_register(int8_t index, uint8_t max_index)
 
 void clear_req()
 {
+	if (computer_state == COMPUTER_IN_OS)
+		computer_state = COMPUTER_DAEMON_WORK;
+
 	if (layout.direct.i2c[PENDR0] == 0)
 		layout.l.req = 0;
 }
@@ -168,9 +171,11 @@ void write_reset()
 void write_post_code_lsb()
 {
 	computer_data.packed.post_code = layout.l.bios_post_code;
+	if ((computer_state == COMPUTER_IN_BIOS) && (computer_data.packed.post_code == POST_CODE_BIOS_DONE))
+		computer_state = COMPUTER_IN_OS;
 }
 
-void write_memory(uint8_t mem_addr) //Todo: change memory status set
+void write_memory(uint8_t mem_addr)
 {
 	uint8_t index = (mem_addr - MEM_LSB ) * 2;
 	uint8_t data = layout.direct.i2c[mem_addr];

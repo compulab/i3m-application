@@ -69,7 +69,6 @@
 #define BOOTLOADER_APPLICATION_START		0x10
 
 #define DEFAULT_SCREEN_SAVER_TIME			10
-
 #define SERIAL_NUMBER_LENGTH				12
 #define PART_NUMBER_LENGTH					64
 #define PART_NUMBER_OPT_LENGTH				16
@@ -244,6 +243,13 @@ union layout_t {
 };
 
 extern union layout_t layout;
+
+enum computer_state_t {
+	COMPUTER_OFF,
+	COMPUTER_IN_BIOS,
+	COMPUTER_IN_OS,
+	COMPUTER_DAEMON_WORK,
+};
 
 enum memory_error_codes {
 	NO_ERROR = 0,
@@ -676,5 +682,5 @@ enum screen_saver_type {
 struct twi_log log_twi;
 
 union updatable_info computer_data;
-
+enum computer_state_t computer_state;
 #endif /* LAYOUT_H_ */

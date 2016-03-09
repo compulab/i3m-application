@@ -184,6 +184,7 @@ void handle_power_state_changed()
 {
 	switch(current_power_state) {
 	case POWER_ON:
+		computer_state = COMPUTER_IN_BIOS;
 		handle_power_on();
 		enter_power_on_mode();
 		break;
@@ -194,6 +195,7 @@ void handle_power_state_changed()
 		enter_sleep_mode();
 		break;
 	case POWER_OFF:
+		computer_state = COMPUTER_OFF;
 		enter_power_off_mode();
 		handle_power_off();
 		break;
