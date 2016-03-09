@@ -16,6 +16,7 @@
 #endif
 
 #include "../display/glcd-0.5.2/glcd_font.h"
+//#include "../display/glcd-0.5.2/glcd.h"
 
 # define PROGMEM_BYTE_ARRAY_T uint8_t*
 
