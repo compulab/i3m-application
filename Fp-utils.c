@@ -1074,6 +1074,8 @@ bool is_menu_need_update(struct gfx_action_menu *menu)
 	struct gfx_information_node *info_node;
 	for (uint8_t i = 0; i < menu->menu->num_elements; i++) {
 		if (menu->actions[i].type == ACTION_TYPE_SHOW_FRAME) {
+			if (menu->actions[i].frame == dashboard)
+				continue;
 			info_node = menu->actions[i].frame->information_head;
 			while (info_node != 0){
 				need_to_update = is_information_need_to_change(&info_node->information, menu->actions[i].visible);

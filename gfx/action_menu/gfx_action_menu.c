@@ -21,6 +21,12 @@ void update_action_visibility(struct gfx_item_action *action)
 		action->visible = true;
 		return;
 	}
+
+	if (action->frame == dashboard) {
+		action->visible = true;
+		return ;
+	}
+
 	bool visible = true;
 	struct gfx_information_node * info_node = action->frame->information_head;
 	while (info_node != 0) {
@@ -306,10 +312,14 @@ void set_dmi_menu()
 void show_frame(struct gfx_frame *frame)
 {
 	present_menu->visible = false;
-	display_state = DISPLAY_FRAME;
+	if (frame == dashboard)
+		display_state = DISPLAY_DASHBOARD;
+	else
+		display_state = DISPLAY_FRAME;
 	clear_screen();
 	disable_screen_saver_mode();
 	gfx_frame_draw(frame, false);
+
 }
 
 void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)

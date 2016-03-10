@@ -68,10 +68,8 @@ void update_screen_saver()
 			break;
 
 		case SCREEN_SAVER_DASHBOARD:
-			if (current_power_state != POWER_OFF && dashboard != NULL) {
+			if (current_power_state != POWER_OFF && dashboard != NULL)
 				show_frame(dashboard);
-				display_state = DISPLAY_DASHBOARD;
-			}
 			break;
 		}
 	}

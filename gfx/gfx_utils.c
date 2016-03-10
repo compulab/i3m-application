@@ -426,17 +426,26 @@ void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
 	if (frame != 0) {
 		update_screen_timer();
 		frame_present = frame;
-		if (present_menu->is_active_frame || !redraw) {
-			clear_screen();
-			gfx_labels_draw(frame->label_head);
-			gfx_images_draw(frame->image_head);
-			if (present_menu->is_active_frame) display_state = DISPLAY_ACTION_FRAME;
-			if (frame->type == FRAME_REGULAR)
-				gfx_mono_generic_draw_horizontal_line(0, SEPERATE_LINE_Y, GFX_MONO_LCD_WIDTH, GFX_PIXEL_SET);
-		}
+		if (display_state == DISPLAY_DASHBOARD) {
+			if (!redraw) {
+				clear_screen();
+				gfx_labels_draw(frame->label_head);
+				gfx_images_draw(frame->image_head);
+			}
+			gfx_infos_draw(frame->information_head, true);
+		} else {
+			if (present_menu->is_active_frame || !redraw) {
+				clear_screen();
+				gfx_labels_draw(frame->label_head);
+				gfx_images_draw(frame->image_head);
+				if (present_menu->is_active_frame) display_state = DISPLAY_ACTION_FRAME;
+				if (frame->type == FRAME_REGULAR)
+					gfx_mono_generic_draw_horizontal_line(0, SEPERATE_LINE_Y, GFX_MONO_LCD_WIDTH, GFX_PIXEL_SET);
+			}
 
-		gfx_infos_draw(frame->information_head, true);
-		insert_graphic_signs(frame);
+			gfx_infos_draw(frame->information_head, true);
+			insert_graphic_signs(frame);
+		}
 		gfx_mono_ssd1306_put_framebuffer();
 	}
 }

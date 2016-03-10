@@ -133,7 +133,7 @@ void action_types_init()
 	}
 }
 
-int load_action(struct gfx_item_action *action, struct cnf_action config_action)
+int load_action(struct gfx_item_action *action, struct cnf_action config_action, struct cnf_frame * cnf_dashboard)
 {
 	action->type = config_action.type;
 	switch(config_action.type){
@@ -142,6 +142,11 @@ int load_action(struct gfx_item_action *action, struct cnf_action config_action)
 #ifdef DEBUG_MODE_ACTION
 		MSG("action is frame")
 #endif
+		if (config_action.frame == cnf_dashboard) {
+			action->frame = dashboard;
+			return 0;
+		}
+
 		action->frame = malloc_locked(sizeof(struct gfx_frame));
 		if (action->frame == NULL) {
 			uart_send_string("action frame failed\n\r");
@@ -298,13 +303,13 @@ int set_mono_menu(struct gfx_action_menu *action_menu, struct gfx_mono_menu *men
 	return 0;
 }
 
-int set_actions(struct gfx_action_menu * menu, struct cnf_action_node *cnf_action_node)
+int set_actions(struct gfx_action_menu * menu, struct cnf_action_node *cnf_action_node, struct cnf_frame * cnf_dashboard)
 {
 	struct cnf_action_node action_node;
 	uint8_t action_index = 0;
 	while (cnf_action_node != 0){
 		memcpy_config(&action_node, cnf_action_node, sizeof(struct cnf_action_node));
-		if (load_action(&(menu->actions[action_index]), action_node.action) != 0) {
+		if (load_action(&(menu->actions[action_index]), action_node.action, cnf_dashboard) != 0) {
 			uart_send_string("load action fail\n\r");
 			return -1;
 		}
@@ -361,7 +366,7 @@ int load_config_block()
 			action_menus[config_menu.id]->id = config_menu.id;
 			if ((set_mono_menu(action_menus[config_menu.id], config_menu.menu) != 0) |
 					(set_graphic_view(action_menus[config_menu.id], config_menu.images_items_head) != 0) |
-					(set_actions(action_menus[i], config_menu.actions_head) != 0)) {
+					(set_actions(action_menus[i], config_menu.actions_head, config_block.dashboard) != 0)) {
 				uart_send_string("set action_menu error\n\r");
 				return config_block_error();
 			}
