@@ -246,6 +246,7 @@ extern union layout_t layout;
 
 enum computer_state_t {
 	COMPUTER_OFF,
+	COMPUTER_ON,
 	COMPUTER_IN_BIOS,
 	COMPUTER_IN_OS,
 	COMPUTER_DAEMON_WORK,

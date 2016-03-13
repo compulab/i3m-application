@@ -46,8 +46,6 @@
 #define REQUEST_CPUT			0x04
 #define REQUEST_GPUT			0x08
 
-#define	POST_CODE_BIOS_DONE		0 		// BIOS post code that send when BIOS is end and the computer continue boot.
-
 void handle_sram_read_request(uint8_t read_address, uint8_t *data);
 
 int handle_sram_write_request(uint8_t write_address, uint8_t data);

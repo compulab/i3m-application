@@ -184,7 +184,6 @@ void handle_power_state_changed()
 {
 	switch(current_power_state) {
 	case POWER_ON:
-		computer_state = COMPUTER_IN_BIOS;
 		handle_power_on();
 		enter_power_on_mode();
 		break;
@@ -195,11 +194,11 @@ void handle_power_state_changed()
 		enter_sleep_mode();
 		break;
 	case POWER_OFF:
-		computer_state = COMPUTER_OFF;
 		enter_power_off_mode();
 		handle_power_off();
 		break;
 	}
+	update_computer_state();
 }
 
 struct work power_state_work = { .do_work = handle_power_state_changed, .data = NULL, .next = NULL };
@@ -1104,6 +1103,18 @@ bool is_frame_need_update(struct gfx_frame *frame)
 		info_node = info_node->next;
 	}
 	return false;
+}
+
+void update_computer_state()
+{
+	if (current_power_state == POWER_OFF)
+		computer_state = COMPUTER_OFF;
+	else if (current_power_state == POWER_ON && computer_state == COMPUTER_OFF)
+		computer_state = COMPUTER_ON;
+	else if (computer_data.packed.post_code == POST_CODE_BIOS_START)
+		computer_state = COMPUTER_IN_BIOS;
+	else if ((computer_state == COMPUTER_IN_BIOS) && (computer_data.packed.post_code == POST_CODE_BIOS_DONE))
+		computer_state = COMPUTER_IN_OS;
 }
 
 void update_info()

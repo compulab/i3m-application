@@ -48,6 +48,9 @@
 #define CPUTR_BIT					2
 #define GPUTR_BIT					3
 
+#define POST_CODE_BIOS_START	0xE1		// BIOS post code that send when BIOS is end and the computer continue boot.
+#define	POST_CODE_BIOS_DONE		0xA0 		// BIOS post code that send when BIOS is end and the computer continue boot.
+
 
 #ifndef APPLICATION_SIZE
 #define APPLICATION_SIZE 0
@@ -119,6 +122,8 @@ void update_ambient_temp();
 void update_adc();
 
 void update_brightness();
+
+void update_computer_state();
 
 void update_power_state();
 

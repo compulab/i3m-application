@@ -171,8 +171,7 @@ void write_reset()
 void write_post_code_lsb()
 {
 	computer_data.packed.post_code = layout.l.bios_post_code;
-	if ((computer_state == COMPUTER_IN_BIOS) && (computer_data.packed.post_code == POST_CODE_BIOS_DONE))
-		computer_state = COMPUTER_IN_OS;
+	update_computer_state();
 }
 
 void write_memory(uint8_t mem_addr)
