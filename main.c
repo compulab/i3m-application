@@ -4,9 +4,6 @@
 #include "wdt/wdt.h"
 #include "uart/uart.h"
 #include "rtc/rtc.h"
-#include "display/glcd-0.5.2/glcd.h"
-
-const uint32_t ProgramLength __attribute__ ((section (".length"))) = 0;
 
 /*
  * Managing I2C requests as described in
@@ -143,7 +140,7 @@ void init_information()
 
 	init_ambient();
 	layout.l.iwren = 0;
-	reset_ambient();
+
 	if (eeprom_read_byte(APPLICATION_VER_MSB_EEPROM_ADDRESS) != APPLICATION_VER_MSB)
 		eeprom_write_byte(APPLICATION_VER_MSB_EEPROM_ADDRESS, APPLICATION_VER_MSB);
 	if (eeprom_read_byte(APPLICATION_VER_LSB_EEPROM_ADDRESS) != APPLICATION_VER_LSB)
