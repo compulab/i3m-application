@@ -1,1 +1,8 @@
 /Release/
+*.d
+*.o
+*.elf
+*.map
+*.hex
+*.eep
+*.lss
