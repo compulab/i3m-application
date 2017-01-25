@@ -8,11 +8,12 @@ RM := rm -rf
 LSS += fp-application.lss
 FLASH_IMAGE += fp-application.hex
 EEPROM_IMAGE += fp-application.eep
+ELF_IMAGE += fp-application.elf
 SIZEDUMMY += sizedummy
 AUTO_GENERATED_FILE = auto_generated.h
 
 # All Target
-all: fp-application.elf secondary-outputs
+all: $(ELF_IMAGE) secondary-outputs
 
 # All of the sources participating in the build are defined here
 -include work-queue/subdir.mk
@@ -44,25 +45,25 @@ all: fp-application.elf secondary-outputs
 -include subdir.mk
 
 # Tool invocations
-fp-application.elf: auto-generated-files $(OBJS) $(USER_OBJS)
+$(ELF_IMAGE): auto-generated-files $(OBJS) $(USER_OBJS)
 	@echo 'LD      $@'
-	@avr-gcc -Wl,-Map,fp-application.map -mmcu=atxmega256a3u -o "fp-application.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	@avr-gcc -Wl,-Map,fp-application.map -mmcu=atxmega256a3u -o $(ELF_IMAGE) $(OBJS) $(USER_OBJS) $(LIBS)
 
-fp-application.lss: fp-application.elf
+$(LSS): $(ELF_IMAGE)
 	@echo 'OBJDUMP $@'
-	@-avr-objdump -h -S fp-application.elf  >"fp-application.lss"
+	@-avr-objdump -h -S $(ELF_IMAGE) > $(LSS)
 
-fp-application.hex: fp-application.elf
+$(FLASH_IMAGE): $(ELF_IMAGE)
 	@echo 'OBJCOPY $@'
-	@-avr-objcopy -O ihex -j .text -j .data -R .configSec -R .configData fp-application.elf  "fp-application.hex"
+	@-avr-objcopy -O ihex -j .text -j .data -R .configSec -R .configData $(ELF_IMAGE) $(FLASH_IMAGE)
 
-fp-application.eep: fp-application.elf
+$(EEPROM_IMAGE): $(ELF_IMAGE)
 	@echo 'OBJCOPY $@'
-	@-avr-objcopy -j .eeprom --no-change-warnings --change-section-lma .eeprom=0 -O ihex fp-application.elf  "fp-application.eep"
+	@-avr-objcopy -j .eeprom --no-change-warnings --change-section-lma .eeprom=0 -O ihex $(ELF_IMAGE) $(EEPROM_IMAGE)
 
-sizedummy: fp-application.elf
+sizedummy: $(ELF_IMAGE)
 	@echo ' '
-	@-avr-size --format=avr --mcu=atxmega256a3u fp-application.elf
+	@-avr-size --format=avr --mcu=atxmega256a3u $(ELF_IMAGE)
 
 auto-generated-files: $(AUTO_GENERATED_FILE)
 
@@ -79,8 +80,8 @@ clean:
 	-@$(RM) $(AUTO_GENERATED_FILE)
 	-@echo 'CLEAN   .'
 	-@$(RM) $(OBJS) $(ASM_DEPS) $(S_DEPS) $(S_UPPER_DEPS) $(C_DEPS)
-	-@echo 'CLEAN   $(FLASH_IMAGE) $(ELFS) $(LSS) $(EEPROM_IMAGE) fp-application.elf fp-application.map'
-	-@$(RM) $(FLASH_IMAGE) $(ELFS) $(EEPROM_IMAGE) fp-application.elf fp-application.map
+	-@echo 'CLEAN   $(FLASH_IMAGE) $(ELF_IMAGE) $(LSS) $(EEPROM_IMAGE) fp-application.map'
+	-@$(RM) $(FLASH_IMAGE) $(ELF_IMAGE) $(EEPROM_IMAGE) fp-application.map
 
 secondary-outputs: $(LSS) $(FLASH_IMAGE) $(EEPROM_IMAGE) $(SIZEDUMMY)
 
