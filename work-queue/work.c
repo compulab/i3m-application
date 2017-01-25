@@ -70,11 +70,11 @@ bool work_handler(void)
 	} else {
 		work_to_do.first = work_to_do.first->next;
 	}
+	works_count--;
 	sei();
 	work->do_work(work->data);
 	cli();
 	free(work);
-	works_count--;
 	sei();
 	if (computer_data.details.error_count > 0)
 			computer_data.details.error_count--;
