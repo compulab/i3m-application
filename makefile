@@ -1,18 +1,15 @@
+VERSION = 0
+PATCHLEVEL = 84
+FRONT_PANEL_APP_VERSION = $(VERSION).$(PATCHLEVEL)
+
 RM := rm -rf
 
-# Add inputs and outputs from these tool invocations to the build variables 
-LSS += \
-fp-application.lss \
-
-FLASH_IMAGE += \
-fp-application.hex \
-
-EEPROM_IMAGE += \
-fp-application.eep \
-
-SIZEDUMMY += \
-sizedummy \
-
+# Add inputs and outputs from these tool invocations to the build variables
+LSS += fp-application.lss
+FLASH_IMAGE += fp-application.hex
+EEPROM_IMAGE += fp-application.eep
+SIZEDUMMY += sizedummy
+AUTO_GENERATED_FILE = auto_generated.h
 
 # All Target
 all: fp-application.elf secondary-outputs
@@ -47,7 +44,7 @@ all: fp-application.elf secondary-outputs
 -include subdir.mk
 
 # Tool invocations
-fp-application.elf: $(OBJS) $(USER_OBJS)
+fp-application.elf: auto-generated-files $(OBJS) $(USER_OBJS)
 	@echo 'LD      $@'
 	@avr-gcc -Wl,-Map,fp-application.map -mmcu=atxmega256a3u -o "fp-application.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 
@@ -66,6 +63,15 @@ fp-application.eep: fp-application.elf
 sizedummy: fp-application.elf
 	@echo ' '
 	@-avr-size --format=avr --mcu=atxmega256a3u fp-application.elf
+
+auto-generated-files: $(AUTO_GENERATED_FILE)
+
+$(AUTO_GENERATED_FILE):
+	@echo 'GEN     $@'
+	@( printf '#define VERSION "%s%s"\n' "$(FRONT_PANEL_APP_VERSION)" \
+	'$(shell ./setversion)' ) > $@
+	@date +'#define BUILD_DATE "%d %b %C%y"' >> $@
+	@date +'#define BUILD_TIME "%T"' >> $@
 
 # Other Targets
 clean:
