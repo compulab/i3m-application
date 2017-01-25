@@ -75,8 +75,12 @@ $(AUTO_GENERATED_FILE):
 
 # Other Targets
 clean:
-	-$(RM) $(FLASH_IMAGE)$(ELFS)$(OBJS)$(ASM_DEPS)$(EEPROM_IMAGE)$(S_DEPS)$(SIZEDUMMY)$(S_UPPER_DEPS)$(LSS)$(C_DEPS) fp-application.elf
-	-@echo ' '
+	-@echo 'CLEAN   $(AUTO_GENERATED_FILE)'
+	-@$(RM) $(AUTO_GENERATED_FILE)
+	-@echo 'CLEAN   .'
+	-@$(RM) $(OBJS) $(ASM_DEPS) $(S_DEPS) $(S_UPPER_DEPS) $(C_DEPS)
+	-@echo 'CLEAN   $(FLASH_IMAGE) $(ELFS) $(LSS) $(EEPROM_IMAGE) fp-application.elf fp-application.map'
+	-@$(RM) $(FLASH_IMAGE) $(ELFS) $(EEPROM_IMAGE) fp-application.elf fp-application.map
 
 secondary-outputs: $(LSS) $(FLASH_IMAGE) $(EEPROM_IMAGE) $(SIZEDUMMY)
 
