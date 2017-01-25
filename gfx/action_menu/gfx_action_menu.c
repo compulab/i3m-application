@@ -34,31 +34,31 @@ void update_action_visibility(struct gfx_item_action *action)
 		case SHOW_CPU_TEMPERTURE:
 			if (!is_valid_cpu_temp(info_node->information.info_data))
 				visible = false;
-				break;
+			break;
 		case SHOW_CPU_FREQUENCY:
 			if (!is_valid_cpu_fq(info_node->information.info_data))
 				visible = false;
-				break;
+			break;
 		case SHOW_AMBIENT_TEMPERATURE:
 			if (!is_valid_ambient_temp())
 				visible = false;
-				break;
+			break;
 		case SHOW_GPU_TEMPERTURE:
 			if (!is_valid_gpu_temp())
 				visible = false;
-				break;
+			break;
 		case SHOW_HDD_SIZE:
 			if (!is_valid_hdd_size(info_node->information.info_data))
 				visible = false;
-				break;
+			break;
 		case SHOW_HDD_TEMPERTURE:
 			if (!is_valid_hdd_temp(info_node->information.info_data))
 				visible = false;
-				break;
+			break;
 		case SHOW_MEMORY_SIZE:
 			if (!is_valid_mem(info_node->information.info_data))
 				visible = false;
-				break;
+			break;
 		case SET_SCREEN_SAVER_TIME_UNIT:
 		case SET_SCREEN_SAVER_TIME:
 		case SET_SCREEN_SAVER_TYPE:
