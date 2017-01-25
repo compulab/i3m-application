@@ -45,9 +45,9 @@ all: $(ELF_IMAGE) secondary-outputs
 -include subdir.mk
 
 # Tool invocations
-$(ELF_IMAGE): auto-generated-files $(OBJS) $(USER_OBJS)
+$(ELF_IMAGE): auto-generated-files $(OBJS)
 	@echo 'LD      $@'
-	@avr-gcc -Wl,-Map,fp-application.map -mmcu=atxmega256a3u -o $(ELF_IMAGE) $(OBJS) $(USER_OBJS) $(LIBS)
+	@avr-gcc -Wl,-Map,fp-application.map -mmcu=atxmega256a3u -o $(ELF_IMAGE) $(OBJS) $(LIBS)
 
 $(LSS): $(ELF_IMAGE)
 	@echo 'OBJDUMP $@'
