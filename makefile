@@ -81,7 +81,7 @@ clean:
 	-@echo 'CLEAN   .'
 	-@$(RM) $(OBJS) $(ASM_DEPS) $(S_DEPS) $(S_UPPER_DEPS) $(C_DEPS)
 	-@echo 'CLEAN   $(FLASH_IMAGE) $(ELF_IMAGE) $(LSS) $(EEPROM_IMAGE) fp-application.map'
-	-@$(RM) $(FLASH_IMAGE) $(ELF_IMAGE) $(EEPROM_IMAGE) fp-application.map
+	-@$(RM) $(FLASH_IMAGE) $(ELF_IMAGE) $(LSS) $(EEPROM_IMAGE) fp-application.map
 
 secondary-outputs: $(LSS) $(FLASH_IMAGE) $(EEPROM_IMAGE) $(SIZEDUMMY)
 
