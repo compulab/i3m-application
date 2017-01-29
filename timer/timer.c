@@ -54,12 +54,6 @@ void time_task()
 	calendar_add_second_to_date(&computer_date_time);
 }
 
-void tc_handle_init()
-{
-	first_ambient_read = false;
-	ambient_update_fail_count = 0;
-}
-
 void update_screen_saver()
 {
 	if (screen_saver_mode_enabled && computer_data.details.screen_saver_visible == 1) {
