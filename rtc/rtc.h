@@ -12,8 +12,6 @@
 #define RTC_CYCLES_1S     1024
 
 
-extern long rtc_time;
-
 void rtc_init();
 
 #endif /* RTC_RTC_H_ */
