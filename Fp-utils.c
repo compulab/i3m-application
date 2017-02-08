@@ -6,6 +6,7 @@
  */
 #include "Fp-utils.h"
 #include "uart/uart.h"
+#include "timer/scheduler.h"
 
 #define MAX_DIGITS 5
 #define UPDATE_FRAME_MIN_TICKS	0x08ff
@@ -1192,3 +1193,30 @@ void update_info()
 	}
 }
 
+#define UPDATE_REQ_SEC	1
+
+static struct work requests_work = { .do_work = update_requests };
+
+static double pending_req_get_recur_period(void)
+{
+	return UPDATE_REQ_SEC;
+}
+
+struct scheduler_task pending_req_tick_task = {
+    .work = &requests_work,
+    .get_recur_period = pending_req_get_recur_period,
+};
+
+#define PRINT_WORKS_COUNT_SEC	1
+
+static struct work print_works_count_work = { .do_work = print_work_count };
+
+static double print_works_get_recur_period(void)
+{
+	return PRINT_WORKS_COUNT_SEC;
+}
+
+struct scheduler_task print_works_count_sec_task = {
+    .work = &print_works_count_work,
+    .get_recur_period = print_works_get_recur_period,
+};
