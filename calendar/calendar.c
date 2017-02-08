@@ -45,6 +45,8 @@
  */
 #include "../ASF/xmega/utils/compiler.h"
 #include "calendar.h"
+#include "../timer/scheduler.h"
+#include "../uart/uart.h"
 #include <stdio.h>
 
 //! Unix epoch year
@@ -490,3 +492,21 @@ void calendar_add_second_to_date(struct calendar_date *date)
 		calendar_add_minute_to_date(date);
 	}
 }
+
+static void calendar_time_task()
+{
+	uart_send_string("time_task\n\r");
+	calendar_add_second_to_date(&computer_date_time);
+}
+
+static double time_get_recur_period(void)
+{
+	return 1;
+}
+
+static struct work time_work = { .do_work = calendar_time_task };
+
+struct scheduler_task time_sec_task = {
+    .work = &time_work,
+    .get_recur_period = time_get_recur_period,
+};
