@@ -3,7 +3,6 @@ C_SRCS += \
 ./timer/tc.c \
 ./timer/tc_scheduler.c \
 ./timer/rtc_scheduler.c \
-./timer/adc_task.c \
 ./timer/ambient_task.c \
 ./timer/pending_req_task.c \
 ./timer/print_works_count_task.c \
@@ -15,7 +14,6 @@ OBJS += \
 ./timer/tc.o \
 ./timer/tc_scheduler.o \
 ./timer/rtc_scheduler.o \
-./timer/adc_task.o \
 ./timer/ambient_task.o \
 ./timer/pending_req_task.o \
 ./timer/print_works_count_task.o \
@@ -27,7 +25,6 @@ C_DEPS += \
 ./timer/tc.d \
 ./timer/tc_scheduler.d \
 ./timer/rtc_scheduler.d \
-./timer/adc_task.d \
 ./timer/ambient_task.d \
 ./timer/pending_req_task.d \
 ./timer/print_works_count_task.d \
