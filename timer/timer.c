@@ -26,20 +26,11 @@ struct scheduler_tick_task {
 	double (*get_recur_period)(void);
 };
 
-enum TYPE_OF_TICK_TASK {
-	PENDING_REQ_TASK 	= 	0,
-	AMBIENT_TASK	  	=	1,
-	ADC_TASK		 	=	2,
-};
 #define NUMBER_OF_TICK_TASKS		3
 static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS];
 
-enum TYPE_OF_SEC_TASK {
-	SCREEN_SAVER_TASK 		=	0,
-	TIME_TASK 				=	1,
-	PRINT_WORKS_COUNT_TASK	=	2,
-	UPDATE_SCREEN_TASK		= 	3,
-};
+#define UPDATE_SCREEN_TASK		3
+
 #define NUMBER_OF_SEC_TASKS		4
 static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS];
 
@@ -110,9 +101,9 @@ static uint32_t get_ticks_in_sec()
 	return sysclk_get_cpu_hz() / tc_get_div();
 }
 
-void set_sec_task_timer(uint8_t sec_to_update, enum TYPE_OF_SEC_TASK type)
+void set_sec_task_timer(uint8_t sec_to_update, int task_id)
 {
-	sec_tasks_to_do[type].secs_left = sec_to_update;
+	sec_tasks_to_do[task_id].secs_left = sec_to_update;
 }
 
 void print_debug_tick_set(uint32_t ticks_in_sec, double sec, uint32_t ticks, uint16_t overflow)
@@ -128,9 +119,9 @@ void print_debug_tick_set(uint32_t ticks_in_sec, double sec, uint32_t ticks, uin
 	uart_send_string(" - ticks to next round\n\r");
 }
 
-void set_tick_task_timer(double sec_to_update, enum TYPE_OF_TICK_TASK type)
+void set_tick_task_timer(double sec_to_update, int task_id)
 {
-	struct scheduler_tick_task *task = &tick_tasks_to_do[type];
+	struct scheduler_tick_task *task = &tick_tasks_to_do[task_id];
 	uint32_t ticks = sec_to_update * get_ticks_in_sec();
 	uint16_t ticks_to_overflow = TIMER_MAX_VALUE - TCC0.CNT;
 	if (sec_to_update == 0.5)
