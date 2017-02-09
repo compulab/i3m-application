@@ -24,6 +24,11 @@
 #include "../uart/uart.h"
 #include "../calendar/calendar.h"
 
+struct scheduler_task {
+	struct work *work;
+	double (*get_recur_period)(void);
+};
+
 extern bool reset_screen_saver_req;
 
 void reset_screen_saver(void);

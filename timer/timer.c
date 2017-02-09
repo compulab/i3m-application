@@ -14,16 +14,14 @@ bool reset_screen_saver_req;
 uint8_t ambient_update_fail_count;
 
 struct scheduler_sec_task {
+	struct scheduler_task task;
 	int secs_left;
-	struct work *work;
-	double (*get_recur_period)(void);
 };
 
 struct scheduler_tick_task {
+	struct scheduler_task task;
 	int overlaps_count;
 	uint16_t offset;
-	struct work *work;
-	double (*get_recur_period)(void);
 };
 
 #define NUMBER_OF_TICK_TASKS		3
@@ -212,23 +210,31 @@ void reset_screen_saver()
 static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS] = {
 		{
 				.secs_left = -1,
-				.work = &screen_saver_work,
-				.get_recur_period = screen_saver_set_timer,
+				.task = {
+					.work = &screen_saver_work,
+				    .get_recur_period = screen_saver_set_timer,
+				},
 		},
 		{
 				.secs_left = -1,
-				.work = &time_work,
-				.get_recur_period = time_set_timer,
+				.task = {
+					.work = &time_work,
+				    .get_recur_period = time_set_timer,
+				},
 		},
 		{
 				.secs_left = -1,
-				.work = &print_works_count_work,
-				.get_recur_period = print_works_count_timer,
+				.task = {
+				    .work = &print_works_count_work,
+				    .get_recur_period = print_works_count_timer,
+				},
 		},
 		{
 				.secs_left = -1,
-				.work = &update_screen_work,
-				.get_recur_period = screen_set_timer,
+				.task = {
+				    .work = &update_screen_work,
+				    .get_recur_period = screen_set_timer,
+				},
 		},
 };
 
@@ -236,23 +242,27 @@ static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = {
 		{
 				.overlaps_count = -1,
 				.offset = 0,
-				.work = &requests_work,
-				.get_recur_period = pending_req_set_timer,
+				.task = {
+				    .work = &requests_work,
+				    .get_recur_period = pending_req_set_timer,
+				},
 		},
 		{
 				.overlaps_count = -1,
 				.offset = 0,
-				.work = &ambient_work,
-				.get_recur_period = ambient_set_timer,
+				.task = {
+				    .work = &ambient_work,
+				    .get_recur_period = ambient_set_timer,
+				},
 		},
 		{
 				.overlaps_count = -1,
 				.offset = 0,
-				.work = &adc_work,
-				.get_recur_period = adc_set_timer,
+				.task = {
+				    .work = &adc_work,
+				    .get_recur_period = adc_set_timer,
+				},
 		},
-
-
 };
 
 bool set_task_cmp(uint8_t task_id)
@@ -282,10 +292,9 @@ void find_next_task(void)
 void tasks_init(void)
 {
 	for (uint8_t i = 0; i < NUMBER_OF_TICK_TASKS; i++)
-		set_tick_task_timer(tick_tasks_to_do[i].get_recur_period(), i);
+		set_tick_task_timer(tick_tasks_to_do[i].task.get_recur_period(), i);
 	for (uint8_t i = 0; i < NUMBER_OF_SEC_TASKS; i++)
-		set_tick_task_timer(sec_tasks_to_do[i].get_recur_period(), i);
-
+		set_tick_task_timer(sec_tasks_to_do[i].task.get_recur_period(), i);
 
 	find_next_task();
 }
@@ -299,9 +308,9 @@ void update_tasks_timeout(void)
 
 	for (int i = 0; i < NUMBER_OF_SEC_TASKS; i ++) {
 		if (sec_tasks_to_do[i].secs_left == 0) {
-			if (!insert_work(sec_tasks_to_do[i].work))
+			if (!insert_work(sec_tasks_to_do[i].task.work))
 				insert_to_log('S'+i);
-			set_tick_task_timer(sec_tasks_to_do[i].get_recur_period(), i);
+			set_tick_task_timer(sec_tasks_to_do[i].task.get_recur_period(), i);
 		}
 	}
 }
@@ -324,9 +333,9 @@ void ticks_task_update_work(void)
 	/* Find expired task and add it to the work queue */
 	for (uint8_t i = 0; i < NUMBER_OF_TICK_TASKS; i++) {
 		if (tick_tasks_to_do[i].overlaps_count == 0 &&  tick_tasks_to_do[i].offset <= TCC0.CNT) {
-			if (!insert_work(tick_tasks_to_do[i].work))
+			if (!insert_work(tick_tasks_to_do[i].task.work))
 				insert_to_log('T'+i);
-			set_tick_task_timer(tick_tasks_to_do[i].get_recur_period(), i);
+			set_tick_task_timer(tick_tasks_to_do[i].task.get_recur_period(), i);
 		}
 	}
 
