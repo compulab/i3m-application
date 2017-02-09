@@ -10,7 +10,6 @@
 
 #define MAX_AMBIENT_UPDATE_FAIL	2
 
-bool first_ambient_read;
 bool reset_screen_saver_req;
 uint8_t ambient_update_fail_count;
 
@@ -19,7 +18,6 @@ static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS];
 
 void init_ambient()
 {
-	first_ambient_read = false;
 	layout.l.ambs = 0;
 }
 
@@ -27,12 +25,7 @@ void update_ambient_temp()
 {
 	if (current_power_state == POWER_ON) {
 		bool valid_update;
-		if (first_ambient_read) {
-			valid_update = TWI_read_reg(AMBIENT_TWI_ADDRESS, AMBIENT_TEMPERATURE_ADDRESS, &layout.l.ambt, 2);
-			first_ambient_read = !valid_update;
-		} else {
-			valid_update = TWI_read_reg(AMBIENT_TWI_ADDRESS, AMBIENT_TEMPERATURE_ADDRESS, &layout.l.ambt, 2);
-		}
+		valid_update = TWI_read_reg(AMBIENT_TWI_ADDRESS, AMBIENT_TEMPERATURE_ADDRESS, &layout.l.ambt, 2);
 
 		if (valid_update) {
 			ambient_update_fail_count = 0;
