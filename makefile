@@ -21,6 +21,7 @@ all: $(ELF_IMAGE) secondary-outputs
 -include uart/subdir.mk
 -include twi/subdir.mk
 -include timer/subdir.mk
+-include scheduler/subdir.mk
 -include rtc/subdir.mk
 -include gfx/action_menu/subdir.mk
 -include gfx/subdir.mk

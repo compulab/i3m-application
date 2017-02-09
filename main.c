@@ -1,6 +1,6 @@
 #include "asf.h"
 #include "twi/twi_slave.h"
-#include "timer/scheduler.h"
+#include "scheduler/scheduler.h"
 #include "wdt/wdt.h"
 #include "twi/twi_master.h"
 #include "uart/uart.h"

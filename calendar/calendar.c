@@ -45,8 +45,8 @@
  */
 #include "../ASF/xmega/utils/compiler.h"
 #include "calendar.h"
-#include "../timer/scheduler.h"
 #include "../uart/uart.h"
+#include "../scheduler/scheduler.h"
 #include <stdio.h>
 
 //! Unix epoch year

@@ -20,7 +20,7 @@
 
 #include "../work-queue/work.h"
 
-#include "../timer/scheduler.h"
+#include "../scheduler/scheduler.h"
 
 #include "../display/display_render.h"
 

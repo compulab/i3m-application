@@ -5,7 +5,7 @@
  *      Author: arkadi
  */
 #include "adc.h"
-#include "../timer/scheduler.h"
+#include "../scheduler/scheduler.h"
 #include "../Fp-utils.h"
 #include <stdio.h>
 
