@@ -85,37 +85,9 @@ static struct work print_works_count_work = { .do_work = print_work_count, .data
 static struct work screen_saver_work = { .do_work = update_screen_saver, .data = NULL, .next = NULL, };
 static struct work time_work = { .do_work = time_task , .data = NULL, .next = NULL, };
 
-uint32_t get_ticks_in_sec()
+static uint32_t get_ticks_in_sec()
 {
-	uint16_t tc_div;
-	switch (TCC0.CTRLA & TC_CLKSEL_DIV1024_gc) {
-	case TC_CLKSEL_DIV1_gc:
-		tc_div = 1;
-		break;
-	case TC_CLKSEL_DIV2_gc:
-		tc_div = 2;
-		break;
-	case TC_CLKSEL_DIV4_gc:
-		tc_div = 4;
-		break;
-	case TC_CLKSEL_DIV8_gc:
-		tc_div = 8;
-		break;
-	case TC_CLKSEL_DIV64_gc:
-		tc_div = 64;
-		break;
-	case TC_CLKSEL_DIV256_gc:
-		tc_div = 256;
-		break;
-	case TC_CLKSEL_DIV1024_gc:
-		tc_div = 1024;
-		break;
-	default:
-		tc_div = 1;
-		break;
-	}
-
-	return sysclk_get_cpu_hz() / tc_div;
+	return sysclk_get_cpu_hz() / tc_get_div();
 }
 
 void set_sec_task_timer(uint8_t sec_to_update, enum TYPE_OF_SEC_TASK type)

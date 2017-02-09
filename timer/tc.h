@@ -21,5 +21,6 @@ void tc_cmp_disable();
 
 void tc_set_cmp_value(uint16_t value);
 
+uint16_t tc_get_div(void);
 
 #endif
