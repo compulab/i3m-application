@@ -128,47 +128,52 @@ void set_tick_task_timer(double sec_to_update, enum TYPE_OF_TICK_TASK type)
 /*
  * Set timer for new work of updating works count - Debug
  */
-void print_works_count_timer()
+double print_works_count_timer(void)
 {
-	set_sec_task_timer(1, PRINT_WORKS_COUNT_TASK);
+	return 1;
 }
 
 /*
  * Set timer for new work of updating RTC time
  */
-void time_set_timer()
+double time_set_timer(void)
 {
-	set_sec_task_timer(1 , TIME_TASK);
+	return 1;
 }
 
 /*
  * Set timer for new work of updating screen saver
  */
-void screen_saver_set_timer()
+double screen_saver_set_timer(void)
 {
-	set_sec_task_timer(computer_data.details.screen_saver_update_time , SCREEN_SAVER_TASK);
+	return computer_data.details.screen_saver_update_time;
 }
 
 /*
  * Set timer for new work of updating ambient temp
  */
-void ambient_set_timer()
+double ambient_set_timer(void)
 {
-	set_tick_task_timer(UPDATE_AMBIENT_SEC, AMBIENT_TASK);
+	return UPDATE_AMBIENT_SEC;
 }
 
 /*
  * Set timer for new work of updating ADC
  */
-void adc_set_timer()
+double adc_set_timer(void)
 {
-	set_tick_task_timer(UPDATE_ADC_SEC, ADC_TASK);
+	return UPDATE_ADC_SEC;
+}
+
+double screen_set_timer(void)
+{
+	return UPDATE_SCREEN_TIME;
 }
 
 /*
  * Set timer for new work of screen information
  */
-void update_screen_timer()
+void update_screen_timer(void)
 {
 	set_sec_task_timer(UPDATE_SCREEN_TIME, UPDATE_SCREEN_TASK);
 }
@@ -176,9 +181,9 @@ void update_screen_timer()
 /*
  * Set timer for new work of updating pending requests
  */
-void pending_req_set_timer()
+double pending_req_set_timer(void)
 {
-	set_tick_task_timer(UPDATE_REQ_SEC, PENDING_REQ_TASK);
+	return UPDATE_REQ_SEC;
 }
 
 /*
@@ -193,22 +198,22 @@ static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS] = {
 		{
 				.secs_left = -1,
 				.work = &screen_saver_work,
-				.set_new_timer = screen_saver_set_timer,
+				.get_recur_period = screen_saver_set_timer,
 		},
 		{
 				.secs_left = -1,
 				.work = &time_work,
-				.set_new_timer = time_set_timer,
+				.get_recur_period = time_set_timer,
 		},
 		{
 				.secs_left = -1,
 				.work = &print_works_count_work,
-				.set_new_timer = print_works_count_timer,
+				.get_recur_period = print_works_count_timer,
 		},
 		{
 				.secs_left = -1,
 				.work = &update_screen_work,
-				.set_new_timer = update_screen_timer,
+				.get_recur_period = screen_set_timer,
 		},
 };
 
@@ -217,19 +222,19 @@ static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = {
 				.overlaps_count = -1,
 				.offset = 0,
 				.work = &requests_work,
-				.set_new_timer = pending_req_set_timer,
+				.get_recur_period = pending_req_set_timer,
 		},
 		{
 				.overlaps_count = -1,
 				.offset = 0,
 				.work = &ambient_work,
-				.set_new_timer = ambient_set_timer,
+				.get_recur_period = ambient_set_timer,
 		},
 		{
 				.overlaps_count = -1,
 				.offset = 0,
 				.work = &adc_work,
-				.set_new_timer = adc_set_timer,
+				.get_recur_period = adc_set_timer,
 		},
 
 
@@ -262,9 +267,9 @@ void find_next_task(void)
 void tasks_init(void)
 {
 	for (uint8_t i = 0; i < NUMBER_OF_TICK_TASKS; i++)
-		tick_tasks_to_do[i].set_new_timer();
+		set_tick_task_timer(tick_tasks_to_do[i].get_recur_period(), i);
 	for (uint8_t i = 0; i < NUMBER_OF_SEC_TASKS; i++)
-		sec_tasks_to_do[i].set_new_timer();
+		set_tick_task_timer(sec_tasks_to_do[i].get_recur_period(), i);
 
 
 	find_next_task();
@@ -281,7 +286,7 @@ void update_tasks_timeout(void)
 		if (sec_tasks_to_do[i].secs_left == 0) {
 			if (!insert_work(sec_tasks_to_do[i].work))
 				insert_to_log('S'+i);
-			sec_tasks_to_do[i].set_new_timer();
+			set_tick_task_timer(sec_tasks_to_do[i].get_recur_period(), i);
 		}
 	}
 }
@@ -306,7 +311,7 @@ void ticks_task_update_work(void)
 		if (tick_tasks_to_do[i].overlaps_count == 0 &&  tick_tasks_to_do[i].offset <= TCC0.CNT) {
 			if (!insert_work(tick_tasks_to_do[i].work))
 				insert_to_log('T'+i);
-			tick_tasks_to_do[i].set_new_timer();
+			set_tick_task_timer(tick_tasks_to_do[i].get_recur_period(), i);
 		}
 	}
 

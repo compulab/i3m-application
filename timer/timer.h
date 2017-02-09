@@ -51,7 +51,7 @@ struct scheduler_tick_task {
 	int overlaps_count;
 	uint16_t offset;
 	struct work *work;
-	void (* set_new_timer)(void);
+	double (* get_recur_period)(void);
 };
 
 #define NUMBER_OF_SEC_TASKS		4
@@ -67,7 +67,7 @@ enum TYPE_OF_SEC_TASK {
 struct scheduler_sec_task {
 	int secs_left;
 	struct work *work;
-	void (* set_new_timer)(void);
+	double (* get_recur_period)(void);
 };
 
 extern bool reset_screen_saver_req;
