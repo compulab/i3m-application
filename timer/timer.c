@@ -13,7 +13,34 @@
 bool reset_screen_saver_req;
 uint8_t ambient_update_fail_count;
 
+struct scheduler_sec_task {
+	int secs_left;
+	struct work *work;
+	double (*get_recur_period)(void);
+};
+
+struct scheduler_tick_task {
+	int overlaps_count;
+	uint16_t offset;
+	struct work *work;
+	double (*get_recur_period)(void);
+};
+
+enum TYPE_OF_TICK_TASK {
+	PENDING_REQ_TASK 	= 	0,
+	AMBIENT_TASK	  	=	1,
+	ADC_TASK		 	=	2,
+};
+#define NUMBER_OF_TICK_TASKS		3
 static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS];
+
+enum TYPE_OF_SEC_TASK {
+	SCREEN_SAVER_TASK 		=	0,
+	TIME_TASK 				=	1,
+	PRINT_WORKS_COUNT_TASK	=	2,
+	UPDATE_SCREEN_TASK		= 	3,
+};
+#define NUMBER_OF_SEC_TASKS		4
 static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS];
 
 void init_ambient()
@@ -145,6 +172,7 @@ double screen_saver_set_timer(void)
 /*
  * Set timer for new work of updating ambient temp
  */
+#define UPDATE_AMBIENT_SEC		4
 double ambient_set_timer(void)
 {
 	return UPDATE_AMBIENT_SEC;
@@ -153,19 +181,21 @@ double ambient_set_timer(void)
 /*
  * Set timer for new work of updating ADC
  */
+#define UPDATE_ADC_SEC			1
 double adc_set_timer(void)
 {
 	return UPDATE_ADC_SEC;
 }
 
+/*
+ * Set timer for new work of screen information
+ */
+#define UPDATE_SCREEN_TIME		1
 double screen_set_timer(void)
 {
 	return UPDATE_SCREEN_TIME;
 }
 
-/*
- * Set timer for new work of screen information
- */
 void update_screen_timer(void)
 {
 	set_sec_task_timer(UPDATE_SCREEN_TIME, UPDATE_SCREEN_TASK);
@@ -174,6 +204,7 @@ void update_screen_timer(void)
 /*
  * Set timer for new work of updating pending requests
  */
+#define UPDATE_REQ_SEC			1
 double pending_req_set_timer(void)
 {
 	return UPDATE_REQ_SEC;
