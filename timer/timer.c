@@ -8,8 +8,6 @@
 #include "timer.h"
 #include "../lib/syntax.h"
 
-bool reset_screen_saver_req;
-
 struct scheduler_sec_task {
 	struct scheduler_task task;
 	int secs_left;
@@ -35,31 +33,8 @@ void time_task()
 	calendar_add_second_to_date(&computer_date_time);
 }
 
-void update_screen_saver()
-{
-	if (screen_saver_mode_enabled && computer_data.details.screen_saver_visible == 1) {
-		switch(computer_data.details.screen_saver_type) {
-		case SCREEN_SAVER_SPLASH:
-			show_logo();
-			break;
-
-		case SCREEN_SAVER_DASHBOARD:
-			if (current_power_state != POWER_OFF && dashboard != NULL)
-				show_frame(dashboard);
-			break;
-
-		case SCREEN_SAVER_CLOCK:
-			if (clock != NULL && calendar_is_date_valid(&computer_date_time)) {
-				show_frame(clock);
-				display_state = DISPLAY_CLOCK;
-			}
-		}
-	}
-}
-
 static struct work update_screen_work = { .do_work = update_info, .data = NULL, .next = NULL, };
 //static struct work buttons_clear_work = { .do_work = handle_button_pressed, .data = NULL, .next = NULL, };
-static struct work screen_saver_work = { .do_work = update_screen_saver, .data = NULL, .next = NULL, };
 static struct work time_work = { .do_work = time_task , .data = NULL, .next = NULL, };
 
 static uint32_t get_ticks_in_sec()
@@ -111,14 +86,6 @@ double time_get_recur_period(void)
 }
 
 /*
- * Set timer for new work of updating screen saver
- */
-double screen_saver_get_recur_period(void)
-{
-	return computer_data.details.screen_saver_update_time;
-}
-
-/*
  * Set timer for new work of screen information
  */
 #define UPDATE_SCREEN_TIME		1
@@ -130,14 +97,6 @@ double screen_get_recur_period(void)
 void update_screen_timer(void)
 {
 	set_sec_task_timer(UPDATE_SCREEN_TIME, UPDATE_SCREEN_TASK);
-}
-
-/*
- * Reset screen saver timer
- */
-void reset_screen_saver()
-{
-	screen_saver_get_recur_period();
 }
 
 static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS] = { 0 };
@@ -166,10 +125,6 @@ static void schedule_closest_task(void)
 		tc_cmp_disable();
 }
 
-struct scheduler_task screen_saver_sec_task = {
-    .work = &screen_saver_work,
-    .get_recur_period = screen_saver_get_recur_period,
-};
 struct scheduler_task screen_sec_task = {
     .work = &update_screen_work,
     .get_recur_period = screen_get_recur_period,
