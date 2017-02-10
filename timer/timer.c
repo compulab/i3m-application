@@ -265,22 +265,20 @@ static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = {
 		},
 };
 
-bool set_task_cmp(uint8_t task_id)
+static bool task_due_before_scheduled(uint8_t task_id)
 {
-	if (tick_tasks_to_do[task_id].overlaps_count == 0 && (!is_tc_cmp_enable() || tick_tasks_to_do[task_id].offset < TCC0.CCA)) {
-		TCC0.CCA = tick_tasks_to_do[task_id].offset;
-		return true;
-	}
-
-	return false;
+	return tick_tasks_to_do[task_id].overlaps_count == 0 &&
+		(!is_tc_cmp_enable() || tick_tasks_to_do[task_id].offset < TCC0.CCA);
 }
 
 void find_next_task(void)
 {
 	bool task_is_set = false;
 	for (uint8_t i = 0; i < NUMBER_OF_TICK_TASKS; i++) {
-		if (set_task_cmp(i))
+		if (task_due_before_scheduled(i)) {
+			TCC0.CCA = tick_tasks_to_do[i].offset;
 			task_is_set = true;
+		}
 	}
 
 	if (task_is_set)
