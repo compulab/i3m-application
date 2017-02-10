@@ -22,29 +22,6 @@ ISR(TWIC_TWIM_vect)
 	handle_twi_master();
 }
 
-/*
- * Updating the time of tasks (By seconds) to start
- */
-ISR(RTC_OVF_vect)
-{
-	update_tasks_timeout();
-}
-
-/*
- * Updating the time of tasks (By ticks) to start
- */
-ISR(TCC0_CCA_vect)
-{
-	ticks_task_update_work();
-}
-
-/*
- * Updating the overlaps of tick tasks
- */
-ISR(TCC0_OVF_vect)
-{
-	ticks_task_update_overlap();
-}
 
 /*
  * Power state GPIO change
