@@ -6,7 +6,7 @@
  */
 
 #include "timer.h"
-
+#include "../lib/syntax.h"
 
 #define MAX_AMBIENT_UPDATE_FAIL	2
 
@@ -271,17 +271,17 @@ static bool task_due_before_scheduled(uint8_t task_id)
 		(!is_tc_cmp_enable() || tick_tasks_to_do[task_id].offset < TCC0.CCA);
 }
 
-void find_next_task(void)
+static void schedule_closest_task(void)
 {
-	bool task_is_set = false;
-	for (uint8_t i = 0; i < NUMBER_OF_TICK_TASKS; i++) {
-		if (task_due_before_scheduled(i)) {
-			TCC0.CCA = tick_tasks_to_do[i].offset;
-			task_is_set = true;
+	bool scheduled_task_exists = false;
+	array_foreach(struct scheduler_tick_task, tick_tasks_to_do, index) {
+		if (task_due_before_scheduled(index)) {
+			TCC0.CCA = tick_tasks_to_do[index].offset;
+			scheduled_task_exists = true;
 		}
 	}
 
-	if (task_is_set)
+	if (scheduled_task_exists)
 		tc_cmp_enable();
 	else
 		tc_cmp_disable();
@@ -294,7 +294,7 @@ void tasks_init(void)
 	for (uint8_t i = 0; i < NUMBER_OF_SEC_TASKS; i++)
 		set_sec_task_timer(sec_tasks_to_do[i].task.get_recur_period(), i);
 
-	find_next_task();
+	schedule_closest_task();
 }
 
 void update_tasks_timeout(void)
@@ -322,7 +322,7 @@ void ticks_task_update_overlap(void)
 			tick_tasks_to_do[i].overlaps_count--;
 	}
 
-	find_next_task();
+	schedule_closest_task();
 }
 
 
@@ -337,7 +337,7 @@ void ticks_task_update_work(void)
 		}
 	}
 
-	find_next_task();
+	schedule_closest_task();
 }
 
 /*
