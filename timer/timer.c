@@ -34,9 +34,9 @@ static uint32_t get_ticks_in_sec()
 	return sysclk_get_cpu_hz() / tc_get_div();
 }
 
-void set_sec_task_timer(uint8_t sec_to_update, int task_id)
+static void sec_task_set_timer(int task_index)
 {
-	sec_tasks_to_do[task_id].secs_left = sec_to_update;
+	sec_tasks_to_do[task_index].secs_left = sec_tasks_to_do[task_index].task.get_recur_period();
 }
 
 void print_debug_tick_set(uint32_t ticks_in_sec, double sec, uint32_t ticks, uint16_t overflow)
@@ -69,9 +69,10 @@ void set_tick_task_timer(double sec_to_update, int task_id)
 	}
 }
 
+//Note: murder this thing with fire ASAP
 void update_screen_timer(void)
 {
-	set_sec_task_timer(UPDATE_SCREEN_TIME, UPDATE_SCREEN_TASK);
+	sec_tasks_to_do[UPDATE_SCREEN_TASK].secs_left = UPDATE_SCREEN_TIME;
 }
 
 static bool task_due_before_scheduled(uint8_t task_id)
@@ -146,7 +147,7 @@ void rtc_scheduler_init(void)
     sec_tasks_to_do[3] = new_sec_task(screen_sec_task);
 
 	array_foreach(struct scheduler_sec_task, sec_tasks_to_do, index)
-		set_sec_task_timer(sec_tasks_to_do[index].task.get_recur_period(), index);
+		sec_task_set_timer(index);
 }
 
 void tasks_init(void)
@@ -171,7 +172,7 @@ void update_tasks_timeout(void)
 		if (sec_tasks_to_do[i].secs_left == 0) {
 			if (!insert_work(sec_tasks_to_do[i].task.work))
 				insert_to_log('S'+i);
-			set_sec_task_timer(sec_tasks_to_do[i].task.get_recur_period(), i);
+			sec_task_set_timer(i);
 		}
 	}
 }
