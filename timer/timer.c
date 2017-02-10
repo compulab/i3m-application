@@ -207,63 +207,9 @@ void reset_screen_saver()
 	screen_saver_get_recur_period();
 }
 
-static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS] = {
-		{
-				.secs_left = -1,
-				.task = {
-					.work = &screen_saver_work,
-				    .get_recur_period = screen_saver_get_recur_period,
-				},
-		},
-		{
-				.secs_left = -1,
-				.task = {
-					.work = &time_work,
-				    .get_recur_period = time_get_recur_period,
-				},
-		},
-		{
-				.secs_left = -1,
-				.task = {
-				    .work = &print_works_count_work,
-				    .get_recur_period = print_works_get_recur_period,
-				},
-		},
-		{
-				.secs_left = -1,
-				.task = {
-				    .work = &update_screen_work,
-				    .get_recur_period = screen_get_recur_period,
-				},
-		},
-};
+static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS] = { 0 };
 
-static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = {
-		{
-				.overlaps_count = -1,
-				.offset = 0,
-				.task = {
-				    .work = &requests_work,
-				    .get_recur_period = pending_req_get_recur_period,
-				},
-		},
-		{
-				.overlaps_count = -1,
-				.offset = 0,
-				.task = {
-				    .work = &ambient_work,
-				    .get_recur_period = ambient_get_recur_period,
-				},
-		},
-		{
-				.overlaps_count = -1,
-				.offset = 0,
-				.task = {
-				    .work = &adc_work,
-				    .get_recur_period = adc_get_recur_period,
-				},
-		},
-};
+static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = { 0 };
 
 static bool task_due_before_scheduled(uint8_t task_id)
 {
@@ -287,18 +233,101 @@ static void schedule_closest_task(void)
 		tc_cmp_disable();
 }
 
-void tasks_init(void)
+struct scheduler_task adc_tick_task = {
+    .work = &adc_work,
+    .get_recur_period = adc_get_recur_period,
+};
+struct scheduler_task ambient_tick_task = {
+    .work = &ambient_work,
+    .get_recur_period = ambient_get_recur_period,
+};
+struct scheduler_task pending_req_tick_task = {
+    .work = &requests_work,
+    .get_recur_period = pending_req_get_recur_period,
+};
+struct scheduler_task print_works_count_sec_task = {
+    .work = &print_works_count_work,
+    .get_recur_period = print_works_get_recur_period,
+};
+struct scheduler_task screen_saver_sec_task = {
+    .work = &screen_saver_work,
+    .get_recur_period = screen_saver_get_recur_period,
+};
+struct scheduler_task screen_sec_task = {
+    .work = &update_screen_work,
+    .get_recur_period = screen_get_recur_period,
+};
+struct scheduler_task time_sec_task = {
+    .work = &time_work,
+    .get_recur_period = time_get_recur_period,
+};
+
+static struct scheduler_tick_task new_tick_task(struct scheduler_task task)
 {
-	for (uint8_t i = 0; i < NUMBER_OF_TICK_TASKS; i++)
-		set_tick_task_timer(tick_tasks_to_do[i].task.get_recur_period(), i);
-	for (uint8_t i = 0; i < NUMBER_OF_SEC_TASKS; i++)
-		set_sec_task_timer(sec_tasks_to_do[i].task.get_recur_period(), i);
+	struct scheduler_tick_task res = { 0 };
+	res.task = task;
+    res.overlaps_count = -1;
+    res.offset = 0;
+	return res;
+}
+
+static bool tc_can_schedule = false;
+void switch_tc_interrupt_schedule(bool on)
+{
+	tc_can_schedule = on;
+}
+
+void tc_scheduler_init(void)
+{
+    tick_tasks_to_do[0] = new_tick_task(pending_req_tick_task);
+	tick_tasks_to_do[1] = new_tick_task(ambient_tick_task);
+	tick_tasks_to_do[2] = new_tick_task(adc_tick_task);
+
+	array_foreach(struct scheduler_tick_task, tick_tasks_to_do, index)
+		set_tick_task_timer(tick_tasks_to_do[index].task.get_recur_period(), index);
 
 	schedule_closest_task();
 }
 
+static struct scheduler_sec_task new_sec_task(struct scheduler_task task)
+{
+	struct scheduler_sec_task res = { 0 };
+	res.task = task;
+	res.secs_left = -1;
+	return res;
+}
+
+static bool rtc_can_schedule = false;
+
+void switch_rtc_interrupt_schedule(bool on)
+{
+	rtc_can_schedule = on;
+}
+
+void rtc_scheduler_init(void)
+{
+    sec_tasks_to_do[0] = new_sec_task(screen_saver_sec_task);
+    sec_tasks_to_do[1] = new_sec_task(time_sec_task);
+    sec_tasks_to_do[2] = new_sec_task(print_works_count_sec_task);
+    sec_tasks_to_do[3] = new_sec_task(screen_sec_task);
+
+	array_foreach(struct scheduler_sec_task, sec_tasks_to_do, index)
+		set_sec_task_timer(sec_tasks_to_do[index].task.get_recur_period(), index);
+}
+
+void tasks_init(void)
+{
+	rtc_scheduler_init();
+	tc_scheduler_init();
+	switch_rtc_interrupt_schedule(true);
+	switch_tc_interrupt_schedule(true);
+}
+
 void update_tasks_timeout(void)
 {
+	if (!rtc_can_schedule)
+		return;
+
 	for (int i = 0; i < NUMBER_OF_SEC_TASKS; i ++) {
 		if (sec_tasks_to_do[i].secs_left > 0)
 			sec_tasks_to_do[i].secs_left--;
@@ -315,6 +344,9 @@ void update_tasks_timeout(void)
 
 void ticks_task_update_overlap(void)
 {
+	if (!tc_can_schedule)
+		return;
+
 	for (uint8_t i = 0; i < NUMBER_OF_TICK_TASKS; i++) {
 		if (tick_tasks_to_do[i].overlaps_count <= 0)
 			continue;
@@ -328,6 +360,9 @@ void ticks_task_update_overlap(void)
 
 void ticks_task_update_work(void)
 {
+	if (!tc_can_schedule)
+		return;
+
 	/* Find expired task and add it to the work queue */
 	for (uint8_t i = 0; i < NUMBER_OF_TICK_TASKS; i++) {
 		if (tick_tasks_to_do[i].overlaps_count == 0 &&  tick_tasks_to_do[i].offset <= TCC0.CNT) {
