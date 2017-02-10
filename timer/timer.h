@@ -36,6 +36,7 @@ struct scheduler_task ambient_tick_task;
 struct scheduler_task pending_req_tick_task;
 struct scheduler_task print_works_count_sec_task;
 struct scheduler_task screen_saver_sec_task;
+struct scheduler_task screen_sec_task;
 
 void reset_screen_saver(void);
 void update_screen_timer();

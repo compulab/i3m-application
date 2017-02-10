@@ -22,7 +22,9 @@ struct scheduler_tick_task {
 #define NUMBER_OF_TICK_TASKS		3
 static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS];
 
+//Note: get rid of this as fast as possible
 #define UPDATE_SCREEN_TASK		3
+#define UPDATE_SCREEN_TIME		1
 
 #define NUMBER_OF_SEC_TASKS		4
 static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS];
@@ -33,7 +35,6 @@ void time_task()
 	calendar_add_second_to_date(&computer_date_time);
 }
 
-static struct work update_screen_work = { .do_work = update_info, .data = NULL, .next = NULL, };
 //static struct work buttons_clear_work = { .do_work = handle_button_pressed, .data = NULL, .next = NULL, };
 static struct work time_work = { .do_work = time_task , .data = NULL, .next = NULL, };
 
@@ -85,15 +86,6 @@ double time_get_recur_period(void)
 	return 1;
 }
 
-/*
- * Set timer for new work of screen information
- */
-#define UPDATE_SCREEN_TIME		1
-double screen_get_recur_period(void)
-{
-	return UPDATE_SCREEN_TIME;
-}
-
 void update_screen_timer(void)
 {
 	set_sec_task_timer(UPDATE_SCREEN_TIME, UPDATE_SCREEN_TASK);
@@ -125,10 +117,6 @@ static void schedule_closest_task(void)
 		tc_cmp_disable();
 }
 
-struct scheduler_task screen_sec_task = {
-    .work = &update_screen_work,
-    .get_recur_period = screen_get_recur_period,
-};
 struct scheduler_task time_sec_task = {
     .work = &time_work,
     .get_recur_period = time_get_recur_period,
