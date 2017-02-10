@@ -19,26 +19,11 @@ static uint32_t get_ticks_in_sec()
 	return sysclk_get_cpu_hz() / tc_get_div();
 }
 
-void print_debug_tick_set(uint32_t ticks_in_sec, double sec, uint32_t ticks, uint16_t overflow)
-{
-	uart_send_string("Debug Tick set: \n\r");
-	uart_send_num(ticks_in_sec, 16);
-	uart_send_string(" - ticks in sec\n\r");
-	uart_send_num(sec, 16);
-	uart_send_string(" - secs to timeout\n\r");
-	uart_send_num(ticks, 16);
-	uart_send_string(" - ticks till timeout\n\r");
-	uart_send_num(overflow, 16);
-	uart_send_string(" - ticks to next round\n\r");
-}
-
 void set_tick_task_timer(double sec_to_update, int task_id)
 {
 	struct scheduler_tick_task *task = &tick_tasks_to_do[task_id];
 	uint32_t ticks = sec_to_update * get_ticks_in_sec();
 	uint16_t ticks_to_overflow = TIMER_MAX_VALUE - TCC0.CNT;
-	if (sec_to_update == 0.5)
-		print_debug_tick_set(get_ticks_in_sec(), sec_to_update, ticks, ticks_to_overflow);
 	if (ticks < ticks_to_overflow) {
 		task->offset = ticks + TCC0.CNT;
 		task->overlaps_count = 0;
