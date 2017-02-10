@@ -20,14 +20,14 @@ struct scheduler_tick_task {
 };
 
 #define NUMBER_OF_TICK_TASKS		3
-static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS];
+static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = { 0 };
 
 //Note: get rid of this as fast as possible
 #define UPDATE_SCREEN_TASK		3
 #define UPDATE_SCREEN_TIME		1
 
 #define NUMBER_OF_SEC_TASKS		4
-static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS];
+static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS] = { 0 };
 
 static uint32_t get_ticks_in_sec()
 {
@@ -73,10 +73,6 @@ void update_screen_timer(void)
 {
 	set_sec_task_timer(UPDATE_SCREEN_TIME, UPDATE_SCREEN_TASK);
 }
-
-static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS] = { 0 };
-
-static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = { 0 };
 
 static bool task_due_before_scheduled(uint8_t task_id)
 {
