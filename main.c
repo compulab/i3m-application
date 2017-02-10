@@ -98,6 +98,11 @@ void reset_screen_saver_config()
 	update_screen_saver_from_eeprom();
 }
 
+void init_ambient()
+{
+	layout.l.ambs = 0;
+}
+
 /*
  * Initialize and validate Screen Saver configuration
  * Initialize ambient sensor

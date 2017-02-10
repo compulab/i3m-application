@@ -8,10 +8,7 @@
 #include "timer.h"
 #include "../lib/syntax.h"
 
-#define MAX_AMBIENT_UPDATE_FAIL	2
-
 bool reset_screen_saver_req;
-uint8_t ambient_update_fail_count;
 
 struct scheduler_sec_task {
 	struct scheduler_task task;
@@ -31,31 +28,6 @@ static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS];
 
 #define NUMBER_OF_SEC_TASKS		4
 static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS];
-
-void init_ambient()
-{
-	layout.l.ambs = 0;
-}
-
-void update_ambient_temp()
-{
-	if (current_power_state == POWER_ON) {
-		bool valid_update;
-		valid_update = TWI_read_reg(AMBIENT_TWI_ADDRESS, AMBIENT_TEMPERATURE_ADDRESS, &layout.l.ambt, 2);
-
-		if (valid_update) {
-			ambient_update_fail_count = 0;
-			layout.l.ambs = 1;
-		} else if (ambient_update_fail_count == MAX_AMBIENT_UPDATE_FAIL) {
-			layout.l.ambs = 0;
-		} else  {
-			ambient_update_fail_count++;
-			update_ambient_temp();
-		}
-		computer_data.details.ambs = layout.l.ambs;
-		computer_data.details.ambt = layout.l.ambt;
-	}
-}
 
 void time_task()
 {
@@ -86,7 +58,6 @@ void update_screen_saver()
 }
 
 static struct work requests_work = { .do_work = update_requests, .data = NULL, .next = NULL, };
-static struct work ambient_work = { .do_work = update_ambient_temp, .data = NULL, .next = NULL, };
 static struct work update_screen_work = { .do_work = update_info, .data = NULL, .next = NULL, };
 static struct work print_works_count_work = { .do_work = print_work_count, .data = NULL, .next = NULL, };
 //static struct work buttons_clear_work = { .do_work = handle_button_pressed, .data = NULL, .next = NULL, };
@@ -158,15 +129,6 @@ double screen_saver_get_recur_period(void)
 }
 
 /*
- * Set timer for new work of updating ambient temp
- */
-#define UPDATE_AMBIENT_SEC		4
-double ambient_get_recur_period(void)
-{
-	return UPDATE_AMBIENT_SEC;
-}
-
-/*
  * Set timer for new work of screen information
  */
 #define UPDATE_SCREEN_TIME		1
@@ -223,10 +185,6 @@ static void schedule_closest_task(void)
 		tc_cmp_disable();
 }
 
-struct scheduler_task ambient_tick_task = {
-    .work = &ambient_work,
-    .get_recur_period = ambient_get_recur_period,
-};
 struct scheduler_task pending_req_tick_task = {
     .work = &requests_work,
     .get_recur_period = pending_req_get_recur_period,
