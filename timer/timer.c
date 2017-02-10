@@ -19,14 +19,14 @@ static uint32_t get_ticks_in_sec()
 	return sysclk_get_cpu_hz() / tc_get_div();
 }
 
-void set_tick_task_timer(double sec_to_update, int task_id)
+static void task_set_timer(int task_index)
 {
-	struct scheduler_tick_task *task = &tick_tasks_to_do[task_id];
-	uint32_t ticks = sec_to_update * get_ticks_in_sec();
+	struct scheduler_tick_task *task = &tick_tasks_to_do[task_index];
+	uint32_t ticks = task->task.get_recur_period() * get_ticks_in_sec();
 	uint16_t ticks_to_overflow = TIMER_MAX_VALUE - TCC0.CNT;
 	if (ticks < ticks_to_overflow) {
-		task->offset = ticks + TCC0.CNT;
 		task->overlaps_count = 0;
+		task->offset = ticks + TCC0.CNT;
 	} else {
 		ticks -= ticks_to_overflow;
 		task->overlaps_count = ticks / TIMER_MAX_VALUE + 1;
@@ -78,7 +78,7 @@ void tc_scheduler_init(void)
 	tick_tasks_to_do[2] = new_tick_task(adc_tick_task);
 
 	array_foreach(struct scheduler_tick_task, tick_tasks_to_do, index)
-		set_tick_task_timer(tick_tasks_to_do[index].task.get_recur_period(), index);
+		task_set_timer(index);
 
 	schedule_closest_task();
 }
@@ -117,7 +117,7 @@ void ticks_task_update_work(void)
 		if (tick_tasks_to_do[i].overlaps_count == 0 &&  tick_tasks_to_do[i].offset <= TCC0.CNT) {
 			if (!insert_work(tick_tasks_to_do[i].task.work))
 				insert_to_log('T'+i);
-			set_tick_task_timer(tick_tasks_to_do[i].task.get_recur_period(), i);
+			task_set_timer(i);
 		}
 	}
 
