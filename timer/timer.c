@@ -294,7 +294,7 @@ void tasks_init(void)
 	for (uint8_t i = 0; i < NUMBER_OF_TICK_TASKS; i++)
 		set_tick_task_timer(tick_tasks_to_do[i].task.get_recur_period(), i);
 	for (uint8_t i = 0; i < NUMBER_OF_SEC_TASKS; i++)
-		set_tick_task_timer(sec_tasks_to_do[i].task.get_recur_period(), i);
+		set_sec_task_timer(sec_tasks_to_do[i].task.get_recur_period(), i);
 
 	find_next_task();
 }
@@ -310,7 +310,7 @@ void update_tasks_timeout(void)
 		if (sec_tasks_to_do[i].secs_left == 0) {
 			if (!insert_work(sec_tasks_to_do[i].task.work))
 				insert_to_log('S'+i);
-			set_tick_task_timer(sec_tasks_to_do[i].task.get_recur_period(), i);
+			set_sec_task_timer(sec_tasks_to_do[i].task.get_recur_period(), i);
 		}
 	}
 }
