@@ -31,6 +31,8 @@ struct scheduler_task {
 
 extern bool reset_screen_saver_req;
 
+struct scheduler_task adc_tick_task;
+
 void reset_screen_saver(void);
 void update_screen_timer();
 void init_ambient(void);

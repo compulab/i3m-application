@@ -87,7 +87,6 @@ void update_screen_saver()
 
 static struct work requests_work = { .do_work = update_requests, .data = NULL, .next = NULL, };
 static struct work ambient_work = { .do_work = update_ambient_temp, .data = NULL, .next = NULL, };
-static struct work adc_work = { .do_work = update_adc, .data = NULL, .next = NULL, };
 static struct work update_screen_work = { .do_work = update_info, .data = NULL, .next = NULL, };
 static struct work print_works_count_work = { .do_work = print_work_count, .data = NULL, .next = NULL, };
 //static struct work buttons_clear_work = { .do_work = handle_button_pressed, .data = NULL, .next = NULL, };
@@ -168,15 +167,6 @@ double ambient_get_recur_period(void)
 }
 
 /*
- * Set timer for new work of updating ADC
- */
-#define UPDATE_ADC_SEC			1
-double adc_get_recur_period(void)
-{
-	return UPDATE_ADC_SEC;
-}
-
-/*
  * Set timer for new work of screen information
  */
 #define UPDATE_SCREEN_TIME		1
@@ -233,10 +223,6 @@ static void schedule_closest_task(void)
 		tc_cmp_disable();
 }
 
-struct scheduler_task adc_tick_task = {
-    .work = &adc_work,
-    .get_recur_period = adc_get_recur_period,
-};
 struct scheduler_task ambient_tick_task = {
     .work = &ambient_work,
     .get_recur_period = ambient_get_recur_period,

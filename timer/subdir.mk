@@ -1,15 +1,18 @@
 # Add inputs and outputs from these tool invocations to the build variables
 C_SRCS += \
 ./timer/tc.c \
-./timer/timer.c
+./timer/timer.c \
+./timer/adc_task.c
 
 OBJS += \
 ./timer/tc.o \
-./timer/timer.o
+./timer/timer.o \
+./timer/adc_task.o
 
 C_DEPS += \
 ./timer/tc.d \
-./timer/timer.d
+./timer/timer.d \
+./timer/adc_task.d
 
 
 # Each subdirectory must supply rules for building sources it contributes
