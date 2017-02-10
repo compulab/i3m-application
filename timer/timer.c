@@ -1,17 +1,9 @@
-/*
- * timer.c
- *
- *  Created on: Nov 9, 2015
- *      Author: arkadi
- */
-
 #include "timer.h"
 #include "../lib/syntax.h"
 
-struct scheduler_sec_task {
-	struct scheduler_task task;
-	int secs_left;
-};
+extern struct scheduler_task adc_tick_task;
+extern struct scheduler_task ambient_tick_task;
+extern struct scheduler_task pending_req_tick_task;
 
 struct scheduler_tick_task {
 	struct scheduler_task task;
@@ -22,21 +14,9 @@ struct scheduler_tick_task {
 #define NUMBER_OF_TICK_TASKS		3
 static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = { 0 };
 
-//Note: get rid of this as fast as possible
-#define UPDATE_SCREEN_TASK		3
-#define UPDATE_SCREEN_TIME		1
-
-#define NUMBER_OF_SEC_TASKS		4
-static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS] = { 0 };
-
 static uint32_t get_ticks_in_sec()
 {
 	return sysclk_get_cpu_hz() / tc_get_div();
-}
-
-static void sec_task_set_timer(int task_index)
-{
-	sec_tasks_to_do[task_index].secs_left = sec_tasks_to_do[task_index].task.get_recur_period();
 }
 
 void print_debug_tick_set(uint32_t ticks_in_sec, double sec, uint32_t ticks, uint16_t overflow)
@@ -67,12 +47,6 @@ void set_tick_task_timer(double sec_to_update, int task_id)
 		task->overlaps_count = ticks / TIMER_MAX_VALUE + 1;
 		task->offset = ticks % TIMER_MAX_VALUE;
 	}
-}
-
-//Note: murder this thing with fire ASAP
-void update_screen_timer(void)
-{
-	sec_tasks_to_do[UPDATE_SCREEN_TASK].secs_left = UPDATE_SCREEN_TIME;
 }
 
 static bool task_due_before_scheduled(uint8_t task_id)
@@ -124,57 +98,12 @@ void tc_scheduler_init(void)
 	schedule_closest_task();
 }
 
-static struct scheduler_sec_task new_sec_task(struct scheduler_task task)
-{
-	struct scheduler_sec_task res = { 0 };
-	res.task = task;
-	res.secs_left = -1;
-	return res;
-}
-
-static bool rtc_can_schedule = false;
-
-void switch_rtc_interrupt_schedule(bool on)
-{
-	rtc_can_schedule = on;
-}
-
-void rtc_scheduler_init(void)
-{
-    sec_tasks_to_do[0] = new_sec_task(screen_saver_sec_task);
-    sec_tasks_to_do[1] = new_sec_task(time_sec_task);
-    sec_tasks_to_do[2] = new_sec_task(print_works_count_sec_task);
-    sec_tasks_to_do[3] = new_sec_task(screen_sec_task);
-
-	array_foreach(struct scheduler_sec_task, sec_tasks_to_do, index)
-		sec_task_set_timer(index);
-}
-
 void tasks_init(void)
 {
 	rtc_scheduler_init();
 	tc_scheduler_init();
 	switch_rtc_interrupt_schedule(true);
 	switch_tc_interrupt_schedule(true);
-}
-
-void update_tasks_timeout(void)
-{
-	if (!rtc_can_schedule)
-		return;
-
-	for (int i = 0; i < NUMBER_OF_SEC_TASKS; i ++) {
-		if (sec_tasks_to_do[i].secs_left > 0)
-			sec_tasks_to_do[i].secs_left--;
-	}
-
-	for (int i = 0; i < NUMBER_OF_SEC_TASKS; i ++) {
-		if (sec_tasks_to_do[i].secs_left == 0) {
-			if (!insert_work(sec_tasks_to_do[i].task.work))
-				insert_to_log('S'+i);
-			sec_task_set_timer(i);
-		}
-	}
 }
 
 void ticks_task_update_overlap(void)
@@ -208,14 +137,6 @@ void ticks_task_update_work(void)
 	}
 
 	schedule_closest_task();
-}
-
-/*
- * Updating the time of tasks (By seconds) to start
- */
-ISR(RTC_OVF_vect)
-{
-	update_tasks_timeout();
 }
 
 /*

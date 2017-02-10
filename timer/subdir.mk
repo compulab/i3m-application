@@ -2,6 +2,7 @@
 C_SRCS += \
 ./timer/tc.c \
 ./timer/timer.c \
+./timer/rtc_scheduler.c \
 ./timer/adc_task.c \
 ./timer/ambient_task.c \
 ./timer/pending_req_task.c \
@@ -13,6 +14,7 @@ C_SRCS += \
 OBJS += \
 ./timer/tc.o \
 ./timer/timer.o \
+./timer/rtc_scheduler.o \
 ./timer/adc_task.o \
 ./timer/ambient_task.o \
 ./timer/pending_req_task.o \
@@ -24,6 +26,7 @@ OBJS += \
 C_DEPS += \
 ./timer/tc.d \
 ./timer/timer.d \
+./timer/rtc_scheduler.d \
 ./timer/adc_task.d \
 ./timer/ambient_task.d \
 ./timer/pending_req_task.d \

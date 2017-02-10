@@ -31,13 +31,8 @@ struct scheduler_task {
 
 extern bool reset_screen_saver_req;
 
-struct scheduler_task adc_tick_task;
-struct scheduler_task ambient_tick_task;
-struct scheduler_task pending_req_tick_task;
-struct scheduler_task print_works_count_sec_task;
-struct scheduler_task screen_saver_sec_task;
-struct scheduler_task screen_sec_task;
-struct scheduler_task time_sec_task;
+void rtc_scheduler_init(void);
+void switch_rtc_interrupt_schedule(bool on);
 
 void reset_screen_saver(void);
 void update_screen_timer();
