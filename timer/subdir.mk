@@ -4,21 +4,24 @@ C_SRCS += \
 ./timer/timer.c \
 ./timer/adc_task.c \
 ./timer/ambient_task.c \
-./timer/pending_req_task.c
+./timer/pending_req_task.c \
+./timer/print_works_count_task.c
 
 OBJS += \
 ./timer/tc.o \
 ./timer/timer.o \
 ./timer/adc_task.o \
 ./timer/ambient_task.o \
-./timer/pending_req_task.o
+./timer/pending_req_task.o \
+./timer/print_works_count_task.o
 
 C_DEPS += \
 ./timer/tc.d \
 ./timer/timer.d \
 ./timer/adc_task.d \
 ./timer/ambient_task.d \
-./timer/pending_req_task.d
+./timer/pending_req_task.d \
+./timer/print_works_count_task.d
 
 
 # Each subdirectory must supply rules for building sources it contributes

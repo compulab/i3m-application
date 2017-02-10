@@ -58,7 +58,6 @@ void update_screen_saver()
 }
 
 static struct work update_screen_work = { .do_work = update_info, .data = NULL, .next = NULL, };
-static struct work print_works_count_work = { .do_work = print_work_count, .data = NULL, .next = NULL, };
 //static struct work buttons_clear_work = { .do_work = handle_button_pressed, .data = NULL, .next = NULL, };
 static struct work screen_saver_work = { .do_work = update_screen_saver, .data = NULL, .next = NULL, };
 static struct work time_work = { .do_work = time_task , .data = NULL, .next = NULL, };
@@ -101,14 +100,6 @@ void set_tick_task_timer(double sec_to_update, int task_id)
 		task->overlaps_count = ticks / TIMER_MAX_VALUE + 1;
 		task->offset = ticks % TIMER_MAX_VALUE;
 	}
-}
-
-/*
- * Set timer for new work of updating works count - Debug
- */
-double print_works_get_recur_period(void)
-{
-	return 1;
 }
 
 /*
@@ -175,10 +166,6 @@ static void schedule_closest_task(void)
 		tc_cmp_disable();
 }
 
-struct scheduler_task print_works_count_sec_task = {
-    .work = &print_works_count_work,
-    .get_recur_period = print_works_get_recur_period,
-};
 struct scheduler_task screen_saver_sec_task = {
     .work = &screen_saver_work,
     .get_recur_period = screen_saver_get_recur_period,
