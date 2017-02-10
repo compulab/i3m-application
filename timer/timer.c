@@ -137,7 +137,7 @@ void set_tick_task_timer(double sec_to_update, int task_id)
 /*
  * Set timer for new work of updating works count - Debug
  */
-double print_works_count_timer(void)
+double print_works_get_recur_period(void)
 {
 	return 1;
 }
@@ -145,7 +145,7 @@ double print_works_count_timer(void)
 /*
  * Set timer for new work of updating RTC time
  */
-double time_set_timer(void)
+double time_get_recur_period(void)
 {
 	return 1;
 }
@@ -153,7 +153,7 @@ double time_set_timer(void)
 /*
  * Set timer for new work of updating screen saver
  */
-double screen_saver_set_timer(void)
+double screen_saver_get_recur_period(void)
 {
 	return computer_data.details.screen_saver_update_time;
 }
@@ -162,7 +162,7 @@ double screen_saver_set_timer(void)
  * Set timer for new work of updating ambient temp
  */
 #define UPDATE_AMBIENT_SEC		4
-double ambient_set_timer(void)
+double ambient_get_recur_period(void)
 {
 	return UPDATE_AMBIENT_SEC;
 }
@@ -171,7 +171,7 @@ double ambient_set_timer(void)
  * Set timer for new work of updating ADC
  */
 #define UPDATE_ADC_SEC			1
-double adc_set_timer(void)
+double adc_get_recur_period(void)
 {
 	return UPDATE_ADC_SEC;
 }
@@ -180,7 +180,7 @@ double adc_set_timer(void)
  * Set timer for new work of screen information
  */
 #define UPDATE_SCREEN_TIME		1
-double screen_set_timer(void)
+double screen_get_recur_period(void)
 {
 	return UPDATE_SCREEN_TIME;
 }
@@ -194,7 +194,7 @@ void update_screen_timer(void)
  * Set timer for new work of updating pending requests
  */
 #define UPDATE_REQ_SEC			1
-double pending_req_set_timer(void)
+double pending_req_get_recur_period(void)
 {
 	return UPDATE_REQ_SEC;
 }
@@ -204,7 +204,7 @@ double pending_req_set_timer(void)
  */
 void reset_screen_saver()
 {
-	screen_saver_set_timer();
+	screen_saver_get_recur_period();
 }
 
 static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS] = {
@@ -212,28 +212,28 @@ static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS] = {
 				.secs_left = -1,
 				.task = {
 					.work = &screen_saver_work,
-				    .get_recur_period = screen_saver_set_timer,
+				    .get_recur_period = screen_saver_get_recur_period,
 				},
 		},
 		{
 				.secs_left = -1,
 				.task = {
 					.work = &time_work,
-				    .get_recur_period = time_set_timer,
+				    .get_recur_period = time_get_recur_period,
 				},
 		},
 		{
 				.secs_left = -1,
 				.task = {
 				    .work = &print_works_count_work,
-				    .get_recur_period = print_works_count_timer,
+				    .get_recur_period = print_works_get_recur_period,
 				},
 		},
 		{
 				.secs_left = -1,
 				.task = {
 				    .work = &update_screen_work,
-				    .get_recur_period = screen_set_timer,
+				    .get_recur_period = screen_get_recur_period,
 				},
 		},
 };
@@ -244,7 +244,7 @@ static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = {
 				.offset = 0,
 				.task = {
 				    .work = &requests_work,
-				    .get_recur_period = pending_req_set_timer,
+				    .get_recur_period = pending_req_get_recur_period,
 				},
 		},
 		{
@@ -252,7 +252,7 @@ static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = {
 				.offset = 0,
 				.task = {
 				    .work = &ambient_work,
-				    .get_recur_period = ambient_set_timer,
+				    .get_recur_period = ambient_get_recur_period,
 				},
 		},
 		{
@@ -260,7 +260,7 @@ static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = {
 				.offset = 0,
 				.task = {
 				    .work = &adc_work,
-				    .get_recur_period = adc_set_timer,
+				    .get_recur_period = adc_get_recur_period,
 				},
 		},
 };
