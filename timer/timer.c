@@ -29,15 +29,6 @@ static struct scheduler_tick_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS];
 #define NUMBER_OF_SEC_TASKS		4
 static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS];
 
-void time_task()
-{
-	uart_send_string("time_task\n\r");
-	calendar_add_second_to_date(&computer_date_time);
-}
-
-//static struct work buttons_clear_work = { .do_work = handle_button_pressed, .data = NULL, .next = NULL, };
-static struct work time_work = { .do_work = time_task , .data = NULL, .next = NULL, };
-
 static uint32_t get_ticks_in_sec()
 {
 	return sysclk_get_cpu_hz() / tc_get_div();
@@ -78,14 +69,6 @@ void set_tick_task_timer(double sec_to_update, int task_id)
 	}
 }
 
-/*
- * Set timer for new work of updating RTC time
- */
-double time_get_recur_period(void)
-{
-	return 1;
-}
-
 void update_screen_timer(void)
 {
 	set_sec_task_timer(UPDATE_SCREEN_TIME, UPDATE_SCREEN_TASK);
@@ -116,11 +99,6 @@ static void schedule_closest_task(void)
 	else
 		tc_cmp_disable();
 }
-
-struct scheduler_task time_sec_task = {
-    .work = &time_work,
-    .get_recur_period = time_get_recur_period,
-};
 
 static struct scheduler_tick_task new_tick_task(struct scheduler_task task)
 {
