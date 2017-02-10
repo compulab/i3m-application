@@ -57,7 +57,6 @@ void update_screen_saver()
 	}
 }
 
-static struct work requests_work = { .do_work = update_requests, .data = NULL, .next = NULL, };
 static struct work update_screen_work = { .do_work = update_info, .data = NULL, .next = NULL, };
 static struct work print_works_count_work = { .do_work = print_work_count, .data = NULL, .next = NULL, };
 //static struct work buttons_clear_work = { .do_work = handle_button_pressed, .data = NULL, .next = NULL, };
@@ -143,15 +142,6 @@ void update_screen_timer(void)
 }
 
 /*
- * Set timer for new work of updating pending requests
- */
-#define UPDATE_REQ_SEC			1
-double pending_req_get_recur_period(void)
-{
-	return UPDATE_REQ_SEC;
-}
-
-/*
  * Reset screen saver timer
  */
 void reset_screen_saver()
@@ -185,10 +175,6 @@ static void schedule_closest_task(void)
 		tc_cmp_disable();
 }
 
-struct scheduler_task pending_req_tick_task = {
-    .work = &requests_work,
-    .get_recur_period = pending_req_get_recur_period,
-};
 struct scheduler_task print_works_count_sec_task = {
     .work = &print_works_count_work,
     .get_recur_period = print_works_get_recur_period,
