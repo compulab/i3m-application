@@ -8,25 +8,11 @@
 #ifndef FP_UTILS_H_
 #define FP_UTILS_H_
 
-#ifndef LAYOUT_H_
 #include "layout.h"
-#endif
-
-#ifndef GFX_GFX_ACTION_MENU_H_
 #include "gfx/action_menu/gfx_action_menu.h"
-#endif
-
-#ifndef DEF_H
 #include "def.h"
-#endif
-
-#ifndef EEPROM_H
 #include "twi/eeprom.h"
-#endif
-
-#ifndef ADC_ADC_H_
 #include "adc/adc.h"
-#endif
 
 #include <stdio.h>
 #include <string.h>
