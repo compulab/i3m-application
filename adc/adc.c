@@ -9,7 +9,6 @@
 #include "../Fp-utils.h"
 #include <stdio.h>
 
-
 //***ADC configuration
 #define MY_ADC    ADCA
 #define MY_ADC_CH ADC_CH0
@@ -21,13 +20,10 @@ int32_t power_sum;
 float gain = 0;
 float vcc = 3.3;
 
-
-
 void adc_init()
 {
 	struct adc_config adc_conf;
 	struct adc_channel_config adcch_conf;
-
 
 	adc_read_configuration(&MY_ADC, &adc_conf);
 	adcch_read_configuration(&MY_ADC, MY_ADC_CH, &adcch_conf);
@@ -89,4 +85,3 @@ struct scheduler_task adc_tick_task = {
 	.work = &adc_work,
 	.get_recur_period = adc_get_recur_period,
 };
-
