@@ -103,6 +103,14 @@ void init_ambient()
 	layout.l.ambs = 0;
 }
 
+void tasks_init(void)
+{
+	rtc_scheduler_init();
+	tc_scheduler_init();
+	switch_rtc_interrupt_schedule(true);
+	switch_tc_interrupt_schedule(true);
+}
+
 /*
  * Initialize and validate Screen Saver configuration
  * Initialize ambient sensor

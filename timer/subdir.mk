@@ -1,7 +1,7 @@
 # Add inputs and outputs from these tool invocations to the build variables
 C_SRCS += \
 ./timer/tc.c \
-./timer/timer.c \
+./timer/tc_scheduler.c \
 ./timer/rtc_scheduler.c \
 ./timer/adc_task.c \
 ./timer/ambient_task.c \
@@ -13,7 +13,7 @@ C_SRCS += \
 
 OBJS += \
 ./timer/tc.o \
-./timer/timer.o \
+./timer/tc_scheduler.o \
 ./timer/rtc_scheduler.o \
 ./timer/adc_task.o \
 ./timer/ambient_task.o \
@@ -25,7 +25,7 @@ OBJS += \
 
 C_DEPS += \
 ./timer/tc.d \
-./timer/timer.d \
+./timer/tc_scheduler.d \
 ./timer/rtc_scheduler.d \
 ./timer/adc_task.d \
 ./timer/ambient_task.d \

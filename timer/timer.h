@@ -33,6 +33,8 @@ extern bool reset_screen_saver_req;
 
 void rtc_scheduler_init(void);
 void switch_rtc_interrupt_schedule(bool on);
+void tc_scheduler_init(void);
+void switch_tc_interrupt_schedule(bool on);
 
 void reset_screen_saver(void);
 void update_screen_timer();
