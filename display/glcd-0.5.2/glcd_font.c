@@ -6,6 +6,7 @@
  */
 
 #include "glcd_font.h"
+#include "../../uart/uart.h"
 
 struct glcd_FontConfig_t **fonts;
 uint16_t fonts_size;

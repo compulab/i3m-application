@@ -5,6 +5,7 @@
  *      Author: arkadi
  */
 #include "Fp-utils.h"
+#include "uart/uart.h"
 
 #define MAX_DIGITS 5
 #define UPDATE_FRAME_MIN_TICKS	0x08ff

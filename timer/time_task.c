@@ -1,4 +1,5 @@
-#include "timer.h"
+#include "scheduler.h"
+#include "../uart/uart.h"
 
 void time_task()
 {

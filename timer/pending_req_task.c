@@ -1,4 +1,4 @@
-#include "timer.h"
+#include "scheduler.h"
 
 static struct work requests_work = { .do_work = update_requests };
 

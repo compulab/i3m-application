@@ -16,7 +16,7 @@
  * 	Author: Nikita Kiryanov
  */
 
-#include "timer.h"
+#include "scheduler.h"
 #include "../lib/syntax.h"
 
 extern struct scheduler_task adc_tick_task;

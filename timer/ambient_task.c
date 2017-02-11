@@ -1,4 +1,6 @@
-#include "timer.h"
+#include "scheduler.h"
+#include "../twi/twi_master.h"
+
 
 #define MAX_AMBIENT_UPDATE_FAIL	2
 

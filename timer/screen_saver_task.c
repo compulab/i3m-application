@@ -1,4 +1,4 @@
-#include "timer.h"
+#include "scheduler.h"
 
 bool reset_screen_saver_req;
 

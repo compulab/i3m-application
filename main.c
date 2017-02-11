@@ -1,7 +1,8 @@
 #include "asf.h"
 #include "twi/twi_slave.h"
-#include "timer/timer.h"
+#include "timer/scheduler.h"
 #include "wdt/wdt.h"
+#include "twi/twi_master.h"
 #include "uart/uart.h"
 #include "rtc/rtc.h"
 

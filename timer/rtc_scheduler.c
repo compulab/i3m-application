@@ -1,4 +1,4 @@
-#include "timer.h"
+#include "scheduler.h"
 #include "../lib/syntax.h"
 
 extern struct scheduler_task print_works_count_sec_task;

@@ -6,6 +6,7 @@
  */
 
 #include "gfx_utils.h"
+#include "../uart/uart.h"
 
 #define PAGE_ADDRESS(y) floor (y/8)
 
