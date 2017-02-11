@@ -352,8 +352,6 @@ void set_updated_ambient_temp(char *output_str)
 
 void update_adc()
 {
-	char last_value[10] = "0 W";
-	strcpy(last_value, power_value);
 	set_power_data(power_value);
 }
 
