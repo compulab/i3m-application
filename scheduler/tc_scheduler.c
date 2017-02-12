@@ -23,6 +23,7 @@ extern struct scheduler_task adc_tick_task;
 extern struct scheduler_task ambient_tick_task;
 extern struct scheduler_task pending_req_tick_task;
 extern struct scheduler_task screen_saver_sec_task;
+extern struct scheduler_task print_works_count_sec_task;
 
 struct tc_scheduler_task {
 	struct scheduler_task task;
@@ -30,7 +31,7 @@ struct tc_scheduler_task {
 	uint16_t offset;
 };
 
-#define NUMBER_OF_TICK_TASKS		4
+#define NUMBER_OF_TICK_TASKS		5
 static struct tc_scheduler_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = { 0 };
 
 static struct tc_scheduler_task new_tick_task(struct scheduler_task task)
@@ -96,6 +97,7 @@ void tc_scheduler_init(void)
 	tick_tasks_to_do[1] = new_tick_task(ambient_tick_task);
 	tick_tasks_to_do[2] = new_tick_task(adc_tick_task);
 	tick_tasks_to_do[3] = new_tick_task(screen_saver_sec_task);
+	tick_tasks_to_do[4] = new_tick_task(print_works_count_sec_task);
 
 	array_foreach(struct tc_scheduler_task, tick_tasks_to_do, index)
 		task_set_timer(index);
