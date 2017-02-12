@@ -30,11 +30,6 @@ void update_screen_saver()
 	}
 }
 
-void reset_screen_saver(void)
-{
-	screen_saver_get_recur_period();
-}
-
 static struct work screen_saver_work = { .do_work = update_screen_saver };
 
 struct scheduler_task screen_saver_sec_task = {
