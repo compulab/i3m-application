@@ -7,7 +7,7 @@ extern struct scheduler_task screen_sec_task;
 extern struct scheduler_task time_sec_task;
 
 struct scheduler_sec_task {
-	struct scheduler_task task;
+	struct scheduler_task;
 	int secs_left;
 };
 
@@ -17,7 +17,7 @@ static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS] = { 0 };
 
 static void sec_task_set_timer(int task_index)
 {
-	sec_tasks_to_do[task_index].secs_left = sec_tasks_to_do[task_index].task.get_recur_period();
+	sec_tasks_to_do[task_index].secs_left = sec_tasks_to_do[task_index].get_recur_period();
 }
 
 //Note: murder this thing with fire ASAP
@@ -31,7 +31,8 @@ void update_screen_timer(void)
 static struct scheduler_sec_task new_sec_task(struct scheduler_task task)
 {
 	struct scheduler_sec_task res = { 0 };
-	res.task = task;
+	res.work = task.work;
+	res.get_recur_period = task.get_recur_period;
 	res.secs_left = -1;
 	return res;
 }
@@ -65,7 +66,7 @@ ISR(RTC_OVF_vect)
 
 	for (int i = 0; i < NUMBER_OF_SEC_TASKS; i ++) {
 		if (sec_tasks_to_do[i].secs_left == 0) {
-			if (!insert_work(sec_tasks_to_do[i].task.work))
+			if (!insert_work(sec_tasks_to_do[i].work))
 				insert_to_log('S'+i);
 			sec_task_set_timer(i);
 		}
