@@ -8,7 +8,7 @@
 #ifndef UART_UART_H_
 #define UART_UART_H_
 
-#include "../asf.h"
+#include "asf.h"
 
 #define BSEL 	16
 #define UART_BASE	USARTD0

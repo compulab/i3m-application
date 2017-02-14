@@ -32,7 +32,7 @@
 	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "../glcd.h"
+#include "display/glcd-0.5.2/glcd.h"
 #include "LPC11Uxx.h"
 
 #if defined(GLCD_DEVICE_LPC11UXX)

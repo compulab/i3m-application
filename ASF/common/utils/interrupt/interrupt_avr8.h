@@ -46,8 +46,8 @@
 #ifndef UTILS_INTERRUPT_INTERRUPT_H
 #define UTILS_INTERRUPT_INTERRUPT_H
 
-#include "../../../xmega/utils/compiler.h"
-#include "../parts.h"
+#include "ASF/xmega/utils/compiler.h"
+#include "ASF/common/utils/parts.h"
 
 /**
  * \weakgroup interrupt_group

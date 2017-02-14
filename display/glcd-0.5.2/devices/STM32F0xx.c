@@ -42,7 +42,7 @@
 #include "stm32f0xx_misc.h"
 
 /* Includes from GLCD */
-#include "../glcd.h"
+#include "display/glcd-0.5.2/glcd.h"
 #include "inc/STM32F0xx.h"
 
 void glcd_init(void)

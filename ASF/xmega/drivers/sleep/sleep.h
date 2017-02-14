@@ -46,7 +46,7 @@
 #ifndef SLEEP_H
 #define SLEEP_H
 
-#include "../../utils/compiler.h"
+#include "ASF/xmega/utils/compiler.h"
 
 /**
  * \defgroup sleep_group Sleep controller driver

@@ -47,7 +47,7 @@
 #ifndef _CONF_USB_H_
 #define _CONF_USB_H_
 
-#include "../ASF/xmega/utils/compiler.h"
+#include "ASF/xmega/utils/compiler.h"
 
 //#warning You must refill the following definitions with a correct values
 

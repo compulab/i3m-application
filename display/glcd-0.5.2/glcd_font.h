@@ -8,9 +8,8 @@
 #ifndef DISPLAY_GLCD_0_5_2_GLCD_FONT_H_
 #define DISPLAY_GLCD_0_5_2_GLCD_FONT_H_
 
-#include "../../work-queue/work.h"
+#include "work-queue/work.h"
 
-//#include "glcd.h"
 #include "glcd_text.h"
 #include "fonts/font5x7.h"
 

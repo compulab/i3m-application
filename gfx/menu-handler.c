@@ -1,6 +1,6 @@
 #include "menu-handler.h"
 
-#include "../uart/uart.h"
+#include "uart/uart.h"
 
 #define is_key_selected(var,key) (var & key) == key
 

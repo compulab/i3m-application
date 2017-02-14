@@ -17,7 +17,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#include "../uart/uart.h"
+#include "uart/uart.h"
 
 
 enum TRANSACTION_TYPES_enum

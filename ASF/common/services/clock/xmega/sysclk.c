@@ -44,14 +44,14 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#include "../../../../xmega/utils/compiler.h"
+#include "ASF/xmega/utils/compiler.h"
 
 #include "sysclk.h"
-#include "../osc.h"
-#include "../pll.h"
+#include "ASF/common/services/clock/osc.h"
+#include "ASF/common/services/clock/pll.h"
 
 #if XMEGA_AU || XMEGA_B || XMEGA_C
-#  include "../../../../xmega/drivers/nvm/nvm.h"
+#  include "ASF/xmega/drivers/nvm/nvm.h"
 #endif
 
 

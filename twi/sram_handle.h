@@ -7,14 +7,14 @@
 
 #ifndef TWI_SRAM_HANDLE_H_
 #define TWI_SRAM_HANDLE_H_
-#include "../layout.h"
-#include "../asf.h"
+#include "layout.h"
+#include "asf.h"
 #include "eeprom.h"
-#include "../Fp-utils.h"
-#include "../gfx/gfx_utils.h"
-#include "../gfx/action_menu/gfx_action_menu.h"
-#include "../work-queue/work.h"
-#include "../debug.h"
+#include "Fp-utils.h"
+#include "gfx/gfx_utils.h"
+#include "gfx/action_menu/gfx_action_menu.h"
+#include "work-queue/work.h"
+#include "debug.h"
 #include "twi_slave.h"
 
 #define CPU_FQ_MSK 				0x1f00

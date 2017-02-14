@@ -46,8 +46,8 @@
 #ifndef CLK_PLL_H_INCLUDED
 #define CLK_PLL_H_INCLUDED
 
-#include "../../utils/parts.h"
-#include "../../../../config/conf_clock.h"
+#include "ASF/common/utils/parts.h"
+#include "config/conf_clock.h"
 
 #if SAM3S
 # include "sam3s/pll.h"

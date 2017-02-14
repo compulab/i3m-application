@@ -8,7 +8,7 @@
 #ifndef WORK_QUEUE_WORK_H_
 #define WORK_QUEUE_WORK_H_
 
-#include "../Fp-utils.h"
+#include "Fp-utils.h"
 
 struct work {
 	void (*do_work)(void *);

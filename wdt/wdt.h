@@ -45,7 +45,7 @@
  */
 #ifndef _WDT_H_
 #define _WDT_H_
-#include "../asf.h"
+#include "asf.h"
 /// @cond 0
 /**INDENT-OFF**/
 #ifdef __cplusplus

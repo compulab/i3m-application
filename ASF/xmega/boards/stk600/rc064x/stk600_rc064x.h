@@ -52,7 +52,7 @@
 #ifndef _STK600_RC064_H_
 #define _STK600_RC064_H_
 
-#include "../../../utils/compiler.h"
+#include "ASF/xmega/utils/compiler.h"
 
 
 //FP-MSH:

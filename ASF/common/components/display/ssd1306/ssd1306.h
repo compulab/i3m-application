@@ -46,16 +46,16 @@
 #ifndef SSD1306_H_INCLUDED
 #define SSD1306_H_INCLUDED
 
-#include "../../../../xmega/utils/compiler.h"
-#include "../../../services/clock/sysclk.h"
-#include "../../../services/ioport/ioport.h"
-#include "../../../../xmega/utils/status_codes.h"
-#include "../../../services/delay/delay.h"
-#include "../../../services/gfx_mono/gfx_mono_framebuffer.h"
+#include "ASF/xmega/utils/compiler.h"
+#include "ASF/common/services/clock/sysclk.h"
+#include "ASF/common/services/ioport/ioport.h"
+#include "ASF/xmega/utils/status_codes.h"
+#include "ASF/common/services/delay/delay.h"
+#include "ASF/common/services/gfx_mono/gfx_mono_framebuffer.h"
 // controller and OLED configuration file
-#include "../../../../../config/conf_ssd1306.h"
-#include "../../../../../twi/eeprom.h"
-#include "../../../../../layout.h"
+#include "config/conf_ssd1306.h"
+#include "twi/eeprom.h"
+#include "layout.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -48,7 +48,7 @@
 
 #include <stdint.h>
 
-#include "../../../xmega/utils/compiler.h"
+#include "ASF/xmega/utils/compiler.h"
 
 #ifdef __cplusplus
 extern "C" {

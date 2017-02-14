@@ -48,8 +48,8 @@
 
 #include <stdint.h>
 
-#include "../../../xmega/utils/compiler.h"
-#include "../../../xmega/utils/progmem.h"
+#include "ASF/xmega/utils/compiler.h"
+#include "ASF/xmega/utils/progmem.h"
 #ifdef CONFIG_HAVE_HUGEMEM
 # include "hugemem.h"
 #endif

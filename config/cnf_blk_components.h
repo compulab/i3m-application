@@ -12,11 +12,11 @@
 #include <stdbool.h>
 
 #ifndef DEF_H_
-#include "../def.h"
+#include "def.h"
 #endif
 
-#include "../display/glcd-0.5.2/glcd_font.h"
-#include "../display/glcd-0.5.2/glcd.h"
+#include "display/glcd-0.5.2/glcd_font.h"
+#include "display/glcd-0.5.2/glcd.h"
 
 # define PROGMEM_BYTE_ARRAY_T uint8_t*
 

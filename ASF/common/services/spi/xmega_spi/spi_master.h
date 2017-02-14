@@ -52,10 +52,10 @@
 #ifndef _SPI_MASTER_H_
 #define _SPI_MASTER_H_
 
-#include "../../../../xmega/utils/compiler.h"
-#include "../../../../xmega/utils/status_codes.h"
-#include "../../ioport/ioport.h"
-#include "../../../../xmega/drivers/spi/spi.h"
+#include "ASF/xmega/utils/compiler.h"
+#include "ASF/xmega/utils/status_codes.h"
+#include "ASF/common/services/ioport/ioport.h"
+#include "ASF/xmega/drivers/spi/spi.h"
 
 #ifdef __cplusplus
 extern "C" {

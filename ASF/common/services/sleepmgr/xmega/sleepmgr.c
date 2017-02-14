@@ -43,7 +43,7 @@
  /**
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#include "../../../../xmega/utils/compiler.h"
+#include "ASF/xmega/utils/compiler.h"
 #include "sleepmgr.h"
 
 #if defined(CONFIG_SLEEPMGR_ENABLE) || defined(__DOXYGEN__)

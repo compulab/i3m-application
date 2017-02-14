@@ -48,7 +48,7 @@
 #include <stddef.h>
 #include <assert.h>
 
-#include "../../../../config/conf_sysfont.h"
+#include "config/conf_sysfont.h"
 
 #include "gfx_mono.h"
 #include "sysfont.h"

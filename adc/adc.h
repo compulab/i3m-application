@@ -10,8 +10,8 @@
 
 #include <string.h>
 #include "math.h"
-#include "../asf.h"
-#include "../Fp-utils.h"
+#include "asf.h"
+#include "Fp-utils.h"
 
 void adc_init(void);
 

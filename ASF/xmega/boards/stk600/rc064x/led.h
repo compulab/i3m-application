@@ -52,7 +52,7 @@
 #ifndef _LED_H_
 #define _LED_H_
 
-#include "../../../../common/services/gpio/gpio.h"
+#include "ASF/common/services/gpio/gpio.h"
 
 /*! \brief Turns off the specified LEDs.
  *

@@ -47,11 +47,11 @@
 #ifndef _UDI_HID_GENERIC_H_
 #define _UDI_HID_GENERIC_H_
 
-#include "../../../../../../../../config/conf_usb.h"
-#include "../../../../usb_protocol.h"
-#include "../../usb_protocol_hid.h"
-#include "../../../../udc/udc_desc.h"
-#include "../../../../udc/udi.h"
+#include "config/conf_usb.h"
+#include "ASF/common/services/usb/usb_protocol.h"
+#include "ASF/common/services/usb/class/hid/usb_protocol_hid.h"
+#include "ASF/common/services/usb/udc/udc_desc.h"
+#include "ASF/common/services/usb/udc/udi.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -34,7 +34,7 @@
 
 #if defined(GLCD_CONTROLLER_NT75451)
 
-#include "../glcd.h"
+#include "display/glcd-0.5.2/glcd.h"
 
 /** Parallel write to NT75451 */
 void glcd_parallel_write(uint8_t c);

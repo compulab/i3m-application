@@ -9,20 +9,20 @@
 #define GFX_MENU_HANDLER_H_
 
 #ifndef TC_DRIVER_H
-#include "../timer/tc.h"
+#include "timer/tc.h"
 #endif
 
 #ifndef GFX_GFX_UTILS_H_
 #include "gfx_utils.h"
 #endif
 
-#include "../display/glcd-0.5.2/glcd_font.h"
+#include "display/glcd-0.5.2/glcd_font.h"
 
-#include "../work-queue/work.h"
+#include "work-queue/work.h"
 
-#include "../scheduler/scheduler.h"
+#include "scheduler/scheduler.h"
 
-#include "../display/display_render.h"
+#include "display/display_render.h"
 
 #define CONFIG_SECTION_ADDRESS 0xA000
 

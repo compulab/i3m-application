@@ -45,11 +45,11 @@
  */
 
 
-#include "../../../../../../../../config/conf_usb.h"
-#include "../../../../usb_protocol.h"
-#include "../../../../udc/udd.h"
-#include "../../../../udc/udc.h"
-#include "../udi_hid.h"
+#include "config/conf_usb.h"
+#include "ASF/common/services/usb/usb_protocol.h"
+#include "ASF/common/services/usb/udc/udd.h"
+#include "ASF/common/services/usb/udc/udc.h"
+#include "ASF/common/services/usb/class/hid/device/udi_hid.h"
 #include "udi_hid_generic.h"
 #include <string.h>
 

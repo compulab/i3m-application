@@ -48,7 +48,7 @@
 
 #include "gfx_mono.h"
 #include "gfx_mono_text.h"
-#include "../../../../asf.h"
+#include "asf.h"
 
 
 #ifndef CONFIG_FONT_PIXELS_PER_BYTE

@@ -45,11 +45,11 @@
  /**
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#include "../../../../common/boards/board.h"
-#include "../../../utils/compiler.h"
+#include "ASF/common/boards/board.h"
+#include "ASF/xmega/utils/compiler.h"
 #include "stk600_rc064x.h"
-#include "../../../../../config/conf_board.h"
-#include "../../../../common/services/ioport/ioport.h"
+#include "config/conf_board.h"
+#include "ASF/common/services/ioport/ioport.h"
 
 void board_init(void)
 {

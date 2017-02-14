@@ -45,8 +45,8 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#include "../spi_master.h"
-#include "../../clock/sysclk.h"
+#include "ASF/common/services/spi/spi_master.h"
+#include "ASF/common/services/clock/sysclk.h"
 
 /*! \brief Initializes the SPI in master mode.
  *

@@ -9,7 +9,7 @@
 #define GFX_GFX_ACTION_MENU_H_
 
 #ifndef GFX_MENU_HANDLER_H_
-#include "../menu-handler.h"
+#include "gfx/menu-handler.h"
 #endif
 
 #ifndef GFX_ACTION_MENU_GRAPHIC_MENU_H_

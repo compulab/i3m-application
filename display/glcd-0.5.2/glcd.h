@@ -69,7 +69,7 @@ Change Activity:
 	#include <avr/pgmspace.h>
 	#include <avr/io.h>
 	#include <avr/interrupt.h>
-	#include "../../ASF/common/services/delay/delay.h"
+	#include "ASF/common/services/delay/delay.h"
 
 #if !defined(GLCD_USE_AVR_DELAY)
 //		extern void delay_ms(uint32_t ms);

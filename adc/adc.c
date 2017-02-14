@@ -5,8 +5,8 @@
  *      Author: arkadi
  */
 #include "adc.h"
-#include "../scheduler/scheduler.h"
-#include "../Fp-utils.h"
+#include "scheduler/scheduler.h"
+#include "Fp-utils.h"
 #include <stdio.h>
 
 //***ADC configuration

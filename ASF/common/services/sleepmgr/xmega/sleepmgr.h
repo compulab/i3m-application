@@ -50,9 +50,9 @@
 extern "C" {
 #endif
 
-#include "../../../../xmega/utils/compiler.h"
-#include "../../../../../config/conf_sleepmgr.h"
-#include "../../../../xmega/drivers/sleep/sleep.h"
+#include "ASF/xmega/utils/compiler.h"
+#include "config/conf_sleepmgr.h"
+#include "ASF/xmega/drivers/sleep/sleep.h"
 
 /**
  * \weakgroup sleepmgr_group

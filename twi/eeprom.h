@@ -9,7 +9,7 @@
 #define EEPROM_H
 #include <stdint.h>
 
-#include "../config/conf_twi.h"
+#include "config/conf_twi.h"
 #include "eeprom_driver.h"
 
 void eeprom_write_str(char *str, uint16_t addr);

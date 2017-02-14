@@ -35,7 +35,7 @@
 
 #if defined(GLCD_CONTROLLER_PCD8544)
 
-#include "../glcd.h"
+#include "display/glcd-0.5.2/glcd.h"
 
 void glcd_command(uint8_t c)
 {

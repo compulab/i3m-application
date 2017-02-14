@@ -5,10 +5,10 @@
  *      Author: arkadi
  */
 
-#include "../debug.h"
+#include "debug.h"
 #define SRAM_DEBUG
 #include "sram_handle.h"
-#include "../uart/uart.h"
+#include "uart/uart.h"
 
 uint8_t direct_write_length;
 uint8_t direct_write_index;

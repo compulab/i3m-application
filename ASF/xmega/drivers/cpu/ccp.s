@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
-#include "../../utils/assembler.h"
+#include "ASF/xmega/utils/assembler.h"
 
 //! Value to write to CCP for access to protected IO registers.
 #define CCP_IOREG   0xd8

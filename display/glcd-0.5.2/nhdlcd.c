@@ -1,4 +1,4 @@
-#include "../../ASF/common/services/gfx_mono/gfx_mono.h"
+#include "ASF/common/services/gfx_mono/gfx_mono.h"
 #include "glcd.h"
 
 void glcd_write(void)

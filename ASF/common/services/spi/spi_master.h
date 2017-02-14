@@ -46,7 +46,7 @@
 #ifndef SPI_MASTER_H_INCLUDED
 #define SPI_MASTER_H_INCLUDED
 
-#include "../../utils/parts.h"
+#include "ASF/common/utils/parts.h"
 
 #if XMEGA
 # include "xmega_spi/spi_master.h"

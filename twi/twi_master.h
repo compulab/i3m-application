@@ -11,7 +11,7 @@
 #include <stdbool.h>
 
 //#ifndef DEBUG_H_
-#include "../debug.h"
+#include "debug.h"
 //#endif
 
 #define TWI						TWIC

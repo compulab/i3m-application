@@ -37,7 +37,7 @@
 #include <stdio.h>
 #include "glcd.h"
 
-#include "../../ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.h"
+#include "ASF/common/services/gfx_mono/gfx_mono_ug_2832hsweg04.h"
 /** \addtogroup GlobalVars Global Variables
  *  @{
  */

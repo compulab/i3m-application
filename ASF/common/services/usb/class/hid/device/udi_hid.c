@@ -45,10 +45,7 @@
  */
 
 
-//#include "../../../../../../../config/conf_usb.h"
-//#include "../../../usb_protocol.h"
-//#include "../../../udc/udd.h"
-#include "../../../udc/udc.h"
+#include "ASF/common/services/usb/udc/udc.h"
 #include "udi_hid.h"
 
 

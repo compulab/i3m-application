@@ -50,7 +50,7 @@
 extern "C" {
 #endif
 
-#include "../clock/sysclk.h"
+#include "ASF/common/services/clock/sysclk.h"
 
 #if UC3
 #   include <cycle_counter.h>

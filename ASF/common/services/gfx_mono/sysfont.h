@@ -47,7 +47,7 @@
 #ifndef SYSFONT_H_INCLUDED
 #define SYSFONT_H_INCLUDED
 
-#include "../../../../config/conf_sysfont.h"
+#include "config/conf_sysfont.h"
 #include "gfx_mono.h"
 #include "gfx_mono_text.h"
 

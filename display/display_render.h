@@ -10,13 +10,13 @@
 #include <string.h>
 
 #ifndef GFX_GFX_COMPONENTS_H_
-	#include "../gfx/gfx_components.h"
+	#include "gfx/gfx_components.h"
 #endif
 
 #include "glcd-0.5.2/glcd_font.h"
 #include "glcd-0.5.2/glcd_text.h"
 
-#include "../gfx/menu-handler.h"
+#include "gfx/menu-handler.h"
 
 #ifndef GLCD_FONT_SUPPORT
 //struct gfx_font {

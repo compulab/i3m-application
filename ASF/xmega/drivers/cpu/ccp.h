@@ -45,7 +45,7 @@
  */
 #ifndef CPU_CCP_H
 #define CPU_CCP_H
-#include "../../utils/compiler.h"
+#include "ASF/xmega/utils/compiler.h"
 
 /**
  * \defgroup ccp_group Configuration Change Protection

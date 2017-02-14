@@ -111,7 +111,7 @@ void glcd_font(const char * font_table, uint8_t width, uint8_t height, char star
 	font_current.end_char = end_char;
 	font_current.table_type = type; /* Only supports MikroElektronika generated format at the moment */
 }
-#include "../../uart/uart.h"
+#include "uart/uart.h"
 
 uint8_t glcd_draw_char_xy(uint8_t x, uint8_t y, char c)
 {

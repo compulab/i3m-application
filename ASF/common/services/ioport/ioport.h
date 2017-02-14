@@ -51,8 +51,8 @@
 extern "C" {
 #endif
 
-#include "../../utils/parts.h"
-#include "../../../xmega/utils/compiler.h"
+#include "ASF/common/utils/parts.h"
+#include "ASF/xmega/utils/compiler.h"
 
 /**
  * \defgroup ioport_group Common IOPORT API

@@ -48,8 +48,8 @@
 #define _UDC_H_
 
 
-#include "../../../../../config/conf_usb.h"
-#include "../usb_protocol.h"
+#include "config/conf_usb.h"
+#include "ASF/common/services/usb/usb_protocol.h"
 #include "udc_desc.h"
 #include "udd.h"
 

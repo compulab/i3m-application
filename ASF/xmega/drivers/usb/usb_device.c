@@ -45,7 +45,7 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#include "../../../../config/conf_usb.h"
+#include "config/conf_usb.h"
 
 // Read Modify Write opcode is implemented after IAR AVR 5.51
 #ifdef __ICCAVR__
@@ -55,13 +55,13 @@
 #  endif
 #endif
 
-#include "../../../common/services/clock/sysclk.h"
-#include "../../../common/services/usb/udc/udd.h"
+#include "ASF/common/services/clock/sysclk.h"
+#include "ASF/common/services/usb/udc/udd.h"
 #include "usb_device.h"
 #include <string.h>
 
 #ifndef UDD_NO_SLEEP_MGR
-#include "../../../common/services/sleepmgr/sleepmgr.h"
+#include "ASF/common/services/sleepmgr/sleepmgr.h"
 #endif
 
 #ifndef UDD_USB_INT_LEVEL

@@ -43,7 +43,7 @@
  /**
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#include "../ioport.h"
+#include "ASF/common/services/ioport/ioport.h"
 
 #if defined(IOPORT_XMEGA_COMPAT)
 void ioport_configure_port_pin(void *port, pin_mask_t pin_mask,

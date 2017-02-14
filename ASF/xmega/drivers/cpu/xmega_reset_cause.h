@@ -46,7 +46,7 @@
 #ifndef XMEGA_DRIVERS_CPU_RESET_CAUSE_H
 #define XMEGA_DRIVERS_CPU_RESET_CAUSE_H
 
-#include "../../utils/compiler.h"
+#include "ASF/xmega/utils/compiler.h"
 #include "ccp.h"
 
 /**

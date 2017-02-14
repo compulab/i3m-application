@@ -17,7 +17,7 @@
  */
 
 #include "scheduler.h"
-#include "../lib/syntax.h"
+#include "lib/syntax.h"
 
 extern struct scheduler_task adc_tick_task;
 extern struct scheduler_task ambient_tick_task;

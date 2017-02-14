@@ -61,9 +61,9 @@
  * \{
  */
 
-#include "../../utils/compiler.h"
-#include "../../utils/status_codes.h"
-#include "../../../common/services/ioport/ioport.h"
+#include "ASF/xmega/utils/compiler.h"
+#include "ASF/xmega/utils/status_codes.h"
+#include "ASF/common/services/ioport/ioport.h"
 
 /*! \brief Calculates the SPI baudrate divider.
  *

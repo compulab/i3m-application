@@ -38,8 +38,8 @@
  * Set up SSP and GPIO drivers (GPIO drivers required for SSP)
  * Change these paths if the files are located elsewhere
  */
-#include "../../drivers/ssp.h"
-#include "../../drivers/gpio.h"
+#include "display/drivers/ssp.h"
+#include "display/drivers/gpio.h"
 
 #define swap(a, b) { uint8_t t = a; a = b; b = t; }
 

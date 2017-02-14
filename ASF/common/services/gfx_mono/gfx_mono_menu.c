@@ -44,8 +44,8 @@
  */
 
 #include "sysfont.h"
-#include "../../../../config/conf_menu.h"
-#include "../../../../debug.h"
+#include "config/conf_menu.h"
+#include "debug.h"
 #include "gfx_mono_menu.h"
 
 /**

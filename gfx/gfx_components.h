@@ -9,10 +9,10 @@
 #ifndef GFX_GFX_COMPONENTS_H_
 #define GFX_GFX_COMPONENTS_H_
 
-#include "../asf.h"
+#include "asf.h"
 
 #ifndef DEF_H
-#include "../def.h"
+#include "def.h"
 #endif
 
 struct gfx_item {

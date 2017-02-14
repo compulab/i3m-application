@@ -59,7 +59,7 @@
 #ifndef EEPROM_DRIVER_H
 #define EEPROM_DRIVER_H
 
-#include "../asf.h"
+#include "asf.h"
 //#include "avr_compiler.h"
 
 /* Definitions of macros. */

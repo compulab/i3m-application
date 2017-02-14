@@ -46,8 +46,8 @@
 
 #ifndef GFX_MONO_2832HSWEG04_H
 #define GFX_MONO_2832HSWEG04_H
-#include "../../../xmega/utils/compiler.h"
-#include "../../components/display/ssd1306/ssd1306.h"
+#include "ASF/xmega/utils/compiler.h"
+#include "ASF/common/components/display/ssd1306/ssd1306.h"
 
 #include "gfx_mono.h"
 #include "gfx_mono_framebuffer.h"

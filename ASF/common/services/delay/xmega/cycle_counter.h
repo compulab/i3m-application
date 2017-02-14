@@ -51,7 +51,7 @@ extern "C" {
 #endif
 
 
-#include "../../../../xmega/utils/compiler.h"
+#include "ASF/xmega/utils/compiler.h"
 
 /**
  * @name Convenience functions for busy-wait delay loops

@@ -70,7 +70,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-#include "../../common/utils/parts.h"
+#include "ASF/common/utils/parts.h"
 
 #ifdef __ICCAVR__
 /*! \name Compiler Keywords
