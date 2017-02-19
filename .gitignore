@@ -6,3 +6,4 @@
 *.hex
 *.eep
 *.lss
+auto_generated.h
