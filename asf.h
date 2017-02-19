@@ -114,8 +114,6 @@
 // From module: System Clock Control - XMEGA A1U/A3U/A3BU/A4U/B/C implementation
 #include "ASF/common/services/clock/sysclk.h"
 
-#include "ASF/common/services/usb/udc/udc.h"
-
 // From module: TWI - Two-Wire Interface - XMEGA implementation
 //#include <twi_master.h>
 //#include <twi_slave.h>
