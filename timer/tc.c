@@ -77,11 +77,11 @@ void tc_init()
 {
 	tc_counter = 0;
 	standby_counter = 0;
-	TCC0.CTRLA = TC_CLKSEL_DIV1024_gc;
-	TCC0.CTRLB = (TCC0.CTRLB & ~TC0_WGMODE_gm) | TC_WGMODE_NORMAL_gc;
-	TCC0.CTRLE = TC_BYTEM_NORMAL_gc;
-	TCC0.INTCTRLA = TC_OVFINTLVL_HI_gc;
-	TCC0.INTCTRLB = TC_CCAINTLVL_HI_gc;
+	TCC0.CTRLA = TC_TC0_CLKSEL_DIV1024_gc;
+	TCC0.CTRLB = (TCC0.CTRLB & ~TC0_WGMODE_gm) | TC_TC0_WGMODE_NORMAL_gc;
+	TCC0.CTRLE = TC_TC0_BYTEM_NORMAL_gc;
+	TCC0.INTCTRLA = TC_TC0_OVFINTLVL_HI_gc;
+	TCC0.INTCTRLB = TC_TC0_CCAINTLVL_HI_gc;
 	TCC0.PER = TIMER_MAX_VALUE;
 	tc_cmp_disable();
 }
@@ -110,20 +110,20 @@ void tc_set_cmp_value(uint16_t value)
 
 uint16_t tc_get_div(void)
 {
-	switch (TCC0.CTRLA & TC_CLKSEL_DIV1024_gc) {
-	case TC_CLKSEL_DIV1_gc:
+	switch (TCC0.CTRLA & TC_TC0_CLKSEL_DIV1024_gc) {
+	case TC_TC0_CLKSEL_DIV1_gc:
 		return 1;
-	case TC_CLKSEL_DIV2_gc:
+	case TC_TC0_CLKSEL_DIV2_gc:
 		return 2;
-	case TC_CLKSEL_DIV4_gc:
+	case TC_TC0_CLKSEL_DIV4_gc:
 		return 4;
-	case TC_CLKSEL_DIV8_gc:
+	case TC_TC0_CLKSEL_DIV8_gc:
 		return 8;
-	case TC_CLKSEL_DIV64_gc:
+	case TC_TC0_CLKSEL_DIV64_gc:
 		return 64;
-	case TC_CLKSEL_DIV256_gc:
+	case TC_TC0_CLKSEL_DIV256_gc:
 		return 256;
-	case TC_CLKSEL_DIV1024_gc:
+	case TC_TC0_CLKSEL_DIV1024_gc:
 		return 1024;
 	}
 
