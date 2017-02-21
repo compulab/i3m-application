@@ -5,8 +5,8 @@
  *      Author: arkadi
  */
 
-#ifndef TWI_SRAM_HANDLE_H_
-#define TWI_SRAM_HANDLE_H_
+#ifndef SRAM_HANDLE_H_
+#define SRAM_HANDLE_H_
 #include "layout.h"
 #include "asf.h"
 #include "Fp-utils.h"
@@ -14,7 +14,6 @@
 #include "gfx/action_menu/gfx_action_menu.h"
 #include "work-queue/work.h"
 #include "debug.h"
-#include "twi_slave.h"
 
 #define CPU_FQ_MSK 				0x1f00
 #define CPU_FQ_MSB_MSK 			0x1f
@@ -59,4 +58,4 @@ enum dmi_state_t {
 	DMI_VALUE_WRITE
 };
 
-#endif /* TWI_SRAM_HANDLE_H_ */
+#endif /* SRAM_HANDLE_H_ */
