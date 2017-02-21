@@ -11,7 +11,7 @@
 #include "layout.h"
 #include "gfx/action_menu/gfx_action_menu.h"
 #include "def.h"
-#include "twi/eeprom.h"
+#include "eeprom/eeprom.h"
 #include "adc/adc.h"
 
 #include <stdio.h>

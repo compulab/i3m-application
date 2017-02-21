@@ -1,14 +1,6 @@
 #ifndef CONF_TWI_H_INCLUDED
 #define CONF_TWI_H_INCLUDED
 
-
-
-/* EEPROM definitions */
-#define EEPROM_NO_PAGES     64
-#define EEPROM_BYTES_IN_PAGE 32
-// Masking out the byte address in a page
-#define EEPROM_BYTE_ADDRESS_MASK    0x1f
-
 /* definitions for device recognition */
 #define PARTCODE            0xFA
 #define SIGNATURE_BYTE_1    0x1E

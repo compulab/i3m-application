@@ -9,7 +9,6 @@
 #define TWI_SRAM_HANDLE_H_
 #include "layout.h"
 #include "asf.h"
-#include "eeprom.h"
 #include "Fp-utils.h"
 #include "gfx/gfx_utils.h"
 #include "gfx/action_menu/gfx_action_menu.h"

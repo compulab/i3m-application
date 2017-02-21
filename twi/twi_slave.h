@@ -10,7 +10,6 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include "eeprom.h"
 #include "sram_handle.h"
 #include <stdint.h>
 #include <stdbool.h>
