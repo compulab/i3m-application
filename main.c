@@ -1,6 +1,7 @@
 #include "asf.h"
 #include "twi/twi_slave.h"
 #include "scheduler/scheduler.h"
+#include "sram/sram_handle.h"
 #include "wdt/wdt.h"
 #include "twi/twi_master.h"
 #include "uart/uart.h"

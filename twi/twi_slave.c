@@ -76,6 +76,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * Support mail: avr@atmel.com
  */
 #include "twi_slave.h"
+#include "sram/sram_handle.h"
 
 
 #define UNSET_ADDRESS 0x00
