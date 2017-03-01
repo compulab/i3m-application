@@ -4,7 +4,7 @@
 
 #define MAX_AMBIENT_UPDATE_FAIL	2
 
-void update_ambient_temp()
+void update_ambient_temp(void *data)
 {
 	static uint8_t ambient_update_fail_count = 0;
 
@@ -18,7 +18,7 @@ void update_ambient_temp()
 		layout.l.ambs = 0;
 	} else  {
 		ambient_update_fail_count++;
-		update_ambient_temp();
+		update_ambient_temp(NULL);
 	}
 
 	computer_data.details.ambs = layout.l.ambs;

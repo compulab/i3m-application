@@ -14,7 +14,7 @@
 #define MSG_X				GFX_MONO_LCD_WIDTH / 2
 #define MSG_Y				20
 
-void enter_dim_mode(char *msg)
+static void enter_dim_mode(char *msg)
 {
 	uint16_t font_id = fonts_size > 1 ? 2 : GLCD_FONT_SYSFONT_5X7;
 	display_state = DISPLAY_DIM;
@@ -26,38 +26,38 @@ void enter_dim_mode(char *msg)
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
-void enter_power_off_mode()
+void enter_power_off_mode(void)
 {
 	enter_dim_mode(POWER_OFF_MSG);
 }
 
-void enter_sleep_mode()
+void enter_sleep_mode(void)
 {
 	enter_dim_mode(SLEEP_MSG);
 }
 
-void enter_hibernate_mode()
+void enter_hibernate_mode(void)
 {
 	enter_dim_mode(HIBERNATE_MSG);
 }
 
-void enter_power_on_mode()
+void enter_power_on_mode(void)
 {
 	ssd1306_set_contrast(eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS));
 	show_logo();
 }
 
-void exit_dim_mode()
+static void exit_dim_mode(void)
 {
 	show_current_menu(true);
 }
 
-void exit_power_off_mode()
+static void exit_power_off_mode(void)
 {
 	exit_dim_mode();
 }
 
-void exit_sleep_mode()
+void exit_sleep_mode(void)
 {
 	exit_dim_mode();
 }

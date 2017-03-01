@@ -12,6 +12,6 @@
 #define RTC_CYCLES_1S     1024
 
 
-void rtc_init();
+void rtc_init(void);
 
 #endif /* RTC_RTC_H_ */

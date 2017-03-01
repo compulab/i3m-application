@@ -10,14 +10,14 @@
 
 #include "Fp-utils.h"
 
-void enter_sleep_mode();
+void enter_sleep_mode(void);
 
-void enter_power_on_mode();
+void enter_power_on_mode(void);
 
-void enter_hibernate_mode();
+void enter_hibernate_mode(void);
 
-void enter_power_off_mode();
+void enter_power_off_mode(void);
 
-void exit_sleep_mode();
+void exit_sleep_mode(void);
 
 #endif /* EFFECTS_H_ */

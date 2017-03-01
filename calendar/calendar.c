@@ -493,7 +493,7 @@ void calendar_add_second_to_date(struct calendar_date *date)
 	}
 }
 
-static void calendar_time_task()
+static void calendar_time_task(void *data)
 {
 	uart_send_string("time_task\n\r");
 	calendar_add_second_to_date(&computer_date_time);

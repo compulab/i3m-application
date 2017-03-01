@@ -11,13 +11,13 @@ extern int tc_counter;
 extern int standby_counter;
 
 
-void tc_init();
+void tc_init(void);
 
-bool is_tc_cmp_enable();
+bool is_tc_cmp_enable(void);
 
-void tc_cmp_enable();
+void tc_cmp_enable(void);
 
-void tc_cmp_disable();
+void tc_cmp_disable(void);
 
 void tc_set_cmp_value(uint16_t value);
 

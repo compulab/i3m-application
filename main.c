@@ -44,7 +44,7 @@ ISR(PORTF_INT1_vect)
 /*
  * PORTF contains the UI buttons and the power states
  */
-void portf_init()
+static void portf_init(void)
 {
 	uint8_t sreg = SREG;
 	uint8_t power_pin_cfg =(uint8_t)  PORT_ISC_BOTHEDGES_gc | PORT_OPC_PULLUP_gc;
@@ -66,7 +66,7 @@ void portf_init()
 /*
  * Init first menu shown
  */
-void init_menu()
+static void init_menu(void)
 {
 	set_menu_by_id(&present_menu, 0);
 	show_current_menu(true);
@@ -76,7 +76,7 @@ void init_menu()
 /*
  * Init current power state
  */
-void power_state_init()
+static void power_state_init(void)
 {
 	update_power_state();
 }
@@ -84,7 +84,7 @@ void power_state_init()
 /*
  * Update screen saver configuration as they saved in EEPROM
  */
-void update_screen_saver_from_eeprom()
+static void update_screen_saver_from_eeprom(void)
 {
 	computer_data.packed.screen_saver_config = eeprom_read_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS);
 	computer_data.packed.screen_saver_update_time = eeprom_read_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS);
@@ -93,14 +93,14 @@ void update_screen_saver_from_eeprom()
 /*
  * Reset screen saver configuration to default values
  */
-void reset_screen_saver_config()
+static void reset_screen_saver_config(void)
 {
 	eeprom_write_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS, SCREEN_SAVER_CONFIGURATION_DEFAULT);
 	eeprom_write_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS, SCREEN_SAVER_TIME_DEFAULT);
 	update_screen_saver_from_eeprom();
 }
 
-void init_ambient()
+static void init_ambient(void)
 {
 	layout.l.ambs = 0;
 }
@@ -119,7 +119,7 @@ void tasks_init(void)
  * validate application version
  * validate screen brightness
  */
-void init_information()
+static void init_information(void)
 {
 	update_screen_saver_from_eeprom();
 
@@ -144,7 +144,7 @@ void init_information()
 /*
  * Initializing of computer data struct for new data
  */
-void init_updateable_data()
+static void init_updateable_data(void)
 {
 	init_information();
 	uint8_t *p_computer_data = (uint8_t *)&computer_data;
@@ -152,7 +152,7 @@ void init_updateable_data()
 		p_computer_data[i] = 0;
 }
 
-void init()
+static void init(void)
 {
 	wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_2KCLK);
 	wdt_enable();
@@ -181,7 +181,7 @@ void init()
 /*
  * Sleep function makes the system Idle for timeout_us microseconds or until wakeup flag will be set
  */
-bool sleep_interuptable(uint32_t timeout_us)
+static bool sleep_interuptable(uint32_t timeout_us)
 {
 	uint32_t us = 0;
 
@@ -196,7 +196,7 @@ bool sleep_interuptable(uint32_t timeout_us)
 /*
  * Debug method for printing debug log
  */
-void debug_print_log()
+static void debug_print_log(void)
 {
 	bool is_changed = false;
 	if (log_twi.bottom != log_twi.top) {

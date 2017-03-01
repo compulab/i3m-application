@@ -50,16 +50,16 @@ struct gfx_action_menu **action_menus;
 
 //struct gfx_font** fonts;
 
-int load_config_block();
+int load_config_block(void);
 
 void set_menu_by_id(struct gfx_action_menu **menu, uint8_t index);
 
 void memcpy_config(void *dst, void *src_addr, size_t size);
 
-void hadle_back_to_menu();
+void hadle_back_to_menu(void);
 
-void show_logo();
+void show_logo(void);
 
-void handle_button_pressed();
+void handle_button_pressed(void);
 
 #endif /* GFX_MENU_HANDLER_H_ */

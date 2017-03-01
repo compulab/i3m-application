@@ -7,7 +7,7 @@ static double screen_saver_get_recur_period(void)
     return computer_data.details.screen_saver_update_time;
 }
 
-void update_screen_saver()
+static void update_screen_saver(void *data)
 {
 	if (!screen_saver_mode_enabled || computer_data.details.screen_saver_visible != 1)
         return;

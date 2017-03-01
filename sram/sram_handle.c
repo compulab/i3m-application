@@ -19,31 +19,31 @@ bool is_length_set;
 struct direct_string_item *direct_string_to_add;
 enum dmi_state_t dmi_curr_state;
 
-void clear_direct_help_vars()
+static void clear_direct_help_vars(void)
 {
 	direct_write_index = 0;
 	direct_write_length = 0;
 	is_length_set = false;
 }
 
-void init_direct_write_vars()
+static void init_direct_write_vars(void)
 {
 	direct_string_to_add = 0;
 	dmi_curr_state = DMI_IDLE;
 	clear_direct_help_vars();
 }
 
-void sram_handle_init()
+void sram_handle_init(void)
 {
 	init_direct_write_vars();
 }
 
-bool is_valid_register(int8_t index, uint8_t max_index)
+static bool is_valid_register(int8_t index, uint8_t max_index)
 {
 	return index >= 0 && index < max_index;
 }
 
-void clear_req()
+static void clear_req(void)
 {
 	if (computer_state == COMPUTER_IN_OS)
 		computer_state = COMPUTER_DAEMON_WORK;
@@ -52,7 +52,7 @@ void clear_req()
 		layout.l.req = 0;
 }
 
-void write_cpu_fq_msb(uint8_t cpu_addr)
+static void write_cpu_fq_msb(uint8_t cpu_addr)
 {
 	int8_t index = (cpu_addr - CPU0F_MSB)/2;
 	if (!is_valid_register(index,MAX_CPU))
@@ -68,19 +68,19 @@ void write_cpu_fq_msb(uint8_t cpu_addr)
 	clear_req();
 }
 
-void read_temp_control(uint8_t *data)
+static void read_temp_control(uint8_t *data)
 {
 	*data = 0x02 & computer_data.packed.other_temp_status;
 }
 
-void write_temp_control()
+static void write_temp_control(void)
 {
 	computer_data.details.gput = layout.l.gpus;
 	if (computer_data.details.gput && (layout.l.gput != computer_data.details.gput))
 		computer_data.details.gput = layout.l.gput;
 }
 
-void write_hd_sz_msb(uint8_t hdd_addr)
+static void write_hd_sz_msb(uint8_t hdd_addr)
 {
 	int8_t index = (hdd_addr - HDD0_SZ_MSB) / 2;
 	if (!is_valid_register(index, MAX_HDD))
@@ -95,7 +95,7 @@ void write_hd_sz_msb(uint8_t hdd_addr)
 	}
 }
 
-void software_reset()
+static void software_reset(void)
 {
   uint8_t oldInterruptState = SREG;  // no real need to store the interrupt context as the reset will pre-empt its restoration
   cli();
@@ -106,7 +106,7 @@ void software_reset()
   SREG=oldInterruptState;            // Restore interrupts enabled/disabled state (out of common decency - this line will never be reached because the reset will pre-empt it)
 }
 
-void reset_to_bootloader()
+static void reset_to_bootloader(void)
 {
 	uint8_t magic = nvm_eeprom_read_byte(BOOTLOADER_MAGIC_EEPROM_ADDRESS);
 	magic &= ~BOOTLOADER_APPLICATION_START;
@@ -115,13 +115,13 @@ void reset_to_bootloader()
 	software_reset();
 }
 
-void validate_temperate(bool *valid_bit, uint8_t *dest, uint8_t src)
+static void validate_temperate(bool *valid_bit, uint8_t *dest, uint8_t src)
 {
 	*valid_bit = true;
 	*dest = src;
 }
 
-void write_cpu_status()
+static void write_cpu_status(void)
 {
 	layout.l.cputr = 0;
 	clear_req();
@@ -143,7 +143,7 @@ void write_cpu_status()
 
 
 
-void write_hdd_status()
+static void write_hdd_status(void)
 {
 	if (layout.direct.i2c[HDDTS]  == 0){
 		computer_data.packed.hddts = 0;
@@ -159,7 +159,7 @@ void write_hdd_status()
 	clear_req();
 }
 
-void write_reset()
+static void write_reset(void)
 {
 	if (layout.l.rstusb)
 		reset_to_bootloader();
@@ -167,13 +167,13 @@ void write_reset()
 		software_reset();
 }
 
-void write_post_code_lsb()
+static void write_post_code_lsb(void)
 {
 	computer_data.packed.post_code = layout.l.bios_post_code;
 	update_computer_state();
 }
 
-void write_rtc_day()
+static void write_rtc_day(void)
 {
 	uint8_t old_date = computer_date_time.date;
 	uint8_t new_date = layout.direct.i2c[RTCD] & 0x1f;
@@ -185,7 +185,7 @@ void write_rtc_day()
 		computer_date_time.date = old_date;
 }
 
-void write_rtc_month()
+static void write_rtc_month(void)
 {
 	uint8_t old_month = computer_date_time.month;
 	uint8_t new_month = layout.direct.i2c[RTCD] & 0x0f;
@@ -197,13 +197,13 @@ void write_rtc_month()
 		computer_date_time.month = old_month;
 }
 
-void write_rtc_year()
+static void write_rtc_year(void)
 {
 	uint16_t new_year = (layout.direct.i2c[RTCD] & 0x7f) + 2000;
 	computer_date_time.year = new_year;
 }
 
-void write_rtc_date()
+static void write_rtc_date(void)
 {
 	switch (layout.l.rtcdc) {
 	case RTC_DATE_DAY:
@@ -218,7 +218,7 @@ void write_rtc_date()
 	}
 }
 
-void write_rtc_hour()
+static void write_rtc_hour(void)
 {
 	uint8_t old_hour = computer_date_time.hour;
 	uint8_t new_hour = layout.direct.i2c[RTCT] & 0x1f;
@@ -230,7 +230,7 @@ void write_rtc_hour()
 		computer_date_time.hour = old_hour;
 }
 
-void write_rtc_min()
+static void write_rtc_min(void)
 {
 	uint8_t old_min = computer_date_time.minute;
 	uint8_t new_min = layout.direct.i2c[RTCT] & 0x3f;
@@ -242,7 +242,7 @@ void write_rtc_min()
 		computer_date_time.minute = old_min;
 }
 
-void write_rtc_sec()
+static void write_rtc_sec(void)
 {
 	uint8_t old_sec = computer_date_time.second;
 	uint8_t new_sec = layout.direct.i2c[RTCT] & 0x1f;
@@ -254,7 +254,7 @@ void write_rtc_sec()
 		computer_date_time.second = old_sec;
 }
 
-void write_rtc_time()
+static void write_rtc_time(void)
 {
 	switch (layout.l.rtctc) {
 	case RTC_TIME_HOUR:
@@ -271,7 +271,7 @@ void write_rtc_time()
 	}
 }
 
-void write_memory(uint8_t mem_addr) //Todo: change memory status set
+static void write_memory(uint8_t mem_addr) //Todo: change memory status set
 {
 	uint8_t index = (mem_addr - MEM_LSB ) * 2;
 	uint8_t data = layout.direct.i2c[mem_addr];
@@ -291,7 +291,7 @@ void write_memory(uint8_t mem_addr) //Todo: change memory status set
 	}
 }
 
-void read_bios_post_code(enum i2c_addr_space post_code_address, uint8_t *data)
+static void read_bios_post_code(enum i2c_addr_space post_code_address, uint8_t *data)
 {
 	switch(post_code_address){
 	case POST_CODE_LSB:
@@ -305,12 +305,12 @@ void read_bios_post_code(enum i2c_addr_space post_code_address, uint8_t *data)
 	}
 }
 
-void read_layout(uint8_t *data)
+static void read_layout(uint8_t *data)
 {
 	*data = eeprom_read_byte(LAYOUT_VERSION_EEPROM_ADDRESS);
 }
 
-void read_power_state(uint8_t *data)
+static void read_power_state(uint8_t *data)
 {
 	switch (current_power_state){
 	case POWER_ON:
@@ -328,7 +328,7 @@ void read_power_state(uint8_t *data)
 	}
 }
 
-void read_ambient(uint8_t *data)
+static void read_ambient(uint8_t *data)
 {
 	if (layout.l.ambs != 0)
 		*data = layout.l.ambt;
@@ -336,7 +336,7 @@ void read_ambient(uint8_t *data)
 		*data = DEFAULT_DATA;
 }
 
-void free_direct_string(void)
+static void free_direct_string(void)
 {
 	if (direct_string_to_add != NULL){
 		free(direct_string_to_add->content);
@@ -347,32 +347,32 @@ void free_direct_string(void)
 	clear_direct_help_vars();
 }
 
-void read_iwren(uint8_t *data)
+static void read_iwren(uint8_t *data)
 {
 	*data = layout.l.iwren;
 }
 
-void read_hdd_status(uint8_t *data)
+static void read_hdd_status(uint8_t *data)
 {
 	*data = computer_data.packed.hddts;
 }
 
-void read_cpu_stauts(uint8_t *data)
+static void read_cpu_stauts(uint8_t *data)
 {
 	*data = computer_data.packed.cputs;
 }
 
-void read_pending_requests(uint8_t *data)
+static void read_pending_requests(uint8_t *data)
 {
 	*data = 0x0f & computer_data.packed.pending_req;
 }
 
-void read_fp_control(uint8_t *data)
+static void read_fp_control(uint8_t *data)
 {
         *data = layout.l.iwren << 7;
 }
 
-void read_adc(enum i2c_addr_space adc_address, uint8_t *data)
+static void read_adc(enum i2c_addr_space adc_address, uint8_t *data)
 {
 	switch (adc_address) {
 	case ADC_LSB:
@@ -392,7 +392,7 @@ void read_adc(enum i2c_addr_space adc_address, uint8_t *data)
 	}
 }
 
-int set_direct_string()
+static int set_direct_string(void)
 {
 	direct_string_to_add = malloc_locked(sizeof(struct direct_string_item));
 	if (direct_string_to_add == NULL)
@@ -403,7 +403,7 @@ int set_direct_string()
 	return 0;
 }
 
-void get_dmi_string(char **str)
+static void get_dmi_string(char **str)
 {
 	uint8_t len = eeprom_read_byte(dmi_eeprom_index);
 	(*str) = malloc_locked(sizeof(char) * (len + 1));
@@ -413,7 +413,7 @@ void get_dmi_string(char **str)
 	dmi_eeprom_index++;
 }
 
-void dmi_init()
+void dmi_init(void)
 {
 	dmi_eeprom_index = EEPROM_DMI_START;
 	uint8_t dmi_count = eeprom_read_byte(EEPROM_DMI_COUNT);
@@ -438,7 +438,8 @@ void dmi_init()
 	}
 }
 
-void add_dmi_backup(struct direct_string_item *dmi)
+/*
+static void add_dmi_backup(struct direct_string_item *dmi)
 {
 	uint8_t dmi_count = eeprom_read_byte(EEPROM_DMI_COUNT);
 	dmi->backup_addr = max(dmi_eeprom_index, EEPROM_DMI_START);
@@ -454,8 +455,9 @@ void add_dmi_backup(struct direct_string_item *dmi)
 		eeprom_write_byte(writing_index, dmi->content[i]);
 	eeprom_write_byte(EEPROM_DMI_COUNT, dmi_count);
 }
+*/
 
-void remove_dmi_backup(struct direct_string_item *dmi)
+static void remove_dmi_backup(struct direct_string_item *dmi)
 {
 	uint8_t dmi_count = eeprom_read_byte(EEPROM_DMI_COUNT);
 	if (dmi_count == 0)
@@ -467,7 +469,7 @@ void remove_dmi_backup(struct direct_string_item *dmi)
 	eeprom_write_byte(EEPROM_DMI_COUNT, dmi_count);
 }
 
-void update_dmi_backup(struct direct_string_item *dmi)
+static void update_dmi_backup(struct direct_string_item *dmi)
 {
 	uint16_t start_index = dmi->backup_addr + strlen(dmi->type) + 2;
 	uint8_t new_length = strlen(dmi->content);
@@ -482,7 +484,7 @@ void update_dmi_backup(struct direct_string_item *dmi)
 		eeprom_write_byte(start_index, dmi->content[i]);
 }
 
-void add_direct_string()
+static void add_direct_string(void)
 {
 	uart_send_string("direct string added");
 	struct direct_string_item *curr = computer_data.details.direct_string;
@@ -513,7 +515,7 @@ void add_direct_string()
 }
 
 
-void end_direct_string(bool is_name_byte)
+static void end_direct_string(bool is_name_byte)
 {
 	if(is_name_byte && dmi_curr_state == DMI_NAME_WRITE){
 		direct_string_to_add->type[direct_write_length]='\0';
@@ -529,14 +531,14 @@ void end_direct_string(bool is_name_byte)
 	}
 }
 
-bool is_iwren_mode()
+static bool is_iwren_mode(void)
 {
 	bool res = layout.l.iwren != 0;
 	layout.l.iwren = 0;
 	return res;
 }
 
-void write_byte_direct_string(bool is_written_type, uint8_t data)
+static void write_byte_direct_string(bool is_written_type, uint8_t data)
 {
 	if (is_written_type)
 		direct_string_to_add->type[direct_write_index] = data;
@@ -550,7 +552,7 @@ void write_byte_direct_string(bool is_written_type, uint8_t data)
 	uart_send_string("\n\r");
 }
 
-void set_written_length(bool is_written_name, uint8_t data)
+static void set_written_length(bool is_written_name, uint8_t data)
 {
 	direct_write_length = data;
 	direct_write_index = 0;
@@ -593,7 +595,7 @@ void set_written_length(bool is_written_name, uint8_t data)
 	}
 }
 
-void write_direct_byte(bool is_written_type, uint8_t data)
+static void write_direct_byte(bool is_written_type, uint8_t data)
 {
 	uart_send_num(data, 16);
 	if (is_length_set){
@@ -611,7 +613,7 @@ void write_direct_byte(bool is_written_type, uint8_t data)
 	}
 }
 
-void write_direct(enum i2c_addr_space write_address)
+static void write_direct(enum i2c_addr_space write_address)
 {
 	switch (write_address){
 	case DMIN:
@@ -739,7 +741,7 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 	}
 }
 
-void write_gpu_temp()
+static void write_gpu_temp(void)
 {
 	computer_data.details.gpus = layout.l.gpus;
 	if (computer_data.details.gpus == 1) {
@@ -751,7 +753,7 @@ void write_gpu_temp()
 	clear_req();
 }
 extern bool is_twi_busy; //See below in update_data
-void update_data(void *write_address)
+static void update_data(void *write_address)
 {
 	uint8_t addr = (uint16_t)write_address;
 	switch (addr){
@@ -813,7 +815,7 @@ void update_data(void *write_address)
 	is_twi_busy = false;
 }
 
-void write_data(enum i2c_addr_space addr, uint8_t data)
+static void write_data(enum i2c_addr_space addr, uint8_t data)
 {
 	switch (addr) {
 	case RTCT:

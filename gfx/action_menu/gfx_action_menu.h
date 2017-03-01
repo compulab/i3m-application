@@ -22,13 +22,13 @@ struct gfx_action_menu *present_menu;
 
 void show_current_menu(bool redraw);
 
-void clear_screen();
+void clear_screen(void);
 
 void show_frame(struct gfx_frame *frame);
 
 void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw);
 
-void handle_button_preesed_by_display_mode();
+void handle_button_preesed_by_display_mode(void);
 
 void gfx_action_menu_process_key(struct gfx_action_menu *action_menu,
 		uint8_t keycode, bool from_frame);

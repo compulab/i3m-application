@@ -7,7 +7,7 @@
 
 #include "display_render.h"
 
-bool is_valid_char(char ch)
+static bool is_valid_char(char ch)
 {
 	return ch != '\0' && ch != '\n';
 }
@@ -17,7 +17,7 @@ void clear_string_background(uint8_t length, uint8_t x, uint8_t y, struct glcd_F
 	gfx_mono_draw_filled_rect(x, y, length, font->height + 3, GFX_PIXEL_CLR);
 }
 
-uint8_t length_P(char *str)
+static uint8_t length_P(char *str)
 {
 	uint8_t count = 0;
 	uint8_t temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)(str++));

@@ -49,7 +49,7 @@ void switch_tc_interrupt_schedule(bool on)
 	tc_can_schedule = on;
 }
 
-static uint32_t get_ticks_in_sec()
+static uint32_t get_ticks_in_sec(void)
 {
 	return sysclk_get_cpu_hz() / tc_get_div();
 }

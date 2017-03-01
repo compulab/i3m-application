@@ -73,45 +73,45 @@ extern struct calendar_date computer_date_time;
 
 extern bool screen_saver_mode_enabled;
 
-void enable_screen_saver_mode();
+void enable_screen_saver_mode(void);
 
-void disable_screen_saver_mode();
+void disable_screen_saver_mode(void);
 
-void print_work_count();
+void print_work_count(void *);
 
 bool is_valid_cpu_temp(uint8_t cpu_id);
 
 bool is_valid_cpu_fq(uint8_t cpu_id);
 
-bool is_valid_ambient_temp();
+bool is_valid_ambient_temp(void);
 
-uint8_t get_brightness_level();
+uint8_t get_brightness_level(void);
 
-bool is_valid_gpu_temp();
+bool is_valid_gpu_temp(void);
 
 bool is_valid_hdd_size(uint8_t hdd_id);
 
 bool is_valid_hdd_temp(uint8_t hdd_id);
 
-void fp_init();
+void fp_init(void);
 
 bool is_valid_mem(uint8_t mem_id);
 
-void update_info();
+void update_info(void *);
 
 void update_ambient_value(uint8_t high_bit);
 
-void update_requests();
+void update_requests(void *);
 
-void update_ambient_temp();
+void update_ambient_temp(void *);
 
-void update_adc();
+void update_adc(void *);
 
-void update_brightness();
+void update_brightness(void);
 
-void update_computer_state();
+void update_computer_state(void);
 
-void update_power_state();
+void update_power_state(void);
 
 void set_state(char *state);
 

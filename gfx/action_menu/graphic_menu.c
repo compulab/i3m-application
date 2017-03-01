@@ -7,7 +7,7 @@
 
 #include "graphic_menu.h"
 
-void set_item_position(struct gfx_image *bitmap, uint8_t i, bool is_back_item)
+static void set_item_position(struct gfx_image *bitmap, uint8_t i, bool is_back_item)
 {
 	bitmap->postion.x = is_back_item ? 85 : lrint(i % 3) * 40 + 5;
 	bitmap->postion.y = is_back_item ? 26 : lrint(i / 3) * 25 + 1;
@@ -19,7 +19,7 @@ void set_item_position(struct gfx_image *bitmap, uint8_t i, bool is_back_item)
 #define CURSOR_HEIGHT   5
 
 
-void invert_cursor_horizontal_lines(uint8_t frame_x, uint8_t frame_y)
+static void invert_cursor_horizontal_lines(uint8_t frame_x, uint8_t frame_y)
 {
 	gfx_mono_generic_draw_horizontal_line(frame_x + 1, frame_y, CURSOR_WIDTH - 1, GFX_PIXEL_XOR);
 	gfx_mono_generic_draw_horizontal_line(frame_x, frame_y + FRAME_HEIGHT, CURSOR_WIDTH, GFX_PIXEL_XOR);
@@ -27,7 +27,7 @@ void invert_cursor_horizontal_lines(uint8_t frame_x, uint8_t frame_y)
 	gfx_mono_generic_draw_horizontal_line(frame_x + FRAME_WIDTH - CURSOR_WIDTH, frame_y + FRAME_HEIGHT, CURSOR_WIDTH, GFX_PIXEL_XOR);
 }
 
-void invert_cursor_vertical_lines(uint8_t frame_x, uint8_t frame_y)
+static void invert_cursor_vertical_lines(uint8_t frame_x, uint8_t frame_y)
 {
 	gfx_mono_generic_draw_vertical_line(frame_x, frame_y, CURSOR_HEIGHT, GFX_PIXEL_XOR);
 	gfx_mono_generic_draw_vertical_line(frame_x + FRAME_WIDTH, frame_y, CURSOR_HEIGHT, GFX_PIXEL_XOR);
@@ -35,7 +35,7 @@ void invert_cursor_vertical_lines(uint8_t frame_x, uint8_t frame_y)
 	gfx_mono_generic_draw_vertical_line(frame_x + FRAME_WIDTH, frame_y + FRAME_HEIGHT - CURSOR_HEIGHT + 1, CURSOR_HEIGHT, GFX_PIXEL_XOR);
 }
 
-void invert_item(uint8_t index, bool is_back_item)
+static void invert_item(uint8_t index, bool is_back_item)
 {
 	uint8_t frame_x = is_back_item ? 85 : lrint(index % 3) * 40 + 5;
 	uint8_t frame_y = is_back_item ? 26 : lrint(index / 3) * 25 + 1;
@@ -43,13 +43,13 @@ void invert_item(uint8_t index, bool is_back_item)
 	invert_cursor_vertical_lines(frame_x, frame_y);
 }
 
-void draw_selected_item(char *title)
+static void draw_selected_item(char *title)
 {
 	uint8_t start_title = (GFX_MONO_LCD_WIDTH - strlen_PF((uint16_t)title + 0x10000)) / 4;
 	gfx_mono_draw_progmem_string(title, start_title, 54, &sysfont);
 }
 
-void draw_disable_item(struct gfx_item *pos)
+static void draw_disable_item(struct gfx_item *pos)
 {
 	for (int y = pos->y + 1; y < pos->y + pos->height; y += 2)
 		gfx_mono_draw_horizontal_line(pos->x, y, pos->width, GFX_PIXEL_CLR);

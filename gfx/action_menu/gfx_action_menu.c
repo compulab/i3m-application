@@ -4,7 +4,7 @@ struct gfx_action_menu dmi_menu = {.is_progmem = false };
 
 bool is_dmi_set;
 
-void switch_present_menu(struct gfx_action_menu *action_menu)
+static void switch_present_menu(struct gfx_action_menu *action_menu)
 {
 	present_menu->visible = false;
 	present_menu = action_menu;
@@ -12,7 +12,7 @@ void switch_present_menu(struct gfx_action_menu *action_menu)
 	action_menu->visible = true;
 }
 
-void update_action_visibility(struct gfx_item_action *action)
+static void update_action_visibility(struct gfx_item_action *action)
 {
 	if (action->type == ACTION_TYPE_SHOW_DMI_MENU) {
 		action->visible = computer_data.details.direct_string != 0;
@@ -75,14 +75,14 @@ void update_action_visibility(struct gfx_item_action *action)
 	action->visible = visible;
 }
 
-void update_actions_visibility()
+static void update_actions_visibility(void)
 {
 	for (int i = 0; i < present_menu->menu->num_elements; i++){
 		update_action_visibility(&present_menu->actions[i]);
 	}
 }
 
-void set_present_menu(struct gfx_action_menu *action_menu)
+static void set_present_menu(struct gfx_action_menu *action_menu)
 {
 	present_menu->visible = false;
 	present_menu = action_menu;
@@ -110,7 +110,7 @@ void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 }
 
 
-void free_dmi_frame(struct gfx_frame *frame)
+static void free_dmi_frame(struct gfx_frame *frame)
 {
 	struct gfx_label_node *curr_label = frame->label_head;
 	struct gfx_label_node *next_label;
@@ -123,7 +123,7 @@ void free_dmi_frame(struct gfx_frame *frame)
 	}
 }
 
-void free_dmi_menu()
+static void free_dmi_menu(void)
 {
 	if (dmi_menu.actions != NULL) {
 		for (int i = 0; i < dmi_menu.menu->num_elements -1; i++) {
@@ -145,7 +145,7 @@ void free_dmi_menu()
 	is_dmi_set = false;
 }
 
-void show_menu(struct gfx_action_menu *menu, bool redraw)
+static void show_menu(struct gfx_action_menu *menu, bool redraw)
 {
 	gfx_action_menu_init(menu, redraw);
 }
@@ -155,13 +155,13 @@ void show_current_menu(bool redraw)
 	show_menu(present_menu, redraw);
 }
 
-void clear_screen()
+void clear_screen(void)
 {
 	for (int i=0 ; i < GFX_MONO_LCD_FRAMEBUFFER_SIZE; i++)
 		framebuffer[i] = 0x00;
 }
 
-void set_dmi_mono_menu()
+static void set_dmi_mono_menu(void)
 {
 	is_dmi_set = false;
 	uint8_t count = 0;
@@ -203,7 +203,7 @@ void set_dmi_mono_menu()
 	}
 }
 
-void set_dmi_name_position(struct gfx_item* pos)
+static void set_dmi_name_position(struct gfx_item* pos)
 {
 	pos->x = 0;
 	pos->y = 12;
@@ -212,7 +212,7 @@ void set_dmi_name_position(struct gfx_item* pos)
 	pos->visible = true;
 }
 
-void set_dmi_content_position(struct gfx_item* pos)
+static void set_dmi_content_position(struct gfx_item* pos)
 {
 	pos->x = 0;
 	pos->y = 32;
@@ -221,7 +221,7 @@ void set_dmi_content_position(struct gfx_item* pos)
 	pos->visible = true;
 }
 
-void set_dmi_name_label(struct gfx_label_node **label_node, struct direct_string_item * direct_item)
+static void set_dmi_name_label(struct gfx_label_node **label_node, struct direct_string_item * direct_item)
 {
 	set_dmi_name_position(&(*label_node)->label.postion);
 	(*label_node)->label.text.font = get_font_by_type(GLCD_FONT_SYSFONT_5X7);
@@ -229,7 +229,7 @@ void set_dmi_name_label(struct gfx_label_node **label_node, struct direct_string
 	(*label_node)->label.text.text = direct_item->content;
 }
 
-void set_dmi_content_label(struct gfx_label_node *label_node, struct direct_string_item * direct_item)
+static void set_dmi_content_label(struct gfx_label_node *label_node, struct direct_string_item * direct_item)
 {
 	set_dmi_content_position(&label_node->label.postion);
 	label_node->label.text.font = get_font_by_type(GLCD_FONT_SYSFONT_5X7);
@@ -237,7 +237,7 @@ void set_dmi_content_label(struct gfx_label_node *label_node, struct direct_stri
 	label_node->label.text.text = direct_item->type;
 }
 
-int set_dmi_label(struct gfx_label_node *label_node, uint8_t index)
+static int set_dmi_label(struct gfx_label_node *label_node, uint8_t index)
 {
 	struct direct_string_item * direct_item = computer_data.details.direct_string;
 	while (direct_item != 0){
@@ -252,7 +252,7 @@ int set_dmi_label(struct gfx_label_node *label_node, uint8_t index)
 	return 0;
 }
 
-void set_dmi_frame(struct gfx_frame *frame, uint8_t index)
+static void set_dmi_frame(struct gfx_frame *frame, uint8_t index)
 {
 	frame->information_head = 0;
 	frame->image_head = 0;
@@ -263,7 +263,7 @@ void set_dmi_frame(struct gfx_frame *frame, uint8_t index)
 	}
 }
 
-void set_dmi_label_text()
+static void set_dmi_label_text(void)
 {
 	struct direct_string_item *direct_item = computer_data.details.direct_string;
 	struct gfx_label_node *label;
@@ -280,7 +280,7 @@ void set_dmi_label_text()
 	}
 }
 
-void set_dmi_actions()
+static void set_dmi_actions(void)
 {
 	if (is_dmi_set){
 		dmi_menu.actions = malloc_locked(sizeof(struct gfx_item_action) * dmi_menu.menu->num_elements);
@@ -303,7 +303,7 @@ void set_dmi_actions()
 	}
 }
 
-void set_dmi_menu()
+static void set_dmi_menu(void)
 {
 	set_dmi_mono_menu();
 	set_dmi_actions();
@@ -322,7 +322,7 @@ void show_frame(struct gfx_frame *frame)
 
 }
 
-void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
+static void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
 {
 	enum action_type type;
 	struct gfx_item_action *selected_action;

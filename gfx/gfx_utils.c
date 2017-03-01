@@ -87,21 +87,21 @@ static struct gfx_image plus_sign_image = {
 	.bitmap = &plus_bitmap,
 };
 
-void print_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
+static void print_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
 {
 	gfx_mono_draw_line(x, y, x + length, y, GFX_PIXEL_SET);
 }
 
-void print_vertical_line(uint8_t x, uint8_t y, uint8_t length)
+static void print_vertical_line(uint8_t x, uint8_t y, uint8_t length)
 {
 	gfx_mono_draw_line(x, y, x, y + length, GFX_PIXEL_SET);
 }
 
-void gfx_item_draw(struct gfx_item *item)
+static void gfx_item_draw(struct gfx_item *item)
 {
 }
 
-void gfx_item_init(struct gfx_item *item, uint8_t x, uint8_t y, uint8_t width, uint8_t height)
+static void gfx_item_init(struct gfx_item *item, uint8_t x, uint8_t y, uint8_t width, uint8_t height)
 {
 	item->x = x;
 	item->y = y;
@@ -110,7 +110,7 @@ void gfx_item_init(struct gfx_item *item, uint8_t x, uint8_t y, uint8_t width, u
 	item->visible = true;
 }
 
-void gfx_label_init(struct gfx_label *label, char *text,
+static void gfx_label_init(struct gfx_label *label, char *text,
 		uint8_t x, uint8_t y, uint8_t font_id)
 {
 		gfx_item_init(&label ->postion, x, y, 0, 0);
@@ -119,7 +119,7 @@ void gfx_label_init(struct gfx_label *label, char *text,
 		label->text.font = get_font_by_type(font_id);
 }
 
-void set_size_by_text(char *text, struct font *font, struct gfx_item *item)
+static void set_size_by_text(char *text, struct font *font, struct gfx_item *item)
 {
 	uint8_t width = strlen(text) * font->width + 2,
 			height = font->height + 4;
@@ -127,7 +127,7 @@ void set_size_by_text(char *text, struct font *font, struct gfx_item *item)
 	item->height = height;
 }
 
-int gfx_information_init(struct gfx_information *info,
+static int gfx_information_init(struct gfx_information *info,
 		enum information_type info_type, uint8_t info_data, uint8_t max_length, uint8_t x, uint8_t y, uint8_t font_id)
 {
 	info->info_type = info_type;
@@ -141,17 +141,17 @@ int gfx_information_init(struct gfx_information *info,
 }
 
 
-void print_data_P(char *text, struct glcd_FontConfig_t *font, uint8_t x, uint8_t y)
+static void print_data_P(char *text, struct glcd_FontConfig_t *font, uint8_t x, uint8_t y)
 {
 	draw_string_in_buffer_P(text, x, y, font);
 }
 
-uint8_t print_data(char *text, struct glcd_FontConfig_t *font, uint8_t x, uint8_t y, uint8_t old_len)
+static uint8_t print_data(char *text, struct glcd_FontConfig_t *font, uint8_t x, uint8_t y, uint8_t old_len)
 {
 	return draw_string_in_buffer(text, x, y, font, old_len);
 }
 
-void draw_screen_saver_enable_status(struct gfx_information *info)
+static void draw_screen_saver_enable_status(struct gfx_information *info)
 {
 	uint8_t enable_len = 7 * info->text.font->width, disable_len = 8 * info->text.font->width, enable_x = disable_len + info->text.font->width + info->postion.x, disable_x = info->postion.x;
 	uint8_t set_x = computer_data.details.screen_saver_visible ? enable_x : disable_x,
@@ -163,7 +163,7 @@ void draw_screen_saver_enable_status(struct gfx_information *info)
 	gfx_mono_generic_draw_horizontal_line(clear_x, info->postion.y + info->text.font->height + 2, length_clr, GFX_PIXEL_CLR);
 }
 
-void print_info(struct gfx_information *info)
+static void print_info(struct gfx_information *info)
 {
 	switch (info->info_type) {
 	case SET_SCREEN_SAVER_ENABLE:
@@ -174,7 +174,7 @@ void print_info(struct gfx_information *info)
 	}
 }
 
-void gfx_information_draw(struct gfx_information *info, bool redraw)
+static void gfx_information_draw(struct gfx_information *info, bool redraw)
 {
 	char *text_to_draw = malloc_locked(info->text.max_text_size);
 	if (text_to_draw == NULL)
@@ -186,7 +186,7 @@ void gfx_information_draw(struct gfx_information *info, bool redraw)
 	free(text_to_draw);
 }
 
-void gfx_label_draw(struct gfx_label *label)
+static void gfx_label_draw(struct gfx_label *label)
 {
 	if (label->text.textP != NULL)
 		print_data_P(label->text.textP, label->text.font, label->postion.x, label->postion.y);
@@ -194,7 +194,7 @@ void gfx_label_draw(struct gfx_label *label)
 //		print_data(label->text.text, label->text.font, label->postion.x, label->postion.y, 0); /* same len every time*/
 }
 
-int gfx_image_init(struct gfx_image *image, gfx_mono_color_t PROGMEM_T *bitmap_progmem,
+static int gfx_image_init(struct gfx_image *image, gfx_mono_color_t PROGMEM_T *bitmap_progmem,
 		uint8_t height, uint8_t width, uint8_t x, uint8_t y)
 {
 	struct gfx_mono_bitmap *bitmap = malloc_locked(sizeof(struct gfx_mono_bitmap));
@@ -212,14 +212,14 @@ int gfx_image_init(struct gfx_image *image, gfx_mono_color_t PROGMEM_T *bitmap_p
 	return 0;
 }
 
-void gfx_image_draw(struct gfx_image *image)
+static void gfx_image_draw(struct gfx_image *image)
 {
 	gfx_item_draw(&image->postion);
 	gfx_mono_generic_put_bitmap(image->bitmap, image->postion.x, image->postion.y);
 //	gfx_mono_put_framebuffer();
 }
 
-void init_frame(struct gfx_frame *frame, bool is_dashboard)
+static void init_frame(struct gfx_frame *frame, bool is_dashboard)
 {
 	frame->image_head = 0;
 	frame->information_head = 0;
@@ -227,7 +227,7 @@ void init_frame(struct gfx_frame *frame, bool is_dashboard)
 	frame->type = is_dashboard ? FRAME_DASHBOARD : FRAME_REGULAR;
 }
 
-int set_images(struct gfx_frame *frame, struct cnf_image_node *cnf_image_pgmem)
+static int set_images(struct gfx_frame *frame, struct cnf_image_node *cnf_image_pgmem)
 {
 	struct gfx_image_node *frame_image_last = 0;
 	while (cnf_image_pgmem != 0){
@@ -254,7 +254,7 @@ int set_images(struct gfx_frame *frame, struct cnf_image_node *cnf_image_pgmem)
 	return 0;
 }
 
-int set_labels(struct gfx_frame *frame, struct cnf_label_node *cnf_label_pgmem)
+static int set_labels(struct gfx_frame *frame, struct cnf_label_node *cnf_label_pgmem)
 {
 	struct gfx_label_node *frame_label_last = 0;
 	while (cnf_label_pgmem != 0){
@@ -277,7 +277,7 @@ int set_labels(struct gfx_frame *frame, struct cnf_label_node *cnf_label_pgmem)
 	return 0;
 }
 
-int set_infos(struct gfx_frame *frame,	struct cnf_info_node *cnf_info_pgmem)
+static int set_infos(struct gfx_frame *frame,	struct cnf_info_node *cnf_info_pgmem)
 {
 	struct gfx_information_node *frame_information_last = 0;
 	while (cnf_info_pgmem != 0){
@@ -320,7 +320,7 @@ int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem, b
 	return ((set_images(frame, cnf_frame.images_head) != 0) | (set_labels(frame, cnf_frame.labels_head) != 0) | (set_infos(frame, cnf_frame.infos_head) != 0));
 }
 
-void gfx_labels_draw(struct gfx_label_node *curr_label_node)
+static void gfx_labels_draw(struct gfx_label_node *curr_label_node)
 {
 	while (curr_label_node != 0) {
 		gfx_label_draw(&curr_label_node->label);
@@ -328,7 +328,7 @@ void gfx_labels_draw(struct gfx_label_node *curr_label_node)
 	}
 }
 
-void gfx_infos_draw(struct gfx_information_node *curr_info_node, bool redraw)
+static void gfx_infos_draw(struct gfx_information_node *curr_info_node, bool redraw)
 {
 	while (curr_info_node != 0){
 		gfx_information_draw(&curr_info_node->information, redraw);
@@ -336,7 +336,7 @@ void gfx_infos_draw(struct gfx_information_node *curr_info_node, bool redraw)
 	}
 }
 
-void gfx_images_draw(struct gfx_image_node *curr_image_node)
+static void gfx_images_draw(struct gfx_image_node *curr_image_node)
 {
 	while (curr_image_node != 0){
 		gfx_image_draw(&curr_image_node->image);
@@ -344,7 +344,7 @@ void gfx_images_draw(struct gfx_image_node *curr_image_node)
 	}
 }
 
-void draw_left_sign(bool is_numeric)
+static void draw_left_sign(bool is_numeric)
 {
 	if (is_numeric)
 		gfx_mono_put_bitmap(minus_sign_image.bitmap, minus_sign_image.postion.x, left_sign_image.postion.y);
@@ -352,7 +352,7 @@ void draw_left_sign(bool is_numeric)
 		gfx_mono_put_bitmap(left_sign_image.bitmap, left_sign_image.postion.x, left_sign_image.postion.y);
 }
 
-void draw_right_sign(bool is_numeric)
+static void draw_right_sign(bool is_numeric)
 {
 	if (is_numeric)
 		gfx_mono_put_bitmap(plus_sign_image.bitmap, plus_sign_image.postion.x, left_sign_image.postion.y);
@@ -360,7 +360,7 @@ void draw_right_sign(bool is_numeric)
 		gfx_mono_put_bitmap(right_sign_image.bitmap, right_sign_image.postion.x, right_sign_image.postion.y);
 }
 
-void draw_graphic_signs(uint8_t selection, uint8_t min_index, uint8_t max_index, bool is_numeric)
+static void draw_graphic_signs(uint8_t selection, uint8_t min_index, uint8_t max_index, bool is_numeric)
 {
 	if (selection > min_index)
 		draw_left_sign(is_numeric);
@@ -369,7 +369,7 @@ void draw_graphic_signs(uint8_t selection, uint8_t min_index, uint8_t max_index,
 		draw_right_sign(is_numeric);
 }
 
-void insert_graphic_signs(struct gfx_frame *frame)
+static void insert_graphic_signs(struct gfx_frame *frame)
 {
 	uint8_t min_value = 0, max_value = 0;
 	if (frame->type == FRAME_DASHBOARD)

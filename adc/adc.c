@@ -20,7 +20,7 @@ int32_t power_sum;
 float gain = 0;
 float vcc = 3.3;
 
-void adc_init()
+void adc_init(void)
 {
 	struct adc_config adc_conf;
 	struct adc_channel_config adcch_conf;
@@ -38,7 +38,7 @@ void adc_init()
 	adc_enable(&MY_ADC);
 }
 
-double adc_avg()
+static double adc_avg(void)
 {
 	int16_t i;
 	int16_t adca1_result = 0;

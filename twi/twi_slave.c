@@ -101,7 +101,7 @@ void twi_enable(void)
 	twi_enabled = true;
 }
 
-void twi_slave_init()
+void twi_slave_init(void)
 {
 		TWI_SLAVE_BASE.ADDR = TWI_SLAVE_ADDRESS << 1;
 		TWI_SLAVE_BASE.ADDRMASK = TWI_SLAVE_MSK << 1;
@@ -114,48 +114,48 @@ void twi_slave_init()
         twi_enable();
 }
 
-void clear()
+static void clear(void)
 {
 	index = 0;
 }
 
-void clear_addresses()
+static void clear_addresses(void)
 {
 	 slave_address = UNSET_ADDRESS;
 	 set_address = false;
 }
 
-void twi_ack()
+static void twi_ack(void)
 {
 	TWI_SLAVE_BASE.CTRLB = TWI_SLAVE_CMD_RESPONSE_gc;
 }
 
-void twi_nack()
+static void twi_nack(void)
 {
 	TWI_SLAVE_BASE.CTRLB = TWI_SLAVE_ACKACT_bm |
             TWI_SLAVE_CMD_COMPTRANS_gc;
 }
 
-void twi_clear_status_bit (uint8_t bit)
+static void twi_clear_status_bit (uint8_t bit)
 {
 	TWI_SLAVE_BASE.STATUS |= bit;
 }
-void twi_clear_apif()
+static void twi_clear_apif(void)
 {
 	twi_clear_status_bit(TWI_SLAVE_APIF_bm);
 }
 
-void twi_clear_dif()
+static void twi_clear_dif(void)
 {
 	twi_clear_status_bit(TWI_SLAVE_DIF_bm);
 }
 
-void twi_end_transmission()
+static void twi_end_transmission(void)
 {
 	clear();
 }
 
-void twi_handle_read(uint8_t address)
+static void twi_handle_read(uint8_t address)
 {
 	uint8_t data = 0xff;
 	if (slave_address == TWI_EEPROM_ADDRESS)
@@ -169,7 +169,7 @@ void twi_handle_read(uint8_t address)
 	++reg_address;
 }
 
-int twi_handle_write(uint8_t data)
+static int twi_handle_write(uint8_t data)
 {
 	if (slave_address == TWI_EEPROM_ADDRESS) {
 		eeprom_write_byte(reg_address, data);
@@ -188,7 +188,7 @@ int twi_handle_write(uint8_t data)
 	return 0;
 }
 
-void twi_slave_address_match_handler()
+static void twi_slave_address_match_handler(void)
 {
 	if (twi_enabled) {
 		is_twi_busy = true;
@@ -206,7 +206,7 @@ void twi_slave_address_match_handler()
 	}
 }
 
-void twi_slave_stop_handler()
+static void twi_slave_stop_handler(void)
 {
 	is_twi_busy = false;
 	clear();
@@ -214,7 +214,7 @@ void twi_slave_stop_handler()
 	twi_clear_apif();
 }
 
-void twi_slave_read_data_handler()
+static void twi_slave_read_data_handler(void)
 {
 	uint8_t status = TWI_SLAVE_BASE.STATUS;
 	if (((status & TWI_SLAVE_RXACK_bm) == TWI_SLAVE_RXACK_bm) &&
@@ -229,7 +229,7 @@ void twi_slave_read_data_handler()
 
 }
 
-void twi_slave_write_data_handler()
+static void twi_slave_write_data_handler(void)
 {
 	if (twi_handle_write(TWI_SLAVE_BASE.DATA) != 0)
 		twi_nack();
@@ -239,7 +239,7 @@ void twi_slave_write_data_handler()
 	twi_clear_dif();
 }
 
-void twi_save_address()
+static void twi_save_address(void)
 {
 	set_address = true;
 	reg_address = TWI_SLAVE_BASE.DATA;
@@ -250,7 +250,7 @@ void twi_save_address()
 	twi_clear_dif();
 }
 
-void twi_slave_interrupt_handler()
+void twi_slave_interrupt_handler(void)
 {
 	uint8_t current_status = TWI_SLAVE_BASE.STATUS;
 	if (current_status & TWI_SLAVE_BUSERR_bm) {    		/* If bus error. */

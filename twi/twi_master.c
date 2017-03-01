@@ -272,7 +272,7 @@ void TWI_init(void)
 	TWI.MASTER.STATUS = TWI_MASTER_BUSSTATE_IDLE_gc;
 }
 
-void go_to_reset()
+static void go_to_reset(void)
 {
 	TWI.MASTER.STATUS = TWI_MASTER_BUSSTATE_IDLE_gc;
 	transaction_type_AT = TWI_TRANSACTION_IDLE;

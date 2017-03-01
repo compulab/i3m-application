@@ -26,7 +26,7 @@ enum button_state ok_button = BUTTON_NOT_PRESSED,
 		left_button = BUTTON_NOT_PRESSED,
 		right_button = BUTTON_NOT_PRESSED;
 
-void free_images(struct gfx_image_node *images_head)
+static void free_images(struct gfx_image_node *images_head)
 {
 	struct gfx_image_node *curr_graphic = images_head;
 	struct gfx_image_node *next_graphic;
@@ -45,7 +45,7 @@ void memcpy_config(void *dst, void *src_addr, size_t size)
 	memcpy_PF(dst, (uint_farptr_t) (0x00010000 + (uint16_t)src_addr), size);
 }
 
-void free_infos(struct gfx_information_node *infos_head)
+static void free_infos(struct gfx_information_node *infos_head)
 {
 	struct gfx_information_node *curr_info = infos_head;
 	struct gfx_information_node *next_info;
@@ -58,7 +58,7 @@ void free_infos(struct gfx_information_node *infos_head)
 	}
 }
 
-void free_labels(struct gfx_label_node *labels_head)
+static void free_labels(struct gfx_label_node *labels_head)
 {
 	struct gfx_label_node *curr_label = labels_head;
 	struct gfx_label_node *next_label;
@@ -69,7 +69,7 @@ void free_labels(struct gfx_label_node *labels_head)
 	}
 }
 
-void free_menus()
+static void free_menus(void)
 {
 	if (fonts != NULL) {
 		for (int i = 0; i < new_fonts_size; i++) {
@@ -103,14 +103,14 @@ void free_menus()
 	}
 }
 
-int config_block_error()
+static int config_block_error(void)
 {
 	uart_send_string("config block error handeling\n\r");
 	free_menus();
 	return -1;
 }
 
-void action_types_init()
+static void action_types_init(void)
 {
 	struct gfx_action_menu *menu;
 	struct gfx_item_action *action;
@@ -135,7 +135,7 @@ void action_types_init()
 	}
 }
 
-int load_action(struct gfx_item_action *action, struct cnf_action config_action, struct cnf_frame * cnf_dashboard)
+static int load_action(struct gfx_item_action *action, struct cnf_action config_action, struct cnf_frame * cnf_dashboard)
 {
 	action->type = config_action.type;
 	switch(config_action.type){
@@ -171,7 +171,7 @@ int load_action(struct gfx_item_action *action, struct cnf_action config_action,
 	return 0;
 }
 
-void show_logo()
+void show_logo(void)
 {
 	if (reset_screen_saver_req) {
 		reset_screen_saver();
@@ -194,7 +194,7 @@ void show_logo()
 	}
 }
 
-int graphic_item_init(struct gfx_image *menu_image, struct cnf_image * image_node)
+static int graphic_item_init(struct gfx_image *menu_image, struct cnf_image * image_node)
 {
 	menu_image->bitmap = malloc_locked(sizeof(struct gfx_mono_bitmap));
 	if (menu_image->bitmap == NULL) {
@@ -208,7 +208,7 @@ int graphic_item_init(struct gfx_image *menu_image, struct cnf_image * image_nod
 	return 0;
 }
 
-void splash_init(struct cnf_blk config_block)
+static void splash_init(struct cnf_blk config_block)
 {
 	splash_bitmap.width = config_block.splash_width;
 	splash_bitmap.height = config_block.splash_height;
@@ -217,7 +217,7 @@ void splash_init(struct cnf_blk config_block)
 //	show_splash();
 }
 
-int load_fonts(struct cnf_font_node *cnf_font_node)
+static int load_fonts(struct cnf_font_node *cnf_font_node)
 {
 	struct cnf_font_node font_node;
 	struct glcd_FontConfig_t *font;
@@ -247,7 +247,7 @@ int load_fonts(struct cnf_font_node *cnf_font_node)
 
 
 
-int set_graphic_view(struct gfx_action_menu *action_menu, struct cnf_image_node *cnf_graphic_item_node)
+static int set_graphic_view(struct gfx_action_menu *action_menu, struct cnf_image_node *cnf_graphic_item_node)
 {
 	struct cnf_image_node cnf_image;
 	struct gfx_mono_menu *mono_menu = action_menu->menu;
@@ -286,7 +286,7 @@ int set_graphic_view(struct gfx_action_menu *action_menu, struct cnf_image_node 
 
 }
 
-int set_mono_menu(struct gfx_action_menu *action_menu, struct gfx_mono_menu *menu)
+static int set_mono_menu(struct gfx_action_menu *action_menu, struct gfx_mono_menu *menu)
 {
 	struct gfx_mono_menu *mono_menu = malloc_locked(sizeof(struct gfx_mono_menu));
 	if (mono_menu == NULL) {
@@ -306,7 +306,7 @@ int set_mono_menu(struct gfx_action_menu *action_menu, struct gfx_mono_menu *men
 	return 0;
 }
 
-int set_actions(struct gfx_action_menu * menu, struct cnf_action_node *cnf_action_node, struct cnf_frame * cnf_dashboard)
+static int set_actions(struct gfx_action_menu * menu, struct cnf_action_node *cnf_action_node, struct cnf_frame * cnf_dashboard)
 {
 	struct cnf_action_node action_node;
 	uint8_t action_index = 0;
@@ -323,7 +323,7 @@ int set_actions(struct gfx_action_menu * menu, struct cnf_action_node *cnf_actio
 }
 
 
-int load_config_block()
+int load_config_block(void)
 {
 	struct cnf_blk config_block;
 	struct cnf_menu config_menu;
@@ -403,7 +403,7 @@ void set_menu_by_id(struct gfx_action_menu **menu, uint8_t index)
 	}
 }
 
-void update_button_state(bool pressed, uint8_t *time, enum button_state *state)
+static void update_button_state(bool pressed, uint8_t *time, enum button_state *state)
 {
 #ifndef SUPPORT_HOLD_BUTTON
 	if (pressed)
@@ -424,7 +424,7 @@ void update_button_state(bool pressed, uint8_t *time, enum button_state *state)
 #endif
 }
 
-void update_button_pressed(bool *pressed, uint8_t *time, port_pin_t pin)
+static void update_button_pressed(bool *pressed, uint8_t *time, port_pin_t pin)
 {
 	bool is_high = gpio_pin_is_high(pin);
 	if (!(*pressed) && is_high){
@@ -436,7 +436,7 @@ void update_button_pressed(bool *pressed, uint8_t *time, port_pin_t pin)
 	}
 }
 
-void hadle_back_to_menu()
+void hadle_back_to_menu(void)
 {
 	clear_screen();
 	frame_present = 0;
@@ -445,7 +445,7 @@ void hadle_back_to_menu()
 }
 
 
-void update_buttons_states()
+static void update_buttons_states(void)
 {
 	update_button_pressed(&left_pressed, &left_time, FP_LEFT_BUTTON);
 	update_button_pressed(&right_pressed, &right_time,FP_RIGHT_BUTTON);
@@ -456,7 +456,7 @@ void update_buttons_states()
 	update_button_state(ok_pressed, &ok_time, &ok_button);
 }
 
-void handle_buttons_update()
+static void handle_buttons_update(void *data)
 {
 	switch (ok_button){
 	case BUTTON_HOLD:
@@ -522,7 +522,7 @@ void handle_buttons_update()
 
 struct work button_work = { .do_work = handle_buttons_update, .data = NULL, .next = NULL, };
 
-void handle_button_pressed()
+void handle_button_pressed(void)
 {
 	update_buttons_states();
 	if (!insert_work(&button_work))

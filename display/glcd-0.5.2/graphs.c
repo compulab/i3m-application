@@ -96,7 +96,7 @@ void glcd_scrolling_bar_graph(uint8_t x, uint8_t y, uint8_t width, uint8_t heigh
 	glcd_write();
 }
 
-void glcd_scrolling_bar_graph_timing(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t val, uint8_t line_width, uint16_t delay)
+static void glcd_scrolling_bar_graph_timing(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t val, uint8_t line_width, uint16_t delay)
 {
 	uint8_t n;
 	if (line_width == 0) {

@@ -28,17 +28,17 @@ struct calendar_date computer_date_time = {
     .year = 2015
 };
 
-void enable_screen_saver_mode()
+void enable_screen_saver_mode(void)
 {
 	screen_saver_mode_enabled = true;
 }
 
-void disable_screen_saver_mode()
+void disable_screen_saver_mode(void)
 {
 	screen_saver_mode_enabled = false;
 }
 
-void print_work_count()
+void print_work_count(void *data)
 {
 	uart_send_string("works in queue: ");
 	uart_send_num(works_count, 10);
@@ -55,12 +55,12 @@ bool is_valid_cpu_fq(uint8_t cpu_id)
 	return (computer_data.packed.cpufs & 0x01 << (cpu_id)) != 0;
 }
 
-bool is_valid_ambient_temp()
+bool is_valid_ambient_temp(void)
 {
 	return computer_data.details.ambs == 1;
 }
 
-bool is_valid_gpu_temp()
+bool is_valid_gpu_temp(void)
 {
 	return computer_data.details.gpus == 1;
 }
@@ -80,17 +80,17 @@ bool is_valid_mem(uint8_t mem_id)
 	return (computer_data.packed.mems & 0x01 << (mem_id)) != 0;
 }
 
-void fp_init()
+void fp_init(void)
 {
 	wait_time = 1;
 	update_timestamp = 0;
 }
 
-void set_invalid_string(char *str){
+static void set_invalid_string(char *str){
 	sprintf(str, "-");
 }
 
-bool is_type_in_frame(enum information_type info_type, struct gfx_information_node *info_node)
+static bool is_type_in_frame(enum information_type info_type, struct gfx_information_node *info_node)
 {
 	while (info_node != NULL) {
 		if (info_node->information.info_type == info_type)
@@ -100,7 +100,7 @@ bool is_type_in_frame(enum information_type info_type, struct gfx_information_no
 	return false;
 }
 
-bool need_to_update_req(enum information_type info_type)
+static bool need_to_update_req(enum information_type info_type)
 {
 	if (!present_menu->visible) {
 		return is_type_in_frame(info_type, frame_present->information_head);
@@ -115,38 +115,38 @@ bool need_to_update_req(enum information_type info_type)
 	return false;
 }
 
-void check_update_hddtr_temp_req()
+static void check_update_hddtr_temp_req(void)
 {
 	if(layout.l.hddtr == 0 && need_to_update_req(SHOW_HDD_TEMPERTURE))
 		layout.l.hddtr = 1;
 }
 
-void check_update_cpu_fq_req()
+static void check_update_cpu_fq_req(void)
 {
 	if (layout.l.cpufr == 0 && need_to_update_req(SHOW_CPU_FREQUENCY))
 		layout.l.cpufr = 1;
 }
 
-void check_update_cpu_temp_req()
+static void check_update_cpu_temp_req(void)
 {
 	if (layout.l.cputr == 0 && need_to_update_req(SHOW_CPU_TEMPERTURE))
 		layout.l.cputr = 1;
 }
 
-void check_update_gpu_temp_req()
+static void check_update_gpu_temp_req(void)
 {
 	if (layout.l.gputr == 0 && need_to_update_req(SHOW_GPU_TEMPERTURE))
 		layout.l.gputr = 1;
 }
 
-void check_update_pending_req()
+static void check_update_pending_req(void)
 {
 	if (layout.l.req == 0 && layout.direct.i2c[PENDR0] != 0)
 		layout.l.req = 1;
 }
 
 
-void update_requests()
+void update_requests(void *data)
 {
 	check_update_hddtr_temp_req();
 	check_update_cpu_fq_req();
@@ -156,12 +156,13 @@ void update_requests()
 }
 
 
-void clear_regs(uint8_t *beg_addr, uint8_t *end_addr)
+static void clear_regs(uint8_t *beg_addr, uint8_t *end_addr)
 {
 	for (uint8_t *addr = beg_addr; addr < end_addr; addr++)
 			*addr = 0x00;
 }
-void reset_temperatures()
+
+static void reset_temperatures(void)
 {
 	uint8_t *p_computer_data = (uint8_t *)&computer_data;
 	for (int i = 0; i < ((uint16_t)&computer_data.details.direct_string - (uint16_t)&computer_data); i++)
@@ -170,19 +171,19 @@ void reset_temperatures()
 	clear_regs((uint8_t *)&layout.direct.i2c[CPU0F_LSB], (uint8_t *)&layout.direct.i2c[RESERVED83]);
 }
 
-void handle_power_off()
+static void handle_power_off(void)
 {
 //	reset_ambient();
 	reset_temperatures();
 }
 
-void handle_power_on()
+static void handle_power_on(void)
 {
-	update_adc();
-	update_ambient_temp();
+	update_adc(NULL);
+	update_ambient_temp(NULL);
 }
 
-void handle_power_state_changed()
+static void handle_power_state_changed(void *data)
 {
 	switch(current_power_state) {
 	case POWER_ON:
@@ -205,7 +206,7 @@ void handle_power_state_changed()
 
 struct work power_state_work = { .do_work = handle_power_state_changed, .data = NULL, .next = NULL };
 
-void update_power_state()
+void update_power_state(void)
 {
 	enum power_state  last_power_state = current_power_state;
 	if (gpio_pin_is_low(FP_S5)) {
@@ -250,7 +251,7 @@ void set_state(char *state)
 	}
 }
 
-int num_of_digits(int x)
+static int num_of_digits(int x)
 {
 	if (x < 0)
 		x *= -1;
@@ -260,7 +261,7 @@ int num_of_digits(int x)
   return 0;
 }
 
-void set_mem_size_str(char *str, uint8_t mem)
+static void set_mem_size_str(char *str, uint8_t mem)
 {
 	uint8_t size;
 	switch (mem){
@@ -290,7 +291,7 @@ void set_mem_size_str(char *str, uint8_t mem)
 		sprintf(str,"%d GB",size);
 }
 
-void set_hdd_size_str(char *str, uint16_t size, bool is_tera)
+static void set_hdd_size_str(char *str, uint16_t size, bool is_tera)
 {
 	char * units;
 	if (is_tera)
@@ -300,17 +301,17 @@ void set_hdd_size_str(char *str, uint16_t size, bool is_tera)
 	sprintf(str, "%d %s", size, units);
 }
 
-void set_fq_string(char *str, uint16_t fq)
+static void set_fq_string(char *str, uint16_t fq)
 {
 	sprintf(str, "%d MHZ", fq);
 }
 
-void set_temp_string(char *str, int8_t temperature)
+static void set_temp_string(char *str, int8_t temperature)
 {
 	sprintf(str,"%d%c",temperature ,(uint8_t)128);
 }
 
-void set_cpu_updated_temp(char *data, uint8_t cpu_id)
+static void set_cpu_updated_temp(char *data, uint8_t cpu_id)
 {
 	if ((computer_data.packed.cputs & (0x01 << cpu_id)) != 0)
 		set_temp_string(data, computer_data.details.cput[cpu_id]);
@@ -318,7 +319,7 @@ void set_cpu_updated_temp(char *data, uint8_t cpu_id)
 		set_invalid_string(data);
 }
 
-void set_updated_memory_size(char *output_str, uint8_t mem_id)
+static void set_updated_memory_size(char *output_str, uint8_t mem_id)
 {
 	if ((computer_data.packed.mems & (0x01 << mem_id)))
 		set_mem_size_str(output_str, computer_data.packed.memsz[mem_id]);
@@ -326,7 +327,7 @@ void set_updated_memory_size(char *output_str, uint8_t mem_id)
 		set_invalid_string(output_str);
 }
 
-void set_updated_hdd_size(char *output_str, uint8_t hdd_id)
+static void set_updated_hdd_size(char *output_str, uint8_t hdd_id)
 {
 	if (computer_data.packed.hdds & (0x01 << hdd_id))
 		set_hdd_size_str(output_str, computer_data.packed.hddsz[hdd_id], computer_data.packed.hddf & (0x01 << hdd_id));
@@ -334,7 +335,7 @@ void set_updated_hdd_size(char *output_str, uint8_t hdd_id)
 		set_invalid_string(output_str);
 }
 
-void set_updated_cpu_frequency(char *output_str, uint8_t cpu_id)
+static void set_updated_cpu_frequency(char *output_str, uint8_t cpu_id)
 {
 	if (computer_data.packed.cpufs & (0x01 << cpu_id))
 		set_fq_string(output_str, computer_data.packed.cpuf[cpu_id]);
@@ -342,7 +343,7 @@ void set_updated_cpu_frequency(char *output_str, uint8_t cpu_id)
 		set_invalid_string(output_str);
 }
 
-void set_updated_ambient_temp(char *output_str)
+static void set_updated_ambient_temp(char *output_str)
 {
 	if (computer_data.details.ambs == 1)
 		set_temp_string(output_str, computer_data.details.ambt);
@@ -350,12 +351,12 @@ void set_updated_ambient_temp(char *output_str)
 		set_invalid_string(output_str);
 }
 
-void update_adc()
+void update_adc(void *data)
 {
 	set_power_data(power_value);
 }
 
-void set_updated_gpu_temp(char *output_str)
+static void set_updated_gpu_temp(char *output_str)
 {
 	if (computer_data.details.gpus == 1)
 		set_temp_string(output_str, computer_data.details.gput);
@@ -363,7 +364,7 @@ void set_updated_gpu_temp(char *output_str)
 		set_invalid_string(output_str);
 }
 
-void set_serial_number(char *output_str)
+static void set_serial_number(char *output_str)
 {
 	char serial[SERIAL_NUMBER_LENGTH * 2  + 1];
 	bool start_parsing = false;
@@ -390,7 +391,7 @@ void set_serial_number(char *output_str)
 	sprintf(output_str, serial);
 }
 
-void set_app_version(char *output_str, uint8_t type)
+static void set_app_version(char *output_str, uint8_t type)
 {
 	switch(type) {
 	case 0:
@@ -411,7 +412,7 @@ void set_app_version(char *output_str, uint8_t type)
 	}
 }
 
-void set_part_number(char *output_str)
+static void set_part_number(char *output_str)
 {
 	char part_number[PART_NUMBER_LENGTH + 1];
 	uint8_t index = 0;
@@ -446,7 +447,7 @@ void set_part_number(char *output_str)
 }
 
 
-void set_mac_address(char *output_str, uint8_t info)
+static void set_mac_address(char *output_str, uint8_t info)
 {
 	uint8_t eeprom_addr = info * MAC_ADDRESS_LENGTH + MAC_ADDRESS_EEPROM_ADDRESS;
 	uint8_t mac_address[MAC_ADDRESS_LENGTH];
@@ -455,7 +456,7 @@ void set_mac_address(char *output_str, uint8_t info)
 	sprintf(output_str, "[%d] %02X:%02X:%02X:%02X:%02X:%02X", (info + 1),  mac_address[0], mac_address[1], mac_address[2], mac_address[3], mac_address[4], mac_address[5]);
 }
 
-void set_update_hdd_temp(char *output_str, uint8_t hdd_id)
+static void set_update_hdd_temp(char *output_str, uint8_t hdd_id)
 {
 	if ((computer_data.packed.hddts & (0x01 << hdd_id)) != 0)
 		set_temp_string(output_str, computer_data.packed.hddt[hdd_id]);
@@ -463,12 +464,12 @@ void set_update_hdd_temp(char *output_str, uint8_t hdd_id)
 		set_invalid_string(output_str);
 }
 
-void update_brightness()
+void update_brightness(void)
 {
 	ssd1306_set_contrast(eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS));
 }
 
-uint8_t get_brightness_level()
+uint8_t get_brightness_level(void)
 {
 	uint8_t brightness = eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS);
 	uint8_t brightness_level;
@@ -481,7 +482,7 @@ uint8_t get_brightness_level()
 	return brightness_level;
 }
 
-void increse_brightness_level()
+static void increse_brightness_level(void)
 {
 	uint8_t brightness_level = get_brightness_level();
 	if (brightness_level < MAX_BRIGHTNESS_LEVEL)
@@ -490,7 +491,7 @@ void increse_brightness_level()
 	eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, brightness);
 }
 
-void decrese_brightness_level()
+static void decrese_brightness_level(void)
 {
 	uint8_t brightness_level = get_brightness_level();
 	if (brightness_level > 0)
@@ -499,7 +500,7 @@ void decrese_brightness_level()
 	eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, brightness);
 }
 
-void handle_screen_saver_time_units_buttons(uint8_t key)
+static void handle_screen_saver_time_units_buttons(uint8_t key)
 {
 	if (computer_data.details.screen_saver_visible == 1) {
 		switch (key) {
@@ -519,7 +520,7 @@ void handle_screen_saver_time_units_buttons(uint8_t key)
 	}
 }
 
-void handle_screen_saver_type_buttons(uint8_t key)
+static void handle_screen_saver_type_buttons(uint8_t key)
 {
 	if (computer_data.details.screen_saver_visible == 1) {
 		switch (key) {
@@ -539,7 +540,7 @@ void handle_screen_saver_type_buttons(uint8_t key)
 	}
 }
 
-int screen_saver_less_time()
+static int screen_saver_less_time(void)
 {
 	uint8_t min_value, jump;
 	switch(computer_data.details.screen_saver_update_time_unit) {
@@ -567,7 +568,7 @@ int screen_saver_less_time()
 	return true;
 }
 
-bool screen_saver_more_time()
+static bool screen_saver_more_time(void)
 {
 	uint8_t max_value, jump;
 	switch(computer_data.details.screen_saver_update_time_unit) {
@@ -595,7 +596,7 @@ bool screen_saver_more_time()
 	return true;
 }
 
-void handle_screen_saver_time_buttons(uint8_t key)
+static void handle_screen_saver_time_buttons(uint8_t key)
 {
 	if (computer_data.details.screen_saver_visible == 1) {
 		switch (key) {
@@ -615,7 +616,7 @@ void handle_screen_saver_time_buttons(uint8_t key)
 	}
 }
 
-void handle_screen_saver_enable_buttons(uint8_t key)
+static void handle_screen_saver_enable_buttons(uint8_t key)
 {
 	switch (key) {
 	case GFX_MONO_MENU_KEYCODE_DOWN:
@@ -633,7 +634,7 @@ void handle_screen_saver_enable_buttons(uint8_t key)
 	gfx_frame_draw(frame_present, true);
 }
 
-void handle_brightness_buttons(uint8_t key)
+static void handle_brightness_buttons(uint8_t key)
 {
 	uint8_t brightness_level = get_brightness_level();
 	switch (key) {
@@ -650,7 +651,7 @@ void handle_brightness_buttons(uint8_t key)
 	gfx_frame_draw(frame_present, true);
 }
 
-void set_dmi_content(char *output_str, uint8_t string_id)
+static void set_dmi_content(char *output_str, uint8_t string_id)
 {
 	uint8_t count = 0;
 	struct direct_string_item * string_item = computer_data.details.direct_string;
@@ -668,12 +669,12 @@ const char *screen_saver_time_units_str[SCREEN_SAVER_TIME_UNITS_SIZE] = { "SEC",
 
 const char *screen_saver_type_str[SCREEN_SAVER_TYPE_SIZE] = { "LOGO", "DASHBOARD", "CLOCK"};
 
-void set_disabled(char *str)
+static void set_disabled(char *str)
 {
 	sprintf(str, "DISABLED");
 }
 
-void set_screen_saver_time_unit(char *str)
+static void set_screen_saver_time_unit(char *str)
 {
 	frame_present->handle_buttons = handle_screen_saver_time_units_buttons;
 	if (computer_data.details.screen_saver_visible == 1)
@@ -681,7 +682,7 @@ void set_screen_saver_time_unit(char *str)
 	else
 		set_disabled(str);
 }
-void set_rtc_hour(char *str)
+static void set_rtc_hour(char *str)
 {
 	if (calendar_is_date_valid(&computer_date_time))
 		sprintf(str, "%d" ,computer_date_time.hour);
@@ -689,7 +690,7 @@ void set_rtc_hour(char *str)
 		set_invalid_string(str);
 }
 
-void set_rtc_min(char *str)
+static void set_rtc_min(char *str)
 {
 	if (calendar_is_date_valid(&computer_date_time))
 		sprintf(str, "%02d" ,computer_date_time.minute);
@@ -697,7 +698,7 @@ void set_rtc_min(char *str)
 		set_invalid_string(str);
 }
 
-void set_rtc_sec(char *str)
+static void set_rtc_sec(char *str)
 {
 	if (calendar_is_date_valid(&computer_date_time) && computer_date_time.second % 2)
 		sprintf(str, ":");
@@ -705,7 +706,7 @@ void set_rtc_sec(char *str)
 		str = "";
 }
 
-void set_screen_saver_type(char *str)
+static void set_screen_saver_type(char *str)
 {
 	frame_present->handle_buttons = handle_screen_saver_type_buttons;
 	if (computer_data.details.screen_saver_visible == 1)
@@ -714,7 +715,7 @@ void set_screen_saver_type(char *str)
 		set_disabled(str);
 }
 
-void set_screen_saver_time(char *str)
+static void set_screen_saver_time(char *str)
 {
 	frame_present->handle_buttons = handle_screen_saver_time_buttons;
 	if (computer_data.details.screen_saver_visible == 1)
@@ -723,19 +724,19 @@ void set_screen_saver_time(char *str)
 		set_disabled(str);
 }
 
-void set_screen_saver_enable(char *str)
+static void set_screen_saver_enable(char *str)
 {
 	frame_present->handle_buttons = handle_screen_saver_enable_buttons;
 	sprintf(str, "DISABLE ENABLE");
 }
 
-void set_brightness(char *str)
+static void set_brightness(char *str)
 {
 	frame_present->handle_buttons = handle_brightness_buttons;
 	sprintf(str,"%d ", (eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS) / BRIGHTNESS_STEP));
 }
 
-void set_curr_str(char *str, enum information_type type)
+static void set_curr_str(char *str, enum information_type type)
 {
 	str = "";
 	struct gfx_information_node *info_node = frame_present->information_head;
@@ -748,7 +749,7 @@ void set_curr_str(char *str, enum information_type type)
 	}
 }
 
-void set_update_post_code(char *str)
+static void set_update_post_code(char *str)
 {
 	sprintf(str, "%04X", layout.l.bios_post_code);
 }
@@ -765,7 +766,7 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 		set_updated_hdd_size(output_str, info);
 		break;
 	case SHOW_AMBIENT_TEMPERATURE:
-		update_ambient_temp();
+		update_ambient_temp(NULL);
 		set_updated_ambient_temp(output_str);
 		break;
 	case SHOW_GPU_TEMPERTURE:
@@ -844,7 +845,7 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 	present_menu->is_active_frame = is_active_frame;
 }
 
-bool is_cpu_fq_need_update(struct gfx_information *info, bool is_visible)
+static bool is_cpu_fq_need_update(struct gfx_information *info, bool is_visible)
 {
 	if (is_visible) {
 			return present_menu->visible ? ((computer_data.packed.cpufs & (0x01 << info->info_data)) == 0x00) :
@@ -854,7 +855,7 @@ bool is_cpu_fq_need_update(struct gfx_information *info, bool is_visible)
 	return false;
 }
 
-bool is_hdd_size_need_update(struct gfx_information *info, bool is_visible)
+static bool is_hdd_size_need_update(struct gfx_information *info, bool is_visible)
 {
 	bool need_update = false;
 	if (is_visible) {
@@ -898,7 +899,7 @@ bool is_hdd_size_need_update(struct gfx_information *info, bool is_visible)
 	return need_update;
 }
 
-bool is_mem_size_need_update(struct gfx_information *info, bool is_visible)
+static bool is_mem_size_need_update(struct gfx_information *info, bool is_visible)
 {
 	bool need_update = false;
 	if (is_visible) {
@@ -930,7 +931,7 @@ bool is_mem_size_need_update(struct gfx_information *info, bool is_visible)
 	return need_update;
 }
 
-bool is_hdd_temp_need_update(struct gfx_information *info, bool is_visible)
+static bool is_hdd_temp_need_update(struct gfx_information *info, bool is_visible)
 {
 	bool need_update = false;
 	if (is_visible) {
@@ -974,7 +975,7 @@ bool is_hdd_temp_need_update(struct gfx_information *info, bool is_visible)
 	return need_update;
 }
 
-bool is_cpu_temp_need_update(struct gfx_information *info, bool is_visible)
+static bool is_cpu_temp_need_update(struct gfx_information *info, bool is_visible)
 {
 	if (is_visible) {
 		return present_menu->visible ? ((computer_data.packed.cputs & (0x01 << info->info_data)) == 0x00) :
@@ -983,7 +984,7 @@ bool is_cpu_temp_need_update(struct gfx_information *info, bool is_visible)
 	return false;
 }
 
-bool is_gpu_temp_need_update(struct gfx_information *info, bool is_visible)
+static bool is_gpu_temp_need_update(struct gfx_information *info, bool is_visible)
 {
 	bool need_update = is_visible && computer_data.details.gpus == 0;
 	if (!need_update){
@@ -996,7 +997,7 @@ bool is_gpu_temp_need_update(struct gfx_information *info, bool is_visible)
 	return need_update;
 }
 
-bool is_ambient_need_update(struct gfx_information *info, bool is_visible)
+static bool is_ambient_need_update(struct gfx_information *info, bool is_visible)
 {
 	bool need_update = is_visible && computer_data.details.ambs == 0;
 	if (!need_update){
@@ -1009,7 +1010,7 @@ bool is_ambient_need_update(struct gfx_information *info, bool is_visible)
 	return need_update;
 }
 
-bool is_information_need_to_change(struct gfx_information *info, bool is_visible)
+static bool is_information_need_to_change(struct gfx_information *info, bool is_visible)
 {
 	switch (info->info_type){
 	case SHOW_COMPUTER_POWER:
@@ -1046,7 +1047,7 @@ bool is_information_need_to_change(struct gfx_information *info, bool is_visible
 	}
 }
 
-bool is_status_in_menu_changed(struct gfx_action_menu *menu, enum information_type type)
+static bool is_status_in_menu_changed(struct gfx_action_menu *menu, enum information_type type)
 {
 	bool need_to_update = false;
 	struct gfx_information_node *info_node;
@@ -1069,7 +1070,7 @@ bool is_status_in_menu_changed(struct gfx_action_menu *menu, enum information_ty
 	return false;
 }
 
-bool is_action_in_menu(struct gfx_action_menu *menu, enum information_type type)
+static bool is_action_in_menu(struct gfx_action_menu *menu, enum information_type type)
 {
 	struct gfx_information_node *info_node;
 	for (uint8_t i = 0; i < menu->menu->num_elements; i++){
@@ -1085,28 +1086,28 @@ bool is_action_in_menu(struct gfx_action_menu *menu, enum information_type type)
 	return false;
 }
 
-bool is_enable_to_draw(uint16_t wait_time)
+static bool is_enable_to_draw(uint16_t wait_time)
 {
 	return (TCC0.CNT >= update_timestamp && ((TCC0.CNT - update_timestamp) >= wait_time)) || (TCC0.CNT < update_timestamp && (TCC0.CNT >= wait_time));
 }
 
-bool is_enable_update_frame()
+static bool is_enable_update_frame(void)
 {
 	return is_enable_to_draw(UPDATE_FRAME_MIN_TICKS);
 }
 
-bool is_enable_update_menu()
+static bool is_enable_update_menu(void)
 {
 	return is_enable_to_draw(UPDATE_MENU_MIN_TICKS);
 }
 
-void update_draw()
+static void update_draw(void)
 {
 	wait_time = UPDATE_FRAME_MIN_TICKS;
 	update_timestamp = TCC0.CNT;
 }
 
-bool is_menu_need_update(struct gfx_action_menu *menu)
+static bool is_menu_need_update(struct gfx_action_menu *menu)
 {
 	bool need_to_update = false;
 	struct gfx_information_node *info_node;
@@ -1127,12 +1128,12 @@ bool is_menu_need_update(struct gfx_action_menu *menu)
 	return false;
 }
 
-bool is_info_need_update(struct gfx_information *info)
+static bool is_info_need_update(struct gfx_information *info)
 {
 	return is_information_need_to_change(info, true);
 }
 
-bool is_frame_need_update(struct gfx_frame *frame)
+static bool is_frame_need_update(struct gfx_frame *frame)
 {
 	struct gfx_information_node *info_node= frame->information_head;
 	while (info_node != NULL) {
@@ -1144,7 +1145,7 @@ bool is_frame_need_update(struct gfx_frame *frame)
 	return false;
 }
 
-void update_computer_state()
+void update_computer_state(void)
 {
 	if (current_power_state == POWER_OFF)
 		computer_state = COMPUTER_OFF;
@@ -1156,7 +1157,7 @@ void update_computer_state()
 		computer_state = COMPUTER_IN_OS;
 }
 
-void update_info()
+void update_info(void *data)
 {
 	uart_send_string("update_info start\n\r");
 	switch (display_state) {

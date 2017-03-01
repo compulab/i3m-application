@@ -24,7 +24,7 @@
 
 #define TWI_INTERRUPT_DRIVEN
 
-void handle_twi_master();
+void handle_twi_master(void);
 
 extern void TWI_init(void);
 
