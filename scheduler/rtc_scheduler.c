@@ -11,7 +11,7 @@ struct scheduler_sec_task {
 
 #define NUMBER_OF_SEC_TASKS		2
 
-static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS] = { 0 };
+static struct scheduler_sec_task sec_tasks_to_do[NUMBER_OF_SEC_TASKS] = {{{ 0 }}};
 
 static void sec_task_set_timer(int task_index)
 {
@@ -28,7 +28,7 @@ void update_screen_timer(void)
 
 static struct scheduler_sec_task new_sec_task(struct scheduler_task task)
 {
-	struct scheduler_sec_task res = { 0 };
+	struct scheduler_sec_task res = {{ 0 }};
 	res.work = task.work;
 	res.get_recur_period = task.get_recur_period;
 	res.secs_left = -1;

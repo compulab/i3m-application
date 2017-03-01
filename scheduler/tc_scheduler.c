@@ -32,11 +32,11 @@ struct tc_scheduler_task {
 };
 
 #define NUMBER_OF_TICK_TASKS		5
-static struct tc_scheduler_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = { 0 };
+static struct tc_scheduler_task tick_tasks_to_do[NUMBER_OF_TICK_TASKS] = {{{ 0 }}};
 
 static struct tc_scheduler_task new_tick_task(struct scheduler_task task)
 {
-	struct tc_scheduler_task res = { 0 };
+	struct tc_scheduler_task res = {{ 0 }};
 	res.task = task;
     res.overlaps_count = -1;
     res.offset = 0;
