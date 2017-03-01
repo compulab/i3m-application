@@ -128,4 +128,14 @@
 #include "ASF/xmega/utils/compiler.h"
 #include "ASF/xmega/utils/status_codes.h"
 
+// From module: USB CDC Protocol
+#include "ASF/common/services/usb/class/cdc/usb_protocol_cdc.h"
+
+// From module: USB Device CDC (Single Interface Device)
+#include "ASF/common/services/usb/class/cdc/device/udi_cdc.h"
+
+// From module: USB Device Stack Core (Common API)
+#include "ASF/common/services/usb/udc/udc.h"
+#include "ASF/common/services/usb/udc/udd.h"
+
 #endif // ASF_H
