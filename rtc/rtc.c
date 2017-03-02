@@ -11,10 +11,6 @@
 
 void rtc_init()
 {
-	OSC.CTRL |= OSC_RC32KEN_bm;
-	do {} while ( ( OSC.STATUS & OSC_RC32KRDY_bm ) == 0);
-	CLK.RTCCTRL = CLK_RTCSRC_RCOSC_gc | CLK_RTCEN_bm;
-	do {} while ( RTC_Busy() );
 	RTC.PER = RTC_CYCLES_1S - 1;
 	RTC.CNT = 0;
 	RTC.COMP = 0;

@@ -82,9 +82,7 @@
 #define CONFIG_OSC_RC32_CAL                 48000000UL
 #define CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC  OSC_ID_USBSOF
 
-/* Use to enable and select RTC clock source */
-//#define CONFIG_RTC_SOURCE           SYSCLK_RTCSRC_ULP
-//TODO: In the RTC driver the clock is configured to 32.768KHz internal
-//oscilator source. Why isn't it done here?! Check this out.
+/* RTC uses the internal 32.768KHz oscillator, divided by 32 */
+#define CONFIG_RTC_SOURCE					SYSCLK_RTCSRC_RCOSC
 
 #endif /* CONF_CLOCK_H_INCLUDED */
