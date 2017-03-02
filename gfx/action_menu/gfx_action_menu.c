@@ -4,14 +4,6 @@ struct gfx_action_menu dmi_menu = {.is_progmem = false };
 
 bool is_dmi_set;
 
-static void switch_present_menu(struct gfx_action_menu *action_menu)
-{
-	present_menu->visible = false;
-	present_menu = action_menu;
-	present_menu->is_active_frame = false;
-	action_menu->visible = true;
-}
-
 static void update_action_visibility(struct gfx_item_action *action)
 {
 	if (action->type == ACTION_TYPE_SHOW_DMI_MENU) {

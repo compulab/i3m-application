@@ -87,12 +87,12 @@ static struct gfx_image plus_sign_image = {
 	.bitmap = &plus_bitmap,
 };
 
-static void print_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
+void print_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
 {
 	gfx_mono_draw_line(x, y, x + length, y, GFX_PIXEL_SET);
 }
 
-static void print_vertical_line(uint8_t x, uint8_t y, uint8_t length)
+void print_vertical_line(uint8_t x, uint8_t y, uint8_t length)
 {
 	gfx_mono_draw_line(x, y, x, y + length, GFX_PIXEL_SET);
 }

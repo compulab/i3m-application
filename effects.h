@@ -18,6 +18,8 @@ void enter_hibernate_mode(void);
 
 void enter_power_off_mode(void);
 
+void exit_power_off_mode(void);
+
 void exit_sleep_mode(void);
 
 #endif /* EFFECTS_H_ */

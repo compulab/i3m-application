@@ -251,16 +251,6 @@ void set_state(char *state)
 	}
 }
 
-static int num_of_digits(int x)
-{
-	if (x < 0)
-		x *= -1;
-	for (int i = 1; i < MAX_DIGITS; i++)
-		if (x < pow(10, i))
-		  return i;
-  return 0;
-}
-
 static void set_mem_size_str(char *str, uint8_t mem)
 {
 	uint8_t size;
@@ -651,20 +641,6 @@ static void handle_brightness_buttons(uint8_t key)
 	gfx_frame_draw(frame_present, true);
 }
 
-static void set_dmi_content(char *output_str, uint8_t string_id)
-{
-	uint8_t count = 0;
-	struct direct_string_item * string_item = computer_data.details.direct_string;
-	while (string_item != 0 && count < string_id){
-		string_item = string_item->next;
-		count++;
-	}
-	if (count == string_id)
-		output_str = strdup(string_item->content);
-	else
-		set_invalid_string(output_str);
-}
-
 const char *screen_saver_time_units_str[SCREEN_SAVER_TIME_UNITS_SIZE] = { "SEC", "MIN", "HOUR"};
 
 const char *screen_saver_type_str[SCREEN_SAVER_TYPE_SIZE] = { "LOGO", "DASHBOARD", "CLOCK"};
@@ -1045,66 +1021,6 @@ static bool is_information_need_to_change(struct gfx_information *info, bool is_
 	default:
 		return false;
 	}
-}
-
-static bool is_status_in_menu_changed(struct gfx_action_menu *menu, enum information_type type)
-{
-	bool need_to_update = false;
-	struct gfx_information_node *info_node;
-	for (uint8_t i = 0; i < menu->menu->num_elements; i++){
-		if (menu->actions[i].type == ACTION_TYPE_SHOW_FRAME) {
-			info_node = menu->actions[i].frame->information_head;
-			while (info_node != 0){
-				if (info_node->information.info_type == type) {
-					need_to_update = is_information_need_to_change(&info_node->information, menu->actions[i].visible);
-				}
-				if (need_to_update)
-					return true;
-				info_node = info_node->next;
-			}
-		} else if (menu->actions[i].type == ACTION_TYPE_SHOW_DMI_MENU) {
-			if (!menu->actions[i].visible && computer_data.details.direct_string != NULL)
-				return true;
-		}
-	}
-	return false;
-}
-
-static bool is_action_in_menu(struct gfx_action_menu *menu, enum information_type type)
-{
-	struct gfx_information_node *info_node;
-	for (uint8_t i = 0; i < menu->menu->num_elements; i++){
-		if (menu->actions[i].type == ACTION_TYPE_SHOW_FRAME){
-			info_node = menu->actions[i].frame->information_head;
-			while (info_node != 0){
-				if (info_node->information.info_type == type)
-					return true;
-				info_node = info_node->next;
-			}
-		}
-	}
-	return false;
-}
-
-static bool is_enable_to_draw(uint16_t wait_time)
-{
-	return (TCC0.CNT >= update_timestamp && ((TCC0.CNT - update_timestamp) >= wait_time)) || (TCC0.CNT < update_timestamp && (TCC0.CNT >= wait_time));
-}
-
-static bool is_enable_update_frame(void)
-{
-	return is_enable_to_draw(UPDATE_FRAME_MIN_TICKS);
-}
-
-static bool is_enable_update_menu(void)
-{
-	return is_enable_to_draw(UPDATE_MENU_MIN_TICKS);
-}
-
-static void update_draw(void)
-{
-	wait_time = UPDATE_FRAME_MIN_TICKS;
-	update_timestamp = TCC0.CNT;
 }
 
 static bool is_menu_need_update(struct gfx_action_menu *menu)

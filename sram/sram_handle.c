@@ -115,12 +115,6 @@ static void reset_to_bootloader(void)
 	software_reset();
 }
 
-static void validate_temperate(bool *valid_bit, uint8_t *dest, uint8_t src)
-{
-	*valid_bit = true;
-	*dest = src;
-}
-
 static void write_cpu_status(void)
 {
 	layout.l.cputr = 0;
@@ -345,26 +339,6 @@ static void free_direct_string(void)
 	free(direct_string_to_add);
 	dmi_curr_state = DMI_IDLE;
 	clear_direct_help_vars();
-}
-
-static void read_iwren(uint8_t *data)
-{
-	*data = layout.l.iwren;
-}
-
-static void read_hdd_status(uint8_t *data)
-{
-	*data = computer_data.packed.hddts;
-}
-
-static void read_cpu_stauts(uint8_t *data)
-{
-	*data = computer_data.packed.cputs;
-}
-
-static void read_pending_requests(uint8_t *data)
-{
-	*data = 0x0f & computer_data.packed.pending_req;
 }
 
 static void read_fp_control(uint8_t *data)

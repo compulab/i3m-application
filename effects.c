@@ -52,7 +52,7 @@ static void exit_dim_mode(void)
 	show_current_menu(true);
 }
 
-static void exit_power_off_mode(void)
+void exit_power_off_mode(void)
 {
 	exit_dim_mode();
 }
