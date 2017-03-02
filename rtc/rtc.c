@@ -5,13 +5,13 @@
  *      Author: arkadi
  */
 #include <avr/io.h>
-#include <avr/interrupt.h>
 #include "rtc.h"
 
+#define RTC_CYCLES_1S     (1024 - 1)
 
 void rtc_init()
 {
-	RTC.PER = RTC_CYCLES_1S - 1;
+	RTC.PER = RTC_CYCLES_1S;
 	RTC.CNT = 0;
 	RTC.COMP = 0;
 	RTC.CTRL = RTC_PRESCALER_DIV1_gc;
