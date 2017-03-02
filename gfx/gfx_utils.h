@@ -8,17 +8,9 @@
 #ifndef GFX_GFX_UTILS_H_
 #define GFX_GFX_UTILS_H_
 
-#ifndef CONFIG_CNF_BLK_COMPONENTS_H_
 #include "config/cnf_blk_components.h"
-#endif
-
-#ifndef FP_UTILS_H_
 #include "Fp-utils.h"
-#endif
-
-#ifndef GFX_GFX_COMPONENTS_H_
 #include "gfx_components.h"
-#endif
 
 #define MAX_TEMPERATURE_LENGTH 10
 

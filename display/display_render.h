@@ -8,11 +8,7 @@
 #define DISPLAY_DISPLAY_RENDER_H_
 
 #include <string.h>
-
-#ifndef GFX_GFX_COMPONENTS_H_
-	#include "gfx/gfx_components.h"
-#endif
-
+#include "gfx/gfx_components.h"
 #include "glcd-0.5.2/glcd_font.h"
 #include "glcd-0.5.2/glcd_text.h"
 

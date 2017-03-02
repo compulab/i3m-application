@@ -8,20 +8,17 @@
 #ifndef FP_UTILS_H_
 #define FP_UTILS_H_
 
-#include "layout.h"
-#include "gfx/action_menu/gfx_action_menu.h"
-#include "def.h"
-#include "eeprom/eeprom.h"
-#include "adc/adc.h"
-
 #include <stdio.h>
 #include <string.h>
-
-#include "calendar/calendar.h"
-
+#include "gfx/action_menu/gfx_action_menu.h"
 #include "work-queue/work.h"
-#include "debug.h"
+#include "calendar/calendar.h"
+#include "eeprom/eeprom.h"
+#include "adc/adc.h"
 #include "effects.h"
+#include "layout.h"
+#include "debug.h"
+#include "def.h"
 
 #define AMBIENT_TWI_ADDRESS  		0x4C
 #define AMBIENT_TEMPERATURE_ADDRESS 0x00

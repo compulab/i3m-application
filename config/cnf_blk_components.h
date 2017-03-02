@@ -11,10 +11,7 @@
 #include <avr/pgmspace.h>
 #include <stdbool.h>
 
-#ifndef DEF_H_
 #include "def.h"
-#endif
-
 #include "display/glcd-0.5.2/glcd_font.h"
 #include "display/glcd-0.5.2/glcd.h"
 
