@@ -6,6 +6,7 @@
 #include "twi/twi_master.h"
 #include "uart/uart.h"
 #include "rtc/rtc.h"
+#include "ASF/common/services/usb/udc/udc.h"
 
 /*
  * Managing I2C requests as described in
@@ -152,6 +153,11 @@ static void init_updateable_data(void)
 		p_computer_data[i] = 0;
 }
 
+void usb_init(void)
+{
+	udc_start();
+}
+
 static void init(void)
 {
 	wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_2KCLK);
@@ -173,8 +179,10 @@ static void init(void)
 	TWI_init();
 	init_menu();
 	sei();
+	sleepmgr_init();
 	tc_init();
 	rtc_init();
+	usb_init();
 	tasks_init();
 }
 
@@ -216,6 +224,16 @@ static void debug_print_log(void)
 	}
 }
 
+static bool my_flag_autorize_cdc_transfert = false;
+bool my_callback_cdc_enable(void)
+{
+	my_flag_autorize_cdc_transfert = true;
+	return true;
+}
+void my_callback_cdc_disable(void)
+{
+	my_flag_autorize_cdc_transfert = false;
+}
 int main(int argc, char *argv[])
 {
 

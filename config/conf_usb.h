@@ -69,9 +69,9 @@
 // (USB_CONFIG_ATTR_REMOTE_WAKEUP|USB_CONFIG_ATTR_BUS_POWERED)
 
 //! USB Device string definitions (Optional)
-// #define  USB_DEVICE_MANUFACTURE_NAME      "Manufacture name"
-// #define  USB_DEVICE_PRODUCT_NAME          "Product name"
-// #define  USB_DEVICE_SERIAL_NAME           "12...EF"
+#define  USB_DEVICE_MANUFACTURE_NAME      "Compulab"
+#define  USB_DEVICE_PRODUCT_NAME          "Airtop Front Panel"
+#define  USB_DEVICE_SERIAL_NAME           "12...EF"
 
 
 /**
@@ -132,10 +132,10 @@
 #define  UDI_CDC_SET_DTR_EXT(port,set)
 #define  UDI_CDC_SET_RTS_EXT(port,set)
 
-// #define UDI_CDC_ENABLE_EXT(port) my_callback_cdc_enable()
-// extern bool my_callback_cdc_enable(void);
-// #define UDI_CDC_DISABLE_EXT(port) my_callback_cdc_disable()
-// extern void my_callback_cdc_disable(void);
+//#define UDI_CDC_ENABLE_EXT(port) my_callback_cdc_enable()
+//extern bool my_callback_cdc_enable(void);
+//#define UDI_CDC_DISABLE_EXT(port) my_callback_cdc_disable()
+//extern void my_callback_cdc_disable(void);
 // #define  UDI_CDC_RX_NOTIFY(port) my_callback_rx_notify(port)
 // extern void my_callback_rx_notify(uint8_t port);
 // #define  UDI_CDC_TX_EMPTY_NOTIFY(port) my_callback_tx_empty_notify(port)
