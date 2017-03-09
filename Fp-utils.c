@@ -440,10 +440,11 @@ static void set_part_number(char *output_str)
 static void set_mac_address(char *output_str, uint8_t info)
 {
 	uint8_t eeprom_addr = info * MAC_ADDRESS_LENGTH + MAC_ADDRESS_EEPROM_ADDRESS;
-	uint8_t mac_address[MAC_ADDRESS_LENGTH];
+	uint8_t mac_addr[MAC_ADDRESS_LENGTH];
 	for (int i = 0; i < MAC_ADDRESS_LENGTH; i++)
-		mac_address[i] = eeprom_read_byte(eeprom_addr + i);
-	sprintf(output_str, "[%d] %02X:%02X:%02X:%02X:%02X:%02X", (info + 1),  mac_address[0], mac_address[1], mac_address[2], mac_address[3], mac_address[4], mac_address[5]);
+		mac_addr[i] = eeprom_read_byte(eeprom_addr + i);
+	sprintf(output_str, "[%d] %02X:%02X:%02X:%02X:%02X:%02X", (info + 1),
+			mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);
 }
 
 static void set_update_hdd_temp(char *output_str, uint8_t hdd_id)
