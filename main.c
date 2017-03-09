@@ -9,24 +9,6 @@
 #include "ASF/common/services/usb/udc/udc.h"
 
 /*
- * Managing I2C requests as described in
- * http://droid/mirror/mediawiki/index.php/Airtop_FrontPanel_I2C_Registers_Layout
- */
-ISR(TWIE_TWIS_vect)
-{
-	twi_slave_interrupt_handler();
-}
-
-/*
- * Communication with I2C as master. used for getting the ambient temp
- */
-ISR(TWIC_TWIM_vect)
-{
-	handle_twi_master();
-}
-
-
-/*
  * Power state GPIO change
  */
 ISR(PORTF_INT0_vect)

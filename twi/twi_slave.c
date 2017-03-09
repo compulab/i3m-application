@@ -274,3 +274,12 @@ void twi_slave_interrupt_handler(void)
 		twi_end_transmission();
 	}
 }
+
+/*
+ * Managing I2C requests as described in
+ * http://droid/mirror/mediawiki/index.php/Airtop_FrontPanel_I2C_Registers_Layout
+ */
+ISR(TWIE_TWIS_vect)
+{
+	twi_slave_interrupt_handler();
+}

@@ -373,6 +373,11 @@ void handle_twi_master()
 	}
 }
 
+ISR(TWIC_TWIM_vect)
+{
+	handle_twi_master();
+}
+
 /**************************************************************************************************
 * Write a register
 */
