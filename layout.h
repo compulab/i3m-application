@@ -82,14 +82,6 @@
 #define CPU_TMP_VALID_BIT					0x80
 #define CPU_FQ_VALID_BIT					0x80
 
-#define RTC_DATE_DAY		0
-#define RTC_DATE_MONTH		1
-
-#define RTC_TIME_HOUR		0
-#define RTC_TIME_MIN		1
-#define RTC_TIME_SEC		2
-
-
 struct direct_string_item {
 	char *type;
 	char *content;

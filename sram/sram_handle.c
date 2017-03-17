@@ -168,6 +168,13 @@ static void write_post_code_lsb(void)
 	update_computer_state();
 }
 
+#define RTC_DATE_DAY		0
+#define RTC_DATE_MONTH		1
+
+#define RTC_TIME_HOUR		0
+#define RTC_TIME_MIN		1
+#define RTC_TIME_SEC		2
+
 static void write_rtc_day(void)
 {
 	uint8_t old_date = computer_date_time.date;
