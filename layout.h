@@ -105,7 +105,7 @@ struct twi_log {
 	uint8_t top;
 };
 
-union layout_t {
+union i2c_buffer {
 	struct {
 		const uint8_t sig[4];
 		const uint8_t layout_ver;
@@ -244,13 +244,11 @@ union layout_t {
 		uint8_t rtc_date:6;
 		uint8_t rtcdc:2;
 		uint8_t reserved30[103];
-	} l;
-	struct {
-		char i2c[256];
-	} direct;
+	} layout;
+	char raw[256];
 };
 
-extern union layout_t layout;
+extern union i2c_buffer i2c_buffer;
 
 enum computer_state_t {
 	COMPUTER_OFF,

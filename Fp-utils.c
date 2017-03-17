@@ -119,32 +119,32 @@ static bool need_to_update_req(enum information_type info_type)
 
 static void check_update_hddtr_temp_req(void)
 {
-	if(layout.l.hddtr == 0 && need_to_update_req(SHOW_HDD_TEMPERTURE))
-		layout.l.hddtr = 1;
+	if(i2c_buffer.layout.hddtr == 0 && need_to_update_req(SHOW_HDD_TEMPERTURE))
+		i2c_buffer.layout.hddtr = 1;
 }
 
 static void check_update_cpu_fq_req(void)
 {
-	if (layout.l.cpufr == 0 && need_to_update_req(SHOW_CPU_FREQUENCY))
-		layout.l.cpufr = 1;
+	if (i2c_buffer.layout.cpufr == 0 && need_to_update_req(SHOW_CPU_FREQUENCY))
+		i2c_buffer.layout.cpufr = 1;
 }
 
 static void check_update_cpu_temp_req(void)
 {
-	if (layout.l.cputr == 0 && need_to_update_req(SHOW_CPU_TEMPERTURE))
-		layout.l.cputr = 1;
+	if (i2c_buffer.layout.cputr == 0 && need_to_update_req(SHOW_CPU_TEMPERTURE))
+		i2c_buffer.layout.cputr = 1;
 }
 
 static void check_update_gpu_temp_req(void)
 {
-	if (layout.l.gputr == 0 && need_to_update_req(SHOW_GPU_TEMPERTURE))
-		layout.l.gputr = 1;
+	if (i2c_buffer.layout.gputr == 0 && need_to_update_req(SHOW_GPU_TEMPERTURE))
+		i2c_buffer.layout.gputr = 1;
 }
 
 static void check_update_pending_req(void)
 {
-	if (layout.l.req == 0 && layout.direct.i2c[PENDR0] != 0)
-		layout.l.req = 1;
+	if (i2c_buffer.layout.req == 0 && i2c_buffer.raw[PENDR0] != 0)
+		i2c_buffer.layout.req = 1;
 }
 
 
@@ -169,8 +169,8 @@ static void reset_temperatures(void)
 	uint8_t *p_computer_data = (uint8_t *)&computer_data;
 	for (int i = 0; i < ((uint16_t)&computer_data.details.direct_string - (uint16_t)&computer_data); i++)
 		p_computer_data[i] = 0x00;
-	clear_regs((uint8_t *)&layout.direct.i2c[CPU0T], (uint8_t *)&layout.direct.i2c[RESERVED42]);
-	clear_regs((uint8_t *)&layout.direct.i2c[CPU0F_LSB], (uint8_t *)&layout.direct.i2c[RESERVED83]);
+	clear_regs((uint8_t *)&i2c_buffer.raw[CPU0T], (uint8_t *)&i2c_buffer.raw[RESERVED42]);
+	clear_regs((uint8_t *)&i2c_buffer.raw[CPU0F_LSB], (uint8_t *)&i2c_buffer.raw[RESERVED83]);
 }
 
 static void handle_power_off(void)
@@ -226,7 +226,7 @@ void update_power_state(void)
 	}
 
 	if (current_power_state != last_power_state) {
-		layout.l.power_state = current_power_state;
+		i2c_buffer.layout.power_state = current_power_state;
 		if (!insert_work(&power_state_work))
 			insert_to_log('P');
 	}
@@ -730,7 +730,7 @@ static void set_curr_str(char *str, enum information_type type)
 
 static void set_update_post_code(char *str)
 {
-	sprintf(str, "%04X", layout.l.bios_post_code);
+	sprintf(str, "%04X", i2c_buffer.layout.bios_post_code);
 }
 
 void update_data_by_type(enum information_type type, char *output_str, uint8_t info)

@@ -48,8 +48,8 @@ static void clear_req(void)
 	if (computer_state == COMPUTER_IN_OS)
 		computer_state = COMPUTER_DAEMON_WORK;
 
-	if (layout.direct.i2c[PENDR0] == 0)
-		layout.l.req = 0;
+	if (i2c_buffer.raw[PENDR0] == 0)
+		i2c_buffer.layout.req = 0;
 }
 
 static void write_cpu_fq_msb(uint8_t cpu_addr)
@@ -57,14 +57,14 @@ static void write_cpu_fq_msb(uint8_t cpu_addr)
 	int8_t index = (cpu_addr - CPU0F_MSB)/2;
 	if (!is_valid_register(index,MAX_CPU))
 		return ;
-	if (layout.direct.i2c[cpu_addr] & CPU_FQ_MSB_MSK) {
-		computer_data.packed.cpuf[index] = (layout.direct.i2c[cpu_addr] & CPU_FQ_MSB_MSK) << 8 | layout.direct.i2c[cpu_addr - 1];
-		if (layout.direct.i2c[cpu_addr] & CPU_FQ_VALID_BIT)
+	if (i2c_buffer.raw[cpu_addr] & CPU_FQ_MSB_MSK) {
+		computer_data.packed.cpuf[index] = (i2c_buffer.raw[cpu_addr] & CPU_FQ_MSB_MSK) << 8 | i2c_buffer.raw[cpu_addr - 1];
+		if (i2c_buffer.raw[cpu_addr] & CPU_FQ_VALID_BIT)
 			computer_data.packed.cpufs |= (0x01) << index;
 		else
 			computer_data.packed.cpufs &= ~((0x01) << index);
 	}
-	layout.l.cpufr = 0;
+	i2c_buffer.layout.cpufr = 0;
 	clear_req();
 }
 
@@ -75,9 +75,9 @@ static void read_temp_control(uint8_t *data)
 
 static void write_temp_control(void)
 {
-	computer_data.details.gput = layout.l.gpus;
-	if (computer_data.details.gput && (layout.l.gput != computer_data.details.gput))
-		computer_data.details.gput = layout.l.gput;
+	computer_data.details.gput = i2c_buffer.layout.gpus;
+	if (computer_data.details.gput && (i2c_buffer.layout.gput != computer_data.details.gput))
+		computer_data.details.gput = i2c_buffer.layout.gput;
 }
 
 static void write_hd_sz_msb(uint8_t hdd_addr)
@@ -85,10 +85,10 @@ static void write_hd_sz_msb(uint8_t hdd_addr)
 	int8_t index = (hdd_addr - HDD0_SZ_MSB) / 2;
 	if (!is_valid_register(index, MAX_HDD))
 		return ;
-	if (layout.direct.i2c[hdd_addr] & HDD_SZ_STATUS_MSK) {
-		computer_data.packed.hddsz[index] = (layout.direct.i2c[hdd_addr - 1] & ~ MSB_MSK) | ((layout.direct.i2c[hdd_addr] & HDD_SZ_MSK) << 8);
+	if (i2c_buffer.raw[hdd_addr] & HDD_SZ_STATUS_MSK) {
+		computer_data.packed.hddsz[index] = (i2c_buffer.raw[hdd_addr - 1] & ~ MSB_MSK) | ((i2c_buffer.raw[hdd_addr] & HDD_SZ_MSK) << 8);
 		computer_data.packed.hdds |= (0x01 << index);
-		uint8_t factor = (layout.direct.i2c[hdd_addr] & HDD_SZ_UNIT_MSK) != 0 ? 1 : 0;
+		uint8_t factor = (i2c_buffer.raw[hdd_addr] & HDD_SZ_UNIT_MSK) != 0 ? 1 : 0;
 		computer_data.packed.hddf |= (0x01 << index) & factor;
 	} else {
 		computer_data.packed.hdds &= ~(0x01 << index);
@@ -117,17 +117,17 @@ static void reset_to_bootloader(void)
 
 static void write_cpu_status(void)
 {
-	layout.l.cputr = 0;
+	i2c_buffer.layout.cputr = 0;
 	clear_req();
-	if (layout.direct.i2c[CPUTS] == 0){
+	if (i2c_buffer.raw[CPUTS] == 0){
 		computer_data.packed.cputs = 0;
 	} else {
-		computer_data.packed.cputs |= layout.direct.i2c[CPUTS];
+		computer_data.packed.cputs |= i2c_buffer.raw[CPUTS];
 		uint8_t bit = 0x01;
 		for (uint8_t i = 0 ; i < MAX_CPU; i++){
-			if (layout.direct.i2c[CPUTS] & bit) {
-				if (computer_data.packed.cput[i] != layout.direct.i2c[CPU0T + i]) {
-					computer_data.packed.cput[i] = layout.direct.i2c[CPU0T + i];
+			if (i2c_buffer.raw[CPUTS] & bit) {
+				if (computer_data.packed.cput[i] != i2c_buffer.raw[CPU0T + i]) {
+					computer_data.packed.cput[i] = i2c_buffer.raw[CPU0T + i];
 				}
 			}
 			bit = bit << 1;
@@ -139,38 +139,38 @@ static void write_cpu_status(void)
 
 static void write_hdd_status(void)
 {
-	if (layout.direct.i2c[HDDTS]  == 0){
+	if (i2c_buffer.raw[HDDTS]  == 0){
 		computer_data.packed.hddts = 0;
 	} else {
 		uint8_t bit = 0x01;
 		for (uint8_t i = 0 ; i < MAX_CPU; i++){
-			if (layout.direct.i2c[CPUTS] & bit)
-				computer_data.packed.hddt[i] = layout.direct.i2c[CPU0T + i];
+			if (i2c_buffer.raw[CPUTS] & bit)
+				computer_data.packed.hddt[i] = i2c_buffer.raw[CPU0T + i];
 			bit = bit << 1;
 		}
 	}
-	layout.l.hddtr = 0;
+	i2c_buffer.layout.hddtr = 0;
 	clear_req();
 }
 
 static void write_reset(void)
 {
-	if (layout.l.rstusb)
+	if (i2c_buffer.layout.rstusb)
 		reset_to_bootloader();
-	else if (layout.l.rst)
+	else if (i2c_buffer.layout.rst)
 		software_reset();
 }
 
 static void write_post_code_lsb(void)
 {
-	computer_data.packed.post_code = layout.l.bios_post_code;
+	computer_data.packed.post_code = i2c_buffer.layout.bios_post_code;
 	update_computer_state();
 }
 
 static void write_rtc_day(void)
 {
 	uint8_t old_date = computer_date_time.date;
-	uint8_t new_date = layout.direct.i2c[RTCD] & 0x1f;
+	uint8_t new_date = i2c_buffer.raw[RTCD] & 0x1f;
 
 	if (new_date > 30)
 		return;
@@ -182,7 +182,7 @@ static void write_rtc_day(void)
 static void write_rtc_month(void)
 {
 	uint8_t old_month = computer_date_time.month;
-	uint8_t new_month = layout.direct.i2c[RTCD] & 0x0f;
+	uint8_t new_month = i2c_buffer.raw[RTCD] & 0x0f;
 
 	if (new_month > 11)
 		return;
@@ -193,13 +193,13 @@ static void write_rtc_month(void)
 
 static void write_rtc_year(void)
 {
-	uint16_t new_year = (layout.direct.i2c[RTCD] & 0x7f) + 2000;
+	uint16_t new_year = (i2c_buffer.raw[RTCD] & 0x7f) + 2000;
 	computer_date_time.year = new_year;
 }
 
 static void write_rtc_date(void)
 {
-	switch (layout.l.rtcdc) {
+	switch (i2c_buffer.layout.rtcdc) {
 	case RTC_DATE_DAY:
 		write_rtc_day();
 		break;
@@ -215,7 +215,7 @@ static void write_rtc_date(void)
 static void write_rtc_hour(void)
 {
 	uint8_t old_hour = computer_date_time.hour;
-	uint8_t new_hour = layout.direct.i2c[RTCT] & 0x1f;
+	uint8_t new_hour = i2c_buffer.raw[RTCT] & 0x1f;
 
 	if (new_hour > 23)
 		return;
@@ -227,7 +227,7 @@ static void write_rtc_hour(void)
 static void write_rtc_min(void)
 {
 	uint8_t old_min = computer_date_time.minute;
-	uint8_t new_min = layout.direct.i2c[RTCT] & 0x3f;
+	uint8_t new_min = i2c_buffer.raw[RTCT] & 0x3f;
 
 	if (new_min > 59)
 		return;
@@ -239,7 +239,7 @@ static void write_rtc_min(void)
 static void write_rtc_sec(void)
 {
 	uint8_t old_sec = computer_date_time.second;
-	uint8_t new_sec = layout.direct.i2c[RTCT] & 0x1f;
+	uint8_t new_sec = i2c_buffer.raw[RTCT] & 0x1f;
 
 	if (new_sec > 23)
 		return;
@@ -250,7 +250,7 @@ static void write_rtc_sec(void)
 
 static void write_rtc_time(void)
 {
-	switch (layout.l.rtctc) {
+	switch (i2c_buffer.layout.rtctc) {
 	case RTC_TIME_HOUR:
 		write_rtc_hour();
 		break;
@@ -268,7 +268,7 @@ static void write_rtc_time(void)
 static void write_memory(uint8_t mem_addr) //Todo: change memory status set
 {
 	uint8_t index = (mem_addr - MEM_LSB ) * 2;
-	uint8_t data = layout.direct.i2c[mem_addr];
+	uint8_t data = i2c_buffer.raw[mem_addr];
 	if (data & MEM_SZ_STATUS_LSB_MSK) {
 		computer_data.packed.memsz[index] = (data & MEM_SZ_LSB_MSK) >> 4;
 		computer_data.packed.mems |= 0x01 << index;
@@ -324,8 +324,8 @@ static void read_power_state(uint8_t *data)
 
 static void read_ambient(uint8_t *data)
 {
-	if (layout.l.ambs != 0)
-		*data = layout.l.ambt;
+	if (i2c_buffer.layout.ambs != 0)
+		*data = i2c_buffer.layout.ambt;
 	else
 		*data = DEFAULT_DATA;
 }
@@ -343,7 +343,7 @@ static void free_direct_string(void)
 
 static void read_fp_control(uint8_t *data)
 {
-        *data = layout.l.iwren << 7;
+        *data = i2c_buffer.layout.iwren << 7;
 }
 
 static void read_adc(enum i2c_addr_space adc_address, uint8_t *data)
@@ -507,8 +507,8 @@ static void end_direct_string(bool is_name_byte)
 
 static bool is_iwren_mode(void)
 {
-	bool res = layout.l.iwren != 0;
-	layout.l.iwren = 0;
+	bool res = i2c_buffer.layout.iwren != 0;
+	i2c_buffer.layout.iwren = 0;
 	return res;
 }
 
@@ -597,7 +597,7 @@ static void write_direct(enum i2c_addr_space write_address)
 			free_direct_string();
 			break;
 		}
-		write_direct_byte(true, layout.l.dmi_name);
+		write_direct_byte(true, i2c_buffer.layout.dmi_name);
 		break;
 	case DMIV:
 		if (dmi_curr_state != DMI_VALUE_WRITE) {
@@ -605,7 +605,7 @@ static void write_direct(enum i2c_addr_space write_address)
 			break;
 		}
 		uart_send_string("direct write value byte");
-		write_direct_byte(false,layout.l.dmi_value);
+		write_direct_byte(false,i2c_buffer.layout.dmi_value);
 		break;
 	default:
 		break;
@@ -651,7 +651,7 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 	case RTCD:
 	case REQ:
 	case PENDR0:
-		*data = layout.direct.i2c[addr];
+		*data = i2c_buffer.raw[addr];
 		break;
 	case HDD0T:
 	case HDD1T:
@@ -710,20 +710,20 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 	case DMIV:
 	default:
 		if (is_iwren_mode())
-			*data = layout.direct.i2c[addr];
+			*data = i2c_buffer.raw[addr];
 		break;
 	}
 }
 
 static void write_gpu_temp(void)
 {
-	computer_data.details.gpus = layout.l.gpus;
+	computer_data.details.gpus = i2c_buffer.layout.gpus;
 	if (computer_data.details.gpus == 1) {
-		if (layout.l.gput != computer_data.details.gput) {
-			computer_data.details.gput = layout.l.gput;
+		if (i2c_buffer.layout.gput != computer_data.details.gput) {
+			computer_data.details.gput = i2c_buffer.layout.gput;
 		}
 	}
-	layout.l.gputr = 0;
+	i2c_buffer.layout.gputr = 0;
 	clear_req();
 }
 extern bool is_twi_busy; //See below in update_data
@@ -853,7 +853,7 @@ static void write_data(enum i2c_addr_space addr, uint8_t data)
 	case DMIN:
 	case DMIV:
 	case FPCTRL:
-		layout.direct.i2c[addr] = data;
+		i2c_buffer.raw[addr] = data;
 		break;
 	case SIG0:
 	case SIG1:
@@ -872,7 +872,7 @@ static void write_data(enum i2c_addr_space addr, uint8_t data)
 	case POWER_STATE:
 	default:
 		if (is_iwren_mode())
-			layout.direct.i2c[addr] = data;
+			i2c_buffer.raw[addr] = data;
 		break;
 	}
 }

@@ -85,7 +85,7 @@ static void reset_screen_saver_config(void)
 
 static void init_ambient(void)
 {
-	layout.l.ambs = 0;
+	i2c_buffer.layout.ambs = 0;
 }
 
 void tasks_init(void)
@@ -114,7 +114,7 @@ static void init_information(void)
 		computer_data.packed.screen_saver_update_time = eeprom_read_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS);
 
 	init_ambient();
-	layout.l.iwren = 0;
+	i2c_buffer.layout.iwren = 0;
 
 	if (eeprom_read_byte(APPLICATION_VER_MSB_EEPROM_ADDRESS) != APPLICATION_VER_MSB)
 		eeprom_write_byte(APPLICATION_VER_MSB_EEPROM_ADDRESS, APPLICATION_VER_MSB);
