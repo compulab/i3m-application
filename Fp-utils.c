@@ -45,14 +45,16 @@ void print_work_count(void *data)
 	uart_send_string("\n\r");
 }
 
+#define BIT_ON(value, bitnum)	((value) & (1 << (bitnum))) != 0
+
 bool is_valid_cpu_temp(uint8_t cpu_id)
 {
-	return (computer_data.packed.cputs & 0x01 << (cpu_id)) != 0;
+	return BIT_ON(computer_data.packed.cputs, cpu_id);
 }
 
 bool is_valid_cpu_fq(uint8_t cpu_id)
 {
-	return (computer_data.packed.cpufs & 0x01 << (cpu_id)) != 0;
+	return BIT_ON(computer_data.packed.cpufs, cpu_id);
 }
 
 bool is_valid_ambient_temp(void)
@@ -67,17 +69,17 @@ bool is_valid_gpu_temp(void)
 
 bool is_valid_hdd_size(uint8_t hdd_id)
 {
-	return (computer_data.packed.hdds & 0x01 << (hdd_id)) != 0;
+	return BIT_ON(computer_data.packed.hdds, hdd_id);
 }
 
 bool is_valid_hdd_temp(uint8_t hdd_id)
 {
-	return (computer_data.packed.hddts & 0x01 << (hdd_id)) != 0;
+	return BIT_ON(computer_data.packed.hddts, hdd_id);
 }
 
 bool is_valid_mem(uint8_t mem_id)
 {
-	return (computer_data.packed.mems & 0x01 << (mem_id)) != 0;
+	return BIT_ON(computer_data.packed.mems, mem_id);
 }
 
 void fp_init(void)
