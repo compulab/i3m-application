@@ -14,15 +14,15 @@
 #include <stdint.h>
 
 #ifndef VERSION
-#define VERSION "0.8"
+#define VERSION "Version not set"
 #endif
 
 #ifndef BUILD_DATE
-#define BUILD_DATE "10 Feb 2016"
+#define BUILD_DATE "Some day"
 #endif
 
 #ifndef BUILD_TIME
-#define BUILD_TIME "11:39:18"
+#define BUILD_TIME "hh:mm:ss"
 #endif
 
 #define MAJOR_REVISION_LSB_EEPROM_ADDRESS 	0x00
