@@ -734,6 +734,13 @@ static void set_update_post_code(char *str)
 	sprintf(str, "%04X", i2c_buffer.layout.bios_post_code);
 }
 
+extern char buf[1];
+static void set_usb_serial_string(char *str)
+{
+	strncpy(str, buf, 1);
+}
+
+
 void update_data_by_type(enum information_type type, char *output_str, uint8_t info)
 {
 	bool is_active_frame;
@@ -806,6 +813,8 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 	case SHOW_RTC_SEC:
 		set_rtc_sec(output_str);
 		break;
+	case SHOW_USB_SERIAL_INPUT:
+		set_usb_serial_string(output_str);
 	default:
 		break;
 	}
@@ -1021,6 +1030,7 @@ static bool is_information_need_to_change(struct gfx_information *info, bool is_
 	case SHOW_RTC_HOUR:
 	case SHOW_RTC_SEC:
 	case SHOW_RTC_MIN:
+	case SHOW_USB_SERIAL_INPUT:
 		return true;
 	default:
 		return false;

@@ -35,6 +35,7 @@ enum information_type {
 	SHOW_RTC_YEAR,
 	SHOW_RTC_MONTH,
 	SHOW_RTC_DAY,
+	SHOW_USB_SERIAL_INPUT,
 };
 
 enum frame_type {

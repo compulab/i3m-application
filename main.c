@@ -207,16 +207,31 @@ static void debug_print_log(void)
 	}
 }
 
-static bool my_flag_autorize_cdc_transfert = false;
 bool my_callback_cdc_enable(void)
 {
-	my_flag_autorize_cdc_transfert = true;
-	return true;
+	return stdio_usb_enable();
 }
 void my_callback_cdc_disable(void)
 {
-	my_flag_autorize_cdc_transfert = false;
+	stdio_usb_disable();
 }
+
+#include "ASF/common/services/usb/class/cdc/device/udi_cdc.h"
+
+const int BUF_SIZE = 1;
+char buf[1] = "C";
+bool no_error = true;
+void task(void)
+{
+	if (udi_cdc_is_rx_ready()) {
+		buf[0] = udi_cdc_getc();
+		no_error = udi_cdc_putc(buf[0]);
+		if (!no_error) {
+			buf[0] = '!';
+		}
+	}
+}
+
 int main(int argc, char *argv[])
 {
 
@@ -232,9 +247,11 @@ int main(int argc, char *argv[])
 	init();
 	wdt_reset();
 	while (true) {
+		task();
 //		debug_print_log();
 		wakeup = false;
 		if (!work_handler()) {
+			sleepmgr_enter_sleep();
 			sleep_interuptable(1000); /* 1 ms */
 		} else {
 			wdt_reset();
