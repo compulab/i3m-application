@@ -7,6 +7,7 @@
 #include "Fp-utils.h"
 #include "uart/uart.h"
 #include "scheduler/scheduler.h"
+#include "twi/i2c_buffer.h"
 
 #define MAX_DIGITS 5
 #define UPDATE_FRAME_MIN_TICKS	0x08ff

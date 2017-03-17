@@ -76,6 +76,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  * Support mail: avr@atmel.com
  */
 #include "twi_slave.h"
+#include "i2c_buffer.h"
 #include "sram/sram_handle.h"
 
 

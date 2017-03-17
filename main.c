@@ -4,6 +4,7 @@
 #include "sram/sram_handle.h"
 #include "wdt/wdt.h"
 #include "twi/twi_master.h"
+#include "twi/i2c_buffer.h"
 #include "uart/uart.h"
 #include "rtc/rtc.h"
 #include "ASF/common/services/usb/udc/udc.h"
