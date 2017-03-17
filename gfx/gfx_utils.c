@@ -371,7 +371,6 @@ static void draw_graphic_signs(uint8_t selection, uint8_t min_index, uint8_t max
 
 static void insert_graphic_signs(struct gfx_frame *frame)
 {
-	uint8_t min_value = 0, max_value = 0;
 	if (frame->type == FRAME_DASHBOARD)
 		return ;
 
@@ -384,35 +383,12 @@ static void insert_graphic_signs(struct gfx_frame *frame)
 			draw_graphic_signs(computer_data.details.screen_saver_visible, 0, 1, false);
 			break;
 		case SET_SCREEN_SAVER_TIME:
-			if (computer_data.details.screen_saver_visible == 1)
-				switch(computer_data.details.screen_saver_update_time_unit) {
-				case SCREEN_SAVER_SECOND_UNIT:
-					min_value = SCREEN_SAVER_SECOND_MIN_VALUE;
-					max_value = SCREEN_SAVER_SECOND_MAX_VALUE;
-					break;
-
-				case SCREEN_SAVER_MINUTE_UNIT:
-					min_value = SCREEN_SAVER_MINUTE_MIN_VALUE;
-					max_value = SCREEN_SAVER_MINUTE_MAX_VALUE;
-					break;
-
-				case SCREEN_SAVER_HOUR_UNIT:
-					min_value = SCREEN_SAVER_HOUR_MIN_VALUE;
-					max_value = SCREEN_SAVER_HOUR_MAX_VALUE;
-					break;
-				default:
-					return ;
-				}
 			if (computer_data.details.screen_saver_visible)
-				draw_graphic_signs(computer_data.details.screen_saver_update_time, min_value, max_value, true);
+				draw_graphic_signs(computer_data.details.screen_saver_update_time, SCREEN_SAVER_SECOND_MIN_VALUE, SCREEN_SAVER_SECOND_MAX_VALUE, true);
 			break;
 		case SET_SCREEN_SAVER_TYPE:
 			if (computer_data.details.screen_saver_visible)
 				draw_graphic_signs(computer_data.details.screen_saver_type, 0, SCREEN_SAVER_TYPE_SIZE - 1, false);
-			break;
-		case SET_SCREEN_SAVER_TIME_UNIT:
-			if (computer_data.details.screen_saver_visible)
-				draw_graphic_signs(computer_data.details.screen_saver_update_time_unit, 0, SCREEN_SAVER_TIME_UNITS_SIZE - 1, true);
 			break;
 		default:
 			draw_graphic_signs((present_menu->menu)->current_selection, 0, (present_menu->menu)->num_elements - 2, false);

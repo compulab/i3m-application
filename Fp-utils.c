@@ -494,26 +494,6 @@ static void decrese_brightness_level(void)
 	eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, brightness);
 }
 
-static void handle_screen_saver_time_units_buttons(uint8_t key)
-{
-	if (computer_data.details.screen_saver_visible == 1) {
-		switch (key) {
-		case GFX_MONO_MENU_KEYCODE_DOWN:
-			if (computer_data.details.screen_saver_update_time_unit == 0)
-				return ;
-			computer_data.details.screen_saver_update_time_unit--;
-			break;
-		case GFX_MONO_MENU_KEYCODE_UP:
-			if (computer_data.details.screen_saver_update_time_unit == SCREEN_SAVER_TIME_UNITS_SIZE - 1)
-				return ;
-			computer_data.details.screen_saver_update_time_unit++;
-			break;
-		}
-		eeprom_write_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS, computer_data.packed.screen_saver_update_time);
-		gfx_frame_draw(frame_present, true);
-	}
-}
-
 static void handle_screen_saver_type_buttons(uint8_t key)
 {
 	if (computer_data.details.screen_saver_visible == 1) {
@@ -536,57 +516,19 @@ static void handle_screen_saver_type_buttons(uint8_t key)
 
 static int screen_saver_less_time(void)
 {
-	uint8_t min_value, jump;
-	switch(computer_data.details.screen_saver_update_time_unit) {
-	case SCREEN_SAVER_SECOND_UNIT:
-		min_value = SCREEN_SAVER_SECOND_MIN_VALUE;
-		jump = SCREEN_SAVER_SECOND_JUMP;
-		break;
-
-	case SCREEN_SAVER_MINUTE_UNIT:
-		min_value = SCREEN_SAVER_MINUTE_MIN_VALUE;
-		jump = SCREEN_SAVER_MINUTE_JUMP;
-		break;
-
-	case SCREEN_SAVER_HOUR_UNIT:
-		min_value = SCREEN_SAVER_HOUR_MIN_VALUE;
-		jump = SCREEN_SAVER_HOUR_JUMP;
-		break;
-	default:
+	if (computer_data.details.screen_saver_update_time <= SCREEN_SAVER_SECOND_MIN_VALUE)
 		return false;
-	}
 
-	if (computer_data.details.screen_saver_update_time <= min_value)
-		return false;
-	computer_data.details.screen_saver_update_time -= jump;
+	computer_data.details.screen_saver_update_time -= SCREEN_SAVER_SECOND_JUMP;
 	return true;
 }
 
 static bool screen_saver_more_time(void)
 {
-	uint8_t max_value, jump;
-	switch(computer_data.details.screen_saver_update_time_unit) {
-	case SCREEN_SAVER_SECOND_UNIT:
-		max_value = SCREEN_SAVER_SECOND_MAX_VALUE;
-		jump = SCREEN_SAVER_SECOND_JUMP;
-		break;
-
-	case SCREEN_SAVER_MINUTE_UNIT:
-		max_value = SCREEN_SAVER_MINUTE_MAX_VALUE;
-		jump = SCREEN_SAVER_MINUTE_JUMP;
-		break;
-
-	case SCREEN_SAVER_HOUR_UNIT:
-		max_value = SCREEN_SAVER_HOUR_MAX_VALUE;
-		jump = SCREEN_SAVER_HOUR_JUMP;
-		break;
-	default:
+	if (computer_data.details.screen_saver_update_time >= SCREEN_SAVER_SECOND_MAX_VALUE)
 		return false;
-	}
 
-	if (computer_data.details.screen_saver_update_time >= max_value)
-		return false;
-	computer_data.details.screen_saver_update_time += jump;
+	computer_data.details.screen_saver_update_time += SCREEN_SAVER_SECOND_JUMP;
 	return true;
 }
 
@@ -645,8 +587,6 @@ static void handle_brightness_buttons(uint8_t key)
 	gfx_frame_draw(frame_present, true);
 }
 
-const char *screen_saver_time_units_str[SCREEN_SAVER_TIME_UNITS_SIZE] = { "SEC", "MIN", "HOUR"};
-
 const char *screen_saver_type_str[SCREEN_SAVER_TYPE_SIZE] = { "LOGO", "DASHBOARD", "CLOCK"};
 
 static void set_disabled(char *str)
@@ -654,14 +594,6 @@ static void set_disabled(char *str)
 	sprintf(str, "DISABLED");
 }
 
-static void set_screen_saver_time_unit(char *str)
-{
-	frame_present->handle_buttons = handle_screen_saver_time_units_buttons;
-	if (computer_data.details.screen_saver_visible == 1)
-		sprintf(str, screen_saver_time_units_str[computer_data.details.screen_saver_update_time_unit]);
-	else
-		set_disabled(str);
-}
 static void set_rtc_hour(char *str)
 {
 	if (calendar_is_date_valid(&computer_date_time))
@@ -798,9 +730,6 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 	case SET_SCREEN_SAVER_TIME:
 		set_screen_saver_time(output_str);
 		break;
-	case SET_SCREEN_SAVER_TIME_UNIT:
-		set_screen_saver_time_unit(output_str);
-		break;
 	case SET_SCREEN_SAVER_TYPE:
 		set_screen_saver_type(output_str);
 		break;
@@ -823,7 +752,6 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 	case SET_BRIGHTNESS:
 	case SET_SCREEN_SAVER_ENABLE:
 	case SET_SCREEN_SAVER_TIME:
-	case SET_SCREEN_SAVER_TIME_UNIT:
 	case SET_SCREEN_SAVER_TYPE:
 		is_active_frame = true;
 		break;

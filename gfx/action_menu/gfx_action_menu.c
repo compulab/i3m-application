@@ -51,7 +51,6 @@ static void update_action_visibility(struct gfx_item_action *action)
 			if (!is_valid_mem(info_node->information.info_data))
 				visible = false;
 			break;
-		case SET_SCREEN_SAVER_TIME_UNIT:
 		case SET_SCREEN_SAVER_TIME:
 		case SET_SCREEN_SAVER_TYPE:
 			visible = computer_data.details.screen_saver_visible == 1;
