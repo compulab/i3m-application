@@ -7,6 +7,7 @@
 #include "Fp-utils.h"
 #include "uart/uart.h"
 #include "scheduler/scheduler.h"
+#include "screen_saver/screen_saver.h"
 #include "twi/i2c_buffer.h"
 
 #define MAX_DIGITS 5
@@ -15,7 +16,6 @@
 
 enum power_state current_power_state = POWER_ON;
 enum display_state display_state;
-bool screen_saver_mode_enabled;
 char power_value[10];
 uint16_t update_timestamp;
 uint16_t wait_time;
@@ -28,16 +28,6 @@ struct calendar_date computer_date_time = {
     .month = 11,
     .year = 2015
 };
-
-void enable_screen_saver_mode(void)
-{
-	screen_saver_mode_enabled = true;
-}
-
-void disable_screen_saver_mode(void)
-{
-	screen_saver_mode_enabled = false;
-}
 
 void print_work_count(void *data)
 {
@@ -494,82 +484,6 @@ static void decrese_brightness_level(void)
 	eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, brightness);
 }
 
-static void handle_screen_saver_type_buttons(uint8_t key)
-{
-	if (computer_data.details.screen_saver_visible == 1) {
-		switch (key) {
-		case GFX_MONO_MENU_KEYCODE_DOWN:
-			if (computer_data.details.screen_saver_type == 0)
-				return ;
-			computer_data.details.screen_saver_type--;
-			break;
-		case GFX_MONO_MENU_KEYCODE_UP:
-			if (computer_data.details.screen_saver_type == SCREEN_SAVER_TYPE_SIZE - 1)
-				return ;
-			computer_data.details.screen_saver_type++;
-			break;
-		}
-		eeprom_write_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS, computer_data.packed.screen_saver_config);
-		gfx_frame_draw(frame_present, true);
-	}
-}
-
-static int screen_saver_less_time(void)
-{
-	if (computer_data.details.screen_saver_update_time <= SCREEN_SAVER_SECOND_MIN_VALUE)
-		return false;
-
-	computer_data.details.screen_saver_update_time -= SCREEN_SAVER_SECOND_JUMP;
-	return true;
-}
-
-static bool screen_saver_more_time(void)
-{
-	if (computer_data.details.screen_saver_update_time >= SCREEN_SAVER_SECOND_MAX_VALUE)
-		return false;
-
-	computer_data.details.screen_saver_update_time += SCREEN_SAVER_SECOND_JUMP;
-	return true;
-}
-
-static void handle_screen_saver_time_buttons(uint8_t key)
-{
-	if (computer_data.details.screen_saver_visible == 1) {
-		switch (key) {
-		case GFX_MONO_MENU_KEYCODE_DOWN:
-			if (!screen_saver_less_time())
-				return ;
-			break;
-		case GFX_MONO_MENU_KEYCODE_UP:
-			if (!screen_saver_more_time())
-				return ;
-			break;
-		default:
-			return ;
-		}
-		eeprom_write_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS, computer_data.packed.screen_saver_update_time);
-		gfx_frame_draw(frame_present, true);
-	}
-}
-
-static void handle_screen_saver_enable_buttons(uint8_t key)
-{
-	switch (key) {
-	case GFX_MONO_MENU_KEYCODE_DOWN:
-		if (computer_data.details.screen_saver_visible == 0)
-			return ;
-		computer_data.details.screen_saver_visible = 0;
-		break;
-	case GFX_MONO_MENU_KEYCODE_UP:
-		if (computer_data.details.screen_saver_visible == 1)
-			return ;
-		computer_data.details.screen_saver_visible = 1;
-		break;
-	}
-	eeprom_write_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS, computer_data.packed.screen_saver_config);
-	gfx_frame_draw(frame_present, true);
-}
-
 static void handle_brightness_buttons(uint8_t key)
 {
 	uint8_t brightness_level = get_brightness_level();
@@ -585,13 +499,6 @@ static void handle_brightness_buttons(uint8_t key)
 	}
 	update_brightness();
 	gfx_frame_draw(frame_present, true);
-}
-
-const char *screen_saver_type_str[SCREEN_SAVER_TYPE_SIZE] = { "LOGO", "DASHBOARD", "CLOCK"};
-
-static void set_disabled(char *str)
-{
-	sprintf(str, "DISABLED");
 }
 
 static void set_rtc_hour(char *str)
@@ -616,30 +523,6 @@ static void set_rtc_sec(char *str)
 		sprintf(str, ":");
 	else
 		str = "";
-}
-
-static void set_screen_saver_type(char *str)
-{
-	frame_present->handle_buttons = handle_screen_saver_type_buttons;
-	if (computer_data.details.screen_saver_visible == 1)
-		sprintf(str, screen_saver_type_str[computer_data.details.screen_saver_type]);
-	else
-		set_disabled(str);
-}
-
-static void set_screen_saver_time(char *str)
-{
-	frame_present->handle_buttons = handle_screen_saver_time_buttons;
-	if (computer_data.details.screen_saver_visible == 1)
-		sprintf(str, "%d" , computer_data.details.screen_saver_update_time);
-	else
-		set_disabled(str);
-}
-
-static void set_screen_saver_enable(char *str)
-{
-	frame_present->handle_buttons = handle_screen_saver_enable_buttons;
-	sprintf(str, "DISABLE ENABLE");
 }
 
 static void set_brightness(char *str)
@@ -675,8 +558,7 @@ static void set_usb_serial_string(char *str)
 
 void update_data_by_type(enum information_type type, char *output_str, uint8_t info)
 {
-	bool is_active_frame;
-
+	present_menu->is_active_frame = false;
 	switch (type){
 	case SHOW_MEMORY_SIZE:
 		set_updated_memory_size(output_str, info);
@@ -748,18 +630,8 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 		break;
 	}
 
-	switch (type) {
-	case SET_BRIGHTNESS:
-	case SET_SCREEN_SAVER_ENABLE:
-	case SET_SCREEN_SAVER_TIME:
-	case SET_SCREEN_SAVER_TYPE:
-		is_active_frame = true;
-		break;
-	default:
-		is_active_frame = false;
-		break;
-	}
-	present_menu->is_active_frame = is_active_frame;
+	if (type == SET_BRIGHTNESS)
+		present_menu->is_active_frame = true;
 }
 
 static bool is_cpu_fq_need_update(struct gfx_information *info, bool is_visible)

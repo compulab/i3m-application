@@ -1,4 +1,5 @@
 #include "gfx_action_menu.h"
+#include "screen_saver/screen_saver.h"
 
 struct gfx_action_menu *present_menu;
 struct gfx_action_menu dmi_menu = {.is_progmem = false };

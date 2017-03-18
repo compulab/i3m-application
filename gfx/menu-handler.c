@@ -1,5 +1,5 @@
 #include "menu-handler.h"
-
+#include "screen_saver/screen_saver.h"
 #include "uart/uart.h"
 
 #define is_key_selected(var,key) (var & key) == key

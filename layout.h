@@ -233,14 +233,6 @@ union updatable_info {
 	} packed;
 };
 
-#define SCREEN_SAVER_TYPE_SIZE			3
-
-enum screen_saver_type {
-	SCREEN_SAVER_SPLASH = 0,
-	SCREEN_SAVER_DASHBOARD = 1,
-	SCREEN_SAVER_CLOCK,
-};
-
 struct twi_log log_twi;
 
 union updatable_info computer_data;

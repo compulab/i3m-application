@@ -70,10 +70,6 @@ extern struct calendar_date computer_date_time;
 
 extern bool screen_saver_mode_enabled;
 
-void enable_screen_saver_mode(void);
-
-void disable_screen_saver_mode(void);
-
 void print_work_count(void *);
 
 bool is_valid_cpu_temp(uint8_t cpu_id);
