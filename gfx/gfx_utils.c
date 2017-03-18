@@ -163,17 +163,6 @@ static void draw_screen_saver_enable_status(struct gfx_information *info)
 	gfx_mono_generic_draw_horizontal_line(clear_x, info->postion.y + info->text.font->height + 2, length_clr, GFX_PIXEL_CLR);
 }
 
-static void print_info(struct gfx_information *info)
-{
-	switch (info->info_type) {
-	case SET_SCREEN_SAVER_ENABLE:
-		draw_screen_saver_enable_status(info);
-		break;
-	default:
-		break;
-	}
-}
-
 static void gfx_information_draw(struct gfx_information *info, bool redraw)
 {
 	char *text_to_draw = malloc_locked(info->text.max_text_size);
@@ -182,7 +171,8 @@ static void gfx_information_draw(struct gfx_information *info, bool redraw)
 
 	update_data_by_type(info->info_type, text_to_draw, info->info_data);
 	info->last_length = print_data(text_to_draw, info->text.font, info->postion.x, info->postion.y, info->last_length);
-	print_info(info);
+	if (info->info_type == SET_SCREEN_SAVER_ENABLE)
+		draw_screen_saver_enable_status(info);
 	free(text_to_draw);
 }
 
