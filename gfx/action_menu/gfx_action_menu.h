@@ -18,7 +18,7 @@
 
 #define MAIN_MENU_ID 	0
 
-struct gfx_action_menu *present_menu;
+extern struct gfx_action_menu *present_menu;
 
 void show_current_menu(bool redraw);
 
