@@ -73,12 +73,6 @@ bool is_valid_mem(uint8_t mem_id)
 	return BIT_ON(computer_data.packed.mems, mem_id);
 }
 
-void fp_init(void)
-{
-	wait_time = 1;
-	update_timestamp = 0;
-}
-
 static void set_invalid_string(char *str){
 	sprintf(str, "-");
 }
