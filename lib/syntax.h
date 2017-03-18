@@ -6,4 +6,6 @@
 
 #define array_length(array)	(sizeof(array) / sizeof((array)[0]))
 
+#define BIT_ON(value, bitnum)	((value) & (1 << (bitnum)))
+
 #endif

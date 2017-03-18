@@ -1,5 +1,6 @@
 #include "gfx_action_menu.h"
 #include "screen_saver/screen_saver.h"
+#include "lib/syntax.h"
 
 struct gfx_action_menu *present_menu;
 struct gfx_action_menu dmi_menu = {.is_progmem = false };
@@ -26,36 +27,29 @@ static void update_action_visibility(struct gfx_item_action *action)
 	while (info_node != 0) {
 		switch(info_node->information.info_type) {
 		case SHOW_CPU_TEMPERTURE:
-			if (!is_valid_cpu_temp(info_node->information.info_data))
-				visible = false;
+			visible = BIT_ON(computer_data.packed.cputs, info_node->information.info_data);
 			break;
 		case SHOW_CPU_FREQUENCY:
-			if (!is_valid_cpu_fq(info_node->information.info_data))
-				visible = false;
+			visible = BIT_ON(computer_data.packed.cpufs, info_node->information.info_data);
 			break;
 		case SHOW_AMBIENT_TEMPERATURE:
-			if (!is_valid_ambient_temp())
-				visible = false;
+			visible = computer_data.details.ambs;
 			break;
 		case SHOW_GPU_TEMPERTURE:
-			if (!is_valid_gpu_temp())
-				visible = false;
+			visible = computer_data.details.gpus;
 			break;
 		case SHOW_HDD_SIZE:
-			if (!is_valid_hdd_size(info_node->information.info_data))
-				visible = false;
+			visible = BIT_ON(computer_data.packed.hdds, info_node->information.info_data);
 			break;
 		case SHOW_HDD_TEMPERTURE:
-			if (!is_valid_hdd_temp(info_node->information.info_data))
-				visible = false;
+			visible = BIT_ON(computer_data.packed.hddts, info_node->information.info_data);
 			break;
 		case SHOW_MEMORY_SIZE:
-			if (!is_valid_mem(info_node->information.info_data))
-				visible = false;
+			visible = BIT_ON(computer_data.packed.mems, info_node->information.info_data);
 			break;
 		case SET_SCREEN_SAVER_TIME:
 		case SET_SCREEN_SAVER_TYPE:
-			visible = computer_data.details.screen_saver_visible == 1;
+			visible = computer_data.details.screen_saver_visible;
 			break;
 		default:
 			break;

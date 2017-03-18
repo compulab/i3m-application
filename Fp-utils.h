@@ -69,21 +69,7 @@ extern bool screen_saver_mode_enabled;
 
 void print_work_count(void *);
 
-bool is_valid_cpu_temp(uint8_t cpu_id);
-
-bool is_valid_cpu_fq(uint8_t cpu_id);
-
-bool is_valid_ambient_temp(void);
-
 uint8_t get_brightness_level(void);
-
-bool is_valid_gpu_temp(void);
-
-bool is_valid_hdd_size(uint8_t hdd_id);
-
-bool is_valid_hdd_temp(uint8_t hdd_id);
-
-bool is_valid_mem(uint8_t mem_id);
 
 void update_info(void *);
 

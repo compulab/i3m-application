@@ -9,6 +9,7 @@
 #include "scheduler/scheduler.h"
 #include "screen_saver/screen_saver.h"
 #include "twi/i2c_buffer.h"
+#include "lib/syntax.h"
 #include "screens/brightness/brightness.h"
 
 #define MAX_DIGITS 5
@@ -35,43 +36,6 @@ void print_work_count(void *data)
 	uart_send_string("works in queue: ");
 	uart_send_num(works_count, 10);
 	uart_send_string("\n\r");
-}
-
-#define BIT_ON(value, bitnum)	((value) & (1 << (bitnum))) != 0
-
-bool is_valid_cpu_temp(uint8_t cpu_id)
-{
-	return BIT_ON(computer_data.packed.cputs, cpu_id);
-}
-
-bool is_valid_cpu_fq(uint8_t cpu_id)
-{
-	return BIT_ON(computer_data.packed.cpufs, cpu_id);
-}
-
-bool is_valid_ambient_temp(void)
-{
-	return computer_data.details.ambs == 1;
-}
-
-bool is_valid_gpu_temp(void)
-{
-	return computer_data.details.gpus == 1;
-}
-
-bool is_valid_hdd_size(uint8_t hdd_id)
-{
-	return BIT_ON(computer_data.packed.hdds, hdd_id);
-}
-
-bool is_valid_hdd_temp(uint8_t hdd_id)
-{
-	return BIT_ON(computer_data.packed.hddts, hdd_id);
-}
-
-bool is_valid_mem(uint8_t mem_id)
-{
-	return BIT_ON(computer_data.packed.mems, mem_id);
 }
 
 static void set_invalid_string(char *str){
@@ -291,7 +255,7 @@ static void set_temp_string(char *str, int8_t temperature)
 
 static void set_cpu_updated_temp(char *data, uint8_t cpu_id)
 {
-	if ((computer_data.packed.cputs & (0x01 << cpu_id)) != 0)
+	if (BIT_ON(computer_data.packed.cputs, cpu_id))
 		set_temp_string(data, computer_data.details.cput[cpu_id]);
 	else
 		set_invalid_string(data);
@@ -299,7 +263,7 @@ static void set_cpu_updated_temp(char *data, uint8_t cpu_id)
 
 static void set_updated_memory_size(char *output_str, uint8_t mem_id)
 {
-	if ((computer_data.packed.mems & (0x01 << mem_id)))
+	if (BIT_ON(computer_data.packed.mems, mem_id))
 		set_mem_size_str(output_str, computer_data.packed.memsz[mem_id]);
 	else
 		set_invalid_string(output_str);
@@ -307,7 +271,7 @@ static void set_updated_memory_size(char *output_str, uint8_t mem_id)
 
 static void set_updated_hdd_size(char *output_str, uint8_t hdd_id)
 {
-	if (computer_data.packed.hdds & (0x01 << hdd_id))
+	if (BIT_ON(computer_data.packed.hdds, hdd_id))
 		set_hdd_size_str(output_str, computer_data.packed.hddsz[hdd_id], computer_data.packed.hddf & (0x01 << hdd_id));
 	else
 		set_invalid_string(output_str);
@@ -315,7 +279,7 @@ static void set_updated_hdd_size(char *output_str, uint8_t hdd_id)
 
 static void set_updated_cpu_frequency(char *output_str, uint8_t cpu_id)
 {
-	if (computer_data.packed.cpufs & (0x01 << cpu_id))
+	if (BIT_ON(computer_data.packed.cpufs, cpu_id))
 		set_fq_string(output_str, computer_data.packed.cpuf[cpu_id]);
 	else
 		set_invalid_string(output_str);
@@ -323,7 +287,7 @@ static void set_updated_cpu_frequency(char *output_str, uint8_t cpu_id)
 
 static void set_updated_ambient_temp(char *output_str)
 {
-	if (computer_data.details.ambs == 1)
+	if (computer_data.details.ambs)
 		set_temp_string(output_str, computer_data.details.ambt);
 	else
 		set_invalid_string(output_str);
@@ -336,7 +300,7 @@ void update_adc(void *data)
 
 static void set_updated_gpu_temp(char *output_str)
 {
-	if (computer_data.details.gpus == 1)
+	if (computer_data.details.gpus)
 		set_temp_string(output_str, computer_data.details.gput);
 	else
 		set_invalid_string(output_str);
