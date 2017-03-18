@@ -522,7 +522,7 @@ static void set_rtc_sec(char *str)
 	if (calendar_is_date_valid(&computer_date_time) && computer_date_time.second % 2)
 		sprintf(str, ":");
 	else
-		str = "";
+		sprintf(str, "");
 }
 
 static void set_brightness(char *str)
