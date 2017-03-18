@@ -8,27 +8,8 @@
 #ifndef LAYOUT_H_
 #define LAYOUT_H_
 
-#include "auto_generated.h"
-
 #include <stdbool.h>
 #include <stdint.h>
-
-#ifndef VERSION
-#define VERSION "Version not set"
-#endif
-
-#ifndef BUILD_DATE
-#define BUILD_DATE "Some day"
-#endif
-
-#ifndef BUILD_TIME
-#define BUILD_TIME "hh:mm:ss"
-#endif
-
-#define MAC_ADDRESS_EEPROM_ADDRESS			0x04
-#define SERIAL_NUMBER_EEPROM_ADDRESS 		0x14
-#define LAYOUT_VERSION_EEPROM_ADDRESS 		0x2c
-#define PART_NUMBER_EEPROM_ADDRESS			0x80
 
 #define APPLICATION_VER_MSB_EEPROM_ADDRESS	0x102
 #define APPLICATION_VER_LSB_EEPROM_ADDRESS	0x103
@@ -52,10 +33,6 @@
 #define BOOTLOADER_APPLICATION_START		0x10
 
 #define DEFAULT_SCREEN_SAVER_TIME			10
-#define SERIAL_NUMBER_LENGTH				12
-#define PART_NUMBER_LENGTH					64
-#define PART_NUMBER_OPT_LENGTH				16
-#define MAC_ADDRESS_LENGTH 					6
 
 #define MAX_HDD 							8
 #define MAX_CPU								8
