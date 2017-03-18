@@ -133,6 +133,23 @@ void set_screen_saver_enable(char *str)
 	present_menu->is_active_frame = true;
 }
 
+void set_screen_saver_enable_draw_graphic_signs(void)
+{
+	draw_graphic_signs(computer_data.details.screen_saver_visible, 0, 1, false);
+}
+
+void set_screen_saver_time_draw_graphic_signs(void)
+{
+	if (computer_data.details.screen_saver_visible)
+		draw_graphic_signs(computer_data.details.screen_saver_update_time, SCREEN_SAVER_SECOND_MIN_VALUE, SCREEN_SAVER_SECOND_MAX_VALUE, true);
+}
+
+void set_screen_saver_type_draw_graphic_signs(void)
+{
+	if (computer_data.details.screen_saver_visible)
+		draw_graphic_signs(computer_data.details.screen_saver_type, 0, SCREEN_SAVER_TYPE_SIZE - 1, false);
+}
+
 bool screen_saver_mode_enabled;
 
 void enable_screen_saver_mode(void)

@@ -360,7 +360,7 @@ static void draw_right_sign(bool is_numeric)
 		gfx_mono_put_bitmap(right_sign_image.bitmap, right_sign_image.postion.x, right_sign_image.postion.y);
 }
 
-static void draw_graphic_signs(uint8_t selection, uint8_t min_index, uint8_t max_index, bool is_numeric)
+void draw_graphic_signs(uint8_t selection, uint8_t min_index, uint8_t max_index, bool is_numeric)
 {
 	if (selection > min_index)
 		draw_left_sign(is_numeric);
@@ -380,15 +380,13 @@ static void insert_graphic_signs(struct gfx_frame *frame)
 			draw_graphic_signs(get_brightness_level(), MIN_BRIGHTNESS_LEVEL, MAX_BRIGHTNESS_LEVEL, true);
 			break;
 		case SET_SCREEN_SAVER_ENABLE:
-			draw_graphic_signs(computer_data.details.screen_saver_visible, 0, 1, false);
+			set_screen_saver_enable_draw_graphic_signs();
 			break;
 		case SET_SCREEN_SAVER_TIME:
-			if (computer_data.details.screen_saver_visible)
-				draw_graphic_signs(computer_data.details.screen_saver_update_time, SCREEN_SAVER_SECOND_MIN_VALUE, SCREEN_SAVER_SECOND_MAX_VALUE, true);
+			set_screen_saver_time_draw_graphic_signs();
 			break;
 		case SET_SCREEN_SAVER_TYPE:
-			if (computer_data.details.screen_saver_visible)
-				draw_graphic_signs(computer_data.details.screen_saver_type, 0, SCREEN_SAVER_TYPE_SIZE - 1, false);
+			set_screen_saver_type_draw_graphic_signs();
 			break;
 		default:
 			draw_graphic_signs((present_menu->menu)->current_selection, 0, (present_menu->menu)->num_elements - 2, false);
