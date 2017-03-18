@@ -7,6 +7,8 @@
 
 #include "gfx_utils.h"
 #include "uart/uart.h"
+#include "screen_saver/screen_saver.h"
+#include "screens/brightness/brightness.h"
 
 #define PAGE_ADDRESS(y) floor (y/8)
 
