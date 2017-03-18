@@ -9,6 +9,7 @@
 #include "scheduler/scheduler.h"
 #include "screen_saver/screen_saver.h"
 #include "twi/i2c_buffer.h"
+#include "screens/brightness/brightness.h"
 
 #define MAX_DIGITS 5
 #define UPDATE_FRAME_MIN_TICKS	0x08ff
@@ -442,59 +443,6 @@ static void set_update_hdd_temp(char *output_str, uint8_t hdd_id)
 		set_invalid_string(output_str);
 }
 
-void update_brightness(void)
-{
-	ssd1306_set_contrast(eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS));
-}
-
-uint8_t get_brightness_level(void)
-{
-	uint8_t brightness = eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS);
-	uint8_t brightness_level;
-	if (brightness > (MAX_BRIGHTNESS_LEVEL -1) * BRIGHTNESS_STEP)
-		brightness_level = MAX_BRIGHTNESS_LEVEL;
-	else if (brightness < BRIGHTNESS_STEP)
-		brightness_level = 0;
-	else
-		brightness_level = brightness / BRIGHTNESS_STEP;
-	return brightness_level;
-}
-
-static void increse_brightness_level(void)
-{
-	uint8_t brightness_level = get_brightness_level();
-	if (brightness_level < MAX_BRIGHTNESS_LEVEL)
-		brightness_level++;
-	uint8_t brightness = brightness_level * BRIGHTNESS_STEP;
-	eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, brightness);
-}
-
-static void decrese_brightness_level(void)
-{
-	uint8_t brightness_level = get_brightness_level();
-	if (brightness_level > 0)
-		brightness_level--;
-	uint8_t brightness = brightness_level * BRIGHTNESS_STEP;
-	eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, brightness);
-}
-
-static void handle_brightness_buttons(uint8_t key)
-{
-	uint8_t brightness_level = get_brightness_level();
-	switch (key) {
-	case GFX_MONO_MENU_KEYCODE_DOWN:
-		if (brightness_level > 0)
-			decrese_brightness_level();
-		break;
-	case GFX_MONO_MENU_KEYCODE_UP:
-		if (brightness_level < MAX_BRIGHTNESS_LEVEL)
-			increse_brightness_level();
-		break;
-	}
-	update_brightness();
-	gfx_frame_draw(frame_present, true);
-}
-
 static void set_rtc_hour(char *str)
 {
 	if (calendar_is_date_valid(&computer_date_time))
@@ -517,12 +465,6 @@ static void set_rtc_sec(char *str)
 		sprintf(str, ":");
 	else
 		sprintf(str, "");
-}
-
-static void set_brightness(char *str)
-{
-	frame_present->handle_buttons = handle_brightness_buttons;
-	sprintf(str,"%d ", (eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS) / BRIGHTNESS_STEP));
 }
 
 static void set_curr_str(char *str, enum information_type type)

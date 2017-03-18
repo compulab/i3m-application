@@ -377,7 +377,7 @@ static void insert_graphic_signs(struct gfx_frame *frame)
 	if (frame->information_head != NULL) {
 		switch (frame->information_head->information.info_type) {
 		case SET_BRIGHTNESS:
-			draw_graphic_signs(get_brightness_level(), MIN_BRIGHTNESS_LEVEL, MAX_BRIGHTNESS_LEVEL, true);
+			set_brightness_draw_graphic_signs();
 			break;
 		case SET_SCREEN_SAVER_ENABLE:
 			set_screen_saver_enable_draw_graphic_signs();
