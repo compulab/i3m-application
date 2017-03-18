@@ -62,13 +62,6 @@ static void update_action_visibility(struct gfx_item_action *action)
 	action->visible = visible;
 }
 
-static void update_actions_visibility(void)
-{
-	for (int i = 0; i < present_menu->menu->num_elements; i++){
-		update_action_visibility(&present_menu->actions[i]);
-	}
-}
-
 static void set_present_menu(struct gfx_action_menu *action_menu)
 {
 	present_menu->visible = false;
