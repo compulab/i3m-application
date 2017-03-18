@@ -31,13 +31,6 @@ struct calendar_date computer_date_time = {
     .year = 2015
 };
 
-void print_work_count(void *data)
-{
-	uart_send_string("works in queue: ");
-	uart_send_num(works_count, 10);
-	uart_send_string("\n\r");
-}
-
 static void set_invalid_string(char *str){
 	sprintf(str, "-");
 }
@@ -847,18 +840,4 @@ static double pending_req_get_recur_period(void)
 struct scheduler_task pending_req_tick_task = {
     .work = &requests_work,
     .get_recur_period = pending_req_get_recur_period,
-};
-
-#define PRINT_WORKS_COUNT_SEC	1
-
-static struct work print_works_count_work = { .do_work = print_work_count };
-
-static double print_works_get_recur_period(void)
-{
-	return PRINT_WORKS_COUNT_SEC;
-}
-
-struct scheduler_task print_works_count_sec_task = {
-    .work = &print_works_count_work,
-    .get_recur_period = print_works_get_recur_period,
 };
