@@ -18,11 +18,6 @@ enum screen_saver_type {
 
 const char *screen_saver_type_str[SCREEN_SAVER_TYPE_SIZE] = { "LOGO", "DASHBOARD", "CLOCK" };
 
-static void set_disabled(char *str)
-{
-	sprintf(str, "DISABLED");
-}
-
 static void handle_screen_saver_type_buttons(uint8_t key)
 {
 	if (!computer_data.details.screen_saver_visible)
@@ -39,28 +34,12 @@ static void handle_screen_saver_type_buttons(uint8_t key)
 			return;
 		computer_data.details.screen_saver_type++;
 		break;
+	default:
+		return;
 	}
 
 	eeprom_write_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS, computer_data.packed.screen_saver_config);
 	gfx_frame_draw(frame_present, true);
-}
-
-static int screen_saver_less_time(void)
-{
-	if (computer_data.details.screen_saver_update_time <= SCREEN_SAVER_SECOND_MIN_VALUE)
-		return false;
-
-	computer_data.details.screen_saver_update_time -= SCREEN_SAVER_SECOND_JUMP;
-	return true;
-}
-
-static bool screen_saver_more_time(void)
-{
-	if (computer_data.details.screen_saver_update_time >= SCREEN_SAVER_SECOND_MAX_VALUE)
-		return false;
-
-	computer_data.details.screen_saver_update_time += SCREEN_SAVER_SECOND_JUMP;
-	return true;
 }
 
 static void handle_screen_saver_time_buttons(uint8_t key)
@@ -70,12 +49,14 @@ static void handle_screen_saver_time_buttons(uint8_t key)
 
 	switch (key) {
 	case GFX_MONO_MENU_KEYCODE_DOWN:
-		if (!screen_saver_less_time())
+		if (computer_data.details.screen_saver_update_time <= SCREEN_SAVER_SECOND_MIN_VALUE)
 			return;
+		computer_data.details.screen_saver_update_time -= SCREEN_SAVER_SECOND_JUMP;
 		break;
 	case GFX_MONO_MENU_KEYCODE_UP:
-		if (!screen_saver_more_time())
+		if (computer_data.details.screen_saver_update_time >= SCREEN_SAVER_SECOND_MAX_VALUE)
 			return;
+		computer_data.details.screen_saver_update_time += SCREEN_SAVER_SECOND_JUMP;
 		break;
 	default:
 		return;
@@ -104,10 +85,15 @@ static void handle_screen_saver_enable_buttons(uint8_t key)
 	gfx_frame_draw(frame_present, true);
 }
 
+static void set_disabled(char *str)
+{
+	sprintf(str, "DISABLED");
+}
+
 void set_screen_saver_type(char *str)
 {
 	frame_present->handle_buttons = handle_screen_saver_type_buttons;
-	if (computer_data.details.screen_saver_visible == 1)
+	if (computer_data.details.screen_saver_visible)
 		sprintf(str, screen_saver_type_str[computer_data.details.screen_saver_type]);
 	else
 		set_disabled(str);
@@ -118,8 +104,8 @@ void set_screen_saver_type(char *str)
 void set_screen_saver_time(char *str)
 {
 	frame_present->handle_buttons = handle_screen_saver_time_buttons;
-	if (computer_data.details.screen_saver_visible == 1)
-		sprintf(str, "%d" , computer_data.details.screen_saver_update_time);
+	if (computer_data.details.screen_saver_visible)
+		sprintf(str, "%d", computer_data.details.screen_saver_update_time);
 	else
 		set_disabled(str);
 
@@ -172,24 +158,24 @@ static double screen_saver_get_recur_period(void)
 static void update_screen_saver(void *data)
 {
 	if (!screen_saver_mode_enabled || computer_data.details.screen_saver_visible != 1)
-	return;
+		return;
 
 	switch(computer_data.details.screen_saver_type) {
-		case SCREEN_SAVER_SPLASH:
-			show_logo();
-			break;
+	case SCREEN_SAVER_SPLASH:
+		show_logo();
+		break;
 
-		case SCREEN_SAVER_DASHBOARD:
-			if (current_power_state != POWER_OFF && dashboard != NULL)
-				show_frame(dashboard);
-			break;
+	case SCREEN_SAVER_DASHBOARD:
+		if (current_power_state != POWER_OFF && dashboard != NULL)
+			show_frame(dashboard);
+		break;
 
-		case SCREEN_SAVER_CLOCK:
-			if (clock != NULL && calendar_is_date_valid(&computer_date_time)) {
-				show_frame(clock);
-				display_state = DISPLAY_CLOCK;
-			}
-			break;
+	case SCREEN_SAVER_CLOCK:
+		if (clock != NULL && calendar_is_date_valid(&computer_date_time)) {
+			show_frame(clock);
+			display_state = DISPLAY_CLOCK;
+		}
+		break;
 	}
 }
 
