@@ -59,6 +59,8 @@ extern struct calendar_date computer_date_time;
 
 extern bool screen_saver_mode_enabled;
 
+void sprintf_inval_data(char *str);
+
 void print_work_count(void *);
 
 uint8_t get_brightness_level(void);

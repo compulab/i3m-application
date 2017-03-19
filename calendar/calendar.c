@@ -47,6 +47,7 @@
 #include "calendar.h"
 #include "uart/uart.h"
 #include "scheduler/scheduler.h"
+#include "Fp-utils.h"
 #include <stdio.h>
 
 //! Unix epoch year
@@ -491,6 +492,30 @@ void calendar_add_second_to_date(struct calendar_date *date)
 		date->second = 0;
 		calendar_add_minute_to_date(date);
 	}
+}
+
+void set_rtc_hour(char *str)
+{
+	if (calendar_is_date_valid(&computer_date_time))
+		sprintf(str, "%d" ,computer_date_time.hour);
+	else
+		sprintf_inval_data(str);
+}
+
+void set_rtc_min(char *str)
+{
+	if (calendar_is_date_valid(&computer_date_time))
+		sprintf(str, "%02d" ,computer_date_time.minute);
+	else
+		sprintf_inval_data(str);
+}
+
+void set_rtc_sec(char *str)
+{
+	if (calendar_is_date_valid(&computer_date_time) && computer_date_time.second % 2)
+		sprintf(str, ":");
+	else
+		sprintf(str, "");
 }
 
 static void calendar_time_task(void *data)
