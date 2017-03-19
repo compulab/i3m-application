@@ -32,7 +32,7 @@ struct calendar_date computer_date_time = {
     .year = 2015
 };
 
-static void set_invalid_string(char *str){
+void sprintf_inval_data(char *str) {
 	sprintf(str, "-");
 }
 
@@ -230,7 +230,7 @@ static void set_cpu_updated_temp(char *data, uint8_t cpu_id)
 	if (BIT_ON(computer_data.packed.cputs, cpu_id))
 		set_temp_string(data, computer_data.details.cput[cpu_id]);
 	else
-		set_invalid_string(data);
+		sprintf_inval_data(data);
 }
 
 static void set_updated_memory_size(char *output_str, uint8_t mem_id)
@@ -238,7 +238,7 @@ static void set_updated_memory_size(char *output_str, uint8_t mem_id)
 	if (BIT_ON(computer_data.packed.mems, mem_id))
 		set_mem_size_str(output_str, computer_data.packed.memsz[mem_id]);
 	else
-		set_invalid_string(output_str);
+		sprintf_inval_data(output_str);
 }
 
 static void set_updated_hdd_size(char *output_str, uint8_t hdd_id)
@@ -246,7 +246,7 @@ static void set_updated_hdd_size(char *output_str, uint8_t hdd_id)
 	if (BIT_ON(computer_data.packed.hdds, hdd_id))
 		set_hdd_size_str(output_str, computer_data.packed.hddsz[hdd_id], computer_data.packed.hddf & (0x01 << hdd_id));
 	else
-		set_invalid_string(output_str);
+		sprintf_inval_data(output_str);
 }
 
 static void set_updated_cpu_frequency(char *output_str, uint8_t cpu_id)
@@ -254,7 +254,7 @@ static void set_updated_cpu_frequency(char *output_str, uint8_t cpu_id)
 	if (BIT_ON(computer_data.packed.cpufs, cpu_id))
 		set_fq_string(output_str, computer_data.packed.cpuf[cpu_id]);
 	else
-		set_invalid_string(output_str);
+		sprintf_inval_data(output_str);
 }
 
 static void set_updated_ambient_temp(char *output_str)
@@ -262,7 +262,7 @@ static void set_updated_ambient_temp(char *output_str)
 	if (computer_data.details.ambs)
 		set_temp_string(output_str, computer_data.details.ambt);
 	else
-		set_invalid_string(output_str);
+		sprintf_inval_data(output_str);
 }
 
 void update_adc(void *data)
@@ -275,7 +275,7 @@ static void set_updated_gpu_temp(char *output_str)
 	if (computer_data.details.gpus)
 		set_temp_string(output_str, computer_data.details.gput);
 	else
-		set_invalid_string(output_str);
+		sprintf_inval_data(output_str);
 }
 
 
@@ -285,7 +285,7 @@ static void set_update_hdd_temp(char *output_str, uint8_t hdd_id)
 	if ((computer_data.packed.hddts & (0x01 << hdd_id)) != 0)
 		set_temp_string(output_str, computer_data.packed.hddt[hdd_id]);
 	else
-		set_invalid_string(output_str);
+		sprintf_inval_data(output_str);
 }
 
 static void set_rtc_hour(char *str)
@@ -293,7 +293,7 @@ static void set_rtc_hour(char *str)
 	if (calendar_is_date_valid(&computer_date_time))
 		sprintf(str, "%d" ,computer_date_time.hour);
 	else
-		set_invalid_string(str);
+		sprintf_inval_data(str);
 }
 
 static void set_rtc_min(char *str)
@@ -301,7 +301,7 @@ static void set_rtc_min(char *str)
 	if (calendar_is_date_valid(&computer_date_time))
 		sprintf(str, "%02d" ,computer_date_time.minute);
 	else
-		set_invalid_string(str);
+		sprintf_inval_data(str);
 }
 
 static void set_rtc_sec(char *str)
