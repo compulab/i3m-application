@@ -40,9 +40,10 @@ static bool is_type_in_frame(enum information_type info_type, struct gfx_informa
 {
 	while (info_node != NULL) {
 		if (info_node->information.info_type == info_type)
-						return true;
+			return true;
 		info_node = info_node->next;
 	}
+
 	return false;
 }
 
@@ -78,7 +79,6 @@ void update_requests(void *data)
 	if (!i2c_buffer.layout.req && i2c_buffer.raw[PENDR0])
 		i2c_buffer.layout.req = 1;
 }
-
 
 static void clear_regs(uint8_t *beg_addr, uint8_t *end_addr)
 {

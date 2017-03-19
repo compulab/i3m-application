@@ -23,18 +23,10 @@
 #define AMBIENT_TWI_ADDRESS  		0x4C
 #define AMBIENT_TEMPERATURE_ADDRESS 0x00
 #define EMPTY_SLOT "Empty"
-#define HDDTR_BIT					0
-#define CPUFR_BIT					1
-#define CPUTR_BIT					2
-#define GPUTR_BIT					3
 
 #define POST_CODE_BIOS_START	0xE1		// BIOS post code that send when BIOS is end and the computer continue boot.
 #define	POST_CODE_BIOS_DONE		0xA0 		// BIOS post code that send when BIOS is end and the computer continue boot.
 
-
-#ifndef APPLICATION_SIZE
-#define APPLICATION_SIZE 0
-#endif
 
 #ifndef APPLICATION_VER_MSB
 #define APPLICATION_VER_MSB 0
