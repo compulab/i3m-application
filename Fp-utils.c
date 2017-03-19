@@ -80,11 +80,10 @@ void update_requests(void *data)
 }
 
 
-
 static void clear_regs(uint8_t *beg_addr, uint8_t *end_addr)
 {
 	for (uint8_t *addr = beg_addr; addr < end_addr; addr++)
-			*addr = 0x00;
+		*addr = 0x00;
 }
 
 static void reset_temperatures(void)
@@ -336,7 +335,6 @@ static void set_usb_serial_string(char *str)
 {
 	strncpy(str, buf, 1);
 }
-
 
 void update_data_by_type(enum information_type type, char *output_str, uint8_t info)
 {
