@@ -61,45 +61,24 @@ static bool need_to_update_req(enum information_type info_type)
 	return false;
 }
 
-static void check_update_hddtr_temp_req(void)
+void update_requests(void *data)
 {
-	if(i2c_buffer.layout.hddtr == 0 && need_to_update_req(SHOW_HDD_TEMPERTURE))
+	if (!i2c_buffer.layout.hddtr && need_to_update_req(SHOW_HDD_TEMPERTURE))
 		i2c_buffer.layout.hddtr = 1;
-}
 
-static void check_update_cpu_fq_req(void)
-{
-	if (i2c_buffer.layout.cpufr == 0 && need_to_update_req(SHOW_CPU_FREQUENCY))
+	if (!i2c_buffer.layout.cpufr && need_to_update_req(SHOW_CPU_FREQUENCY))
 		i2c_buffer.layout.cpufr = 1;
-}
 
-static void check_update_cpu_temp_req(void)
-{
-	if (i2c_buffer.layout.cputr == 0 && need_to_update_req(SHOW_CPU_TEMPERTURE))
+	if (!i2c_buffer.layout.cputr && need_to_update_req(SHOW_CPU_TEMPERTURE))
 		i2c_buffer.layout.cputr = 1;
-}
 
-static void check_update_gpu_temp_req(void)
-{
-	if (i2c_buffer.layout.gputr == 0 && need_to_update_req(SHOW_GPU_TEMPERTURE))
+	if (!i2c_buffer.layout.gputr && need_to_update_req(SHOW_GPU_TEMPERTURE))
 		i2c_buffer.layout.gputr = 1;
-}
 
-static void check_update_pending_req(void)
-{
-	if (i2c_buffer.layout.req == 0 && i2c_buffer.raw[PENDR0] != 0)
+	if (!i2c_buffer.layout.req && i2c_buffer.raw[PENDR0])
 		i2c_buffer.layout.req = 1;
 }
 
-
-void update_requests(void *data)
-{
-	check_update_hddtr_temp_req();
-	check_update_cpu_fq_req();
-	check_update_cpu_temp_req();
-	check_update_gpu_temp_req();
-	check_update_pending_req();
-}
 
 
 static void clear_regs(uint8_t *beg_addr, uint8_t *end_addr)
