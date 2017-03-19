@@ -414,56 +414,27 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 		present_menu->is_active_frame = true;
 }
 
-static bool is_cpu_fq_need_update(struct gfx_information *info, bool is_visible)
+static bool is_data_need_update_packed(uint8_t data, struct gfx_information *info, bool is_visible)
 {
-	if (is_visible) {
-			return present_menu->visible ? ((computer_data.packed.cpufs & (0x01 << info->info_data)) == 0x00) :
-					((computer_data.packed.cpufs & (0x01 << info->info_data)) != 0x00);
-		}
+	if (!is_visible)
+		return false;
 
-	return false;
+	bool data_valid = BIT_ON(data, info->info_data);
+	return present_menu->visible ? !data_valid : data_valid;
 }
 
 static bool is_hdd_size_need_update(struct gfx_information *info, bool is_visible)
 {
 	bool need_update = false;
-	if (is_visible) {
-		switch (info->info_data){
-		case 0:
-			need_update = computer_data.details.hdd0s == 0;
-			break;
-		case 1:
-			need_update = computer_data.details.hdd1s == 0;
-			break;
-		case 2:
-			need_update = computer_data.details.hdd2s == 0;
-			break;
-		case 3:
-			need_update = computer_data.details.hdd3s == 0;
-			break;
-		case 4:
-			need_update = computer_data.details.hdd4s == 0;
-			break;
-		case 5:
-			need_update = computer_data.details.hdd5s == 0;
-			break;
-		case 6:
-			need_update = computer_data.details.hdd6s == 0;
-			break;
-		case 7:
-			need_update = computer_data.details.hdd7s == 0;
-			break;
-		default:
-			need_update = false;
-			break;
-		}
-	}
+	if (is_visible)
+		need_update = !BIT_ON(computer_data.packed.hdds, info->info_data);
+
 	if (!need_update) {
 		char temp_str[3];
 		char curr_str[3];
-		set_hdd_size_str(temp_str, computer_data.packed.hddsz[info->info_data], computer_data.packed.hddf & (0x01 << info->info_data));
+		set_hdd_size_str(temp_str, computer_data.packed.hddsz[info->info_data], BIT_ON(computer_data.packed.hddf, info->info_data));
 		set_curr_str(curr_str, SHOW_HDD_SIZE);
-		need_update = strcmp(temp_str, curr_str) != 0;
+		need_update = strcmp(temp_str, curr_str);
 	}
 	return need_update;
 }
@@ -471,31 +442,15 @@ static bool is_hdd_size_need_update(struct gfx_information *info, bool is_visibl
 static bool is_mem_size_need_update(struct gfx_information *info, bool is_visible)
 {
 	bool need_update = false;
-	if (is_visible) {
-		switch (info->info_data){
-		case 0:
-			need_update = computer_data.details.mem0s == 0;
-			break;
-		case 1:
-			need_update = computer_data.details.mem1s == 0;
-			break;
-		case 2:
-			need_update = computer_data.details.mem2s == 0;
-			break;
-		case 3:
-			need_update = computer_data.details.mem3s == 0;
-			break;
-		default:
-			need_update = false;
-			break;
-		}
-	}
+	if (is_visible)
+		need_update = !BIT_ON(computer_data.packed.mems, info->info_data);
+
 	if (!need_update) {
 		char temp_str[3];
 		char curr_str[3];
 		set_mem_size_str(temp_str, info->info_data);
 		set_curr_str(curr_str, SHOW_MEMORY_SIZE);
-		need_update = strcmp(temp_str, curr_str) != 0;
+		need_update = strcmp(temp_str, curr_str);
 	}
 	return need_update;
 }
@@ -503,72 +458,35 @@ static bool is_mem_size_need_update(struct gfx_information *info, bool is_visibl
 static bool is_hdd_temp_need_update(struct gfx_information *info, bool is_visible)
 {
 	bool need_update = false;
-	if (is_visible) {
-		switch (info->info_data){
-		case 0:
-			need_update = computer_data.details.hdd0ts== 0;
-			break;
-		case 1:
-			need_update = computer_data.details.hdd1ts == 0;
-			break;
-		case 2:
-			need_update = computer_data.details.hdd2ts == 0;
-			break;
-		case 3:
-			need_update = computer_data.details.hdd3ts == 0;
-			break;
-		case 4:
-			need_update = computer_data.details.hdd4ts == 0;
-			break;
-		case 5:
-			need_update = computer_data.details.hdd5ts == 0;
-			break;
-		case 6:
-			need_update = computer_data.details.hdd6ts == 0;
-			break;
-		case 7:
-			need_update = computer_data.details.hdd7ts == 0;
-			break;
-		default:
-			need_update = false;
-			break;
-		}
-	}
+	if (is_visible)
+		need_update = !BIT_ON(computer_data.packed.hddts, info->info_data);
+
 	if (!need_update) {
 		char temp_str[3];
 		char curr_str[3];
 		set_update_hdd_temp(temp_str, info->info_data);
 		set_curr_str(curr_str, SHOW_HDD_SIZE);
-		need_update = strcmp(temp_str, curr_str) != 0;
+		need_update = strcmp(temp_str, curr_str);
 	}
 	return need_update;
 }
 
-static bool is_cpu_temp_need_update(struct gfx_information *info, bool is_visible)
-{
-	if (is_visible) {
-		return present_menu->visible ? ((computer_data.packed.cputs & (0x01 << info->info_data)) == 0x00) :
-				((computer_data.packed.cputs & (0x01 << info->info_data)) != 0x00);
-	}
-	return false;
-}
-
 static bool is_gpu_temp_need_update(struct gfx_information *info, bool is_visible)
 {
-	bool need_update = is_visible && computer_data.details.gpus == 0;
+	bool need_update = is_visible && !computer_data.details.gpus;
 	if (!need_update){
 		char temp_str[3];
 		char curr_str[3];
 		set_curr_str(curr_str, SHOW_GPU_TEMPERTURE);
 		set_updated_gpu_temp(temp_str);
-		need_update = strcmp(temp_str, curr_str) != 0;
+		need_update = strcmp(temp_str, curr_str);
 	}
 	return need_update;
 }
 
 static bool is_ambient_need_update(struct gfx_information *info, bool is_visible)
 {
-	bool need_update = is_visible && computer_data.details.ambs == 0;
+	bool need_update = is_visible && !computer_data.details.ambs;
 	if (!need_update){
 		char temp_str[3];
 		char curr_str[3];
@@ -585,7 +503,7 @@ static bool is_information_need_to_change(struct gfx_information *info, bool is_
 	case SHOW_COMPUTER_POWER:
 		return !present_menu->visible;
 	case SHOW_CPU_FREQUENCY:
-		return is_cpu_fq_need_update(info, is_visible);
+		return is_data_need_update_packed(computer_data.packed.cpufs, info, is_visible);
 	case SHOW_HDD_SIZE:
 		return is_hdd_size_need_update(info, is_visible);
 	case SHOW_MEMORY_SIZE:
@@ -593,7 +511,7 @@ static bool is_information_need_to_change(struct gfx_information *info, bool is_
 	case SHOW_HDD_TEMPERTURE:
 		return is_hdd_temp_need_update(info, is_visible);
 	case SHOW_CPU_TEMPERTURE:
-		return is_cpu_temp_need_update(info, is_visible);
+		return is_data_need_update_packed(computer_data.packed.cputs, info, is_visible);
 	case SHOW_GPU_TEMPERTURE:
 		return is_gpu_temp_need_update(info, is_visible);
 	case SHOW_AMBIENT_TEMPERATURE:
