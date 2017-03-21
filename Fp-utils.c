@@ -49,16 +49,16 @@ static bool is_type_in_frame(enum information_type info_type, struct gfx_informa
 
 static bool need_to_update_req(enum information_type info_type)
 {
-	if (!present_menu->visible) {
+	if (!present_menu->visible)
 		return is_type_in_frame(info_type, frame_present->information_head);
-	} else {
-		struct gfx_item_action *action;
-		for (int i = 0; i < present_menu->menu->num_elements; i++){
-			action = &present_menu->actions[i];
-			if (action->type == ACTION_TYPE_SHOW_FRAME && is_type_in_frame(info_type, action->frame->information_head))
-				return true;
-		}
+
+	struct gfx_item_action *action;
+	for (int i = 0; i < present_menu->menu->num_elements; i++){
+		action = &present_menu->actions[i];
+		if (action->type == ACTION_TYPE_SHOW_FRAME && is_type_in_frame(info_type, action->frame->information_head))
+			return true;
 	}
+
 	return false;
 }
 
@@ -182,7 +182,7 @@ void set_fq_string(char *str, uint16_t fq)
 
 void set_temp_string(char *str, int8_t temperature)
 {
-	sprintf(str,"%d%c",temperature ,(uint8_t)128);
+	sprintf(str, "%d%c", temperature, (uint8_t)128);
 }
 
 
