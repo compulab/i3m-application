@@ -23,7 +23,7 @@
 #define BUILD_TIME "hh:mm:ss"
 #endif
 
-void set_mac_address(char *output_str, uint8_t mac_address_index)
+void sprintf_mac_address(char *output_str, uint8_t mac_address_index)
 {
 	uint8_t eeprom_addr = MAC_ADDRESS_EEPROM_ADDRESS + MAC_ADDRESS_LENGTH * mac_address_index;
 	uint8_t mac_addr[MAC_ADDRESS_LENGTH];
@@ -34,7 +34,7 @@ void set_mac_address(char *output_str, uint8_t mac_address_index)
 			mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);
 }
 
-void set_app_version(char *output_str, uint8_t type)
+void sprintf_app_version(char *output_str, uint8_t type)
 {
 	switch (type) {
 	case 0:
@@ -55,7 +55,7 @@ void set_app_version(char *output_str, uint8_t type)
 	}
 }
 
-void set_part_number(char *output_str)
+void sprintf_part_number(char *output_str)
 {
 	char part_number[PART_NUMBER_LENGTH + 1];
 	uint8_t index = 0;
@@ -86,7 +86,7 @@ void set_part_number(char *output_str)
 	strcpy(output_str, part_number);
 }
 
-void set_serial_number(char *output_str)
+void sprintf_serial_number(char *output_str)
 {
 	char serial[SERIAL_NUMBER_LENGTH * 2  + 1];
 	bool start_parsing = false;

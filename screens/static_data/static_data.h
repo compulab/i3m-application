@@ -9,9 +9,9 @@
 #ifndef STATIC_DATA_H_
 #define STATIC_DATA_H_
 
-void set_serial_number(char *output_str);
-void set_part_number(char *output_str);
-void set_app_version(char *output_str, uint8_t type);
-void set_mac_address(char *output_str, uint8_t mac_address_index);
+void sprintf_serial_number(char *output_str);
+void sprintf_part_number(char *output_str);
+void sprintf_app_version(char *output_str, uint8_t type);
+void sprintf_mac_address(char *output_str, uint8_t mac_address_index);
 
 #endif /* STATIC_DATA_H_ */

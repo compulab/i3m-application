@@ -154,7 +154,7 @@ void update_power_state(void)
 	}
 }
 
-void set_state(char *state)
+void sprintf_power_state(char *state)
 {
 	switch (current_power_state){
 	case POWER_ON:
@@ -267,7 +267,7 @@ static void set_updated_ambient_temp(char *output_str)
 
 void update_adc(void *data)
 {
-	set_power_data(power_value);
+	sprintf_power_data(power_value);
 }
 
 static void set_updated_gpu_temp(char *output_str)
@@ -301,7 +301,7 @@ static void set_curr_str(char *str, enum information_type type)
 	}
 }
 
-static void set_update_post_code(char *str)
+static void sprintf_post_code(char *str)
 {
 	sprintf(str, "%04X", i2c_buffer.layout.bios_post_code);
 }
@@ -317,68 +317,68 @@ void update_data_by_type(enum information_type type, char *output_str, uint8_t i
 	present_menu->is_active_frame = false;
 	switch (type){
 	case SHOW_MEMORY_SIZE:
-		set_updated_memory_size(output_str, info);
+		sprintf_memory_size(output_str, info);
 		break;
 	case SHOW_HDD_SIZE:
-		set_updated_hdd_size(output_str, info);
+		sprintf_hdd_size(output_str, info);
 		break;
 	case SHOW_AMBIENT_TEMPERATURE:
 		update_ambient_temp(NULL);
-		set_updated_ambient_temp(output_str);
+		sprintf_ambient_temp(output_str);
 		break;
 	case SHOW_GPU_TEMPERTURE:
-		set_updated_gpu_temp(output_str);
+		sprintf_gpu_temp(output_str);
 		break;
 	case SHOW_CPU_FREQUENCY:
-		set_updated_cpu_frequency(output_str, info);
+		sprintf_cpu_freq(output_str, info);
 		break;
 	case SHOW_HDD_TEMPERTURE:
-		set_update_hdd_temp(output_str, info);
+		sprintf_hdd_temp(output_str, info);
 		break;
 	case SHOW_POST_CODE:
-		set_update_post_code(output_str);
+		sprintf_post_code(output_str);
 		break;
 	case SHOW_COMPUTER_POWER:
-		set_power_data(output_str);
+		sprintf_power_data(output_str);
 		break;
 	case SHOW_SERIAL_NUMBER:
-		set_serial_number(output_str);
+		sprintf_serial_number(output_str);
 		break;
 	case SHOW_APP_VERSION:
-		set_app_version(output_str, info);
+		sprintf_app_version(output_str, info);
 		break;
 	case SHOW_PART_NUMBER:
-		set_part_number(output_str);
+		sprintf_part_number(output_str);
 		break;
 	case SHOW_MAC_ADDRESS:
-		set_mac_address(output_str, info);
+		sprintf_mac_address(output_str, info);
 		break;
 	case SHOW_POWER_STATE:
-		set_state(output_str);
+		sprintf_power_state(output_str);
 		break;
 	case SET_BRIGHTNESS:
-		set_brightness(output_str);
+		sprintf_brightness(output_str);
 		break;
 	case SHOW_CPU_TEMPERTURE:
-		set_cpu_updated_temp(output_str, info);
+		sprintf_cpu_temp(output_str, info);
 		break;
 	case SET_SCREEN_SAVER_ENABLE:
-		set_screen_saver_enable(output_str);
+		sprintf_screen_saver_enable(output_str);
 		break;
 	case SET_SCREEN_SAVER_TIME:
-		set_screen_saver_time(output_str);
+		sprintf_screen_saver_time(output_str);
 		break;
 	case SET_SCREEN_SAVER_TYPE:
-		set_screen_saver_type(output_str);
+		sprintf_screen_saver_type(output_str);
 		break;
 	case SHOW_RTC_HOUR:
-		set_rtc_hour(output_str);
+		sprintf_rtc_hour(output_str);
 		break;
 	case SHOW_RTC_MIN:
-		set_rtc_min(output_str);
+		sprintf_rtc_min(output_str);
 		break;
 	case SHOW_RTC_SEC:
-		set_rtc_sec(output_str);
+		sprintf_rtc_sec(output_str);
 		break;
 	case SHOW_USB_SERIAL_INPUT:
 		set_usb_serial_string(output_str);

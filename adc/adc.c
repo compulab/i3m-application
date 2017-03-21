@@ -53,7 +53,7 @@ static double adc_avg(void)
 	return power_sum / (i);
 }
 
-void set_power_data(char *str)
+void sprintf_power_data(char *str)
 {
 	double avg = adc_avg();
 	long power = avg * 0.10137 + 2.9;

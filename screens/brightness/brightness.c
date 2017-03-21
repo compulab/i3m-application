@@ -64,7 +64,7 @@ static void handle_brightness_buttons(uint8_t key)
 	gfx_frame_draw(frame_present, true);
 }
 
-void set_brightness(char *str)
+void sprintf_brightness(char *str)
 {
 	frame_present->handle_buttons = handle_brightness_buttons;
 	sprintf(str, "%d ", eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS) / BRIGHTNESS_STEP);

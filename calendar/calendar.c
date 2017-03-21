@@ -494,7 +494,7 @@ void calendar_add_second_to_date(struct calendar_date *date)
 	}
 }
 
-void set_rtc_hour(char *str)
+void sprintf_rtc_hour(char *str)
 {
 	if (calendar_is_date_valid(&computer_date_time))
 		sprintf(str, "%d" ,computer_date_time.hour);
@@ -502,7 +502,7 @@ void set_rtc_hour(char *str)
 		sprintf_inval_data(str);
 }
 
-void set_rtc_min(char *str)
+void sprintf_rtc_min(char *str)
 {
 	if (calendar_is_date_valid(&computer_date_time))
 		sprintf(str, "%02d" ,computer_date_time.minute);
@@ -510,7 +510,7 @@ void set_rtc_min(char *str)
 		sprintf_inval_data(str);
 }
 
-void set_rtc_sec(char *str)
+void sprintf_rtc_sec(char *str)
 {
 	if (calendar_is_date_valid(&computer_date_time) && computer_date_time.second % 2)
 		sprintf(str, ":");

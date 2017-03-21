@@ -81,7 +81,7 @@ void update_computer_state(void);
 
 void update_power_state(void);
 
-void set_state(char *state);
+void sprintf_power_state(char *state);
 
 void update_data_by_type(enum information_type type, char *output_str, uint8_t info);
 

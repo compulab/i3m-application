@@ -90,7 +90,7 @@ static void set_disabled(char *str)
 	sprintf(str, "DISABLED");
 }
 
-void set_screen_saver_type(char *str)
+void sprintf_screen_saver_type(char *str)
 {
 	frame_present->handle_buttons = handle_screen_saver_type_buttons;
 	if (computer_data.details.screen_saver_visible)
@@ -101,7 +101,7 @@ void set_screen_saver_type(char *str)
 	present_menu->is_active_frame = true;
 }
 
-void set_screen_saver_time(char *str)
+void sprintf_screen_saver_time(char *str)
 {
 	frame_present->handle_buttons = handle_screen_saver_time_buttons;
 	if (computer_data.details.screen_saver_visible)
@@ -112,7 +112,7 @@ void set_screen_saver_time(char *str)
 	present_menu->is_active_frame = true;
 }
 
-void set_screen_saver_enable(char *str)
+void sprintf_screen_saver_enable(char *str)
 {
 	frame_present->handle_buttons = handle_screen_saver_enable_buttons;
 	sprintf(str, "DISABLE ENABLE");
