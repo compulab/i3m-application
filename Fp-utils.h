@@ -85,4 +85,10 @@ void sprintf_power_state(char *state);
 
 void update_data_by_type(enum information_type type, char *output_str, uint8_t info);
 
+void set_curr_str(char *str, enum information_type type);
+
+void set_fq_string(char *str, uint16_t fq);
+
+void set_temp_string(char *str, int8_t temperature);
+
 #endif /* FP_UTILS_H_ */
