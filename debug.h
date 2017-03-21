@@ -16,11 +16,6 @@
 
 char debug[15];
 
-
-#ifdef DEBUG_MODE
-
-#endif
-
 inline void insert_to_log(char ch)
 {
 	if (computer_data.details.error_count > 0) {
