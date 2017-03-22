@@ -187,19 +187,6 @@ void update_adc(void *data)
 	sprintf_power_data(power_value);
 }
 
-void set_curr_str(char *str, enum information_type type)
-{
-	str = "";
-	struct gfx_information_node *info_node = frame_present->information_head;
-	while (info_node != NULL) {
-		if (info_node->information.info_type == type){
-			strcpy(str, info_node->information.text.text);
-			break;
-		}
-		info_node = info_node->next;
-	}
-}
-
 static void sprintf_post_code(char *str)
 {
 	sprintf(str, "%04X", i2c_buffer.layout.bios_post_code);

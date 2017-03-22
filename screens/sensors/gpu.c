@@ -18,13 +18,5 @@ void sprintf_gpu_temp(char *output_str)
 
 bool is_gpu_temp_need_update(struct gfx_information *info, bool is_visible)
 {
-	bool need_update = is_visible && !computer_data.details.gpus;
-	if (!need_update){
-		char temp_str[3];
-		char curr_str[3];
-		set_curr_str(curr_str, SHOW_GPU_TEMPERTURE);
-		sprintf_gpu_temp(temp_str);
-		need_update = strcmp(temp_str, curr_str);
-	}
-	return need_update;
+	return is_visible && !computer_data.details.gpus;
 }
