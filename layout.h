@@ -38,8 +38,6 @@
 #define MAX_CPU								8
 #define MAX_MEMORY_SLOT						4
 
-#define HDD_TMP_VALID_BIT					0x80
-#define CPU_TMP_VALID_BIT					0x80
 #define CPU_FQ_VALID_BIT					0x80
 
 struct direct_string_item {

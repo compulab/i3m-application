@@ -13,15 +13,9 @@
 #include "screens/brightness/brightness.h"
 #include "screens/static_data/static_data.h"
 
-#define MAX_DIGITS 5
-#define UPDATE_FRAME_MIN_TICKS	0x08ff
-#define UPDATE_MENU_MIN_TICKS	0xafff
-
 enum power_state current_power_state = POWER_ON;
 enum display_state display_state;
 char power_value[10];
-uint16_t update_timestamp;
-uint16_t wait_time;
 
 struct calendar_date computer_date_time = {
     .second = 40,
