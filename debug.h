@@ -16,19 +16,6 @@
 
 char debug[15];
 
-inline void insert_to_log(char ch)
-{
-	if (computer_data.details.error_count > 0) {
-	cli();
-	if (log_twi.top >= MAX_LOG_SIZE)
-		return ;
-	log_twi.data[log_twi.top] = ch;
-	log_twi.top++;
-	sei();
-	}
-}
-
-
 #define CLEAR ssd1306_clear();
 
 #define MSG(str, y)	gfx_mono_draw_string(str, 0, y, &sysfont); \

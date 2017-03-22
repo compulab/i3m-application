@@ -116,8 +116,7 @@ ISR(TCC0_CCA_vect)
 	/* Find expired task and add it to the work queue */
 	array_foreach(struct tc_scheduler_task, tick_tasks_to_do, index) {
 		if (tick_tasks_to_do[index].overlaps_count == 0 &&  tick_tasks_to_do[index].offset <= TCC0.CNT) {
-			if (!insert_work(tick_tasks_to_do[index].task.work))
-				insert_to_log('T'+index);
+			insert_work(tick_tasks_to_do[index].task.work);
 			task_set_timer(index);
 		}
 	}

@@ -149,8 +149,7 @@ void update_power_state(void)
 
 	if (current_power_state != last_power_state) {
 		i2c_buffer.layout.power_state = current_power_state;
-		if (!insert_work(&power_state_work))
-			insert_to_log('P');
+		insert_work(&power_state_work);
 	}
 }
 

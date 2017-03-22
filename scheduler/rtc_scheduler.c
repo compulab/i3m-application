@@ -62,8 +62,7 @@ ISR(RTC_OVF_vect)
 
 	for (int i = 0; i < NUMBER_OF_SEC_TASKS; i ++) {
 		if (sec_tasks_to_do[i].secs_left == 0) {
-			if (!insert_work(sec_tasks_to_do[i].work))
-				insert_to_log('S'+i);
+			insert_work(sec_tasks_to_do[i].work);
 			sec_task_set_timer(i);
 		}
 	}

@@ -185,29 +185,6 @@ static bool sleep_interuptable(uint32_t timeout_us)
 	return wakeup;
 }
 
-/*
- * Debug method for printing debug log
- */
-static void debug_print_log(void)
-{
-	bool is_changed = false;
-	if (log_twi.bottom != log_twi.top) {
-		for (; log_twi.bottom < log_twi.top; log_twi.bottom++) {
-			uart_send_char(log_twi.data[log_twi.bottom]);
-			uart_send_string(", ");
-			is_changed = true;
-		}
-
-		if (is_changed)
-			uart_send_string(".\n\r");
-	}
-
-	if (0 != computer_data.details.error_count) {
-		uart_send_num(computer_data.details.error_count, 10);
-		uart_send_string(" - errors\n\r");
-	}
-}
-
 bool my_callback_cdc_enable(void)
 {
 	return stdio_usb_enable();
@@ -236,7 +213,6 @@ void task(void)
 int main(int argc, char *argv[])
 {
 
-	log_twi.bottom = log_twi.top = 0;
 	computer_data.details.error_count = 0;
 	works_count = 0;
 

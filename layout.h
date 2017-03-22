@@ -49,14 +49,6 @@ struct direct_string_item {
 	struct direct_string_item *next;
 };
 
-#define MAX_LOG_SIZE 30
-
-struct twi_log {
-	char data[MAX_LOG_SIZE];
-	uint8_t bottom;
-	uint8_t top;
-};
-
 enum computer_state_t {
 	COMPUTER_OFF,
 	COMPUTER_ON,
@@ -209,8 +201,6 @@ union updatable_info {
 		uint32_t error_count;
 	} packed;
 };
-
-struct twi_log log_twi;
 
 union updatable_info computer_data;
 enum computer_state_t computer_state;

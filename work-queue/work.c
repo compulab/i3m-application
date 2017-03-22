@@ -34,7 +34,6 @@ int insert_work(struct work *work)
 	struct work *new_work = malloc_locked(sizeof(struct work));
 	if (new_work == NULL) {
 		computer_data.details.error_count++;
-		insert_to_log('E');
 		return -1;
 	}
 	new_work->data = work->data;
