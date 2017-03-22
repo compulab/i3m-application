@@ -372,7 +372,6 @@ static bool is_frame_need_update(struct gfx_frame *frame)
 {
 	struct gfx_information_node *info_node= frame->information_head;
 	while (info_node != NULL) {
-		uart_send_string("check update info\n\r");
 		if (is_info_need_update(&info_node->information))
 			return true;
 		info_node = info_node->next;
@@ -394,7 +393,6 @@ void update_computer_state(void)
 
 void update_info(void *data)
 {
-	uart_send_string("update_info start\n\r");
 	switch (display_state) {
 	case DISPLAY_LOGO:
 	case DISPLAY_ACTION_FRAME:
@@ -402,7 +400,6 @@ void update_info(void *data)
 		return;
 
 	case DISPLAY_MENU:
-		uart_send_string("check update menu\n\r");
 		if (is_menu_need_update(present_menu))
 			gfx_action_menu_init(present_menu, true);
 		break;
@@ -412,13 +409,11 @@ void update_info(void *data)
 		break;
 
 	case DISPLAY_FRAME:
-		uart_send_string("check update frame\n\r");
 		if (is_frame_need_update(frame_present))
 			gfx_frame_draw(frame_present, true);
 	break;
 
 	case DISPLAY_DASHBOARD:
-		uart_send_string("check update dashboard**********\n\r");
 		if (is_frame_need_update(dashboard))
 			gfx_frame_draw(dashboard, true);
 		break;

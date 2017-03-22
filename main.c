@@ -225,7 +225,6 @@ int main(int argc, char *argv[])
 	wdt_reset();
 	while (true) {
 		task();
-//		debug_print_log();
 		wakeup = false;
 		if (!work_handler()) {
 			sleepmgr_enter_sleep();
