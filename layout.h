@@ -146,14 +146,7 @@ union updatable_info {
 		uint8_t hdd5f:1;
 		uint8_t hdd6f:1;
 		uint8_t hdd7f:1;
-		uint16_t cpu0f;
-		uint16_t cpu1f;
-		uint16_t cpu2f;
-		uint16_t cpu3f;
-		uint16_t cpu4f;
-		uint16_t cpu5f;
-		uint16_t cpu6f;
-		uint16_t cpu7f;
+		uint16_t cpuf[MAX_CPU];
 		uint8_t cpu0fs:1;
 		uint8_t cpu1fs:1;
 		uint8_t cpu2fs:1;
