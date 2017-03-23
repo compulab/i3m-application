@@ -55,20 +55,29 @@ static double adc_avg(void)
 
 void sprintf_power_data(char *str)
 {
+	long power = computer_data.details.adc * 0.10137 + 2.9;
+
+	if (!computer_data.details.adcs)
+		sprintf(str, "-");
+	else if (power >= 6 && power <= 300)
+		sprintf(str, "%ld W", power);
+	else
+		sprintf(str, "LOW");
+}
+
+void update_adc(void *data)
+{
 	double avg = adc_avg();
 	long power = avg * 0.10137 + 2.9;
 	if (power >= 6 && power <= 300) {
 		computer_data.details.adc = avg;
 		computer_data.details.adcs = 1;
 		current_power = power;
-		sprintf(str, "%ld W", current_power);
 	} else if (power > 0) {
 		computer_data.details.adcs = 1;
 		computer_data.details.adc = 0;
-		sprintf(str, "LOW");
 	} else {
 		computer_data.details.adcs = 0;
-		sprintf(str, "-");
 	}
 }
 

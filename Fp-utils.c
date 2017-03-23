@@ -182,11 +182,6 @@ void set_temp_string(char *str, int8_t temperature)
 
 
 
-void update_adc(void *data)
-{
-	sprintf_power_data(power_value);
-}
-
 static void sprintf_post_code(char *str)
 {
 	sprintf(str, "%04X", i2c_buffer.layout.bios_post_code);
