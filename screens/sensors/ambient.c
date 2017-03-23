@@ -10,13 +10,13 @@
 
 void sprintf_ambient_temp(char *output_str)
 {
-	if (computer_data.details.ambs)
-		sprintf_temperature(output_str, computer_data.details.ambt);
+	if (computer_data.details.ambient_temp_set)
+		sprintf_temperature(output_str, computer_data.details.ambient_temp);
 	else
 		sprintf_inval_data(output_str);
 }
 
 bool is_ambient_need_update(struct gfx_information *info, bool is_visible)
 {
-	return is_visible && !computer_data.details.ambs;
+	return is_visible && !computer_data.details.ambient_temp_set;
 }

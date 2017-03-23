@@ -27,22 +27,22 @@ static void update_action_visibility(struct gfx_item_action *action)
 	while (info_node != 0) {
 		switch(info_node->information.info_type) {
 		case SHOW_CPU_TEMPERTURE:
-			visible = BIT_ON(computer_data.packed.cputs, info_node->information.info_data);
+			visible = BIT_ON(computer_data.packed.cpu_temp_set, info_node->information.info_data);
 			break;
 		case SHOW_CPU_FREQUENCY:
-			visible = BIT_ON(computer_data.packed.cpufs, info_node->information.info_data);
+			visible = BIT_ON(computer_data.packed.cpu_freq_set, info_node->information.info_data);
 			break;
 		case SHOW_AMBIENT_TEMPERATURE:
-			visible = computer_data.details.ambs;
+			visible = computer_data.details.ambient_temp_set;
 			break;
 		case SHOW_GPU_TEMPERTURE:
-			visible = computer_data.details.gpus;
+			visible = computer_data.details.gpu_temp_set;
 			break;
 		case SHOW_HDD_SIZE:
 			visible = BIT_ON(computer_data.packed.hdds, info_node->information.info_data);
 			break;
 		case SHOW_HDD_TEMPERTURE:
-			visible = BIT_ON(computer_data.packed.hddts, info_node->information.info_data);
+			visible = BIT_ON(computer_data.packed.hdd_temp_set, info_node->information.info_data);
 			break;
 		case SHOW_MEMORY_SIZE:
 			visible = BIT_ON(computer_data.packed.mems, info_node->information.info_data);

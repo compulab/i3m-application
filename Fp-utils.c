@@ -282,7 +282,7 @@ static bool is_information_need_to_change(struct gfx_information *info, bool is_
 	case SHOW_COMPUTER_POWER:
 		return !present_menu->visible;
 	case SHOW_CPU_FREQUENCY:
-		return is_data_need_update_packed(computer_data.packed.cpufs, info, is_visible);
+		return is_data_need_update_packed(computer_data.packed.cpu_freq_set, info, is_visible);
 	case SHOW_HDD_SIZE:
 		return is_hdd_size_need_update(info, is_visible);
 	case SHOW_MEMORY_SIZE:
@@ -290,7 +290,7 @@ static bool is_information_need_to_change(struct gfx_information *info, bool is_
 	case SHOW_HDD_TEMPERTURE:
 		return is_hdd_temp_need_update(info, is_visible);
 	case SHOW_CPU_TEMPERTURE:
-		return is_data_need_update_packed(computer_data.packed.cputs, info, is_visible);
+		return is_data_need_update_packed(computer_data.packed.cpu_temp_set, info, is_visible);
 	case SHOW_GPU_TEMPERTURE:
 		return is_gpu_temp_need_update(info, is_visible);
 	case SHOW_AMBIENT_TEMPERATURE:

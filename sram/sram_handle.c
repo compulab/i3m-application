@@ -59,11 +59,11 @@ static void write_cpu_fq_msb(uint8_t cpu_addr)
 	if (!is_valid_register(index,MAX_CPU))
 		return ;
 	if (i2c_buffer.raw[cpu_addr] & CPU_FQ_MSB_MSK) {
-		computer_data.packed.cpuf[index] = (i2c_buffer.raw[cpu_addr] & CPU_FQ_MSB_MSK) << 8 | i2c_buffer.raw[cpu_addr - 1];
+		computer_data.packed.cpu_freq[index] = (i2c_buffer.raw[cpu_addr] & CPU_FQ_MSB_MSK) << 8 | i2c_buffer.raw[cpu_addr - 1];
 		if (i2c_buffer.raw[cpu_addr] & CPU_FQ_VALID_BIT)
-			computer_data.packed.cpufs |= (0x01) << index;
+			computer_data.packed.cpu_freq_set |= (0x01) << index;
 		else
-			computer_data.packed.cpufs &= ~((0x01) << index);
+			computer_data.packed.cpu_freq_set &= ~((0x01) << index);
 	}
 	i2c_buffer.layout.cpufr = 0;
 	clear_req();
@@ -76,9 +76,9 @@ static void read_temp_control(uint8_t *data)
 
 static void write_temp_control(void)
 {
-	computer_data.details.gput = i2c_buffer.layout.gpus;
-	if (computer_data.details.gput && (i2c_buffer.layout.gput != computer_data.details.gput))
-		computer_data.details.gput = i2c_buffer.layout.gput;
+	computer_data.details.gpu_temp = i2c_buffer.layout.gpus;
+	if (computer_data.details.gpu_temp && (i2c_buffer.layout.gput != computer_data.details.gpu_temp))
+		computer_data.details.gpu_temp = i2c_buffer.layout.gput;
 }
 
 static void write_hd_sz_msb(uint8_t hdd_addr)
@@ -121,14 +121,14 @@ static void write_cpu_status(void)
 	i2c_buffer.layout.cputr = 0;
 	clear_req();
 	if (i2c_buffer.raw[CPUTS] == 0){
-		computer_data.packed.cputs = 0;
+		computer_data.packed.cpu_temp_set = 0;
 	} else {
-		computer_data.packed.cputs |= i2c_buffer.raw[CPUTS];
+		computer_data.packed.cpu_temp_set |= i2c_buffer.raw[CPUTS];
 		uint8_t bit = 0x01;
 		for (uint8_t i = 0 ; i < MAX_CPU; i++){
 			if (i2c_buffer.raw[CPUTS] & bit) {
-				if (computer_data.packed.cput[i] != i2c_buffer.raw[CPU0T + i]) {
-					computer_data.packed.cput[i] = i2c_buffer.raw[CPU0T + i];
+				if (computer_data.packed.cpu_temp[i] != i2c_buffer.raw[CPU0T + i]) {
+					computer_data.packed.cpu_temp[i] = i2c_buffer.raw[CPU0T + i];
 				}
 			}
 			bit = bit << 1;
@@ -141,12 +141,12 @@ static void write_cpu_status(void)
 static void write_hdd_status(void)
 {
 	if (i2c_buffer.raw[HDDTS]  == 0){
-		computer_data.packed.hddts = 0;
+		computer_data.packed.hdd_temp_set = 0;
 	} else {
 		uint8_t bit = 0x01;
 		for (uint8_t i = 0 ; i < MAX_CPU; i++){
 			if (i2c_buffer.raw[CPUTS] & bit)
-				computer_data.packed.hddt[i] = i2c_buffer.raw[CPU0T + i];
+				computer_data.packed.hdd_temp[i] = i2c_buffer.raw[CPU0T + i];
 			bit = bit << 1;
 		}
 	}
@@ -358,13 +358,13 @@ static void read_adc(enum i2c_addr_space adc_address, uint8_t *data)
 {
 	switch (adc_address) {
 	case ADC_LSB:
-		if (computer_data.details.adcs)
+		if (computer_data.details.adc_set)
 				*data = LSB(computer_data.packed.adc);
 		else
 				*data = 0xff;
 		break;
 	case ADC_MSB:
-		if (computer_data.details.adcs)
+		if (computer_data.details.adc_set)
 				*data = MSB(computer_data.packed.adc);
 		else
 				*data = 0xff;
@@ -725,10 +725,10 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 
 static void write_gpu_temp(void)
 {
-	computer_data.details.gpus = i2c_buffer.layout.gpus;
-	if (computer_data.details.gpus == 1) {
-		if (i2c_buffer.layout.gput != computer_data.details.gput) {
-			computer_data.details.gput = i2c_buffer.layout.gput;
+	computer_data.details.gpu_temp_set = i2c_buffer.layout.gpus;
+	if (computer_data.details.gpu_temp_set == 1) {
+		if (i2c_buffer.layout.gput != computer_data.details.gpu_temp) {
+			computer_data.details.gpu_temp = i2c_buffer.layout.gput;
 		}
 	}
 	i2c_buffer.layout.gputr = 0;

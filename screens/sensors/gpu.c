@@ -10,13 +10,13 @@
 
 void sprintf_gpu_temp(char *output_str)
 {
-	if (computer_data.details.gpus)
-		sprintf_temperature(output_str, computer_data.details.gput);
+	if (computer_data.details.gpu_temp_set)
+		sprintf_temperature(output_str, computer_data.details.gpu_temp);
 	else
 		sprintf_inval_data(output_str);
 }
 
 bool is_gpu_temp_need_update(struct gfx_information *info, bool is_visible)
 {
-	return is_visible && !computer_data.details.gpus;
+	return is_visible && !computer_data.details.gpu_temp_set;
 }

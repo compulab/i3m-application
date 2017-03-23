@@ -57,7 +57,7 @@ void sprintf_power_data(char *str)
 {
 	long power = computer_data.details.adc * 0.10137 + 2.9;
 
-	if (!computer_data.details.adcs)
+	if (!computer_data.details.adc_set)
 		sprintf(str, "-");
 	else if (power >= 6 && power <= 300)
 		sprintf(str, "%ld W", power);
@@ -71,13 +71,13 @@ void update_adc(void *data)
 	long power = avg * 0.10137 + 2.9;
 	if (power >= 6 && power <= 300) {
 		computer_data.details.adc = avg;
-		computer_data.details.adcs = 1;
+		computer_data.details.adc_set = 1;
 		current_power = power;
 	} else if (power > 0) {
-		computer_data.details.adcs = 1;
+		computer_data.details.adc_set = 1;
 		computer_data.details.adc = 0;
 	} else {
-		computer_data.details.adcs = 0;
+		computer_data.details.adc_set = 0;
 	}
 }
 

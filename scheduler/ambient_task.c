@@ -22,8 +22,8 @@ void update_ambient_temp(void *data)
 		update_ambient_temp(NULL);
 	}
 
-	computer_data.details.ambs = i2c_buffer.layout.ambs;
-	computer_data.details.ambt = i2c_buffer.layout.ambt;
+	computer_data.details.ambient_temp_set = i2c_buffer.layout.ambs;
+	computer_data.details.ambient_temp = i2c_buffer.layout.ambt;
 }
 
 static struct work ambient_work = { .do_work = update_ambient_temp };

@@ -11,16 +11,16 @@
 
 void sprintf_cpu_temp(char *data, uint8_t cpu_id)
 {
-	if (BIT_ON(computer_data.packed.cputs, cpu_id))
-		sprintf_temperature(data, computer_data.details.cput[cpu_id]);
+	if (BIT_ON(computer_data.packed.cpu_temp_set, cpu_id))
+		sprintf_temperature(data, computer_data.details.cpu_temp[cpu_id]);
 	else
 		sprintf_inval_data(data);
 }
 
 void sprintf_cpu_freq(char *output_str, uint8_t cpu_id)
 {
-	if (BIT_ON(computer_data.packed.cpufs, cpu_id))
-		set_fq_string(output_str, computer_data.packed.cpuf[cpu_id]);
+	if (BIT_ON(computer_data.packed.cpu_freq_set, cpu_id))
+		set_fq_string(output_str, computer_data.packed.cpu_freq[cpu_id]);
 	else
 		sprintf_inval_data(output_str);
 }
