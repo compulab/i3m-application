@@ -175,12 +175,8 @@ static void init(void)
  */
 static bool sleep_interuptable(uint32_t timeout_us)
 {
-	uint32_t us = 0;
-
-	while (us < timeout_us && !wakeup) {
-		us++;
+	for (uint32_t us = 0; us < timeout_us && !wakeup; us++)
 		delay_us(1);
-	}
 
 	return wakeup;
 }
