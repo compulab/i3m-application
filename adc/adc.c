@@ -43,7 +43,7 @@ static double adc_avg(void)
 	int16_t i;
 	int16_t adca1_result = 0;
 	power_sum = 0;
-	for (i=0; i < POWER_COUNT ;i++) {
+	for (i = 0; i < POWER_COUNT; i++) {
 		adc_start_conversion(&MY_ADC, MY_ADC_CH);  //one conversion begins
 		adc_wait_for_interrupt_flag(&MY_ADC, MY_ADC_CH);
 		adca1_result = adc_get_result(&MY_ADC, MY_ADC_CH); // & 0x0FFF;
