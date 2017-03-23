@@ -22,7 +22,7 @@ void set_hdd_size_str(char *str, uint16_t size, bool is_tera)
 void sprintf_hdd_temp(char *output_str, uint8_t hdd_id)
 {
 	if (BIT_ON(computer_data.packed.hddts, hdd_id))
-		set_temp_string(output_str, computer_data.packed.hddt[hdd_id]);
+		sprintf_temperature(output_str, computer_data.packed.hddt[hdd_id]);
 	else
 		sprintf_inval_data(output_str);
 }

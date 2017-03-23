@@ -173,7 +173,7 @@ void set_fq_string(char *str, uint16_t fq)
 	sprintf(str, "%d MHZ", fq);
 }
 
-void set_temp_string(char *str, int8_t temperature)
+void sprintf_temperature(char *str, int8_t temperature)
 {
 	sprintf(str, "%d%c", temperature, (uint8_t)128);
 }

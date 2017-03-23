@@ -89,6 +89,6 @@ void set_curr_str(char *str, enum information_type type);
 
 void set_fq_string(char *str, uint16_t fq);
 
-void set_temp_string(char *str, int8_t temperature);
+void sprintf_temperature(char *str, int8_t temperature);
 
 #endif /* FP_UTILS_H_ */

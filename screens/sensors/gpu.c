@@ -11,7 +11,7 @@
 void sprintf_gpu_temp(char *output_str)
 {
 	if (computer_data.details.gpus)
-		set_temp_string(output_str, computer_data.details.gput);
+		sprintf_temperature(output_str, computer_data.details.gput);
 	else
 		sprintf_inval_data(output_str);
 }

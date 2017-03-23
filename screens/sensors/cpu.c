@@ -12,7 +12,7 @@
 void sprintf_cpu_temp(char *data, uint8_t cpu_id)
 {
 	if (BIT_ON(computer_data.packed.cputs, cpu_id))
-		set_temp_string(data, computer_data.details.cput[cpu_id]);
+		sprintf_temperature(data, computer_data.details.cput[cpu_id]);
 	else
 		sprintf_inval_data(data);
 }
