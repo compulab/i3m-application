@@ -10,12 +10,11 @@
 #include "screen_saver/screen_saver.h"
 #include "twi/i2c_buffer.h"
 #include "lib/syntax.h"
+#include "power/power.h"
 #include "screens/brightness/brightness.h"
 #include "screens/static_data/static_data.h"
 
-#include "power/power.h"
 enum display_state display_state;
-char power_value[10];
 
 struct calendar_date computer_date_time = {
     .second = 40,
@@ -183,16 +182,11 @@ static bool is_menu_need_update(struct gfx_action_menu *menu)
 	return false;
 }
 
-static bool is_info_need_update(struct gfx_information *info)
-{
-	return is_information_need_to_change(info, true);
-}
-
 static bool is_frame_need_update(struct gfx_frame *frame)
 {
 	struct gfx_information_node *info_node= frame->information_head;
 	while (info_node != NULL) {
-		if (is_info_need_update(&info_node->information))
+		if (is_information_need_to_change(&info_node->information, true))
 			return true;
 		info_node = info_node->next;
 	}
@@ -223,16 +217,13 @@ void update_info(void *data)
 		if (is_menu_need_update(present_menu))
 			gfx_action_menu_init(present_menu, true);
 		break;
-
 	case DISPLAY_CLOCK:
 		gfx_frame_draw(frame_present, true);
 		break;
-
 	case DISPLAY_FRAME:
 		if (is_frame_need_update(frame_present))
 			gfx_frame_draw(frame_present, true);
-	break;
-
+		break;
 	case DISPLAY_DASHBOARD:
 		if (is_frame_need_update(dashboard))
 			gfx_frame_draw(dashboard, true);
