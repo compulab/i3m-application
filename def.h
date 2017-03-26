@@ -51,13 +51,6 @@ enum action_type {
 	ACTION_TYPE_SET_BIOS_STATE
 };
 
-enum power_state {
-	POWER_OFF = 0x00,
-	POWER_STD = 0x01,
-	POWER_STR = 0x03,
-	POWER_ON = 0x07,
-};
-
 enum screen_saver_time_unit {
 	SCREEN_SAVER_SECOND_UNIT = 0X00,
 	SCREEN_SAVER_MINUTE_UNIT = 0X01,

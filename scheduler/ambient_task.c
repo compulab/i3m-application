@@ -1,4 +1,5 @@
 #include "scheduler.h"
+#include "power/power.h"
 #include "twi/twi_master.h"
 #include "twi/i2c_buffer.h"
 

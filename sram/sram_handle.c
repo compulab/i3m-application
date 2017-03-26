@@ -8,6 +8,7 @@
 #include "debug.h"
 #define SRAM_DEBUG
 #include "sram_handle.h"
+#include "power/power.h"
 #include "uart/uart.h"
 #include "twi/i2c_buffer.h"
 

@@ -7,6 +7,7 @@
 
 #include "Fp-utils.h"
 #include "scheduler/scheduler.h"
+#include "power/power.h"
 #include "lib/syntax.h"
 
 enum screen_saver_type {

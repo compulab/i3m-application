@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "eeprom/eeprom.h"
+#include "twi/i2c_buffer.h"
 #include "auto_generated.h"
 
 #ifndef VERSION

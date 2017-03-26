@@ -49,7 +49,6 @@
 #define SCREEN_SAVER_HOUR_JUMP			1
 
 #define SEPERATE_LINE_Y					50
-extern enum power_state current_power_state;
 
 extern enum display_state display_state;
 
