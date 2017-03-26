@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 
-static inline void set_fq_string(char *str, uint16_t fq)
+static inline void sprintf_freq(char *str, uint16_t fq)
 {
 	sprintf(str, "%d MHZ", fq);
 }

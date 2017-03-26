@@ -21,7 +21,7 @@ void sprintf_cpu_temp(char *data, uint8_t cpu_id)
 void sprintf_cpu_freq(char *output_str, uint8_t cpu_id)
 {
 	if (BIT_ON(computer_data.packed.cpu_freq_set, cpu_id))
-		set_fq_string(output_str, computer_data.packed.cpu_freq[cpu_id]);
+		sprintf_freq(output_str, computer_data.packed.cpu_freq[cpu_id]);
 	else
 		sprintf_inval_data(output_str);
 }
