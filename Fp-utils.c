@@ -26,50 +26,6 @@ struct calendar_date computer_date_time = {
     .year = 2015
 };
 
-static bool is_type_in_frame(enum information_type info_type, struct gfx_information_node *info_node)
-{
-	while (info_node != NULL) {
-		if (info_node->information.info_type == info_type)
-			return true;
-		info_node = info_node->next;
-	}
-
-	return false;
-}
-
-static bool need_to_update_req(enum information_type info_type)
-{
-	if (!present_menu->visible)
-		return is_type_in_frame(info_type, frame_present->information_head);
-
-	struct gfx_item_action *action;
-	for (int i = 0; i < present_menu->menu->num_elements; i++){
-		action = &present_menu->actions[i];
-		if (action->type == ACTION_TYPE_SHOW_FRAME && is_type_in_frame(info_type, action->frame->information_head))
-			return true;
-	}
-
-	return false;
-}
-
-void update_requests(void *data)
-{
-	if (!i2c_buffer.layout.hddtr && need_to_update_req(SHOW_HDD_TEMPERTURE))
-		i2c_buffer.layout.hddtr = 1;
-
-	if (!i2c_buffer.layout.cpufr && need_to_update_req(SHOW_CPU_FREQUENCY))
-		i2c_buffer.layout.cpufr = 1;
-
-	if (!i2c_buffer.layout.cputr && need_to_update_req(SHOW_CPU_TEMPERTURE))
-		i2c_buffer.layout.cputr = 1;
-
-	if (!i2c_buffer.layout.gputr && need_to_update_req(SHOW_GPU_TEMPERTURE))
-		i2c_buffer.layout.gputr = 1;
-
-	if (!i2c_buffer.layout.req && i2c_buffer.raw[PENDR0])
-		i2c_buffer.layout.req = 1;
-}
-
 static void clear_regs(uint8_t *beg_addr, uint8_t *end_addr)
 {
 	for (uint8_t *addr = beg_addr; addr < end_addr; addr++)
@@ -391,18 +347,4 @@ static double screen_get_recur_period(void)
 struct scheduler_task screen_sec_task = {
     .work = &update_screen_work,
     .get_recur_period = screen_get_recur_period,
-};
-
-#define UPDATE_REQ_SEC	1
-
-static struct work requests_work = { .do_work = update_requests };
-
-static double pending_req_get_recur_period(void)
-{
-	return UPDATE_REQ_SEC;
-}
-
-struct scheduler_task pending_req_tick_task = {
-    .work = &requests_work,
-    .get_recur_period = pending_req_get_recur_period,
 };
