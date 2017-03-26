@@ -51,12 +51,6 @@ enum action_type {
 	ACTION_TYPE_SET_BIOS_STATE
 };
 
-enum screen_saver_time_unit {
-	SCREEN_SAVER_SECOND_UNIT = 0X00,
-	SCREEN_SAVER_MINUTE_UNIT = 0X01,
-	SCREEN_SAVER_HOUR_UNIT = 0X02,
-};
-
 enum display_state {
 	DISPLAY_MENU,
 	DISPLAY_FRAME,

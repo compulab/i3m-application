@@ -58,23 +58,15 @@ extern struct calendar_date computer_date_time;
 
 extern bool screen_saver_mode_enabled;
 
-void sprintf_inval_data(char *str);
-
 void print_work_count(void *);
 
 uint8_t get_brightness_level(void);
 
 void update_info(void *);
 
-void update_ambient_value(uint8_t high_bit);
-
 void update_requests(void *);
 
 void update_ambient_temp(void *);
-
-void update_adc(void *);
-
-void update_brightness(void);
 
 void update_computer_state(void);
 
@@ -83,7 +75,5 @@ void update_power_state(void);
 void sprintf_power_state(char *state);
 
 void update_data_by_type(enum information_type type, char *output_str, uint8_t info);
-
-void set_curr_str(char *str, enum information_type type);
 
 #endif /* FP_UTILS_H_ */
