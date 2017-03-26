@@ -26,10 +26,6 @@ struct calendar_date computer_date_time = {
     .year = 2015
 };
 
-void sprintf_inval_data(char *str) {
-	sprintf(str, "-");
-}
-
 static bool is_type_in_frame(enum information_type info_type, struct gfx_information_node *info_node)
 {
 	while (info_node != NULL) {
@@ -166,16 +162,6 @@ void sprintf_power_state(char *state)
 		strcpy(state, "");
 		break;
 	}
-}
-
-void set_fq_string(char *str, uint16_t fq)
-{
-	sprintf(str, "%d MHZ", fq);
-}
-
-void sprintf_temperature(char *str, int8_t temperature)
-{
-	sprintf(str, "%d%c", temperature, (uint8_t)128);
 }
 
 static void sprintf_post_code(char *str)

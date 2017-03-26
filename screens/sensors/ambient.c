@@ -7,6 +7,7 @@
 
 #include <string.h>
 #include "Fp-utils.h"
+#include "screens/string_formats.h"
 
 void sprintf_ambient_temp(char *output_str)
 {

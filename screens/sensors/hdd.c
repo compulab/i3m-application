@@ -7,6 +7,7 @@
 
 #include <string.h>
 #include "Fp-utils.h"
+#include "screens/string_formats.h"
 #include "lib/syntax.h"
 
 void sprintf_hdd_temp(char *output_str, uint8_t hdd_id)

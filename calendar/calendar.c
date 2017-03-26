@@ -47,6 +47,7 @@
 #include "calendar.h"
 #include "uart/uart.h"
 #include "scheduler/scheduler.h"
+#include "screens/string_formats.h"
 #include "Fp-utils.h"
 #include <stdio.h>
 

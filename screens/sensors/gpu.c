@@ -6,6 +6,7 @@
  */
 
 #include <string.h>
+#include "screens/string_formats.h"
 #include "Fp-utils.h"
 
 void sprintf_gpu_temp(char *output_str)

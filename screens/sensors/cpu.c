@@ -7,6 +7,7 @@
 
 #include <string.h>
 #include "Fp-utils.h"
+#include "screens/string_formats.h"
 #include "lib/syntax.h"
 
 void sprintf_cpu_temp(char *data, uint8_t cpu_id)
