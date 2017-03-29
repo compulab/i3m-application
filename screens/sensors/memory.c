@@ -41,12 +41,19 @@ void set_mem_size_str(char *str, uint8_t mem)
 		sprintf(str,"%d GB",size);
 }
 
-void sprintf_memory_size(char *output_str, uint8_t mem_id)
+void sprintf_memory_size(struct gfx_information *info, char *output_str)
 {
+	uint8_t mem_id = info->info_data;
 	if (BIT_ON(computer_data.packed.mems, mem_id))
 		set_mem_size_str(output_str, computer_data.packed.memsz[mem_id]);
 	else
 		sprintf_inval_data(output_str);
+}
+
+int gfx_information_init_show_memory_size(struct gfx_information *info)
+{
+	info->to_string = sprintf_memory_size;
+	return 0;
 }
 
 bool is_mem_size_need_update(struct gfx_information *info, bool is_visible)

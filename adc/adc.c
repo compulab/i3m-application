@@ -53,18 +53,6 @@ static double adc_avg(void)
 	return power_sum / (i);
 }
 
-void sprintf_power_data(char *str)
-{
-	long power = computer_data.details.adc * 0.10137 + 2.9;
-
-	if (!computer_data.details.adc_set)
-		sprintf(str, "-");
-	else if (power >= 6 && power <= 300)
-		sprintf(str, "%ld W", power);
-	else
-		sprintf(str, "LOW");
-}
-
 void update_adc(void *data)
 {
 	double avg = adc_avg();

@@ -11,14 +11,13 @@
 #include "config/cnf_blk_components.h"
 #include "Fp-utils.h"
 #include "gfx_components.h"
+#include "gfx_frame.h"
 
 #define MAX_TEMPERATURE_LENGTH 10
 
 struct gfx_frame *frame_present;
 
 int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem, bool is_dashboard);
-
-void gfx_frame_draw(struct gfx_frame *frame, bool redraw);
 
 void draw_graphic_signs(uint8_t selection, uint8_t min_index, uint8_t max_index, bool is_numeric);
 

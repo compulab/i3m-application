@@ -8,13 +8,19 @@
 #ifndef GFX_GFX_ACTION_MENU_H_
 #define GFX_GFX_ACTION_MENU_H_
 
-#ifndef GFX_MENU_HANDLER_H_
 #include "gfx/menu-handler.h"
-#endif
-
-#ifndef GFX_ACTION_MENU_GRAPHIC_MENU_H_
 #include "graphic_menu.h"
-#endif
+
+struct gfx_action_menu {
+	struct gfx_mono_menu *menu;
+	struct gfx_item_action *actions;
+	struct gfx_image_node *graphic_items_head;
+	uint8_t id;
+	bool is_active_frame;
+	bool is_progmem;
+	bool is_graphic_view;
+	bool visible;
+};
 
 #define MAIN_MENU_ID 	0
 

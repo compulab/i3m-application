@@ -1,9 +1,10 @@
 #include "gfx_action_menu.h"
+#include "gfx/gfx_item_action.h"
 #include "screen_saver/screen_saver.h"
 #include "lib/syntax.h"
 
 struct gfx_action_menu *present_menu;
-struct gfx_action_menu dmi_menu = {.is_progmem = false };
+struct gfx_action_menu dmi_menu = { .is_progmem = false };
 
 bool is_dmi_set;
 
@@ -298,8 +299,7 @@ void show_frame(struct gfx_frame *frame)
 		display_state = DISPLAY_FRAME;
 	clear_screen();
 	disable_screen_saver_mode();
-	gfx_frame_draw(frame, false);
-
+	frame->draw(frame, false);
 }
 
 static void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)

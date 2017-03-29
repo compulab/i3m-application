@@ -6,6 +6,9 @@
 
 #define array_length(array)	(sizeof(array) / sizeof((array)[0]))
 
+#define list_foreach(member_type, list, index)		\
+	for (member_type index = list; index != NULL; index = index->next)
+
 #define BIT_ON(value, bitnum)	((value) & (1 << (bitnum)))
 
 #endif

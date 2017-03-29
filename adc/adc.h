@@ -15,6 +15,4 @@
 
 void adc_init(void);
 
-void sprintf_power_data(char *str);
-
 #endif /* ADC_ADC_H_ */

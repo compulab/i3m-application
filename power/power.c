@@ -8,6 +8,7 @@
 #include "power.h"
 #include "twi/i2c_buffer.h"
 #include "work-queue/work.h"
+#include "gfx/gfx_information.h"
 
 enum power_state current_power_state = POWER_ON;
 
@@ -85,23 +86,47 @@ void update_power_state(void)
 	}
 }
 
-void sprintf_power_state(char *state)
+void sprintf_power_state(struct gfx_information *info, char *output_str)
 {
 	switch (current_power_state){
 	case POWER_ON:
-		strcpy(state, "Airtop on");
+		strcpy(output_str, "Airtop on");
 		break;
 	case POWER_STR:
-		strcpy(state, "Sleep");
+		strcpy(output_str, "Sleep");
 		break;
 	case POWER_STD:
-		strcpy(state, "Hibernate");
+		strcpy(output_str, "Hibernate");
 		break;
 	case POWER_OFF:
-		strcpy(state, "Airtop off");
+		strcpy(output_str, "Airtop off");
 		break;
 	default:
-		strcpy(state, "");
+		strcpy(output_str, "");
 		break;
 	}
+}
+
+int gfx_information_init_show_power_state(struct gfx_information *info)
+{
+	info->to_string = sprintf_power_state;
+	return 0;
+}
+
+static void sprintf_power_data(struct gfx_information *info, char *output_str)
+{
+	long power = computer_data.details.adc * 0.10137 + 2.9;
+
+	if (!computer_data.details.adc_set)
+	sprintf(output_str, "-");
+	else if (power >= 6 && power <= 300)
+	sprintf(output_str, "%ld W", power);
+	else
+	sprintf(output_str, "LOW");
+}
+
+int gfx_information_init_show_power_data(struct gfx_information *info)
+{
+	info->to_string = sprintf_power_data;
+	return 0;
 }

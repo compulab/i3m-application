@@ -62,7 +62,7 @@ void print_work_count(void *);
 
 uint8_t get_brightness_level(void);
 
-void update_info(void *);
+void update_screen(void *);
 
 void update_requests(void *);
 
@@ -71,9 +71,5 @@ void update_ambient_temp(void *);
 void update_computer_state(void);
 
 void update_power_state(void);
-
-void sprintf_power_state(char *state);
-
-void update_data_by_type(enum information_type type, char *output_str, uint8_t info);
 
 #endif /* FP_UTILS_H_ */

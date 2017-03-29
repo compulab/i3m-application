@@ -9,20 +9,22 @@
 #ifndef STRING_FORMATS_H_
 #define STRING_FORMATS_H_
 
+#include "gfx/gfx_information.h"
 #include <stdio.h>
 
-static inline void sprintf_freq(char *str, uint16_t fq)
+static inline void sprintf_freq(char *output_str, uint16_t fq)
 {
-	sprintf(str, "%d MHZ", fq);
+	sprintf(output_str, "%d MHZ", fq);
 }
 
-static inline void sprintf_temperature(char *str, int8_t temperature)
+static inline void sprintf_temperature(char *output_str, int8_t temperature)
 {
-	sprintf(str, "%d%c", temperature, (uint8_t)128);
+	sprintf(output_str, "%d%c", temperature, (uint8_t)128);
 }
 
-static inline void sprintf_inval_data(char *str) {
-	sprintf(str, "-");
+static inline void sprintf_inval_data(char *output_str) {
+	sprintf(output_str, "-");
 }
+
 
 #endif /* STRING_FORMATS_H_ */

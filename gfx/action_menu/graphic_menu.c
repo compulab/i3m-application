@@ -6,6 +6,7 @@
  */
 
 #include "graphic_menu.h"
+#include "gfx/gfx_item_action.h"
 
 static void set_item_position(struct gfx_image *bitmap, uint8_t i, bool is_back_item)
 {

@@ -61,16 +61,23 @@ static void handle_brightness_buttons(uint8_t key)
 		break;
 	}
 	update_brightness();
-	gfx_frame_draw(frame_present, true);
+	frame_present->draw(frame_present, true);
 }
 
-void sprintf_brightness(char *str)
+void sprintf_brightness(struct gfx_information *info, char *output_str)
 {
 	frame_present->handle_buttons = handle_brightness_buttons;
-	sprintf(str, "%d ", eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS) / BRIGHTNESS_STEP);
+	sprintf(output_str, "%d ", eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS) / BRIGHTNESS_STEP);
+	present_menu->is_active_frame = true;
 }
 
 void set_brightness_draw_graphic_signs(void)
 {
 	draw_graphic_signs(get_brightness_level(), MIN_BRIGHTNESS_LEVEL, MAX_BRIGHTNESS_LEVEL, true);
+}
+
+int gfx_information_init_set_brightness(struct gfx_information *info)
+{
+	info->to_string = sprintf_brightness;
+	return 0;
 }

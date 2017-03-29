@@ -202,8 +202,4 @@ void calendar_add_second_to_date(struct calendar_date *date);
 \endcode
  */
 
-void sprintf_rtc_hour(char *str);
-void sprintf_rtc_min(char *str);
-void sprintf_rtc_sec(char *str);
-
 #endif /* _CALENDAR_H_INCLUDED_ */

@@ -48,6 +48,7 @@
 #include "uart/uart.h"
 #include "scheduler/scheduler.h"
 #include "screens/string_formats.h"
+#include "gfx/gfx_information.h"
 #include "Fp-utils.h"
 #include <stdio.h>
 
@@ -495,28 +496,46 @@ void calendar_add_second_to_date(struct calendar_date *date)
 	}
 }
 
-void sprintf_rtc_hour(char *str)
+void sprintf_rtc_hour(struct gfx_information *info, char *output_str)
 {
 	if (calendar_is_date_valid(&computer_date_time))
-		sprintf(str, "%d" ,computer_date_time.hour);
+		sprintf(output_str, "%d" ,computer_date_time.hour);
 	else
-		sprintf_inval_data(str);
+		sprintf_inval_data(output_str);
 }
 
-void sprintf_rtc_min(char *str)
+int gfx_information_init_show_rtc_hour(struct gfx_information *info)
+{
+	info->to_string = sprintf_rtc_hour;
+	return 0;
+}
+
+void sprintf_rtc_min(struct gfx_information *info, char *output_str)
 {
 	if (calendar_is_date_valid(&computer_date_time))
-		sprintf(str, "%02d" ,computer_date_time.minute);
+		sprintf(output_str, "%02d" ,computer_date_time.minute);
 	else
-		sprintf_inval_data(str);
+		sprintf_inval_data(output_str);
 }
 
-void sprintf_rtc_sec(char *str)
+int gfx_information_init_show_rtc_min(struct gfx_information *info)
+{
+	info->to_string = sprintf_rtc_min;
+	return 0;
+}
+
+void sprintf_rtc_sec(struct gfx_information *info, char *output_str)
 {
 	if (calendar_is_date_valid(&computer_date_time) && computer_date_time.second % 2)
-		sprintf(str, ":");
+		sprintf(output_str, ":");
 	else
-		sprintf(str, "");
+		sprintf(output_str, "");
+}
+
+int gfx_information_init_show_rtc_sec(struct gfx_information *info)
+{
+	info->to_string = sprintf_rtc_sec;
+	return 0;
 }
 
 static void calendar_time_task(void *data)

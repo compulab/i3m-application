@@ -6,7 +6,9 @@
  */
 
 #include "gfx_utils.h"
+#include "gfx_frame.h"
 #include "uart/uart.h"
+#include "lib/syntax.h"
 #include "screen_saver/screen_saver.h"
 #include "screens/brightness/brightness.h"
 
@@ -99,11 +101,7 @@ void print_vertical_line(uint8_t x, uint8_t y, uint8_t length)
 	gfx_mono_draw_line(x, y, x, y + length, GFX_PIXEL_SET);
 }
 
-static void gfx_item_draw(struct gfx_item *item)
-{
-}
-
-static void gfx_item_init(struct gfx_item *item, uint8_t x, uint8_t y, uint8_t width, uint8_t height)
+void gfx_item_init(struct gfx_item *item, uint8_t x, uint8_t y, uint8_t width, uint8_t height)
 {
 	item->x = x;
 	item->y = y;
@@ -129,61 +127,15 @@ static void set_size_by_text(char *text, struct font *font, struct gfx_item *ite
 	item->height = height;
 }
 
-static int gfx_information_init(struct gfx_information *info,
-		enum information_type info_type, uint8_t info_data, uint8_t max_length, uint8_t x, uint8_t y, uint8_t font_id)
-{
-	info->info_type = info_type;
-	info->info_data = info_data;
-	info->last_length = 0;
-	info->text.is_progmem = false;
-	info->text.max_text_size = max_length;
-	gfx_item_init(&info->postion, x, y, 0, 0);
-	info->text.font = get_font_by_type(font_id);
-	return 0;
-}
-
-
 static void print_data_P(char *text, struct glcd_FontConfig_t *font, uint8_t x, uint8_t y)
 {
 	draw_string_in_buffer_P(text, x, y, font);
-}
-
-static uint8_t print_data(char *text, struct glcd_FontConfig_t *font, uint8_t x, uint8_t y, uint8_t old_len)
-{
-	return draw_string_in_buffer(text, x, y, font, old_len);
-}
-
-static void draw_screen_saver_enable_status(struct gfx_information *info)
-{
-	uint8_t enable_len = 7 * info->text.font->width, disable_len = 8 * info->text.font->width, enable_x = disable_len + info->text.font->width + info->postion.x, disable_x = info->postion.x;
-	uint8_t set_x = computer_data.details.screen_saver_visible ? enable_x : disable_x,
-			clear_x = computer_data.details.screen_saver_visible ? disable_x : enable_x,
-			length_set = computer_data.details.screen_saver_visible ? enable_len : disable_len,
-			length_clr = computer_data.details.screen_saver_visible ? disable_len : enable_len;
-
-	gfx_mono_generic_draw_horizontal_line(set_x, info->postion.y + info->text.font->height + 2, length_set, GFX_PIXEL_SET);
-	gfx_mono_generic_draw_horizontal_line(clear_x, info->postion.y + info->text.font->height + 2, length_clr, GFX_PIXEL_CLR);
-}
-
-static void gfx_information_draw(struct gfx_information *info, bool redraw)
-{
-	char *text_to_draw = malloc_locked(info->text.max_text_size);
-	if (text_to_draw == NULL)
-		return ;
-
-	update_data_by_type(info->info_type, text_to_draw, info->info_data);
-	info->last_length = print_data(text_to_draw, info->text.font, info->postion.x, info->postion.y, info->last_length);
-	if (info->info_type == SET_SCREEN_SAVER_ENABLE)
-		draw_screen_saver_enable_status(info);
-	free(text_to_draw);
 }
 
 static void gfx_label_draw(struct gfx_label *label)
 {
 	if (label->text.textP != NULL)
 		print_data_P(label->text.textP, label->text.font, label->postion.x, label->postion.y);
-//	else
-//		print_data(label->text.text, label->text.font, label->postion.x, label->postion.y, 0); /* same len every time*/
 }
 
 static int gfx_image_init(struct gfx_image *image, gfx_mono_color_t PROGMEM_T *bitmap_progmem,
@@ -206,20 +158,10 @@ static int gfx_image_init(struct gfx_image *image, gfx_mono_color_t PROGMEM_T *b
 
 static void gfx_image_draw(struct gfx_image *image)
 {
-	gfx_item_draw(&image->postion);
 	gfx_mono_generic_put_bitmap(image->bitmap, image->postion.x, image->postion.y);
-//	gfx_mono_put_framebuffer();
 }
 
-static void init_frame(struct gfx_frame *frame, bool is_dashboard)
-{
-	frame->image_head = 0;
-	frame->information_head = 0;
-	frame->label_head = 0;
-	frame->type = is_dashboard ? FRAME_DASHBOARD : FRAME_REGULAR;
-}
-
-static int set_images(struct gfx_frame *frame, struct cnf_image_node *cnf_image_pgmem)
+static int gfx_frame_set_images(struct gfx_frame *frame, struct cnf_image_node *cnf_image_pgmem)
 {
 	struct gfx_image_node *frame_image_last = 0;
 	while (cnf_image_pgmem != 0){
@@ -246,7 +188,7 @@ static int set_images(struct gfx_frame *frame, struct cnf_image_node *cnf_image_
 	return 0;
 }
 
-static int set_labels(struct gfx_frame *frame, struct cnf_label_node *cnf_label_pgmem)
+static int gfx_frame_set_labels(struct gfx_frame *frame, struct cnf_label_node *cnf_label_pgmem)
 {
 	struct gfx_label_node *frame_label_last = 0;
 	while (cnf_label_pgmem != 0){
@@ -269,71 +211,136 @@ static int set_labels(struct gfx_frame *frame, struct cnf_label_node *cnf_label_
 	return 0;
 }
 
-static int set_infos(struct gfx_frame *frame,	struct cnf_info_node *cnf_info_pgmem)
+static int gfx_frame_set_infos(struct gfx_frame *frame, struct cnf_info_node *cnf_info_pgmem)
 {
 	struct gfx_information_node *frame_information_last = 0;
-	while (cnf_info_pgmem != 0){
+	while (cnf_info_pgmem) {
 		struct cnf_info_node cnf_info_node;
 		struct gfx_information_node *gfx_information_node = malloc_locked(sizeof(struct gfx_information_node));
-		if (gfx_information_node == NULL) {
-			uart_send_string("information_node fail\n\r");
+		if (gfx_information_node == NULL)
 			return -1;
-		}
 
 		memcpy_config(&cnf_info_node, (void *)cnf_info_pgmem, sizeof(struct cnf_info_node));
-		uart_send_num(cnf_info_node.info.info_type, 16);
-		uart_send_string("\t");
-		if (gfx_information_init(&gfx_information_node->information, cnf_info_node.info.info_type, cnf_info_node.info.information,
-						cnf_info_node.info.max_length, cnf_info_node.info.x, cnf_info_node.info.y, cnf_info_node.font_id) != 0) {
-			uart_send_string("information init fail\n\r");
+		struct cnf_info cnf_info = cnf_info_node.info;
+		if (gfx_information_init(&gfx_information_node->information, &cnf_info, cnf_info_node.font_id))
 			return -1;
-		}
 
 		gfx_information_node->next = 0;
-		if (frame->information_head == 0)
-			frame->information_head = gfx_information_node;
-		else
+		if (frame->information_head)
 			frame_information_last->next = gfx_information_node;
+		else
+			frame->information_head = gfx_information_node;
 		frame_information_last = gfx_information_node;
 		cnf_info_pgmem = cnf_info_node.next;
 	}
 	return 0;
 }
 
-int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem, bool is_dashboard)
-{
-	if (is_dashboard)
-		uart_send_string("dash:\n\r");
-	else
-		uart_send_string("frame:\n\r");
-	struct cnf_frame cnf_frame;
-	memcpy_config(&cnf_frame, cnf_frame_pgmem, sizeof(cnf_frame));
-	init_frame(frame, is_dashboard);
-	return ((set_images(frame, cnf_frame.images_head) != 0) | (set_labels(frame, cnf_frame.labels_head) != 0) | (set_infos(frame, cnf_frame.infos_head) != 0));
-}
-
 static void gfx_labels_draw(struct gfx_label_node *curr_label_node)
 {
-	while (curr_label_node != 0) {
+	while (curr_label_node) {
 		gfx_label_draw(&curr_label_node->label);
 		curr_label_node = curr_label_node->next;
 	}
 }
 
-static void gfx_infos_draw(struct gfx_information_node *curr_info_node, bool redraw)
+static void gfx_infos_draw(struct gfx_information_node *curr_info_node)
 {
-	while (curr_info_node != 0){
-		gfx_information_draw(&curr_info_node->information, redraw);
+	while (curr_info_node) {
+		curr_info_node->information.draw(&curr_info_node->information);
 		curr_info_node = curr_info_node->next;
 	}
 }
 
-static void gfx_images_draw(struct gfx_image_node *curr_image_node)
+static void gfx_images_draw(struct gfx_image_node *list)
 {
-	while (curr_image_node != 0){
-		gfx_image_draw(&curr_image_node->image);
-		curr_image_node = curr_image_node->next;
+	list_foreach(struct gfx_image_node *, list, image_node)
+		gfx_image_draw(&image_node->image);
+}
+
+static void insert_graphic_signs(struct gfx_frame *frame)
+{
+	if (frame->type == FRAME_DASHBOARD || frame->information_head == NULL)
+		return;
+
+	switch (frame->information_head->information.info_type) {
+	case SET_BRIGHTNESS:
+		set_brightness_draw_graphic_signs();
+		break;
+	case SET_SCREEN_SAVER_ENABLE:
+		set_screen_saver_enable_draw_graphic_signs();
+		break;
+	case SET_SCREEN_SAVER_TIME:
+		set_screen_saver_time_draw_graphic_signs();
+		break;
+	case SET_SCREEN_SAVER_TYPE:
+		set_screen_saver_type_draw_graphic_signs();
+		break;
+	default:
+		draw_graphic_signs((present_menu->menu)->current_selection, 0, (present_menu->menu)->num_elements - 2, false);
+		break;
 	}
+}
+
+//TODO: there's a lot of code duplication with the dashboard version. Fix later.
+static void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
+{
+	if (!frame)
+		return;
+
+	update_screen_timer();
+	frame_present = frame;
+	if (present_menu->is_active_frame || !redraw) {
+		clear_screen();
+		gfx_labels_draw(frame->label_head);
+		gfx_images_draw(frame->image_head);
+		if (present_menu->is_active_frame)
+			display_state = DISPLAY_ACTION_FRAME;
+		gfx_mono_generic_draw_horizontal_line(0, SEPERATE_LINE_Y, GFX_MONO_LCD_WIDTH, GFX_PIXEL_SET);
+	}
+
+	gfx_infos_draw(frame->information_head);
+	insert_graphic_signs(frame);
+	gfx_mono_ssd1306_put_framebuffer();
+}
+
+//TODO: there's a lot of code duplication with the frame version. Fix later.
+static void gfx_dashboard_draw(struct gfx_frame *frame, bool redraw)
+{
+	if (!frame)
+		return;
+
+	update_screen_timer();
+	frame_present = frame;
+	if (!redraw) {
+		clear_screen();
+		gfx_labels_draw(frame->label_head);
+		gfx_images_draw(frame->image_head);
+	}
+
+	gfx_infos_draw(frame->information_head);
+	insert_graphic_signs(frame);
+	gfx_mono_ssd1306_put_framebuffer();
+}
+
+static void init_frame(struct gfx_frame *frame, bool is_dashboard)
+{
+	frame->image_head = 0;
+	frame->information_head = 0;
+	frame->label_head = 0;
+	frame->type = is_dashboard ? FRAME_DASHBOARD : FRAME_REGULAR;
+	frame->draw = is_dashboard ? gfx_dashboard_draw : gfx_frame_draw;
+}
+
+int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem, bool is_dashboard)
+{
+	struct cnf_frame cnf_frame;
+	memcpy_config(&cnf_frame, cnf_frame_pgmem, sizeof(cnf_frame));
+	init_frame(frame, is_dashboard);
+	int retval = gfx_frame_set_images(frame, cnf_frame.images_head);
+	retval |= gfx_frame_set_labels(frame, cnf_frame.labels_head);
+	retval |= gfx_frame_set_infos(frame, cnf_frame.infos_head);
+	return retval;
 }
 
 static void draw_left_sign(bool is_numeric)
@@ -359,60 +366,4 @@ void draw_graphic_signs(uint8_t selection, uint8_t min_index, uint8_t max_index,
 
 	if (selection < max_index)
 		draw_right_sign(is_numeric);
-}
-
-static void insert_graphic_signs(struct gfx_frame *frame)
-{
-	if (frame->type == FRAME_DASHBOARD)
-		return ;
-
-	if (frame->information_head != NULL) {
-		switch (frame->information_head->information.info_type) {
-		case SET_BRIGHTNESS:
-			set_brightness_draw_graphic_signs();
-			break;
-		case SET_SCREEN_SAVER_ENABLE:
-			set_screen_saver_enable_draw_graphic_signs();
-			break;
-		case SET_SCREEN_SAVER_TIME:
-			set_screen_saver_time_draw_graphic_signs();
-			break;
-		case SET_SCREEN_SAVER_TYPE:
-			set_screen_saver_type_draw_graphic_signs();
-			break;
-		default:
-			draw_graphic_signs((present_menu->menu)->current_selection, 0, (present_menu->menu)->num_elements - 2, false);
-			break;
-		}
-	}
-
-}
-
-void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
-{
-	if (frame != 0) {
-		update_screen_timer();
-		frame_present = frame;
-		if (display_state == DISPLAY_DASHBOARD) {
-			if (!redraw) {
-				clear_screen();
-				gfx_labels_draw(frame->label_head);
-				gfx_images_draw(frame->image_head);
-			}
-			gfx_infos_draw(frame->information_head, true);
-		} else {
-			if (present_menu->is_active_frame || !redraw) {
-				clear_screen();
-				gfx_labels_draw(frame->label_head);
-				gfx_images_draw(frame->image_head);
-				if (present_menu->is_active_frame) display_state = DISPLAY_ACTION_FRAME;
-				if (frame->type == FRAME_REGULAR)
-					gfx_mono_generic_draw_horizontal_line(0, SEPERATE_LINE_Y, GFX_MONO_LCD_WIDTH, GFX_PIXEL_SET);
-			}
-
-			gfx_infos_draw(frame->information_head, true);
-			insert_graphic_signs(frame);
-		}
-		gfx_mono_ssd1306_put_framebuffer();
-	}
 }

@@ -1,4 +1,6 @@
 #include "menu-handler.h"
+#include "gfx/gfx_information.h"
+#include "gfx/gfx_item_action.h"
 #include "screen_saver/screen_saver.h"
 #include "uart/uart.h"
 
@@ -114,19 +116,13 @@ static void action_types_init(void)
 {
 	struct gfx_action_menu *menu;
 	struct gfx_item_action *action;
-	for (int i=0; i < size_of_menus; i++){
+	for (int i = 0; i < size_of_menus; i++) {
 		menu = action_menus[i];
-#ifdef DEBUG_MODE
-		MSG_T_N("menu init in menu:",i)
-#endif
-		for (int j=0; j < menu->menu->num_elements; j++){
+		for (int j = 0; j < menu->menu->num_elements; j++) {
 			action = &menu->actions[j];
-			switch (action->type){
+			switch (action->type) {
 			case ACTION_TYPE_SHOW_MENU:
 				set_menu_by_id(&(action->menu), action->menu_id);
-#ifdef DEBUG_MODE
-				MSG_T_N("Menu id",action->menu_id)
-#endif
 				break;
 			default:
 				break;
@@ -214,7 +210,6 @@ static void splash_init(struct cnf_blk config_block)
 	splash_bitmap.height = config_block.splash_height;
 	splash_bitmap.data.progmem = config_block.splash;
 	splash_bitmap.type = GFX_MONO_BITMAP_SECTION;
-//	show_splash();
 }
 
 static int load_fonts(struct cnf_font_node *cnf_font_node)
@@ -334,7 +329,7 @@ int load_config_block(void)
 	new_fonts_size = config_block.font_size;
 	glcd_fonts_init(new_fonts_size);
 
-	if (new_fonts_size > 0 && config_block.fonts_head != 0 && load_fonts(config_block.fonts_head) != 0)
+	if (new_fonts_size > 0 && config_block.fonts_head && load_fonts(config_block.fonts_head))
 			return config_block_error();
 
 	if (config_block.dashboard != NULL) {
