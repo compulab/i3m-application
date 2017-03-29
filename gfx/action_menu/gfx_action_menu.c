@@ -1,6 +1,6 @@
 #include "gfx_action_menu.h"
 #include "gfx/gfx_item_action.h"
-#include "screen_saver/screen_saver.h"
+#include "screens/screen_saver/screen_saver.h"
 #include "lib/syntax.h"
 
 struct gfx_action_menu *present_menu;

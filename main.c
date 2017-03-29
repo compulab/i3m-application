@@ -1,7 +1,7 @@
 #include "asf.h"
 #include "twi/twi_slave.h"
 #include "scheduler/scheduler.h"
-#include "screen_saver/screen_saver.h"
+#include "screens/screen_saver/screen_saver.h"
 #include "sram/sram_handle.h"
 #include "wdt/wdt.h"
 #include "twi/twi_master.h"

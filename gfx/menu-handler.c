@@ -1,7 +1,7 @@
 #include "menu-handler.h"
 #include "gfx/gfx_information.h"
 #include "gfx/gfx_item_action.h"
-#include "screen_saver/screen_saver.h"
+#include "screens/screen_saver/screen_saver.h"
 #include "uart/uart.h"
 
 #define is_key_selected(var,key) (var & key) == key
