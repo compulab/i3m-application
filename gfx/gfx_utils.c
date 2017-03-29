@@ -119,14 +119,6 @@ static void gfx_label_init(struct gfx_label *label, char *text,
 		label->text.font = get_font_by_type(font_id);
 }
 
-static void set_size_by_text(char *text, struct font *font, struct gfx_item *item)
-{
-	uint8_t width = strlen(text) * font->width + 2,
-			height = font->height + 4;
-	item->width = width;
-	item->height = height;
-}
-
 static void print_data_P(char *text, struct glcd_FontConfig_t *font, uint8_t x, uint8_t y)
 {
 	draw_string_in_buffer_P(text, x, y, font);

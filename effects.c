@@ -5,7 +5,9 @@
  *      Author: arkadi
  */
 
+#include "eeprom/eeprom_layout.h"
 #include "effects.h"
+
 #define SLEEP_BRIGHTNESS 	100
 #define SLEEP_MSG 			"SLEEP"
 #define HIBERNATE_MSG		"HIBERNATE"

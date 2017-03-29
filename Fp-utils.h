@@ -56,8 +56,6 @@ extern enum information_type update_information_type;
 
 extern struct calendar_date computer_date_time;
 
-extern bool screen_saver_mode_enabled;
-
 void update_power_state(void);
 
 #endif /* FP_UTILS_H_ */
