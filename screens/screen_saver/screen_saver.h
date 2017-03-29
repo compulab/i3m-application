@@ -9,6 +9,8 @@
 #ifndef SCREEN_SAVER_H_
 #define SCREEN_SAVER_H_
 
+#include "gfx/gfx_information.h"
+
 enum screen_saver_type {
 	SCREEN_SAVER_SPLASH,
 	SCREEN_SAVER_DASHBOARD,
@@ -21,9 +23,11 @@ static inline void sprintf_disabled(char *output_string)
 	sprintf(output_string, "DISABLED");
 }
 
-void sprintf_screen_saver_type(struct gfx_information *info, char *output_str);
-void sprintf_screen_saver_time(struct gfx_information *info, char *output_str);
-void sprintf_screen_saver_enable(struct gfx_information *info, char *output_str);
+extern bool screen_saver_mode_enabled;
+
+int gfx_information_init_set_screen_saver_type(struct gfx_information *info);
+int gfx_information_init_set_screen_saver_time(struct gfx_information *info);
+int gfx_information_init_set_screen_saver_enable(struct gfx_information *info);
 void enable_screen_saver_mode(void);
 void disable_screen_saver_mode(void);
 void set_screen_saver_enable_draw_graphic_signs(void);

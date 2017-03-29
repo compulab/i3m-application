@@ -7,6 +7,7 @@
 
 #include <stdbool.h>
 #include "gfx/gfx_utils.h"
+#include "eeprom/eeprom_layout.h"
 
 bool screen_saver_mode_enabled;
 
@@ -23,14 +24,14 @@ void disable_screen_saver_mode(void)
 static void handle_screen_saver_enable_buttons(uint8_t key)
 {
 	switch (key) {
-		case GFX_MONO_MENU_KEYCODE_DOWN:
+	case GFX_MONO_MENU_KEYCODE_DOWN:
 		if (!computer_data.details.screen_saver_visible)
-		return;
+			return;
 		computer_data.details.screen_saver_visible = 0;
 		break;
-		case GFX_MONO_MENU_KEYCODE_UP:
+	case GFX_MONO_MENU_KEYCODE_UP:
 		if (computer_data.details.screen_saver_visible)
-		return;
+			return;
 		computer_data.details.screen_saver_visible = 1;
 		break;
 	}
@@ -39,7 +40,7 @@ static void handle_screen_saver_enable_buttons(uint8_t key)
 	frame_present->draw(frame_present, true);
 }
 
-void sprintf_screen_saver_enable(struct gfx_information *info, char *output_str)
+static void sprintf_screen_saver_enable(struct gfx_information *info, char *output_str)
 {
 	frame_present->handle_buttons = handle_screen_saver_enable_buttons;
 	sprintf(output_str, "DISABLE ENABLE");

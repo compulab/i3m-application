@@ -6,17 +6,14 @@
  */
 
 #include <stdio.h>
-#include "config/conf_menu.h"
 #include "gfx/gfx_information.h"
-#include "layout.h"
 #include "eeprom/eeprom_layout.h"
 #include "screen_saver.h"
-#include "Fp-utils.h"
 
 static void handle_screen_saver_time_buttons(uint8_t key)
 {
 	if (!computer_data.details.screen_saver_visible)
-	return;
+		return;
 
 	switch (key) {
 	case GFX_MONO_MENU_KEYCODE_DOWN:
@@ -58,10 +55,4 @@ void set_screen_saver_time_draw_graphic_signs(void)
 {
 	if (computer_data.details.screen_saver_visible)
 		draw_graphic_signs(computer_data.details.screen_saver_update_time, SCREEN_SAVER_SECOND_MIN_VALUE, SCREEN_SAVER_SECOND_MAX_VALUE, true);
-}
-
-void set_screen_saver_type_draw_graphic_signs(void)
-{
-	if (computer_data.details.screen_saver_visible)
-		draw_graphic_signs(computer_data.details.screen_saver_type, 0, SCREEN_SAVER_TYPE_SIZE - 1, false);
 }

@@ -5,7 +5,6 @@
  *  Author: Nikita
  */
 
-#include "Fp-utils.h"
 #include "screen_saver.h"
 #include "scheduler/scheduler.h"
 #include "power/power.h"
@@ -20,7 +19,7 @@ static double screen_saver_get_recur_period(void)
 
 static void update_screen_saver(void *data)
 {
-	if (!screen_saver_mode_enabled || computer_data.details.screen_saver_visible != 1)
+	if (!screen_saver_mode_enabled || !computer_data.details.screen_saver_visible)
 		return;
 
 	switch(computer_data.details.screen_saver_type) {
