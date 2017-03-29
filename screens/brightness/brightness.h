@@ -10,6 +10,6 @@
 #define BRIGHTNESS_H_
 
 void set_brightness_draw_graphic_signs(void);
-void sprintf_brightness(char *str);
+int gfx_information_init_set_brightness(struct gfx_information *info);
 
 #endif /* BRIGHTNESS_H_ */

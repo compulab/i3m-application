@@ -5,6 +5,8 @@
  *  Author: Nikita
  */
 
+#include "config/conf_menu.h"
+#include "gfx/gfx_utils.h"
 #include "eeprom/eeprom_layout.h"
 
 static void handle_brightness_buttons(uint8_t key)
@@ -24,7 +26,7 @@ static void handle_brightness_buttons(uint8_t key)
 	frame_present->draw(frame_present, true);
 }
 
-void sprintf_brightness(struct gfx_information *info, char *output_str)
+static void sprintf_brightness(struct gfx_information *info, char *output_str)
 {
 	frame_present->handle_buttons = handle_brightness_buttons;
 	sprintf(output_str, "%d ", eeprom_get_brightness_level());
