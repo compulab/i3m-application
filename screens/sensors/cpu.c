@@ -7,11 +7,10 @@
 
 #include <string.h>
 #include "gfx/gfx_information.h"
-#include "Fp-utils.h"
 #include "screens/string_formats.h"
 #include "lib/syntax.h"
 
-void sprintf_cpu_temp(struct gfx_information *info, char *output_str)
+static void sprintf_cpu_temp(struct gfx_information *info, char *output_str)
 {
 	uint8_t cpu_id = info->info_data;
 	if (BIT_ON(computer_data.packed.cpu_temp_set, cpu_id))
@@ -26,7 +25,7 @@ int gfx_information_init_show_cpu_temp(struct gfx_information *info)
 	return 0;
 }
 
-void sprintf_cpu_freq(struct gfx_information *info, char *output_str)
+static void sprintf_cpu_freq(struct gfx_information *info, char *output_str)
 {
 	uint8_t cpu_id = info->info_data;
 	if (BIT_ON(computer_data.packed.cpu_freq_set, cpu_id))

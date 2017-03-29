@@ -9,7 +9,7 @@
 #include "Fp-utils.h"
 #include "screens/string_formats.h"
 
-void sprintf_ambient_temp(struct gfx_information *info, char *output_str)
+static void sprintf_ambient_temp(struct gfx_information *info, char *output_str)
 {
 	if (computer_data.details.ambient_temp_set)
 		sprintf_temperature(output_str, computer_data.details.ambient_temp);

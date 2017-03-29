@@ -10,7 +10,7 @@
 #include "screens/string_formats.h"
 #include "lib/syntax.h"
 
-void set_mem_size_str(char *str, uint8_t mem)
+static void set_mem_size_str(char *str, uint8_t mem)
 {
 	uint8_t size;
 	switch (mem){
@@ -34,14 +34,14 @@ void set_mem_size_str(char *str, uint8_t mem)
 	}
 
 	if (size < 0)
-		sprintf(str, "-");
+		sprintf_inval_data(str);
 	else if (size == 0)
 		sprintf(str, EMPTY_SLOT);
 	else
-		sprintf(str,"%d GB",size);
+		sprintf(str, "%d GB", size);
 }
 
-void sprintf_memory_size(struct gfx_information *info, char *output_str)
+static void sprintf_memory_size(struct gfx_information *info, char *output_str)
 {
 	uint8_t mem_id = info->info_data;
 	if (BIT_ON(computer_data.packed.mems, mem_id))

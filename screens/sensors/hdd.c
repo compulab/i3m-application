@@ -6,11 +6,11 @@
  */
 
 #include <string.h>
-#include "Fp-utils.h"
+#include "gfx/gfx_information.h"
 #include "screens/string_formats.h"
 #include "lib/syntax.h"
 
-void sprintf_hdd_temp(struct gfx_information *info, char *output_str)
+static void sprintf_hdd_temp(struct gfx_information *info, char *output_str)
 {
 	uint8_t hdd_id = info->info_data;
 	if (BIT_ON(computer_data.packed.hdd_temp_set, hdd_id))
@@ -33,7 +33,7 @@ bool is_hdd_temp_need_update(struct gfx_information *info, bool is_visible)
 	return true;
 }
 
-void sprintf_hdd_size(struct gfx_information *info, char *output_str)
+static void sprintf_hdd_size(struct gfx_information *info, char *output_str)
 {
 	uint8_t hdd_id = info->info_data;
 	uint16_t size = computer_data.packed.hddsz[hdd_id];
