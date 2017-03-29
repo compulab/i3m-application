@@ -163,6 +163,18 @@ static void write_reset(void)
 		software_reset();
 }
 
+void update_computer_state(void)
+{
+	if (current_power_state == POWER_OFF)
+		computer_state = COMPUTER_OFF;
+	else if (current_power_state == POWER_ON && computer_state == COMPUTER_OFF)
+		computer_state = COMPUTER_ON;
+	else if (computer_data.packed.post_code == POST_CODE_BIOS_START)
+		computer_state = COMPUTER_IN_BIOS;
+	else if ((computer_state == COMPUTER_IN_BIOS) && (computer_data.packed.post_code == POST_CODE_BIOS_DONE))
+		computer_state = COMPUTER_IN_OS;
+}
+
 static void write_post_code_lsb(void)
 {
 	computer_data.packed.post_code = i2c_buffer.layout.bios_post_code;
