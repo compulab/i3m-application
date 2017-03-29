@@ -43,7 +43,7 @@ void enter_hibernate_mode(void)
 
 void enter_power_on_mode(void)
 {
-	ssd1306_set_contrast(eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS));
+	ssd1306_set_contrast(eeprom_get_brightness_value());
 	show_logo();
 }
 

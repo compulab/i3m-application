@@ -5,75 +5,35 @@
  *  Author: Nikita
  */
 
-#include "layout.h"
-#include "Fp-utils.h"
-
-#define BRIGHTNESS_STEP				25
-#define MIN_BRIGHTNESS_LEVEL		0
-#define MAX_BRIGHTNESS_LEVEL		10
-
-void update_brightness(void)
-{
-	ssd1306_set_contrast(eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS));
-}
-
-uint8_t get_brightness_level(void)
-{
-	uint8_t brightness = eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS);
-
-	if (brightness > (MAX_BRIGHTNESS_LEVEL -1) * BRIGHTNESS_STEP)
-		return MAX_BRIGHTNESS_LEVEL;
-	else if (brightness < BRIGHTNESS_STEP)
-		return 0;
-
-	return brightness / BRIGHTNESS_STEP;
-}
-
-static void increse_brightness_level(void)
-{
-	uint8_t brightness_level = get_brightness_level();
-	if (brightness_level < MAX_BRIGHTNESS_LEVEL)
-		brightness_level++;
-	uint8_t brightness = brightness_level * BRIGHTNESS_STEP;
-	eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, brightness);
-}
-
-static void decrese_brightness_level(void)
-{
-	uint8_t brightness_level = get_brightness_level();
-	if (brightness_level > 0)
-		brightness_level--;
-	uint8_t brightness = brightness_level * BRIGHTNESS_STEP;
-	eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, brightness);
-}
+#include "eeprom/eeprom_layout.h"
 
 static void handle_brightness_buttons(uint8_t key)
 {
-	uint8_t brightness_level = get_brightness_level();
 	switch (key) {
 	case GFX_MONO_MENU_KEYCODE_DOWN:
-		if (brightness_level > 0)
-			decrese_brightness_level();
+		eeprom_decrese_brightness_level();
 		break;
 	case GFX_MONO_MENU_KEYCODE_UP:
-		if (brightness_level < MAX_BRIGHTNESS_LEVEL)
-			increse_brightness_level();
+		eeprom_increse_brightness_level();
 		break;
 	}
-	update_brightness();
+
+	//Yes it is kind of fucked up that we update brightness by changing contrast.
+	//TODO: figure out why this is implemented this way and hopefully fix it.
+	ssd1306_set_contrast(eeprom_get_brightness_value());
 	frame_present->draw(frame_present, true);
 }
 
 void sprintf_brightness(struct gfx_information *info, char *output_str)
 {
 	frame_present->handle_buttons = handle_brightness_buttons;
-	sprintf(output_str, "%d ", eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS) / BRIGHTNESS_STEP);
+	sprintf(output_str, "%d ", eeprom_get_brightness_level());
 	present_menu->is_active_frame = true;
 }
 
 void set_brightness_draw_graphic_signs(void)
 {
-	draw_graphic_signs(get_brightness_level(), MIN_BRIGHTNESS_LEVEL, MAX_BRIGHTNESS_LEVEL, true);
+	draw_graphic_signs(eeprom_get_brightness_level(), MIN_BRIGHTNESS_LEVEL, MAX_BRIGHTNESS_LEVEL, true);
 }
 
 int gfx_information_init_set_brightness(struct gfx_information *info)

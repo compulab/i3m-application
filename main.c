@@ -122,8 +122,8 @@ static void init_information(void)
 		eeprom_write_byte(APPLICATION_VER_MSB_EEPROM_ADDRESS, APPLICATION_VER_MSB);
 	if (eeprom_read_byte(APPLICATION_VER_LSB_EEPROM_ADDRESS) != APPLICATION_VER_LSB)
 		eeprom_write_byte(APPLICATION_VER_LSB_EEPROM_ADDRESS, APPLICATION_VER_LSB);
-	if (eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS) == 0x00)
-		eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, BRIGHTNESS_DEFAULT);
+	if (eeprom_get_brightness_value() == 0x00)
+		eeprom_set_brigntness_value(BRIGHTNESS_DEFAULT);
 }
 
 /*
