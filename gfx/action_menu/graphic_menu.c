@@ -6,6 +6,7 @@
  */
 
 #include "graphic_menu.h"
+#include "lib/syntax.h"
 #include "gfx/gfx_item_action.h"
 
 static void set_item_position(struct gfx_image *bitmap, uint8_t i, bool is_back_item)
@@ -58,23 +59,21 @@ static void draw_disable_item(struct gfx_item *pos)
 
 void graphic_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 {
-	struct gfx_image_node *curr_image = action_menu->graphic_items_head;
 	struct gfx_mono_menu *menu = action_menu->menu;
-	if (redraw){
+	if (redraw) {
 		uint8_t i = 0;
 		clear_screen();
-		while (curr_image != NULL) {
+		list_foreach(struct gfx_image_node *, action_menu->graphic_items_head, curr_image) {
 			set_item_position(&curr_image->image, i, action_menu->id != 0 && i == menu->num_elements - 1);
 			gfx_mono_generic_put_bitmap(curr_image->image.bitmap, curr_image->image.postion.x, curr_image->image.postion.y);
 			if (!action_menu->actions[i].visible)
 				draw_disable_item(&curr_image->image.postion);
-			curr_image = curr_image->next;
 			i++;
 		}
 	} else {
-		invert_item(menu->last_selection, action_menu->id != 0 && menu->last_selection == menu->num_elements - 1);
+		invert_item(menu->last_selection, action_menu->id && menu->last_selection == menu->num_elements - 1);
 		gfx_mono_draw_filled_rect(0, 54, 128, 10, GFX_PIXEL_CLR);
 	}
-	invert_item(menu->current_selection, action_menu->id != 0 && menu->current_selection == menu->num_elements - 1);
+	invert_item(menu->current_selection, action_menu->id && menu->current_selection == menu->num_elements - 1);
 	draw_selected_item(menu->strings[menu->current_selection]);
 }

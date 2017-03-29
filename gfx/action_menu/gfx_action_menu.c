@@ -361,7 +361,6 @@ void handle_button_preesed_by_display_mode()
 	case DISPLAY_CLOCK:
 		reset_screen_saver();
 		hadle_back_to_menu();
-//		return show_current_menu(true);
 		break;
 
 	case DISPLAY_DIM:

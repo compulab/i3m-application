@@ -98,11 +98,11 @@ void ssd1306_init(void)
 	ssd1306_interface_init();
 
 	ssd1306_display_off();
-	
+
 	// Set Display Clock Divide Ratio / Oscillator Frequency (Default => 0x80)
 	ssd1306_write_command(SSD1306_CMD_SET_DISPLAY_CLOCK_DIVIDE_RATIO);
 	ssd1306_write_command(0xA0);
-	
+
 	// 1/32 Duty (0x0F~0x3F)
 	ssd1306_write_command(SSD1306_CMD_SET_MULTIPLEX_RATIO);
 	ssd1306_write_command(0x3F);
@@ -135,20 +135,20 @@ void ssd1306_init(void)
 	// Set VCOMH Deselect Level
 	ssd1306_write_command(SSD1306_CMD_SET_VCOMH_DESELECT_LEVEL);
 	ssd1306_write_command(0x3C); // Default => 0x20 (0.77*VCC) 3C
-	
+
 	// Disable Entire display On
 	ssd1306_write_command(SSD1306_CMD_ENTIRE_DISPLAY_AND_GDDRAM_ON);
 
 	ssd1306_display_invert_disable();
 
 	ssd1306_clear();
-	
+
 	ioport_set_pin_high(FP_VCC_EN); //FP_MSH: VCC enable for OLED
 
 	delay_us(100000); // 10msec
 
 	ssd1306_display_on();
-	
+
 	delay_us(100000);  // 100msec
 }
 
