@@ -71,8 +71,8 @@ static void power_state_init(void)
  */
 static void update_screen_saver_from_eeprom(void)
 {
-	computer_data.packed.screen_saver_config = eeprom_read_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS);
-	computer_data.packed.screen_saver_update_time = eeprom_read_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS);
+	computer_data.packed.screen_saver_config = eeprom_get_screen_saver_config();
+	computer_data.packed.screen_saver_update_time = eeprom_get_screen_saver_time();
 }
 
 /*
@@ -80,8 +80,8 @@ static void update_screen_saver_from_eeprom(void)
  */
 static void reset_screen_saver_config(void)
 {
-	eeprom_write_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS, SCREEN_SAVER_CONFIGURATION_DEFAULT);
-	eeprom_write_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS, SCREEN_SAVER_TIME_DEFAULT);
+	eeprom_set_screen_saver_config(SCREEN_SAVER_CONFIGURATION_DEFAULT);
+	eeprom_set_screen_saver_time(SCREEN_SAVER_TIME_DEFAULT);
 	update_screen_saver_from_eeprom();
 }
 
@@ -113,7 +113,7 @@ static void init_information(void)
 	else if (computer_data.details.screen_saver_update_time < SCREEN_SAVER_SECOND_MIN_VALUE)
 		computer_data.details.screen_saver_update_time = DEFAULT_SCREEN_SAVER_TIME;
 	else
-		computer_data.packed.screen_saver_update_time = eeprom_read_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS);
+		computer_data.packed.screen_saver_update_time = eeprom_get_screen_saver_time();
 
 	init_ambient();
 	i2c_buffer.layout.iwren = 0;

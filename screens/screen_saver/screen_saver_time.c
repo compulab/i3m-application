@@ -9,6 +9,7 @@
 #include "config/conf_menu.h"
 #include "gfx/gfx_information.h"
 #include "layout.h"
+#include "eeprom/eeprom_layout.h"
 #include "screen_saver.h"
 #include "Fp-utils.h"
 
@@ -32,7 +33,7 @@ static void handle_screen_saver_time_buttons(uint8_t key)
 		return;
 	}
 
-	eeprom_write_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS, computer_data.packed.screen_saver_update_time);
+	eeprom_set_screen_saver_time(computer_data.packed.screen_saver_update_time);
 	frame_present->draw(frame_present, true);
 }
 

@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include "gfx/gfx_information.h"
 #include "lib/syntax.h"
+#include "eeprom/eeprom_layout.h"
 #include "screen_saver.h"
 #include "layout.h"
 #include "Fp-utils.h"
@@ -34,7 +35,7 @@ static void handle_screen_saver_type_buttons(uint8_t key)
 		return;
 	}
 
-	eeprom_write_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS, computer_data.packed.screen_saver_config);
+	eeprom_set_screen_saver_config(computer_data.packed.screen_saver_config);
 	frame_present->draw(frame_present, true);
 }
 

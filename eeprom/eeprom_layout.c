@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include "eeprom_layout.h"
 
+#define SCREEN_SAVER_TIME_EEPROM_ADDRESS	0x120
+#define SCREEN_SAVER_CONFIG_EEPROM_ADDRESS	0x121
 #define BRIGHTNESS_EEPROM_ADDRESS 			0x122
 
 #define BRIGHTNESS_STEP				25
@@ -53,7 +55,27 @@ void eeprom_decrese_brightness_level(void)
 	eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, brightness);
 }
 
-void eeprom_set_brigntness_value(unsigned char new_value)
+void eeprom_set_brigntness_value(uint8_t new_value)
 {
 	eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, new_value);
+}
+
+uint8_t eeprom_get_screen_saver_config(void)
+{
+	return eeprom_read_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS);
+}
+
+void eeprom_set_screen_saver_config(uint8_t new_config)
+{
+	eeprom_write_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS, new_config);
+}
+
+uint8_t eeprom_get_screen_saver_time(void)
+{
+	return eeprom_read_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS);
+}
+
+void eeprom_set_screen_saver_time(uint8_t new_time)
+{
+	eeprom_write_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS, new_time);
 }
