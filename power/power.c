@@ -22,7 +22,7 @@ static void reset_temperatures(void)
 {
 	uint8_t *p_computer_data = (uint8_t *)&computer_data;
 	for (int i = 0; i < ((uint16_t)&computer_data.details.direct_string - (uint16_t)&computer_data); i++)
-	p_computer_data[i] = 0x00;
+		p_computer_data[i] = 0x00;
 	clear_regs((uint8_t *)&i2c_buffer.raw[CPU0T], (uint8_t *)&i2c_buffer.raw[RESERVED42]);
 	clear_regs((uint8_t *)&i2c_buffer.raw[CPU0F_LSB], (uint8_t *)&i2c_buffer.raw[RESERVED83]);
 }
@@ -118,11 +118,11 @@ static void sprintf_power_data(struct gfx_information *info, char *output_str)
 	long power = computer_data.details.adc * 0.10137 + 2.9;
 
 	if (!computer_data.details.adc_set)
-	sprintf(output_str, "-");
+		sprintf(output_str, "-");
 	else if (power >= 6 && power <= 300)
-	sprintf(output_str, "%ld W", power);
+		sprintf(output_str, "%ld W", power);
 	else
-	sprintf(output_str, "LOW");
+		sprintf(output_str, "LOW");
 }
 
 int gfx_information_init_show_power_data(struct gfx_information *info)
