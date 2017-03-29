@@ -70,6 +70,15 @@ const uint8_t month[2][12] = {
 	{ 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }
 };
 
+struct calendar_date computer_date_time = {
+    .second = 40,
+    .minute = 02,
+    .hour = 11,
+    .date = 26,
+    .month = 11,
+    .year = 2015
+};
+
 /**
  * \internal
  * \brief Check if a year is a leap year

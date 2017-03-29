@@ -16,15 +16,6 @@
 
 enum display_state display_state;
 
-struct calendar_date computer_date_time = {
-    .second = 40,
-    .minute = 02,
-    .hour = 11,
-    .date = 26,
-    .month = 11,
-    .year = 2015
-};
-
 static bool is_data_need_update_packed(uint8_t data, struct gfx_information *info, bool is_visible)
 {
 	if (!is_visible)
