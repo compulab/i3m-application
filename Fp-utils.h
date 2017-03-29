@@ -58,18 +58,6 @@ extern struct calendar_date computer_date_time;
 
 extern bool screen_saver_mode_enabled;
 
-void print_work_count(void *);
-
-uint8_t get_brightness_level(void);
-
-void update_screen(void *);
-
-void update_requests(void *);
-
-void update_ambient_temp(void *);
-
-void update_computer_state(void);
-
 void update_power_state(void);
 
 #endif /* FP_UTILS_H_ */
