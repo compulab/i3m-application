@@ -10,7 +10,7 @@
 #include "uart/uart.h"
 #include "lib/syntax.h"
 #include "screens/screen_saver/screen_saver.h"
-#include "screens/brightness/brightness.h"
+#include "screens/settings/brightness.h"
 
 #define PAGE_ADDRESS(y) floor (y/8)
 
