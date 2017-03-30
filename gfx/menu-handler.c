@@ -14,19 +14,19 @@ struct gfx_frame *clock;
 
 enum key_state selected_Key;
 
-bool left_pressed = false,
-		right_pressed = false,
-		ok_pressed = false;
-uint8_t left_time = 0,
-		right_time = 0,
-		ok_time = 0;
+bool left_pressed = false;
+bool right_pressed = false;
+bool ok_pressed = false;
+uint8_t left_time = 0;
+uint8_t right_time = 0;
+uint8_t ok_time = 0;
 uint8_t size_of_menus;
 
 uint8_t new_fonts_size;
 
-enum button_state ok_button = BUTTON_NOT_PRESSED,
-		left_button = BUTTON_NOT_PRESSED,
-		right_button = BUTTON_NOT_PRESSED;
+enum button_state ok_button = BUTTON_NOT_PRESSED;
+enum button_state left_button = BUTTON_NOT_PRESSED;
+enum button_state right_button = BUTTON_NOT_PRESSED;
 
 static void free_images(struct gfx_image_node *images_head)
 {

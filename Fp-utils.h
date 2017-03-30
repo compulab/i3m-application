@@ -9,12 +9,9 @@
 #define FP_UTILS_H_
 
 #include <stdio.h>
-#include <string.h>
 #include "gfx/action_menu/gfx_action_menu.h"
 #include "work-queue/work.h"
 #include "calendar/calendar.h"
-#include "eeprom/eeprom.h"
-#include "adc/adc.h"
 #include "effects.h"
 #include "layout.h"
 #include "debug.h"
@@ -22,7 +19,6 @@
 
 #define AMBIENT_TWI_ADDRESS  		0x4C
 #define AMBIENT_TEMPERATURE_ADDRESS 0x00
-#define EMPTY_SLOT "Empty"
 
 #define POST_CODE_BIOS_START	0xE1		// BIOS post code that send when BIOS is end and the computer continue boot.
 #define	POST_CODE_BIOS_DONE		0xA0 		// BIOS post code that send when BIOS is end and the computer continue boot.
@@ -40,14 +36,6 @@
 #define SCREEN_SAVER_SECOND_MAX_VALUE	55
 #define SCREEN_SAVER_SECOND_JUMP		5
 
-#define SCREEN_SAVER_MINUTE_MIN_VALUE	1
-#define SCREEN_SAVER_MINUTE_MAX_VALUE	59
-#define SCREEN_SAVER_MINUTE_JUMP		2
-
-#define SCREEN_SAVER_HOUR_MIN_VALUE		1
-#define SCREEN_SAVER_HOUR_MAX_VALUE		5
-#define SCREEN_SAVER_HOUR_JUMP			1
-
 #define SEPERATE_LINE_Y					50
 
 extern enum display_state display_state;
@@ -55,7 +43,5 @@ extern enum display_state display_state;
 extern enum information_type update_information_type;
 
 extern struct calendar_date computer_date_time;
-
-void update_power_state(void);
 
 #endif /* FP_UTILS_H_ */

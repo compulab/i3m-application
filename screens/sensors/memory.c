@@ -36,7 +36,7 @@ static void set_mem_size_str(char *str, uint8_t mem)
 	if (size < 0)
 		sprintf_inval_data(str);
 	else if (size == 0)
-		sprintf(str, EMPTY_SLOT);
+		sprintf(str, "Empty");
 	else
 		sprintf(str, "%d GB", size);
 }

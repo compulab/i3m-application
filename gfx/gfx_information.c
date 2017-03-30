@@ -13,11 +13,6 @@ void gfx_information_draw_string(struct gfx_information *info)
 	//TODO: kill this is_active_frame nonesense once we stop making this distinction.
 	present_menu->is_active_frame = false;
 	info->to_string(info, info->text.text);
-
-	if (info->text.text == 0) {
-		MSG("null pinter", 10);
-		while(1);
-	}
 	//TODO: this is fucked up. This is data saved for an algorithm. It should not be here.
 	info->last_length = draw_string_in_buffer(info->text.text, info->postion.x, info->postion.y, info->text.font, info->last_length);
 }
