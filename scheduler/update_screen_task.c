@@ -18,6 +18,10 @@ static bool is_information_need_to_change(struct gfx_information *info)
 	case SET_SCREEN_SAVER_TYPE:
 	case SET_SCREEN_SAVER_TIME:
 	case SET_BRIGHTNESS:
+	case SHOW_SERIAL_NUMBER:
+	case SHOW_APP_VERSION:
+	case SHOW_PART_NUMBER:
+	case SHOW_MAC_ADDRESS:
 		return false;
 	default:
 		return true;
