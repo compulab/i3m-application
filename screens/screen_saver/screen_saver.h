@@ -9,6 +9,7 @@
 #ifndef SCREEN_SAVER_H_
 #define SCREEN_SAVER_H_
 
+#include <stdio.h>
 #include "gfx/gfx_information.h"
 
 enum screen_saver_type {

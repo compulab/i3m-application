@@ -7,6 +7,7 @@
 
 #include "config/conf_menu.h"
 #include "gfx/gfx_utils.h"
+#include "gfx/action_menu/gfx_action_menu.h"
 #include "eeprom/eeprom_layout.h"
 
 static void handle_brightness_buttons(uint8_t key)

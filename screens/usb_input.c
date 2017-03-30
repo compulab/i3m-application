@@ -5,6 +5,9 @@
  *  Author: Nikita
  */
 
+#include <string.h>
+#include "gfx/gfx_information.h"
+
 extern char buf[1];
 void set_usb_serial_string(struct gfx_information *info, char *output_str)
 {

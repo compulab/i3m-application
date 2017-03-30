@@ -4,8 +4,11 @@
  *  Created on: Nov 8, 2015
  *      Author: arkadi
  */
-#include "work.h"
 
+#include <stdbool.h>
+#include "work.h"
+#include "layout.h"
+#include "asf.h"
 
 uint16_t works_count;
 bool wakeup;

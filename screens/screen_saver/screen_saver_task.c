@@ -9,6 +9,8 @@
 #include "scheduler/scheduler.h"
 #include "power/power.h"
 #include "lib/syntax.h"
+#include "gfx/menu-handler.h"
+#include "gfx/action_menu/gfx_action_menu.h"
 
 bool reset_screen_saver_req;
 

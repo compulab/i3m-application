@@ -5,6 +5,7 @@
  *  Author: Nikita
  */
 
+#include <stdio.h>
 #include "gfx/gfx_information.h"
 #include "twi/i2c_buffer.h"
 

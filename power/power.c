@@ -5,7 +5,9 @@
  *  Author: Nikita
  */
 
+#include <string.h>
 #include "power.h"
+#include "effects.h"
 #include "twi/i2c_buffer.h"
 #include "work-queue/work.h"
 #include "gfx/gfx_information.h"

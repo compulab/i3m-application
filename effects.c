@@ -5,6 +5,8 @@
  *      Author: arkadi
  */
 
+#include <string.h>
+#include "display/glcd-0.5.2/glcd_font.h"
 #include "eeprom/eeprom_layout.h"
 #include "effects.h"
 

@@ -9,7 +9,6 @@
 #define FP_UTILS_H_
 
 #include <stdio.h>
-#include "gfx/action_menu/gfx_action_menu.h"
 #include "work-queue/work.h"
 #include "calendar/calendar.h"
 #include "effects.h"
