@@ -229,20 +229,16 @@ static int gfx_frame_set_infos(struct gfx_frame *frame, struct cnf_info_node *cn
 	return 0;
 }
 
-static void gfx_labels_draw(struct gfx_label_node *curr_label_node)
+static void gfx_labels_draw(struct gfx_label_node *list)
 {
-	while (curr_label_node) {
+	list_foreach(struct gfx_label_node *, list, curr_label_node)
 		gfx_label_draw(&curr_label_node->label);
-		curr_label_node = curr_label_node->next;
-	}
 }
 
-static void gfx_infos_draw(struct gfx_information_node *curr_info_node)
+static void gfx_infos_draw(struct gfx_information_node *list)
 {
-	while (curr_info_node) {
+	list_foreach(struct gfx_information_node *, list, curr_info_node)
 		curr_info_node->information.draw(&curr_info_node->information);
-		curr_info_node = curr_info_node->next;
-	}
 }
 
 static void gfx_images_draw(struct gfx_image_node *list)
