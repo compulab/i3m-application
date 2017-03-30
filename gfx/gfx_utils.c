@@ -252,7 +252,7 @@ static void gfx_images_draw(struct gfx_image_node *list)
 
 static void insert_graphic_signs(struct gfx_frame *frame)
 {
-	if (frame->type == FRAME_DASHBOARD || frame->information_head == NULL)
+	if (frame->information_head == NULL)
 		return;
 
 	switch (frame->information_head->information.info_type) {
@@ -311,7 +311,6 @@ static void gfx_dashboard_draw(struct gfx_frame *frame, bool redraw)
 	}
 
 	gfx_infos_draw(frame->information_head);
-	insert_graphic_signs(frame);
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
@@ -320,7 +319,6 @@ static void init_frame(struct gfx_frame *frame, bool is_dashboard)
 	frame->image_head = 0;
 	frame->information_head = 0;
 	frame->label_head = 0;
-	frame->type = is_dashboard ? FRAME_DASHBOARD : FRAME_REGULAR;
 	frame->draw = is_dashboard ? gfx_dashboard_draw : gfx_frame_draw;
 }
 
