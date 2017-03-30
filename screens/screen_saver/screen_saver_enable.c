@@ -73,5 +73,5 @@ int gfx_information_init_set_screen_saver_enable(struct gfx_information *info)
 
 void set_screen_saver_enable_draw_graphic_signs(void)
 {
-	draw_graphic_signs(computer_data.details.screen_saver_visible, 0, 1, false);
+	draw_control_signs_arrows(computer_data.details.screen_saver_visible, 0, 1);
 }

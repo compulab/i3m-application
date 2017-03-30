@@ -60,5 +60,5 @@ int gfx_information_init_set_screen_saver_type(struct gfx_information *info)
 void set_screen_saver_type_draw_graphic_signs(void)
 {
 	if (computer_data.details.screen_saver_visible)
-		draw_graphic_signs(computer_data.details.screen_saver_type, 0, SCREEN_SAVER_TYPE_SIZE - 1, false);
+		draw_control_signs_arrows(computer_data.details.screen_saver_type, 0, SCREEN_SAVER_TYPE_SIZE - 1);
 }

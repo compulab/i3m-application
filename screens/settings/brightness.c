@@ -36,7 +36,7 @@ static void sprintf_brightness(struct gfx_information *info, char *output_str)
 
 void set_brightness_draw_graphic_signs(void)
 {
-	draw_graphic_signs(eeprom_get_brightness_level(), MIN_BRIGHTNESS_LEVEL, MAX_BRIGHTNESS_LEVEL, true);
+	draw_control_signs_numeric(eeprom_get_brightness_level(), MIN_BRIGHTNESS_LEVEL, MAX_BRIGHTNESS_LEVEL);
 }
 
 int gfx_information_init_set_brightness(struct gfx_information *info)

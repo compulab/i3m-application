@@ -57,5 +57,5 @@ int gfx_information_init_set_screen_saver_time(struct gfx_information *info)
 void set_screen_saver_time_draw_graphic_signs(void)
 {
 	if (computer_data.details.screen_saver_visible)
-		draw_graphic_signs(computer_data.details.screen_saver_update_time, SCREEN_SAVER_SECOND_MIN_VALUE, SCREEN_SAVER_SECOND_MAX_VALUE, true);
+		draw_control_signs_numeric(computer_data.details.screen_saver_update_time, SCREEN_SAVER_SECOND_MIN_VALUE, SCREEN_SAVER_SECOND_MAX_VALUE);
 }

@@ -270,7 +270,7 @@ static void insert_graphic_signs(struct gfx_frame *frame)
 		set_screen_saver_type_draw_graphic_signs();
 		break;
 	default:
-		draw_graphic_signs((present_menu->menu)->current_selection, 0, (present_menu->menu)->num_elements - 2, false);
+		draw_control_signs_arrows(present_menu->menu->current_selection, 0, present_menu->menu->num_elements - 2);
 		break;
 	}
 }
@@ -334,27 +334,22 @@ int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem, b
 	return retval;
 }
 
-static void draw_left_sign(bool is_numeric)
-{
-	if (is_numeric)
-		gfx_mono_put_bitmap(minus_sign_image.bitmap, minus_sign_image.postion.x, left_sign_image.postion.y);
-	else
-		gfx_mono_put_bitmap(left_sign_image.bitmap, left_sign_image.postion.x, left_sign_image.postion.y);
-}
-
-static void draw_right_sign(bool is_numeric)
-{
-	if (is_numeric)
-		gfx_mono_put_bitmap(plus_sign_image.bitmap, plus_sign_image.postion.x, left_sign_image.postion.y);
-	else
-		gfx_mono_put_bitmap(right_sign_image.bitmap, right_sign_image.postion.x, right_sign_image.postion.y);
-}
-
-void draw_graphic_signs(uint8_t selection, uint8_t min_index, uint8_t max_index, bool is_numeric)
+void draw_control_signs(uint8_t selection, uint8_t min_index, uint8_t max_index,
+						struct gfx_image *left_sign, struct gfx_image *right_sign)
 {
 	if (selection > min_index)
-		draw_left_sign(is_numeric);
+		gfx_mono_put_bitmap(left_sign->bitmap, left_sign->postion.x, left_sign->postion.y);
 
 	if (selection < max_index)
-		draw_right_sign(is_numeric);
+		gfx_mono_put_bitmap(right_sign->bitmap, right_sign->postion.x, right_sign->postion.y);
+}
+
+void draw_control_signs_arrows(uint8_t selection, uint8_t min_index, uint8_t max_index)
+{
+	draw_control_signs(selection, min_index, max_index, &left_sign_image, &right_sign_image);
+}
+
+void draw_control_signs_numeric(uint8_t selection, uint8_t min_index, uint8_t max_index)
+{
+	draw_control_signs(selection, min_index, max_index, &minus_sign_image, &plus_sign_image);
 }
