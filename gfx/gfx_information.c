@@ -19,7 +19,8 @@ void gfx_information_draw_string(struct gfx_information *info)
 	info->last_length = draw_string_in_buffer(info->text.text, info->postion.x, info->postion.y, info->text.font, info->last_length);
 }
 
-static void sprintf_sprintf(struct gfx_information *info, char *output_str) {
+static void sprintf_sprintf(struct gfx_information *info, char *output_str)
+{
 	sprintf(output_str, info->text.text);
 }
 
