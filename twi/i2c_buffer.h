@@ -138,7 +138,7 @@ union i2c_buffer {
 		uint8_t hddtr:1;
 		uint8_t cpufr:1;
 		uint8_t cputr:1;
-		uint8_t gputr:1;
+		uint8_t gpu_temp_request:1;
 		uint8_t reserved27:4;
 		uint8_t reserved28[13];
 		uint8_t dmi_name;

@@ -40,7 +40,7 @@ static void update_action_visibility(struct gfx_item_action *action)
 			visible = computer_data.details.gpu_temp_set;
 			break;
 		case SHOW_HDD_SIZE:
-			visible = BIT_ON(computer_data.packed.hdds, info_node->information.info_data);
+			visible = BIT_ON(computer_data.packed.hdd_size_set, info_node->information.info_data);
 			break;
 		case SHOW_HDD_TEMPERTURE:
 			visible = BIT_ON(computer_data.packed.hdd_temp_set, info_node->information.info_data);

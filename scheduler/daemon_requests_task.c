@@ -43,7 +43,7 @@ void update_requests(void *data)
 	i2c_buffer.layout.hddtr = !i2c_buffer.layout.hddtr && need_to_update_req(SHOW_HDD_TEMPERTURE);
 	i2c_buffer.layout.cpufr = !i2c_buffer.layout.cpufr && need_to_update_req(SHOW_CPU_FREQUENCY);
 	i2c_buffer.layout.cputr = !i2c_buffer.layout.cputr && need_to_update_req(SHOW_CPU_TEMPERTURE);
-	i2c_buffer.layout.gputr = !i2c_buffer.layout.gputr && need_to_update_req(SHOW_GPU_TEMPERTURE);
+	i2c_buffer.layout.gpu_temp_request = !i2c_buffer.layout.gpu_temp_request && need_to_update_req(SHOW_GPU_TEMPERTURE);
 	i2c_buffer.layout.req = !i2c_buffer.layout.req && i2c_buffer.raw[PENDR0];
 }
 

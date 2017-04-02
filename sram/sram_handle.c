@@ -88,12 +88,12 @@ static void write_hd_sz_msb(uint8_t hdd_addr)
 	if (!is_valid_register(index, MAX_HDD))
 		return ;
 	if (i2c_buffer.raw[hdd_addr] & HDD_SZ_STATUS_MSK) {
-		computer_data.packed.hddsz[index] = (i2c_buffer.raw[hdd_addr - 1] & ~ MSB_MSK) | ((i2c_buffer.raw[hdd_addr] & HDD_SZ_MSK) << 8);
-		computer_data.packed.hdds |= (0x01 << index);
+		computer_data.packed.hdd_size[index] = (i2c_buffer.raw[hdd_addr - 1] & ~ MSB_MSK) | ((i2c_buffer.raw[hdd_addr] & HDD_SZ_MSK) << 8);
+		computer_data.packed.hdd_size_set |= (0x01 << index);
 		uint8_t factor = (i2c_buffer.raw[hdd_addr] & HDD_SZ_UNIT_MSK) != 0 ? 1 : 0;
-		computer_data.packed.hddf |= (0x01 << index) & factor;
+		computer_data.packed.hdd_units_tera |= (0x01 << index) & factor;
 	} else {
-		computer_data.packed.hdds &= ~(0x01 << index);
+		computer_data.packed.hdd_size_set &= ~(0x01 << index);
 	}
 }
 
@@ -744,7 +744,7 @@ static void write_gpu_temp(void)
 			computer_data.details.gpu_temp = i2c_buffer.layout.gput;
 		}
 	}
-	i2c_buffer.layout.gputr = 0;
+	i2c_buffer.layout.gpu_temp_request = 0;
 	clear_req();
 }
 extern bool is_twi_busy; //See below in update_data

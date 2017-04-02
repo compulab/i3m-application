@@ -36,11 +36,11 @@ bool is_hdd_temp_need_update(struct gfx_information *info, bool is_visible)
 static void sprintf_hdd_size(struct gfx_information *info, char *output_str)
 {
 	uint8_t hdd_id = info->info_data;
-	uint16_t size = computer_data.packed.hddsz[hdd_id];
-	bool is_tera = BIT_ON(computer_data.packed.hddf, hdd_id);
+	uint16_t size = computer_data.packed.hdd_size[hdd_id];
+	bool is_tera = BIT_ON(computer_data.packed.hdd_units_tera, hdd_id);
 	char *units = is_tera ? " TB" : " GB";
 
-	if (BIT_ON(computer_data.packed.hdds, hdd_id))
+	if (BIT_ON(computer_data.packed.hdd_size_set, hdd_id))
 		sprintf(output_str, "%d %s", size, units);
 	else
 		sprintf_inval_data(output_str);
@@ -55,7 +55,7 @@ int gfx_information_init_show_hdd_size(struct gfx_information *info)
 bool is_hdd_size_need_update(struct gfx_information *info, bool is_visible)
 {
 	if (is_visible)
-		return !BIT_ON(computer_data.packed.hdds, info->info_data);
+		return !BIT_ON(computer_data.packed.hdd_size_set, info->info_data);
 
 	return true;
 }
