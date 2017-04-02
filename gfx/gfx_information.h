@@ -14,6 +14,7 @@
 
 struct gfx_information {
 	struct gfx_item postion;
+	struct gfx_text text;
 	enum information_type info_type;
 	uint8_t last_length;
 	//TODO: The following is a really bad variable that at different times
@@ -21,9 +22,12 @@ struct gfx_information {
 	//other types of identifiers. This should be refactored the hell out of
 	//here.
 	uint8_t info_data;
+
+	//to_string: sprintf the formatted data value into output_str
 	void (*to_string)(struct gfx_information *info, char *output_str);
+	//draw_data: display formatted data on the screen
 	void (*draw_data)(struct gfx_information *info);
-	struct gfx_text text;
+	//draw_controls: display control symbols for left/right buttons
 	void (*draw_controls)(struct gfx_information *info);
 };
 
