@@ -33,6 +33,5 @@ struct gfx_information_node {
 };
 
 int gfx_information_init(struct gfx_information *info, struct cnf_info *cnf_info, uint8_t font_id);
-void gfx_information_draw_string(struct gfx_information *info);
 
 #endif /* GFX_INFORMATION_H_ */

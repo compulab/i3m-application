@@ -50,7 +50,10 @@ static void sprintf_screen_saver_enable(struct gfx_information *info, char *outp
 
 static void draw_screen_saver_enable(struct gfx_information *info)
 {
-	gfx_information_draw_string(info);
+	present_menu->is_active_frame = false;
+	info->to_string(info, info->text.text);
+	info->last_length = draw_string_in_buffer(info->text.text, info->postion.x, info->postion.y, info->text.font, info->last_length);
+
 	uint8_t enable_len = 7 * info->text.font->width;
 	uint8_t	disable_len = 8 * info->text.font->width;
 	uint8_t	enable_x = disable_len + info->text.font->width + info->postion.x;
