@@ -6,6 +6,7 @@
  */
 
 #include <stdio.h>
+#include "eeprom.h"
 #include "eeprom_layout.h"
 
 #define SCREEN_SAVER_TIME_EEPROM_ADDRESS	0x120
