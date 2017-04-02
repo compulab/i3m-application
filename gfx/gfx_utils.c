@@ -8,6 +8,7 @@
 #include "gfx_utils.h"
 #include "gfx_frame.h"
 #include "gfx_label.h"
+#include "gfx_image.h"
 #include "uart/uart.h"
 #include "lib/syntax.h"
 #include "gfx/action_menu/gfx_action_menu.h"
@@ -103,29 +104,6 @@ void print_vertical_line(uint8_t x, uint8_t y, uint8_t length)
 	gfx_mono_draw_line(x, y, x, y + length, GFX_PIXEL_SET);
 }
 
-static int gfx_image_init(struct gfx_image *image, gfx_mono_color_t PROGMEM_T *bitmap_progmem,
-		uint8_t height, uint8_t width, uint8_t x, uint8_t y)
-{
-	struct gfx_mono_bitmap *bitmap = malloc_locked(sizeof(struct gfx_mono_bitmap));
-	if (bitmap == NULL){
-		uart_send_string("bitmap failed\n\r");
-		return -1;
-	}
-	bitmap->width = width;
-	bitmap->height = height;
-	bitmap->data.progmem = bitmap_progmem;
-	bitmap->type = GFX_MONO_BITMAP_SECTION;
-	image->bitmap = bitmap;
-	gfx_item_init(&image->postion, x, y, (image->bitmap->width + 2),
-			(image->bitmap->height + 2));
-	return 0;
-}
-
-static void gfx_image_draw(struct gfx_image *image)
-{
-	gfx_mono_generic_put_bitmap(image->bitmap, image->postion.x, image->postion.y);
-}
-
 static int gfx_frame_set_images(struct gfx_frame *frame, struct cnf_image_node *cnf_image_pgmem)
 {
 	struct gfx_image_node *frame_image_last = 0;
@@ -137,11 +115,14 @@ static int gfx_frame_set_images(struct gfx_frame *frame, struct cnf_image_node *
 			return -1;
 		}
 		memcpy_config(&cnf_image_node, cnf_image_pgmem, sizeof(struct cnf_image_node));
-		if (gfx_image_init(&gfx_image_node->image, cnf_image_node.image.bitmap_progmem, cnf_image_node.image.height,
-				cnf_image_node.image.width, cnf_image_node.image.x, cnf_image_node.image.y) != 0) {
-			uart_send_string("gfx_image_node init failed\n\r");
+		gfx_image_node->image.bitmap = malloc_locked(sizeof(struct gfx_mono_bitmap));
+		//TODO: Possible memory leak here fix later
+		if (gfx_image_node->image.bitmap == NULL)
 			return -1;
-		}
+
+		gfx_image_init(&gfx_image_node->image, cnf_image_node.image.bitmap_progmem, cnf_image_node.image.height,
+				cnf_image_node.image.width, cnf_image_node.image.x, cnf_image_node.image.y);
+
 		gfx_image_node->next = 0;
 		if (frame->image_head == 0)
 			frame->image_head = gfx_image_node;
@@ -216,7 +197,7 @@ static void gfx_infos_draw(struct gfx_information_node *list)
 static void gfx_images_draw(struct gfx_image_node *list)
 {
 	list_foreach(struct gfx_image_node *, list, image_node)
-		gfx_image_draw(&image_node->image);
+		image_node->image.draw(&image_node->image);
 }
 
 //TODO: there's a lot of code duplication with the dashboard version. Fix later.
