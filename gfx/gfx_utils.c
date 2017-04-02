@@ -7,6 +7,7 @@
 
 #include "gfx_utils.h"
 #include "gfx_frame.h"
+#include "gfx_label.h"
 #include "uart/uart.h"
 #include "lib/syntax.h"
 #include "gfx/action_menu/gfx_action_menu.h"
@@ -100,26 +101,6 @@ void print_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
 void print_vertical_line(uint8_t x, uint8_t y, uint8_t length)
 {
 	gfx_mono_draw_line(x, y, x, y + length, GFX_PIXEL_SET);
-}
-
-static void gfx_label_init(struct gfx_label *label, char *text,
-		uint8_t x, uint8_t y, uint8_t font_id)
-{
-		gfx_item_init(&label ->postion, x, y, 0, 0);
-		label->text.is_progmem = true;
-		label->text.textP = text;
-		label->text.font = get_font_by_type(font_id);
-}
-
-static void print_data_P(char *text, struct glcd_FontConfig_t *font, uint8_t x, uint8_t y)
-{
-	draw_string_in_buffer_P(text, x, y, font);
-}
-
-static void gfx_label_draw(struct gfx_label *label)
-{
-	if (label->text.textP != NULL)
-		print_data_P(label->text.textP, label->text.font, label->postion.x, label->postion.y);
 }
 
 static int gfx_image_init(struct gfx_image *image, gfx_mono_color_t PROGMEM_T *bitmap_progmem,
@@ -223,7 +204,7 @@ static int gfx_frame_set_infos(struct gfx_frame *frame, struct cnf_info_node *cn
 static void gfx_labels_draw(struct gfx_label_node *list)
 {
 	list_foreach(struct gfx_label_node *, list, curr_label_node)
-		gfx_label_draw(&curr_label_node->label);
+		curr_label_node->label.draw(&curr_label_node->label);
 }
 
 static void gfx_infos_draw(struct gfx_information_node *list)

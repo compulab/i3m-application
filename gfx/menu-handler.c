@@ -1,6 +1,7 @@
 #include "menu-handler.h"
 #include "gfx/gfx_information.h"
 #include "gfx/gfx_item_action.h"
+#include "gfx/gfx_label.h"
 #include "gfx/action_menu/gfx_action_menu.h"
 #include "screens/screen_saver/screen_saver.h"
 #include "uart/uart.h"

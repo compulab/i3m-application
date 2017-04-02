@@ -21,16 +21,6 @@ struct gfx_text {
 	struct glcd_FontConfig_t *font;
 };
 
-struct gfx_label {
-	struct gfx_item postion;
-	struct gfx_text text;
-};
-
-struct gfx_label_node {
-	struct gfx_label label;
-	struct gfx_label_node *next;
-};
-
 struct gfx_image {
 	struct gfx_item postion;
 	struct gfx_mono_bitmap *bitmap;
