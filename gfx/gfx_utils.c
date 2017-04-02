@@ -102,15 +102,6 @@ void print_vertical_line(uint8_t x, uint8_t y, uint8_t length)
 	gfx_mono_draw_line(x, y, x, y + length, GFX_PIXEL_SET);
 }
 
-void gfx_item_init(struct gfx_item *item, uint8_t x, uint8_t y, uint8_t width, uint8_t height)
-{
-	item->x = x;
-	item->y = y;
-	item->width = width;
-	item->height = height;
-	item->visible = true;
-}
-
 static void gfx_label_init(struct gfx_label *label, char *text,
 		uint8_t x, uint8_t y, uint8_t font_id)
 {

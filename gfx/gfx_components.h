@@ -11,12 +11,7 @@
 
 #include "asf.h"
 #include "def.h"
-
-struct gfx_item {
-	uint8_t x, y;
-	uint8_t width, height;
-	bool visible;
-};
+#include "gfx_item.h"
 
 struct gfx_text {
 	char *text;

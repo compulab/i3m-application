@@ -6,6 +6,7 @@
  */
 
 #include "gfx_information.h"
+#include "gfx_item.h"
 #include "action_menu/gfx_action_menu.h"
 #include "screens/screens.h"
 
