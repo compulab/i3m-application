@@ -21,4 +21,7 @@ int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem, b
 
 void draw_graphic_signs(uint8_t selection, uint8_t min_index, uint8_t max_index, bool is_numeric);
 
+void draw_control_signs_numeric(uint8_t selection, uint8_t min_index, uint8_t max_index);
+void draw_control_signs_arrows(uint8_t selection, uint8_t min_index, uint8_t max_index);
+
 #endif /* GFX_GFX_UTILS_H_ */

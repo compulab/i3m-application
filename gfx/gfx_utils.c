@@ -247,30 +247,6 @@ static void gfx_images_draw(struct gfx_image_node *list)
 		gfx_image_draw(&image_node->image);
 }
 
-static void insert_graphic_signs(struct gfx_frame *frame)
-{
-	if (frame->information_head == NULL)
-		return;
-
-	switch (frame->information_head->information.info_type) {
-	case SET_BRIGHTNESS:
-		set_brightness_draw_graphic_signs();
-		break;
-	case SET_SCREEN_SAVER_ENABLE:
-		set_screen_saver_enable_draw_graphic_signs();
-		break;
-	case SET_SCREEN_SAVER_TIME:
-		set_screen_saver_time_draw_graphic_signs();
-		break;
-	case SET_SCREEN_SAVER_TYPE:
-		set_screen_saver_type_draw_graphic_signs();
-		break;
-	default:
-		draw_control_signs_arrows(present_menu->menu->current_selection, 0, present_menu->menu->num_elements - 2);
-		break;
-	}
-}
-
 //TODO: there's a lot of code duplication with the dashboard version. Fix later.
 static void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
 {
@@ -289,7 +265,7 @@ static void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
 	}
 
 	gfx_infos_draw(frame->information_head);
-	insert_graphic_signs(frame);
+	frame->information_head->information.draw_controls(&frame->information_head->information);
 	gfx_mono_ssd1306_put_framebuffer();
 }
 

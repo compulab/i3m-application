@@ -22,6 +22,11 @@ static void sprintf_sprintf(struct gfx_information *info, char *output_str) {
 	sprintf(output_str, info->text.text);
 }
 
+static void gfx_information_draw_control_arrows(struct gfx_information *info)
+{
+	draw_control_signs_arrows(present_menu->menu->current_selection, 0, present_menu->menu->num_elements - 2);
+}
+
 static int gfx_information_init_generic(struct gfx_information *info, enum information_type info_type,
 										uint8_t info_data, uint8_t max_length, uint8_t x, uint8_t y, uint8_t font_id)
 {
@@ -38,6 +43,7 @@ static int gfx_information_init_generic(struct gfx_information *info, enum infor
 	info->text.font = get_font_by_type(font_id);
 	info->to_string = sprintf_sprintf;
 	info->draw_data = gfx_information_draw_string;
+	info->draw_controls = gfx_information_draw_control_arrows;
 
 	return 0;
 }

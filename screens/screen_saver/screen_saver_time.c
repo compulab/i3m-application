@@ -48,14 +48,15 @@ void sprintf_screen_saver_time(struct gfx_information *info, char *output_str)
 	present_menu->is_active_frame = true;
 }
 
-int gfx_information_init_set_screen_saver_time(struct gfx_information *info)
-{
-	info->to_string = sprintf_screen_saver_time;
-	return 0;
-}
-
-void set_screen_saver_time_draw_graphic_signs(void)
+static void set_screen_saver_time_draw_graphic_signs(struct gfx_information *info)
 {
 	if (computer_data.details.screen_saver_visible)
 		draw_control_signs_numeric(computer_data.details.screen_saver_update_time, SCREEN_SAVER_SECOND_MIN_VALUE, SCREEN_SAVER_SECOND_MAX_VALUE);
+}
+
+int gfx_information_init_set_screen_saver_time(struct gfx_information *info)
+{
+	info->to_string = sprintf_screen_saver_time;
+	info->draw_controls = set_screen_saver_time_draw_graphic_signs;
+	return 0;
 }

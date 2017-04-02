@@ -64,14 +64,15 @@ static void draw_screen_saver_enable(struct gfx_information *info)
 	gfx_mono_generic_draw_horizontal_line(clear_x, info->postion.y + info->text.font->height + 2, length_clr, GFX_PIXEL_CLR);
 }
 
+static void set_screen_saver_enable_draw_graphic_signs(struct gfx_information *info)
+{
+	draw_control_signs_arrows(computer_data.details.screen_saver_visible, 0, 1);
+}
+
 int gfx_information_init_set_screen_saver_enable(struct gfx_information *info)
 {
 	info->to_string = sprintf_screen_saver_enable;
 	info->draw_data = draw_screen_saver_enable;
+	info->draw_controls = set_screen_saver_enable_draw_graphic_signs;
 	return 0;
-}
-
-void set_screen_saver_enable_draw_graphic_signs(void)
-{
-	draw_control_signs_arrows(computer_data.details.screen_saver_visible, 0, 1);
 }

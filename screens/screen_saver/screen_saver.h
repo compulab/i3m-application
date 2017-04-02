@@ -31,8 +31,5 @@ int gfx_information_init_set_screen_saver_time(struct gfx_information *info);
 int gfx_information_init_set_screen_saver_enable(struct gfx_information *info);
 void enable_screen_saver_mode(void);
 void disable_screen_saver_mode(void);
-void set_screen_saver_enable_draw_graphic_signs(void);
-void set_screen_saver_time_draw_graphic_signs(void);
-void set_screen_saver_type_draw_graphic_signs(void);
 
 #endif /* SCREEN_SAVER_H_ */

@@ -24,6 +24,7 @@ struct gfx_information {
 	void (*to_string)(struct gfx_information *info, char *output_str);
 	void (*draw_data)(struct gfx_information *info);
 	struct gfx_text text;
+	void (*draw_controls)(struct gfx_information *info);
 };
 
 struct gfx_information_node {
