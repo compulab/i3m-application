@@ -238,7 +238,7 @@ static void gfx_labels_draw(struct gfx_label_node *list)
 static void gfx_infos_draw(struct gfx_information_node *list)
 {
 	list_foreach(struct gfx_information_node *, list, curr_info_node)
-		curr_info_node->information.draw(&curr_info_node->information);
+		curr_info_node->information.draw_data(&curr_info_node->information);
 }
 
 static void gfx_images_draw(struct gfx_image_node *list)

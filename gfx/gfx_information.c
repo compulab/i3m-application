@@ -37,7 +37,7 @@ static int gfx_information_init_generic(struct gfx_information *info, enum infor
 	gfx_item_init(&info->postion, x, y, 0, 0);
 	info->text.font = get_font_by_type(font_id);
 	info->to_string = sprintf_sprintf;
-	info->draw = gfx_information_draw_string;
+	info->draw_data = gfx_information_draw_string;
 
 	return 0;
 }

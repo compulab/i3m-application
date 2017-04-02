@@ -67,7 +67,7 @@ static void draw_screen_saver_enable(struct gfx_information *info)
 int gfx_information_init_set_screen_saver_enable(struct gfx_information *info)
 {
 	info->to_string = sprintf_screen_saver_enable;
-	info->draw = draw_screen_saver_enable;
+	info->draw_data = draw_screen_saver_enable;
 	return 0;
 }
 

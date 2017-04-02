@@ -22,7 +22,7 @@ struct gfx_information {
 	//here.
 	uint8_t info_data;
 	void (*to_string)(struct gfx_information *info, char *output_str);
-	void (*draw)(struct gfx_information *info);
+	void (*draw_data)(struct gfx_information *info);
 	struct gfx_text text;
 };
 
