@@ -4,10 +4,13 @@
  *  Created on: Aug 12, 2015
  *      Author: arkadi
  */
-#include "adc.h"
-#include "scheduler/scheduler.h"
-#include "Fp-utils.h"
+
 #include <stdio.h>
+#include <string.h>
+#include "scheduler/scheduler.h"
+#include "adc/adc.h"
+#include "math.h"
+#include "asf.h"
 
 //***ADC configuration
 #define MY_ADC    ADCA
