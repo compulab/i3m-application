@@ -337,20 +337,20 @@ static void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t 
 			break;
 		}
 		break;
-		case GFX_MONO_MENU_KEYCODE_BACK:
-			if (!present_menu->visible)
-				show_current_menu(true);
-			break;
-		default:
-			if (from_frame && ((keycode == GFX_MONO_MENU_KEYCODE_DOWN && action_menu->menu->current_selection == 0) ||
-						(keycode == GFX_MONO_MENU_KEYCODE_UP && action_menu->menu->current_selection == action_menu->menu->num_elements - 2)))
-					return ;
-			 gfx_mono_menu_process_key(action_menu->menu, keycode, action_menu->is_progmem);
-			 if (from_frame)
-				 gfx_action_menu_process_key(action_menu, GFX_MONO_MENU_KEYCODE_ENTER, true);
-			 else
-				 show_current_menu(false);
-			 break;
+	case GFX_MONO_MENU_KEYCODE_BACK:
+		if (!present_menu->visible)
+			show_current_menu(true);
+		break;
+	default:
+		if (from_frame && ((keycode == GFX_MONO_MENU_KEYCODE_DOWN && action_menu->menu->current_selection == 0) ||
+					(keycode == GFX_MONO_MENU_KEYCODE_UP && action_menu->menu->current_selection == action_menu->menu->num_elements - 2)))
+				return ;
+		 gfx_mono_menu_process_key(action_menu->menu, keycode, action_menu->is_progmem);
+		 if (from_frame)
+			 gfx_action_menu_process_key(action_menu, GFX_MONO_MENU_KEYCODE_ENTER, true);
+		 else
+			 show_current_menu(false);
+		 break;
 	}
 }
 
