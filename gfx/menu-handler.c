@@ -480,9 +480,8 @@ static void handle_buttons_update(void *data)
 			handle_button_preesed_by_display_mode();
 			break;
 		default:
-			if (present_menu->is_active_frame) {
-				frame_present->handle_buttons(GFX_MONO_MENU_KEYCODE_DOWN);
-//				update_info();
+			if (frame_present) {
+				frame_present->information_head->information.handle_buttons(GFX_MONO_MENU_KEYCODE_DOWN);
 			} else {
 				gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN, !present_menu->visible);
 			}
@@ -503,9 +502,8 @@ static void handle_buttons_update(void *data)
 				handle_button_preesed_by_display_mode();
 				break;
 			default:
-				if (present_menu->is_active_frame) {
-					frame_present->handle_buttons(GFX_MONO_MENU_KEYCODE_UP);
-//					update_info();
+				if (frame_present) {
+					frame_present->information_head->information.handle_buttons(GFX_MONO_MENU_KEYCODE_UP);
 				} else {
 					gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP, !present_menu->visible);
 				}

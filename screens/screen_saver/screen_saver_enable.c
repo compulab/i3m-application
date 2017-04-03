@@ -43,7 +43,6 @@ static void handle_screen_saver_enable_buttons(uint8_t key)
 
 static void sprintf_screen_saver_enable(struct gfx_information *info, char *output_str)
 {
-	frame_present->handle_buttons = handle_screen_saver_enable_buttons;
 	sprintf(output_str, "DISABLE ENABLE");
 	present_menu->is_active_frame = true;
 }
@@ -77,5 +76,6 @@ int gfx_information_init_set_screen_saver_enable(struct gfx_information *info)
 	info->to_string = sprintf_screen_saver_enable;
 	info->draw_data = draw_screen_saver_enable;
 	info->draw_controls = set_screen_saver_enable_draw_graphic_signs;
+	info->handle_buttons = handle_screen_saver_enable_buttons;
 	return 0;
 }

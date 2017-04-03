@@ -29,7 +29,6 @@ static void handle_brightness_buttons(uint8_t key)
 
 static void sprintf_brightness(struct gfx_information *info, char *output_str)
 {
-	frame_present->handle_buttons = handle_brightness_buttons;
 	sprintf(output_str, "%d ", eeprom_get_brightness_level());
 	present_menu->is_active_frame = true;
 }
@@ -43,5 +42,6 @@ int gfx_information_init_set_brightness(struct gfx_information *info)
 {
 	info->to_string = sprintf_brightness;
 	info->draw_controls = set_brightness_draw_graphic_signs;
+	info->handle_buttons = handle_brightness_buttons;
 	return 0;
 }

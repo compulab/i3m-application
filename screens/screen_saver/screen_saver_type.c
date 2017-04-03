@@ -42,7 +42,6 @@ static void handle_screen_saver_type_buttons(uint8_t key)
 
 static void sprintf_screen_saver_type(struct gfx_information *info, char *output_str)
 {
-	frame_present->handle_buttons = handle_screen_saver_type_buttons;
 	if (computer_data.details.screen_saver_visible)
 		sprintf(output_str, screen_saver_type_str[computer_data.details.screen_saver_type]);
 	else
@@ -61,5 +60,6 @@ int gfx_information_init_set_screen_saver_type(struct gfx_information *info)
 {
 	info->to_string = sprintf_screen_saver_type;
 	info->draw_controls = set_screen_saver_type_draw_graphic_signs;
+	info->handle_buttons = handle_screen_saver_type_buttons;
 	return 0;
 }

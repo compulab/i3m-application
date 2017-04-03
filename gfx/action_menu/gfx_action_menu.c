@@ -303,7 +303,7 @@ void show_frame(struct gfx_frame *frame)
 	frame->draw(frame, false);
 }
 
-static void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
+void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
 {
 	enum action_type type;
 	struct gfx_item_action *selected_action;

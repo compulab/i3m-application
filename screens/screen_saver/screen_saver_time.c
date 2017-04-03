@@ -39,7 +39,6 @@ static void handle_screen_saver_time_buttons(uint8_t key)
 
 void sprintf_screen_saver_time(struct gfx_information *info, char *output_str)
 {
-	frame_present->handle_buttons = handle_screen_saver_time_buttons;
 	if (computer_data.details.screen_saver_visible)
 		sprintf(output_str, "%d", computer_data.details.screen_saver_update_time);
 	else
@@ -58,5 +57,6 @@ int gfx_information_init_set_screen_saver_time(struct gfx_information *info)
 {
 	info->to_string = sprintf_screen_saver_time;
 	info->draw_controls = set_screen_saver_time_draw_graphic_signs;
+	info->handle_buttons = handle_screen_saver_time_buttons;
 	return 0;
 }

@@ -30,6 +30,7 @@ struct gfx_information {
 	void (*draw_data)(struct gfx_information *info);
 	//draw_controls: display control symbols for left/right buttons
 	void (*draw_controls)(struct gfx_information *info);
+	void (*handle_buttons)(uint8_t key);
 };
 
 struct gfx_information_node {
