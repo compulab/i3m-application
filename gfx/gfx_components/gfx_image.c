@@ -5,7 +5,7 @@
  *  Author: Nikita
  */
 
-#include "gfx/gfx_image.h"
+#include "gfx_image.h"
 #include "asf.h"
 
 static void gfx_image_draw(struct gfx_image *image)

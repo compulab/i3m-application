@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 #include "eeprom/eeprom.h"
-#include "gfx/gfx_information.h"
+#include "gfx/gfx_components/gfx_information.h"
 
 static void sprintf_serial_number(struct gfx_information *info, char *output_str)
 {

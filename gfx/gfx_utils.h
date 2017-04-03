@@ -10,7 +10,7 @@
 
 #include "config/cnf_blk_components.h"
 #include "Fp-utils.h"
-#include "gfx_text.h"
+#include "gfx_components/gfx_text.h"
 #include "gfx_frame.h"
 
 #define MAX_TEMPERATURE_LENGTH 10

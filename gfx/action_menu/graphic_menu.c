@@ -8,7 +8,7 @@
 #include "graphic_menu.h"
 #include "lib/syntax.h"
 #include "gfx/gfx_item_action.h"
-#include "gfx/gfx_image.h"
+#include "gfx/gfx_components/gfx_image.h"
 
 static void set_item_position(struct gfx_image *bitmap, uint8_t i, bool is_back_item)
 {

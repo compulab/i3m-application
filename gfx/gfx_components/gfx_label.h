@@ -9,8 +9,8 @@
 #ifndef GFX_LABEL_H_
 #define GFX_LABEL_H_
 
-#include "gfx/gfx_item.h"
-#include "gfx/gfx_text.h"
+#include "gfx_item.h"
+#include "gfx_text.h"
 
 struct gfx_label {
 	struct gfx_item postion;

@@ -48,7 +48,7 @@
 #include "uart/uart.h"
 #include "scheduler/scheduler.h"
 #include "screens/string_formats.h"
-#include "gfx/gfx_information.h"
+#include "gfx/gfx_components/gfx_information.h"
 #include "Fp-utils.h"
 #include <stdio.h>
 

@@ -9,7 +9,7 @@
 #ifndef SENSORS_H_
 #define SENSORS_H_
 
-#include "gfx/gfx_information.h"
+#include "gfx/gfx_components/gfx_information.h"
 
 int gfx_information_init_show_cpu_temp(struct gfx_information *info);
 int gfx_information_init_show_cpu_freq(struct gfx_information *info);

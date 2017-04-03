@@ -6,7 +6,7 @@
  */
 
 #include <stdio.h>
-#include "gfx/gfx_information.h"
+#include "gfx/gfx_components/gfx_information.h"
 #include "gfx/gfx_utils.h"
 #include "gfx/action_menu/gfx_action_menu.h"
 #include "eeprom/eeprom_layout.h"

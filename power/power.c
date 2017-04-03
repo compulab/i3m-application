@@ -10,7 +10,7 @@
 #include "effects.h"
 #include "twi/i2c_buffer.h"
 #include "work-queue/work.h"
-#include "gfx/gfx_information.h"
+#include "gfx/gfx_components/gfx_information.h"
 
 enum power_state current_power_state = POWER_ON;
 

@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "gfx/gfx_information.h"
+#include "gfx/gfx_components/gfx_information.h"
 #include "auto_generated.h"
 
 #ifndef VERSION

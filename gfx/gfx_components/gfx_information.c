@@ -7,7 +7,7 @@
 
 #include "gfx_information.h"
 #include "gfx_item.h"
-#include "action_menu/gfx_action_menu.h"
+#include "gfx/action_menu/gfx_action_menu.h"
 #include "screens/screens.h"
 
 void gfx_information_draw_string(struct gfx_information *info)

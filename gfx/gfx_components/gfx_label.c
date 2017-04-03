@@ -5,7 +5,7 @@
  *  Author: Nikita
  */
 
-#include "gfx/gfx_label.h"
+#include "gfx_label.h"
 #include "display/display_render.h"
 
 static void gfx_label_draw(struct gfx_label *label)

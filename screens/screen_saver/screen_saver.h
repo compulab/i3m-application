@@ -10,7 +10,7 @@
 #define SCREEN_SAVER_H_
 
 #include <stdio.h>
-#include "gfx/gfx_information.h"
+#include "gfx/gfx_components/gfx_information.h"
 
 #define SCREEN_SAVER_SECOND_MIN_VALUE	5
 #define SCREEN_SAVER_SECOND_MAX_VALUE	55

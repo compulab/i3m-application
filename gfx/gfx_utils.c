@@ -7,8 +7,8 @@
 
 #include "gfx_utils.h"
 #include "gfx_frame.h"
-#include "gfx_label.h"
-#include "gfx_image.h"
+#include "gfx_components/gfx_label.h"
+#include "gfx_components/gfx_image.h"
 #include "uart/uart.h"
 #include "lib/syntax.h"
 #include "gfx/action_menu/gfx_action_menu.h"

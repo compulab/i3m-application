@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include "lib/syntax.h"
 #include "Fp-utils.h"
-#include "gfx/gfx_information.h"
+#include "gfx/gfx_components/gfx_information.h"
 #include "gfx/action_menu/gfx_action_menu.h"
 #include "gfx/gfx_utils.h"
 #include "eeprom/eeprom_layout.h"

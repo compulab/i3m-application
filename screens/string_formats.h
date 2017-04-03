@@ -9,7 +9,7 @@
 #ifndef STRING_FORMATS_H_
 #define STRING_FORMATS_H_
 
-#include "gfx/gfx_information.h"
+#include "gfx/gfx_components/gfx_information.h"
 #include <stdio.h>
 
 static inline void sprintf_freq(char *output_str, uint16_t fq)

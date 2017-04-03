@@ -6,7 +6,7 @@
  */
 
 #include <string.h>
-#include "gfx/gfx_information.h"
+#include "gfx/gfx_components/gfx_information.h"
 #include "screens/string_formats.h"
 #include "lib/syntax.h"
 

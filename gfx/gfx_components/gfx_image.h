@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include "gfx/gfx_item.h"
+#include "gfx_item.h"
 #include "config/cnf_blk_components.h"
 
 struct gfx_image {

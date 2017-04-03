@@ -9,10 +9,10 @@
 #ifndef GFX_FRAME_H_
 #define GFX_FRAME_H_
 
-#include "gfx_text.h"
-#include "gfx_image.h"
-#include "gfx_label.h"
-#include "gfx_information.h"
+#include "gfx_components/gfx_text.h"
+#include "gfx_components/gfx_image.h"
+#include "gfx_components/gfx_label.h"
+#include "gfx_components/gfx_information.h"
 
 struct gfx_frame {
 	void (*handle_buttons)(uint8_t);

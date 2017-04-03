@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "gfx/gfx_information.h"
+#include "gfx/gfx_components/gfx_information.h"
 
 static void sprintf_part_number(struct gfx_information *info, char *output_str)
 {
