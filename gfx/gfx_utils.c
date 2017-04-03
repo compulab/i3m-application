@@ -104,7 +104,12 @@ void print_vertical_line(uint8_t x, uint8_t y, uint8_t length)
 	gfx_mono_draw_line(x, y, x, y + length, GFX_PIXEL_SET);
 }
 
+#define SEPERATE_LINE_Y					50
 
+void draw_standard_separator_line(void)
+{
+	gfx_mono_generic_draw_horizontal_line(0, SEPERATE_LINE_Y, GFX_MONO_LCD_WIDTH, GFX_PIXEL_SET);
+}
 
 void draw_control_signs(uint8_t selection, uint8_t min_index, uint8_t max_index,
 						struct gfx_image *left_sign, struct gfx_image *right_sign)

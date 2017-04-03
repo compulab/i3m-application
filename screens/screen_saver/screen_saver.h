@@ -12,6 +12,10 @@
 #include <stdio.h>
 #include "gfx/gfx_information.h"
 
+#define SCREEN_SAVER_SECOND_MIN_VALUE	5
+#define SCREEN_SAVER_SECOND_MAX_VALUE	55
+#define SCREEN_SAVER_SECOND_JUMP		5
+
 enum screen_saver_type {
 	SCREEN_SAVER_SPLASH,
 	SCREEN_SAVER_DASHBOARD,

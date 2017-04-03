@@ -163,6 +163,9 @@ static void write_reset(void)
 		software_reset();
 }
 
+#define POST_CODE_BIOS_START	0xE1		// BIOS post code that send when BIOS is end and the computer continue boot.
+#define	POST_CODE_BIOS_DONE		0xA0 		// BIOS post code that send when BIOS is end and the computer continue boot.
+
 void update_computer_state(void)
 {
 	if (current_power_state == POWER_OFF)

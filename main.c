@@ -102,6 +102,14 @@ void tasks_init(void)
 	switch_tc_interrupt_schedule(true);
 }
 
+#ifndef APPLICATION_VER_MSB
+#define APPLICATION_VER_MSB 0
+#endif
+
+#ifndef APPLICATION_VER_LSB
+#define APPLICATION_VER_LSB 1
+#endif
+
 /*
  * Initialize and validate Screen Saver configuration
  * Initialize ambient sensor
