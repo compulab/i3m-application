@@ -11,7 +11,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include "gfx/action_menu/gfx_action_menu.h"
-#include "gfx/gfx_components.h"
+#include "gfx/gfx_text.h"
 
 #define FRAME_WIDTH	38
 #define FRAME_HEIGHT 22

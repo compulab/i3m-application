@@ -9,7 +9,7 @@
 #ifndef GFX_INFORMATION_H_
 #define GFX_INFORMATION_H_
 
-#include "gfx_components.h"
+#include "gfx_text.h"
 #include "gfx_item.h"
 #include "config/cnf_blk_components.h"
 

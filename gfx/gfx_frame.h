@@ -9,7 +9,7 @@
 #ifndef GFX_FRAME_H_
 #define GFX_FRAME_H_
 
-#include "gfx_components.h"
+#include "gfx_text.h"
 #include "gfx_information.h"
 
 struct gfx_frame {
