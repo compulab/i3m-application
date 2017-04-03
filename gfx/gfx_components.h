@@ -10,8 +10,6 @@
 #define GFX_GFX_COMPONENTS_H_
 
 #include "asf.h"
-#include "def.h"
-#include "gfx_item.h"
 
 struct gfx_text {
 	char *text;
@@ -20,7 +18,5 @@ struct gfx_text {
 	bool is_progmem;
 	struct glcd_FontConfig_t *font;
 };
-
-
 
 #endif /* GFX_GFX_COMPONENTS_H_ */

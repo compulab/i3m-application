@@ -9,6 +9,9 @@
 #ifndef GFX_ITEM_H_
 #define GFX_ITEM_H_
 
+#include <stdio.h>
+#include <stdbool.h>
+
 struct gfx_item {
 	uint8_t x, y;
 	uint8_t width, height;
