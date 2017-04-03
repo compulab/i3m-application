@@ -3,7 +3,6 @@
 #include "twi/twi_master.h"
 #include "twi/i2c_buffer.h"
 
-
 #define MAX_AMBIENT_UPDATE_FAIL	2
 
 #define AMBIENT_TWI_ADDRESS  		0x4C

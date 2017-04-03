@@ -17,9 +17,6 @@
 #include "def.h"
 
 extern enum display_state display_state;
-
-extern enum information_type update_information_type;
-
 extern struct calendar_date computer_date_time;
 
 #endif /* FP_UTILS_H_ */
