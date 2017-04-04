@@ -15,51 +15,49 @@
 #include "screens/screen_saver/screen_saver.h"
 #include "screens/settings/brightness.h"
 
-#define PAGE_ADDRESS(y) floor (y/8)
-
 /*Sign symbols*/
 PROGMEM_DECLARE(gfx_mono_color_t, right [5]) = {
-		0x00, 0x7E, 0x3C, 0x18, 0x00,
+	0x00, 0x7E, 0x3C, 0x18, 0x00,
 };
 
 PROGMEM_DECLARE(gfx_mono_color_t, left [5]) = {
-		0x00, 0x18, 0x3C, 0x7E, 0x00,
+	0x00, 0x18, 0x3C, 0x7E, 0x00,
 };
 
 PROGMEM_DECLARE(gfx_mono_color_t, plus [5]) = {
-		0x18, 0x18, 0xFF, 0x18, 0x18,
+	0x18, 0x18, 0xFF, 0x18, 0x18,
 };
 
 PROGMEM_DECLARE(gfx_mono_color_t, minus [5]) = {
-		0x18, 0x18, 0x18, 0x18, 0x18,
+	0x18, 0x18, 0x18, 0x18, 0x18,
 };
 
 static struct gfx_mono_bitmap minus_bitmap = {
-		.width = 5,
-		.height = 8,
-		.data.progmem = minus,
-		.type = GFX_MONO_BITMAP_PROGMEM
+	.width = 5,
+	.height = 8,
+	.data.progmem = minus,
+	.type = GFX_MONO_BITMAP_PROGMEM
 };
 
 static struct gfx_mono_bitmap plus_bitmap = {
-		.width = 5,
-		.height = 8,
-		.data.progmem = plus,
-		.type = GFX_MONO_BITMAP_PROGMEM
+	.width = 5,
+	.height = 8,
+	.data.progmem = plus,
+	.type = GFX_MONO_BITMAP_PROGMEM
 };
 
 static struct gfx_mono_bitmap left_bitmap = {
-		.width = 5,
-		.height = 8,
-		.data.progmem = left,
-		.type = GFX_MONO_BITMAP_PROGMEM
+	.width = 5,
+	.height = 8,
+	.data.progmem = left,
+	.type = GFX_MONO_BITMAP_PROGMEM
 };
 
 static struct gfx_mono_bitmap right_bitmap = {
-		.width = 5,
-		.height = 8,
-		.data.progmem = right,
-		.type = GFX_MONO_BITMAP_PROGMEM
+	.width = 5,
+	.height = 8,
+	.data.progmem = right,
+	.type = GFX_MONO_BITMAP_PROGMEM
 };
 
 static struct gfx_image left_sign_image = {
