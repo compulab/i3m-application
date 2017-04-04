@@ -120,8 +120,6 @@ static void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
 		clear_screen();
 		gfx_labels_draw(frame->label_head);
 		gfx_images_draw(frame->image_head);
-		if (present_menu->is_active_frame)
-			display_state = DISPLAY_ACTION_FRAME;
 		draw_standard_separator_line();
 	}
 

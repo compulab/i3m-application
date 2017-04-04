@@ -44,12 +44,10 @@ static void handle_screen_saver_enable_buttons(uint8_t key)
 static void sprintf_screen_saver_enable(struct gfx_information *info, char *output_str)
 {
 	sprintf(output_str, "DISABLE ENABLE");
-	present_menu->is_active_frame = true;
 }
 
 static void draw_screen_saver_enable(struct gfx_information *info)
 {
-	present_menu->is_active_frame = false;
 	info->to_string(info, info->text.text);
 	info->last_length = draw_string_in_buffer(info->text.text, info->postion.x, info->postion.y, info->text.font, info->last_length);
 

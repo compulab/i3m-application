@@ -68,7 +68,6 @@ static void set_present_menu(struct gfx_action_menu *action_menu)
 {
 	present_menu->visible = false;
 	present_menu = action_menu;
-	present_menu->is_active_frame = false;
 	action_menu->visible = true;
 	for (int i = 0; i < action_menu->menu->num_elements; i++)
 		update_action_visibility(&action_menu->actions[i]);

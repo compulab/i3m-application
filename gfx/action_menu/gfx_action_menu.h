@@ -16,7 +16,6 @@ struct gfx_action_menu {
 	struct gfx_item_action *actions;
 	struct gfx_image_node *graphic_items_head;
 	uint8_t id;
-	bool is_active_frame;
 	bool is_progmem;
 	bool is_graphic_view;
 	bool visible;

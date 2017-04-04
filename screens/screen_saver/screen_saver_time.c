@@ -43,8 +43,6 @@ void sprintf_screen_saver_time(struct gfx_information *info, char *output_str)
 		sprintf(output_str, "%d", computer_data.details.screen_saver_update_time);
 	else
 		sprintf_disabled(output_str);
-
-	present_menu->is_active_frame = true;
 }
 
 static void set_screen_saver_time_draw_graphic_signs(struct gfx_information *info)

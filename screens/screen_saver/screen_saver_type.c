@@ -46,8 +46,6 @@ static void sprintf_screen_saver_type(struct gfx_information *info, char *output
 		sprintf(output_str, screen_saver_type_str[computer_data.details.screen_saver_type]);
 	else
 		sprintf_disabled(output_str);
-
-	present_menu->is_active_frame = true;
 }
 
 static void set_screen_saver_type_draw_graphic_signs(struct gfx_information *info)
