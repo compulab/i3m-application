@@ -82,10 +82,7 @@ void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 		set_present_menu(action_menu);
 	}
 	frame_present = 0;
-	if (present_menu->is_graphic_view)
-		graphic_menu_init(action_menu, redraw);
-	else
-		gfx_mono_menu_init(action_menu->menu, redraw, action_menu->is_progmem);
+	graphic_menu_init(action_menu, redraw);
 	draw_standard_separator_line();
 	gfx_mono_ssd1306_put_framebuffer();
 }

@@ -249,36 +249,36 @@ static int set_graphic_view(struct gfx_action_menu *action_menu, struct cnf_imag
 {
 	struct cnf_image_node cnf_image;
 	struct gfx_mono_menu *mono_menu = action_menu->menu;
-	action_menu->is_graphic_view =  cnf_graphic_item_node != 0;
-	if (action_menu->is_graphic_view){
-		action_menu->graphic_items_head = malloc_locked(sizeof(struct gfx_image_node));
-		if (action_menu->graphic_items_head == NULL) {
-			uart_send_string("graphic image head failed\n\r");
-			return -1;
-		}
-		struct gfx_image_node *image_node = action_menu->graphic_items_head;
-		for (uint8_t i = 0; i < mono_menu->num_elements; i++){
-			if (cnf_graphic_item_node == 0)
-				break;
-			memcpy_config(&cnf_image, cnf_graphic_item_node, sizeof(struct cnf_image_node));
-			if (graphic_item_init(&image_node->image, &cnf_image.image) != 0) {
-				uart_send_string("grpahic error\n\r");
-				return config_block_error();
-			}
-			cnf_graphic_item_node = cnf_image.next;
-			if (i < mono_menu->num_elements - 1){
-				image_node->next = malloc_locked(sizeof(struct gfx_image_node));
-				if (image_node->next == NULL) {
-					uart_send_string("graphic image node failed\n\r");
-					return -1;
-				}
-				image_node = image_node->next;
-			} else {
-				image_node->next = 0;
-			}
-		}
-	} else {
+	if (cnf_graphic_item_node == 0) {
 		action_menu->graphic_items_head = 0;
+		return 0;
+	}
+
+	action_menu->graphic_items_head = malloc_locked(sizeof(struct gfx_image_node));
+	if (action_menu->graphic_items_head == NULL) {
+		uart_send_string("graphic image head failed\n\r");
+		return -1;
+	}
+	struct gfx_image_node *image_node = action_menu->graphic_items_head;
+	for (uint8_t i = 0; i < mono_menu->num_elements; i++){
+		if (cnf_graphic_item_node == 0)
+			break;
+		memcpy_config(&cnf_image, cnf_graphic_item_node, sizeof(struct cnf_image_node));
+		if (graphic_item_init(&image_node->image, &cnf_image.image) != 0) {
+			uart_send_string("grpahic error\n\r");
+			return config_block_error();
+		}
+		cnf_graphic_item_node = cnf_image.next;
+		if (i < mono_menu->num_elements - 1){
+			image_node->next = malloc_locked(sizeof(struct gfx_image_node));
+			if (image_node->next == NULL) {
+				uart_send_string("graphic image node failed\n\r");
+				return -1;
+			}
+			image_node = image_node->next;
+		} else {
+			image_node->next = 0;
+		}
 	}
 	return 0;
 
