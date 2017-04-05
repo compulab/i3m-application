@@ -184,7 +184,6 @@ void show_logo(void)
 		default:
 			clear_screen();
 			frame_present = 0;
-			present_menu->visible = false;
 			display_state = DISPLAY_LOGO;
 			gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 0);
 			gfx_mono_ssd1306_put_framebuffer();
@@ -394,7 +393,6 @@ void set_menu_by_id(struct gfx_action_menu **menu, uint8_t index)
 {
 	if (index < size_of_menus){
 		*menu = action_menus[index];
-		(*menu)->visible = false;
 		#ifdef DEBUG_MODE
 			MSG_T_N("setting menu number: ", index)
 		#endif
@@ -460,10 +458,10 @@ static void handle_buttons_update(void *data)
 	case BUTTON_HOLD:
 	case BUTTON_CLICK:
 //		tc_button_pressed();
-		if (present_menu->visible)
-			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_ENTER, !present_menu->visible);
-		else
+		if (frame_present)
 			hadle_back_to_menu();
+		else
+			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_ENTER, false);
 		return ;
 		break;
 	default:
@@ -483,7 +481,7 @@ static void handle_buttons_update(void *data)
 			if (frame_present) {
 				frame_present->information_head->information.handle_buttons(GFX_MONO_MENU_KEYCODE_DOWN);
 			} else {
-				gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN, !present_menu->visible);
+				gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN, false);
 			}
 			break;
 		}
@@ -505,7 +503,7 @@ static void handle_buttons_update(void *data)
 				if (frame_present) {
 					frame_present->information_head->information.handle_buttons(GFX_MONO_MENU_KEYCODE_UP);
 				} else {
-					gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP, !present_menu->visible);
+					gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP, false);
 				}
 			break;
 		}

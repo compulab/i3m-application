@@ -17,7 +17,6 @@ struct gfx_action_menu {
 	struct gfx_image_node *graphic_items_head;
 	uint8_t id;
 	bool is_progmem;
-	bool visible;
 };
 
 #define MAIN_MENU_ID 	0

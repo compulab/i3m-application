@@ -66,9 +66,7 @@ static void update_action_visibility(struct gfx_item_action *action)
 
 static void set_present_menu(struct gfx_action_menu *action_menu)
 {
-	present_menu->visible = false;
 	present_menu = action_menu;
-	action_menu->visible = true;
 	for (int i = 0; i < action_menu->menu->num_elements; i++)
 		update_action_visibility(&action_menu->actions[i]);
 }
@@ -289,7 +287,6 @@ static void set_dmi_menu(void)
 
 void show_frame(struct gfx_frame *frame)
 {
-	present_menu->visible = false;
 	if (frame == dashboard)
 		display_state = DISPLAY_DASHBOARD;
 	else
@@ -307,7 +304,6 @@ void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode
 	case GFX_MONO_MENU_KEYCODE_ENTER:
 		selected_action = &action_menu->actions[(action_menu->menu)->current_selection];
 		type = selected_action->type;
-		present_menu->visible = false;
 		frame_present = 0;
 		clear_screen();
 		switch (type){
@@ -334,8 +330,7 @@ void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode
 		}
 		break;
 	case GFX_MONO_MENU_KEYCODE_BACK:
-		if (!present_menu->visible)
-			show_current_menu(true);
+		show_current_menu(true);
 		break;
 	default:
 		if (from_frame && ((keycode == GFX_MONO_MENU_KEYCODE_DOWN && action_menu->menu->current_selection == 0) ||
