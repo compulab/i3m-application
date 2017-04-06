@@ -26,12 +26,6 @@
 
 #define CONFIG_SECTION_ADDRESS 0xA000
 
-enum button_state {
-	BUTTON_NOT_PRESSED,
-	BUTTON_CLICK,
-	BUTTON_HOLD
-};
-
 extern struct gfx_frame *dashboard;
 
 extern struct gfx_frame *clock;

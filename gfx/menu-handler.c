@@ -13,20 +13,13 @@ struct gfx_frame *dashboard;
 
 struct gfx_frame *clock;
 
+bool ok_button = false;
+bool left_button = false;
+bool right_button = false;
 
-bool left_pressed = false;
-bool right_pressed = false;
-bool ok_pressed = false;
-uint8_t left_time = 0;
-uint8_t right_time = 0;
-uint8_t ok_time = 0;
 uint8_t size_of_menus;
 
 uint8_t new_fonts_size;
-
-enum button_state ok_button = BUTTON_NOT_PRESSED;
-enum button_state left_button = BUTTON_NOT_PRESSED;
-enum button_state right_button = BUTTON_NOT_PRESSED;
 
 static void free_images(struct gfx_image_node *images_head)
 {
@@ -393,39 +386,6 @@ void set_menu_by_id(struct gfx_action_menu **menu, uint8_t index)
 	}
 }
 
-static void update_button_state(bool pressed, uint8_t *time, enum button_state *state)
-{
-#ifndef SUPPORT_HOLD_BUTTON
-	if (pressed)
-		*state = BUTTON_CLICK;
-	else
-		*state = BUTTON_NOT_PRESSED;
-
-#else
-	if (!pressed && *time > 0){
-		if (*time < 10)
-			*state = BUTTON_CLICK;
-		else
-			*state = BUTTON_HOLD;
-		*time = 0;
-	} else {
-		*state = BUTTON_NOT_PRESSED;
-	}
-#endif
-}
-
-static void update_button_pressed(bool *pressed, uint8_t *time, port_pin_t pin)
-{
-	bool is_high = gpio_pin_is_high(pin);
-	if (!(*pressed) && is_high){
-		(*time) = tc_counter;
-		(*pressed) = true;
-	} else if (*pressed && (!is_high )) { //|| tc_counter - (*time) > MAX_CLICK_TIME)) {
-		(*time) = tc_counter - (*time);
-		(*pressed) = false;
-	}
-}
-
 void hadle_back_to_menu(void)
 {
 	clear_screen();
@@ -434,84 +394,53 @@ void hadle_back_to_menu(void)
 	gfx_action_menu_init(present_menu, true);
 }
 
-
-static void update_buttons_states(void)
+static void handle_side_button(uint8_t keycode)
 {
-	update_button_pressed(&left_pressed, &left_time, FP_LEFT_BUTTON);
-	update_button_pressed(&right_pressed, &right_time,FP_RIGHT_BUTTON);
-	update_button_pressed(&ok_pressed, &ok_time, FP_OK_BUTTON);
+	switch(display_state) {
+	case DISPLAY_DIM:
+	case DISPLAY_LOGO:
+	case DISPLAY_DASHBOARD:
+	case DISPLAY_CLOCK:
+		handle_button_preesed_by_display_mode();
+		return;
+	default:
+		if (frame_present)
+			frame_present->information_head->information.handle_buttons(keycode);
+		else
+			gfx_action_menu_process_key(present_menu, keycode, false);
 
-	update_button_state(left_pressed, &left_time, &left_button);
-	update_button_state(right_pressed, &right_time, &right_button);
-	update_button_state(ok_pressed, &ok_time, &ok_button);
+		return;
+	}
 }
 
-static void handle_buttons_update(void *data)
+static void handle_buttons(void *data)
 {
-	switch (ok_button){
-	case BUTTON_HOLD:
-	case BUTTON_CLICK:
-//		tc_button_pressed();
+	if (ok_button) {
 		if (frame_present)
 			hadle_back_to_menu();
 		else
 			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_ENTER, false);
-		return ;
-		break;
-	default:
-		break;
+
+		return;
 	}
-	switch (left_button){
-	case BUTTON_HOLD:
-	case BUTTON_CLICK:
-		switch(display_state) {
-		case DISPLAY_DIM:
-		case DISPLAY_LOGO:
-		case DISPLAY_DASHBOARD:
-		case DISPLAY_CLOCK:
-			handle_button_preesed_by_display_mode();
-			break;
-		default:
-			if (frame_present) {
-				frame_present->information_head->information.handle_buttons(GFX_MONO_MENU_KEYCODE_DOWN);
-			} else {
-				gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_DOWN, false);
-			}
-			break;
-		}
-		break;
-	default:
-		break;
+
+	if (left_button) {
+		handle_side_button(GFX_MONO_MENU_KEYCODE_DOWN);
+		return;
 	}
-	switch (right_button){
-	case BUTTON_HOLD:
-	case BUTTON_CLICK:
-		switch(display_state) {
-			case DISPLAY_DIM:
-			case DISPLAY_LOGO:
-			case DISPLAY_CLOCK:
-			case DISPLAY_DASHBOARD:
-				handle_button_preesed_by_display_mode();
-				break;
-			default:
-				if (frame_present) {
-					frame_present->information_head->information.handle_buttons(GFX_MONO_MENU_KEYCODE_UP);
-				} else {
-					gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_UP, false);
-				}
-			break;
-		}
-		break;
-	default:
-		break;
+
+	if (right_button) {
+		handle_side_button(GFX_MONO_MENU_KEYCODE_UP);
+		return;
 	}
-//	tc_no_button_pressed();
 }
 
-struct work button_work = { .do_work = handle_buttons_update, .data = NULL, .next = NULL, };
+struct work button_work = { .do_work = handle_buttons, .data = NULL, .next = NULL, };
 
 void handle_button_pressed(void)
 {
-	update_buttons_states();
+	left_button = gpio_pin_is_high(FP_LEFT_BUTTON);
+	right_button = gpio_pin_is_high(FP_RIGHT_BUTTON);
+	ok_button = gpio_pin_is_high(FP_OK_BUTTON);
 	insert_work(&button_work);
 }
