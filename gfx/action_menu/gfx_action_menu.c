@@ -341,14 +341,14 @@ void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode
 	}
 }
 
-void handle_button_preesed_by_display_mode()
+void handle_button_pressed_by_display_mode()
 {
 	switch (display_state) {
 	case DISPLAY_LOGO:
 	case DISPLAY_DASHBOARD:
 	case DISPLAY_CLOCK:
 		reset_screen_saver();
-		hadle_back_to_menu();
+		handle_back_to_menu();
 		break;
 
 	case DISPLAY_DIM:
@@ -367,7 +367,7 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 	case DISPLAY_LOGO:
 	case DISPLAY_CLOCK:
 	case DISPLAY_DIM:
-		handle_button_preesed_by_display_mode();
+		handle_button_pressed_by_display_mode();
 		break;
 
 	default:

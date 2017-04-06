@@ -386,7 +386,7 @@ void set_menu_by_id(struct gfx_action_menu **menu, uint8_t index)
 	}
 }
 
-void hadle_back_to_menu(void)
+void handle_back_to_menu(void)
 {
 	clear_screen();
 	frame_present = 0;
@@ -401,7 +401,7 @@ static void handle_side_button(uint8_t keycode)
 	case DISPLAY_LOGO:
 	case DISPLAY_DASHBOARD:
 	case DISPLAY_CLOCK:
-		handle_button_preesed_by_display_mode();
+		handle_button_pressed_by_display_mode();
 		return;
 	default:
 		if (frame_present)
@@ -417,7 +417,7 @@ static void handle_buttons(void *data)
 {
 	if (ok_button) {
 		if (frame_present)
-			hadle_back_to_menu();
+			handle_back_to_menu();
 		else
 			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_ENTER, false);
 
