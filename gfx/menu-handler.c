@@ -7,15 +7,12 @@
 #include "screens/screen_saver/screen_saver.h"
 #include "uart/uart.h"
 
-#define is_key_selected(var,key) (var & key) == key
-
 struct gfx_mono_bitmap splash_bitmap;
 
 struct gfx_frame *dashboard;
 
 struct gfx_frame *clock;
 
-enum key_state selected_Key;
 
 bool left_pressed = false;
 bool right_pressed = false;
@@ -43,7 +40,6 @@ static void free_images(struct gfx_image_node *images_head)
 		curr_graphic = next_graphic;
 	}
 }
-
 
 void memcpy_config(void *dst, void *src_addr, size_t size)
 {
@@ -241,8 +237,6 @@ static int load_fonts(struct cnf_font_node *cnf_font_node)
 	}
 	return 0;
 }
-
-
 
 static int set_graphic_view(struct gfx_action_menu *action_menu, struct cnf_image_node *cnf_graphic_item_node)
 {

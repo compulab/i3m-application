@@ -32,14 +32,6 @@ enum button_state {
 	BUTTON_HOLD
 };
 
-enum key_state {
-	KEY_NONE = 0x00,
-	KEY_LEFT = 0x01,
-	KEY_RIGHT = 0x02,
-	KEY_SELECT = 0x04,
-	KEY_HOLD = 0x08
-};
-
 extern struct gfx_frame *dashboard;
 
 extern struct gfx_frame *clock;

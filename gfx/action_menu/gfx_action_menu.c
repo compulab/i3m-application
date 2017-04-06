@@ -85,7 +85,6 @@ void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
-
 static void free_dmi_frame(struct gfx_frame *frame)
 {
 	struct gfx_label_node *curr_label = frame->label_head;
@@ -287,10 +286,7 @@ static void set_dmi_menu(void)
 
 void show_frame(struct gfx_frame *frame)
 {
-	if (frame == dashboard)
-		display_state = DISPLAY_DASHBOARD;
-	else
-		display_state = DISPLAY_FRAME;
+	display_state = (frame == dashboard) ? DISPLAY_DASHBOARD : DISPLAY_FRAME;
 	clear_screen();
 	disable_screen_saver_mode();
 	frame->draw(frame, false);
@@ -306,7 +302,7 @@ void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode
 		type = selected_action->type;
 		frame_present = 0;
 		clear_screen();
-		switch (type){
+		switch (type) {
 		case ACTION_TYPE_SHOW_FRAME:
 			show_frame(selected_action->frame);
 			break;
@@ -316,14 +312,14 @@ void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode
 			show_menu(selected_action->menu, true);
 			break;
 		case ACTION_TYPE_SHOW_DMI_MENU:
-			if (computer_data.details.direct_string != 0){
-				set_dmi_menu();
-				if (is_dmi_set){
-					show_menu(&dmi_menu, true);
-				}
-			} else {
+			if (!computer_data.details.direct_string) {
 				show_current_menu(true);
+				break;
 			}
+
+			set_dmi_menu();
+			if (is_dmi_set)
+				show_menu(&dmi_menu, true);
 			break;
 		default:
 			break;
@@ -335,7 +331,7 @@ void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode
 	default:
 		if (from_frame && ((keycode == GFX_MONO_MENU_KEYCODE_DOWN && action_menu->menu->current_selection == 0) ||
 					(keycode == GFX_MONO_MENU_KEYCODE_UP && action_menu->menu->current_selection == action_menu->menu->num_elements - 2)))
-				return ;
+			return;
 		 gfx_mono_menu_process_key(action_menu->menu, keycode, action_menu->is_progmem);
 		 if (from_frame)
 			 gfx_action_menu_process_key(action_menu, GFX_MONO_MENU_KEYCODE_ENTER, true);

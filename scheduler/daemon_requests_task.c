@@ -47,13 +47,11 @@ void update_requests(void *data)
 	i2c_buffer.layout.req = !i2c_buffer.layout.req && i2c_buffer.raw[PENDR0];
 }
 
-#define UPDATE_REQ_SEC	1
-
 static struct work requests_work = { .do_work = update_requests };
 
 static double pending_req_get_recur_period(void)
 {
-	return UPDATE_REQ_SEC;
+	return 1;
 }
 
 struct scheduler_task pending_req_tick_task = {

@@ -11,6 +11,7 @@
 
 struct scheduler_task {
 	struct work *work;
+	//get_recur_period: returns recur period in seconds
 	double (*get_recur_period)(void);
 };
 
