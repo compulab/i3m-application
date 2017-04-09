@@ -22,6 +22,9 @@ static void handle_screen_saver_type_buttons(uint8_t key)
 		return;
 
 	switch (key) {
+	case GFX_MONO_MENU_KEYCODE_ENTER:
+		handle_back_to_menu();
+		return;
 	case GFX_MONO_MENU_KEYCODE_DOWN:
 		if (computer_data.details.screen_saver_type == 0)
 			return;

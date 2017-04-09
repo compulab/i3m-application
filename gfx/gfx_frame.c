@@ -124,7 +124,10 @@ static void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
 	}
 
 	gfx_infos_draw(frame->information_head);
-	frame->information_head->information.draw_controls(&frame->information_head->information);
+	if (frame->information_head->information.draw_controls)
+		frame->information_head->information.draw_controls(&frame->information_head->information);
+	else
+		frame->draw_controls(frame);
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
@@ -146,12 +149,39 @@ static void gfx_dashboard_draw(struct gfx_frame *frame, bool redraw)
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
+static void gfx_frame_draw_control_arrows(struct gfx_frame *info)
+{
+	draw_control_signs_arrows(present_menu->menu->current_selection, 0, present_menu->menu->num_elements - 2);
+}
+
+static void handle_buttons_scroll_to_frame(uint8_t key)
+{
+	if (key == GFX_MONO_MENU_KEYCODE_ENTER) {
+		handle_back_to_menu();
+		return;
+	}
+
+	if (key == GFX_MONO_MENU_KEYCODE_DOWN && present_menu->menu->current_selection == 0 ||
+		key == GFX_MONO_MENU_KEYCODE_UP && present_menu->menu->current_selection == present_menu->menu->num_elements - 2)
+				return;
+	 gfx_mono_menu_process_key(present_menu->menu, key, present_menu->is_progmem);
+	 //Invoke "display new frame" by simulating a KECODE ENTER event
+	 gfx_handle_key_pressed(present_menu, GFX_MONO_MENU_KEYCODE_ENTER, true);
+}
+
+static void handle_buttons_back_to_menu(uint8_t keycode)
+{
+	handle_back_to_menu();
+}
+
 static void init_frame(struct gfx_frame *frame, bool is_dashboard)
 {
 	frame->image_head = 0;
 	frame->information_head = 0;
 	frame->label_head = 0;
 	frame->draw = is_dashboard ? gfx_dashboard_draw : gfx_frame_draw;
+	frame->handle_buttons = is_dashboard ? handle_buttons_back_to_menu : handle_buttons_scroll_to_frame;
+	frame->draw_controls = is_dashboard ?  NULL : gfx_frame_draw_control_arrows;
 }
 
 int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem, bool is_dashboard)

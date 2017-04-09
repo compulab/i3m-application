@@ -22,21 +22,6 @@ static void sprintf_sprintf(struct gfx_information *info, char *output_str)
 	sprintf(output_str, info->text.text);
 }
 
-static void gfx_information_draw_control_arrows(struct gfx_information *info)
-{
-	draw_control_signs_arrows(present_menu->menu->current_selection, 0, present_menu->menu->num_elements - 2);
-}
-
-static void handle_buttons_scroll_to_frame(uint8_t key)
-{
-	if (key == GFX_MONO_MENU_KEYCODE_DOWN && present_menu->menu->current_selection == 0 ||
-		key == GFX_MONO_MENU_KEYCODE_UP && present_menu->menu->current_selection == present_menu->menu->num_elements - 2)
-				return;
-	 gfx_mono_menu_process_key(present_menu->menu, key, present_menu->is_progmem);
-	 //Invoke "display new frame" by simulating a KECODE ENTER event
-	 gfx_handle_key_pressed(present_menu, GFX_MONO_MENU_KEYCODE_ENTER, true);
-}
-
 static int gfx_information_init_generic(struct gfx_information *info, enum information_type info_type,
 										uint8_t info_data, uint8_t max_length, uint8_t x, uint8_t y, uint8_t font_id)
 {
@@ -53,8 +38,8 @@ static int gfx_information_init_generic(struct gfx_information *info, enum infor
 	info->text.font = get_font_by_type(font_id);
 	info->to_string = sprintf_sprintf;
 	info->draw_data = gfx_information_draw_string;
-	info->draw_controls = gfx_information_draw_control_arrows;
-	info->handle_buttons = handle_buttons_scroll_to_frame;
+	info->draw_controls = NULL;
+	info->handle_buttons = NULL;
 
 	return 0;
 }

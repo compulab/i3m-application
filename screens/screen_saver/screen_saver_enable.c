@@ -25,6 +25,9 @@ void disable_screen_saver_mode(void)
 static void handle_screen_saver_enable_buttons(uint8_t key)
 {
 	switch (key) {
+	case GFX_MONO_MENU_KEYCODE_ENTER:
+		handle_back_to_menu();
+		return;
 	case GFX_MONO_MENU_KEYCODE_DOWN:
 		if (!computer_data.details.screen_saver_visible)
 			return;
