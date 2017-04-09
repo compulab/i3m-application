@@ -99,7 +99,6 @@ static void free_menus(void)
 
 static int config_block_error(void)
 {
-	uart_send_string("config block error handeling\n\r");
 	free_menus();
 	return -1;
 }
@@ -129,28 +128,20 @@ static int load_action(struct gfx_item_action *action, struct cnf_action config_
 	switch(config_action.type){
 	case ACTION_TYPE_SET_BIOS_STATE:
 	case ACTION_TYPE_SHOW_FRAME:
-#ifdef DEBUG_MODE_ACTION
-		MSG("action is frame")
-#endif
 		if (config_action.frame == cnf_dashboard) {
 			action->frame = dashboard;
 			return 0;
 		}
 
 		action->frame = malloc_locked(sizeof(struct gfx_frame));
-		if (action->frame == NULL) {
-			uart_send_string("action frame failed\n\r");
+		if (action->frame == NULL)
 			return -1;
-		}
-		if (gfx_frame_init(action->frame, config_action.frame, false) != 0) {
-			uart_send_string("frame init fail\n\r");
+
+		if (gfx_frame_init(action->frame, config_action.frame, false))
 			return -1;
-		}
-	break;
+
+		break;
 	case ACTION_TYPE_SHOW_MENU:
-#ifdef DEBUG_MODE_ACTION
-		MSG("action is menu")
-#endif
 		action->menu_id = config_action.menu_id;
 		break;
 	default:
@@ -184,10 +175,9 @@ void show_logo(void)
 static int graphic_item_init(struct gfx_image *menu_image, struct cnf_image * image_node)
 {
 	menu_image->bitmap = malloc_locked(sizeof(struct gfx_mono_bitmap));
-	if (menu_image->bitmap == NULL) {
-		uart_send_string("graphic image bitmap failed\n\r");
+	if (menu_image->bitmap == NULL)
 		return -1;
-	}
+
 	menu_image->bitmap->height = image_node->height;
 	menu_image->bitmap->width = image_node->width;
 	menu_image->bitmap->data.progmem = image_node->bitmap_progmem;
@@ -207,17 +197,14 @@ static int load_fonts(struct cnf_font_node *cnf_font_node)
 {
 	struct cnf_font_node font_node;
 	struct glcd_FontConfig_t *font;
-	if (fonts == NULL) {
-		uart_send_string("fonts array failed\n\r");
+	if (fonts == NULL)
 		return -1;
-	}
+
 	while (cnf_font_node != 0) {
 		memcpy_config(&font_node, cnf_font_node, sizeof(struct cnf_font_node));
 		font = malloc_locked(sizeof(struct glcd_FontConfig_t));
-		if (font == NULL) {
-			uart_send_string("font failed\n\r");
+		if (font == NULL)
 			return -1;
-		}
 
 		font->font_table = font_node.font.font_table;
 		font->width = font_node.font.width;
@@ -241,31 +228,28 @@ static int set_graphic_view(struct gfx_action_menu *action_menu, struct cnf_imag
 	}
 
 	action_menu->graphic_items_head = malloc_locked(sizeof(struct gfx_image_node));
-	if (action_menu->graphic_items_head == NULL) {
-		uart_send_string("graphic image head failed\n\r");
+	if (action_menu->graphic_items_head == NULL)
 		return -1;
-	}
+
 	struct gfx_image_node *image_node = action_menu->graphic_items_head;
 	for (uint8_t i = 0; i < mono_menu->num_elements; i++){
 		if (cnf_graphic_item_node == 0)
 			break;
 		memcpy_config(&cnf_image, cnf_graphic_item_node, sizeof(struct cnf_image_node));
-		if (graphic_item_init(&image_node->image, &cnf_image.image) != 0) {
-			uart_send_string("grpahic error\n\r");
 			return config_block_error();
-		}
+		if (graphic_item_init(&image_node->image, &cnf_image.image))
 		cnf_graphic_item_node = cnf_image.next;
 		if (i < mono_menu->num_elements - 1){
 			image_node->next = malloc_locked(sizeof(struct gfx_image_node));
-			if (image_node->next == NULL) {
-				uart_send_string("graphic image node failed\n\r");
+			if (image_node->next == NULL)
 				return -1;
-			}
+
 			image_node = image_node->next;
 		} else {
 			image_node->next = 0;
 		}
 	}
+
 	return 0;
 
 }
@@ -273,19 +257,15 @@ static int set_graphic_view(struct gfx_action_menu *action_menu, struct cnf_imag
 static int set_mono_menu(struct gfx_action_menu *action_menu, struct gfx_mono_menu *menu)
 {
 	struct gfx_mono_menu *mono_menu = malloc_locked(sizeof(struct gfx_mono_menu));
-	if (mono_menu == NULL) {
-		uart_send_string("mono menu failed\n\r");
+	if (mono_menu == NULL)
 		return -1;
-	}
 
 	memcpy_config(mono_menu, menu, sizeof(struct gfx_mono_menu));
 	action_menu->is_progmem = true;
 	action_menu->menu= mono_menu;
 	action_menu->actions = malloc_locked(sizeof(struct gfx_item_action) * mono_menu->num_elements);
-	if (action_menu->actions == NULL) {
-		uart_send_string("actions set failed\n\r");
+	if (action_menu->actions == NULL)
 		return -1;
-	}
 
 	return 0;
 }
@@ -294,25 +274,24 @@ static int set_actions(struct gfx_action_menu * menu, struct cnf_action_node *cn
 {
 	struct cnf_action_node action_node;
 	uint8_t action_index = 0;
-	while (cnf_action_node != 0){
+	while (cnf_action_node != 0) {
 		memcpy_config(&action_node, cnf_action_node, sizeof(struct cnf_action_node));
-		if (load_action(&(menu->actions[action_index]), action_node.action, cnf_dashboard) != 0) {
-			uart_send_string("load action fail\n\r");
+		if (load_action(&(menu->actions[action_index]), action_node.action, cnf_dashboard))
 			return -1;
-		}
+
 		action_index++;
 		cnf_action_node = action_node.next;
 	}
+
 	return 0;
 }
-
 
 int load_config_block(void)
 {
 	struct cnf_blk config_block;
 	struct cnf_menu config_menu;
 	struct cnf_menu_node cnf_menu;
-	uart_send_string("start load config\n\r");
+
 	memcpy_config(&config_block, (void *)CONFIG_SECTION_ADDRESS, sizeof(struct cnf_blk));
 	size_of_menus = config_block.menu_size;
 	new_fonts_size = config_block.font_size;
@@ -378,12 +357,8 @@ int load_config_block(void)
 
 void set_menu_by_id(struct gfx_action_menu **menu, uint8_t index)
 {
-	if (index < size_of_menus){
+	if (index < size_of_menus)
 		*menu = action_menus[index];
-		#ifdef DEBUG_MODE
-			MSG_T_N("setting menu number: ", index)
-		#endif
-	}
 }
 
 void handle_back_to_menu(void)

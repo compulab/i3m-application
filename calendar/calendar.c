@@ -549,7 +549,6 @@ int gfx_information_init_show_rtc_sec(struct gfx_information *info)
 
 static void calendar_time_task(void *data)
 {
-	uart_send_string("time_task\n\r");
 	calendar_add_second_to_date(&computer_date_time);
 }
 
