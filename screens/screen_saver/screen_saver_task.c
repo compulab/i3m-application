@@ -26,7 +26,7 @@ static void update_screen_saver(void *data)
 
 	switch(computer_data.details.screen_saver_type) {
 	case SCREEN_SAVER_SPLASH:
-		show_logo();
+		show_frame(splash);
 		break;
 
 	case SCREEN_SAVER_DASHBOARD:

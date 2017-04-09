@@ -187,8 +187,11 @@ static void init_frame(struct gfx_frame *frame, bool is_dashboard)
 int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem, bool is_dashboard)
 {
 	struct cnf_frame cnf_frame;
-	memcpy_config(&cnf_frame, cnf_frame_pgmem, sizeof(cnf_frame));
 	init_frame(frame, is_dashboard);
+	if (cnf_frame_pgmem == NULL)
+		return 0;
+
+	memcpy_config(&cnf_frame, cnf_frame_pgmem, sizeof(cnf_frame));
 	int retval = gfx_frame_set_images(frame, cnf_frame.images_head);
 	retval |= gfx_frame_set_labels(frame, cnf_frame.labels_head);
 	retval |= gfx_frame_set_infos(frame, cnf_frame.infos_head);

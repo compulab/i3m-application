@@ -341,35 +341,14 @@ void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode
 	}
 }
 
-void handle_button_pressed_by_display_mode()
-{
-	switch (display_state) {
-	case DISPLAY_LOGO:
-	case DISPLAY_DASHBOARD:
-	case DISPLAY_CLOCK:
-		reset_screen_saver();
-		handle_back_to_menu();
-		break;
-
-	case DISPLAY_DIM:
-		exit_sleep_mode();
-		break;
-	default:
-		break;
-	}
-}
-
 void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
 {
 	reset_screen_saver();
 	enable_screen_saver_mode();
 	switch (display_state) {
-	case DISPLAY_LOGO:
-	case DISPLAY_CLOCK:
 	case DISPLAY_DIM:
-		handle_button_pressed_by_display_mode();
+		exit_sleep_mode();
 		break;
-
 	default:
 		gfx_handle_key_pressed(action_menu, keycode, from_frame);
 		break;

@@ -13,6 +13,8 @@ struct gfx_frame *dashboard;
 
 struct gfx_frame *clock;
 
+struct gfx_frame *splash;
+
 bool ok_button = false;
 bool left_button = false;
 bool right_button = false;
@@ -150,26 +152,14 @@ static int load_action(struct gfx_item_action *action, struct cnf_action config_
 	return 0;
 }
 
-void show_logo(void)
+void show_logo(struct gfx_frame *frame, bool redraw)
 {
-	if (reset_screen_saver_req) {
-		reset_screen_saver();
-		reset_screen_saver_req = false;
-	} else {
-		switch(display_state) {
-		case DISPLAY_LOGO:
-		case DISPLAY_DASHBOARD:
-		case DISPLAY_CLOCK:
-			break;
-		default:
-			clear_screen();
-			frame_present = 0;
-			display_state = DISPLAY_LOGO;
-			gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 0);
-			gfx_mono_ssd1306_put_framebuffer();
-			break;
-		}
-	}
+	update_screen_timer();
+	clear_screen();
+	frame_present = frame;
+	display_state = DISPLAY_LOGO;
+	gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 0);
+	gfx_mono_ssd1306_put_framebuffer();
 }
 
 static int graphic_item_init(struct gfx_image *menu_image, struct cnf_image * image_node)
@@ -187,6 +177,8 @@ static int graphic_item_init(struct gfx_image *menu_image, struct cnf_image * im
 
 static void splash_init(struct cnf_blk config_block)
 {
+	gfx_frame_init(splash, NULL, true);
+	splash->draw = show_logo;
 	splash_bitmap.width = config_block.splash_width;
 	splash_bitmap.height = config_block.splash_height;
 	splash_bitmap.data.progmem = config_block.splash;
@@ -318,7 +310,13 @@ int load_config_block(void)
 		clock = NULL;
 	}
 
-	splash_init(config_block);
+	if (config_block.splash != NULL) {
+		splash = malloc_locked(sizeof(struct gfx_frame));
+		if (splash == NULL)
+			return -1;
+		splash_init(config_block);
+	}
+
 	action_menus = malloc_locked(sizeof(struct gfx_action_menu *) * size_of_menus);
 	if (action_menus == NULL) {
 		uart_send_string("action menus set fail\n\r");
@@ -363,6 +361,7 @@ void set_menu_by_id(struct gfx_action_menu **menu, uint8_t index)
 
 void handle_back_to_menu(void)
 {
+	reset_screen_saver();
 	clear_screen();
 	frame_present = 0;
 	enable_screen_saver_mode();
@@ -373,16 +372,17 @@ static void handle_side_button(uint8_t keycode)
 {
 	switch(display_state) {
 	case DISPLAY_DIM:
-	case DISPLAY_LOGO:
-	case DISPLAY_DASHBOARD:
-	case DISPLAY_CLOCK:
-		handle_button_pressed_by_display_mode();
+		exit_sleep_mode();
 		return;
 	default:
-		if (frame_present)
-			frame_present->information_head->information.handle_buttons(keycode);
-		else
+		if (frame_present) {
+			if (frame_present->information_head && frame_present->information_head->information.handle_buttons)
+				frame_present->information_head->information.handle_buttons(keycode);
+			else
+				frame_present->handle_buttons(keycode);
+		} else {
 			gfx_action_menu_process_key(present_menu, keycode, false);
+		}
 
 		return;
 	}
@@ -391,11 +391,7 @@ static void handle_side_button(uint8_t keycode)
 static void handle_buttons(void *data)
 {
 	if (ok_button) {
-		if (frame_present)
-			handle_back_to_menu();
-		else
-			gfx_action_menu_process_key(present_menu, GFX_MONO_MENU_KEYCODE_ENTER, false);
-
+		handle_side_button(GFX_MONO_MENU_KEYCODE_ENTER);
 		return;
 	}
 

@@ -8,6 +8,7 @@
 #include <string.h>
 #include "display/glcd-0.5.2/glcd_font.h"
 #include "eeprom/eeprom_layout.h"
+#include "gfx/menu-handler.h"
 #include "effects.h"
 
 #define SLEEP_BRIGHTNESS 	100
@@ -48,7 +49,7 @@ void enter_hibernate_mode(void)
 void enter_power_on_mode(void)
 {
 	ssd1306_set_contrast(eeprom_get_brightness_value());
-	show_logo();
+	show_frame(splash);
 }
 
 static void exit_dim_mode(void)
