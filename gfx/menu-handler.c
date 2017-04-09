@@ -239,13 +239,11 @@ int load_config_block(void)
 	}
 
 	action_menus = malloc_locked(sizeof(struct gfx_action_menu *) * size_of_menus);
-	if (action_menus == NULL) {
-		uart_send_string("action menus set fail\n\r");
+	if (action_menus == NULL)
 		return -1;
-	}
 
 	struct cnf_menu_node *cnf_menu_node = config_block.menus_head;
-	for (int i=0; i < size_of_menus; i++) {
+	for (int i = 0; i < size_of_menus; i++) {
 		action_menus[i] = malloc_locked(sizeof(struct gfx_action_menu));
 		if (action_menus[i] == NULL)
 			return -1;

@@ -111,9 +111,6 @@ static void gfx_images_draw(struct gfx_image_node *list)
 //TODO: there's a lot of code duplication with the dashboard version. Fix later.
 static void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
 {
-	if (!frame)
-		return;
-
 	update_screen_timer();
 	frame_present = frame;
 	if (!redraw) {
@@ -134,9 +131,6 @@ static void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
 //TODO: there's a lot of code duplication with the frame version. Fix later.
 static void gfx_dashboard_draw(struct gfx_frame *frame, bool redraw)
 {
-	if (!frame)
-		return;
-
 	update_screen_timer();
 	frame_present = frame;
 	if (!redraw) {
