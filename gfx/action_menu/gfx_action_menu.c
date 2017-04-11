@@ -76,7 +76,7 @@ void gfx_action_menu_init(struct gfx_action_menu *action_menu)
 	clear_screen();
 	set_present_menu(action_menu);
 	frame_present = 0;
-	graphic_menu_draw(action_menu);
+	graphic_menu_format(action_menu);
 	graphic_menu_select_item(action_menu, action_menu->menu->current_selection);
 	gfx_mono_ssd1306_put_framebuffer();
 }

@@ -61,7 +61,7 @@ static void draw_disable_item(struct gfx_item *pos)
 		gfx_mono_draw_horizontal_line(pos->x, y, pos->width, GFX_PIXEL_CLR);
 }
 
-void graphic_menu_draw(struct gfx_action_menu *action_menu)
+void graphic_menu_format(struct gfx_action_menu *action_menu)
 {
 	struct gfx_mono_menu *menu = action_menu->menu;
 	uint8_t i = 0;
