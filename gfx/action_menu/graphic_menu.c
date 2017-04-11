@@ -21,6 +21,7 @@ static void set_item_position(struct gfx_image *bitmap, uint8_t item_index)
 #define CURSOR_WIDTH   5
 #define CURSOR_HEIGHT   5
 
+#define MAX_ITEM_INDEX	5
 
 static void invert_cursor_horizontal_lines(uint8_t frame_x, uint8_t frame_y)
 {
@@ -30,12 +31,30 @@ static void invert_cursor_horizontal_lines(uint8_t frame_x, uint8_t frame_y)
 	gfx_mono_generic_draw_horizontal_line(frame_x + FRAME_WIDTH - CURSOR_WIDTH, frame_y + FRAME_HEIGHT, CURSOR_WIDTH, GFX_PIXEL_XOR);
 }
 
+static void set_clr_cursor_horizontal_lines(uint8_t frame_x, uint8_t frame_y, enum gfx_mono_color color)
+{
+	gfx_coord_t cursor_width = 5;
+	gfx_mono_generic_draw_horizontal_line(frame_x + 1, frame_y, cursor_width - 1, color);
+	gfx_mono_generic_draw_horizontal_line(frame_x, frame_y + FRAME_HEIGHT, cursor_width, color);
+	gfx_mono_generic_draw_horizontal_line(frame_x + FRAME_WIDTH - cursor_width, frame_y, cursor_width, color);
+	gfx_mono_generic_draw_horizontal_line(frame_x + FRAME_WIDTH - cursor_width, frame_y + FRAME_HEIGHT, cursor_width, color);
+}
+
 static void invert_cursor_vertical_lines(uint8_t frame_x, uint8_t frame_y)
 {
 	gfx_mono_generic_draw_vertical_line(frame_x, frame_y, CURSOR_HEIGHT, GFX_PIXEL_XOR);
 	gfx_mono_generic_draw_vertical_line(frame_x + FRAME_WIDTH, frame_y, CURSOR_HEIGHT, GFX_PIXEL_XOR);
 	gfx_mono_generic_draw_vertical_line(frame_x, frame_y + FRAME_HEIGHT - CURSOR_HEIGHT, CURSOR_HEIGHT, GFX_PIXEL_XOR);
 	gfx_mono_generic_draw_vertical_line(frame_x + FRAME_WIDTH, frame_y + FRAME_HEIGHT - CURSOR_HEIGHT + 1, CURSOR_HEIGHT, GFX_PIXEL_XOR);
+}
+
+static void set_clr_cursor_vertical_lines(uint8_t frame_x, uint8_t frame_y, enum gfx_mono_color color)
+{
+	gfx_coord_t cursor_height = 5;
+	gfx_mono_generic_draw_vertical_line(frame_x, frame_y, cursor_height, color);
+	gfx_mono_generic_draw_vertical_line(frame_x + FRAME_WIDTH, frame_y, cursor_height, color);
+	gfx_mono_generic_draw_vertical_line(frame_x, frame_y + FRAME_HEIGHT - cursor_height, cursor_height, color);
+	gfx_mono_generic_draw_vertical_line(frame_x + FRAME_WIDTH, frame_y + FRAME_HEIGHT - cursor_height + 1, cursor_height, color);
 }
 
 static void invert_item(uint8_t index, bool is_back_item)
@@ -50,6 +69,14 @@ static void draw_selected_item(char *title)
 {
 	uint8_t start_title = (GFX_MONO_LCD_WIDTH - strlen_PF((uint16_t)title + 0x10000)) / 4;
 	gfx_mono_draw_progmem_string(title, start_title, 54, &sysfont);
+}
+
+static void select_deselect_item(uint8_t index, enum gfx_mono_color color)
+{
+	uint8_t frame_x = lrint(index % 3) * 40 + 5;
+	uint8_t frame_y = lrint(index / 3) * 25 + 1;
+	set_clr_cursor_horizontal_lines(frame_x, frame_y, color);
+	set_clr_cursor_vertical_lines(frame_x, frame_y, color);
 }
 
 static void draw_disable_item(struct gfx_item *pos)
@@ -77,4 +104,20 @@ void graphic_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 	}
 	invert_item(menu->current_selection, action_menu->id && menu->current_selection == menu->num_elements - 1);
 	draw_selected_item(menu->strings[menu->current_selection]);
+}
+
+void graphic_menu_deselect_item(struct gfx_action_menu *action_menu, uint8_t selection)
+{
+	struct gfx_mono_menu *menu = action_menu->menu;
+	uint8_t item_index = (action_menu->id && selection == menu->num_elements - 1) ? MAX_ITEM_INDEX : selection;
+	select_deselect_item(item_index, GFX_PIXEL_CLR);
+	gfx_mono_draw_filled_rect(0, 54, 128, 10, GFX_PIXEL_CLR);
+}
+
+void graphic_menu_select_item(struct gfx_action_menu *action_menu, uint8_t selection)
+{
+	struct gfx_mono_menu *menu = action_menu->menu;
+	uint8_t item_index = (action_menu->id && selection == menu->num_elements - 1) ? MAX_ITEM_INDEX : selection;
+	select_deselect_item(item_index, GFX_PIXEL_SET);
+	draw_selected_item(menu->strings[selection]);
 }

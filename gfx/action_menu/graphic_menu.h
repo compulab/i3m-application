@@ -17,5 +17,7 @@
 #define FRAME_HEIGHT 22
 
 void graphic_menu_init(struct gfx_action_menu *action_menu, bool redraw);
+void graphic_menu_deselect_item(struct gfx_action_menu *action_menu, uint8_t selection);
+void graphic_menu_select_item(struct gfx_action_menu *action_menu, uint8_t selection);
 
 #endif /* GFX_ACTION_MENU_GRAPHIC_MENU_H_ */
