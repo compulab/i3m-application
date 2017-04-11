@@ -9,6 +9,7 @@
 #include "display/glcd-0.5.2/glcd_font.h"
 #include "eeprom/eeprom_layout.h"
 #include "gfx/menu-handler.h"
+#include "gfx/action_menu/gfx_action_menu.h"
 #include "effects.h"
 
 #define SLEEP_BRIGHTNESS 	100
@@ -54,7 +55,7 @@ void enter_power_on_mode(void)
 
 static void exit_dim_mode(void)
 {
-	show_current_menu(true);
+	gfx_action_menu_init(present_menu);
 }
 
 void exit_power_off_mode(void)

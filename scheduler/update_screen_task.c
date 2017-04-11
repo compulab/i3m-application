@@ -60,7 +60,7 @@ static void update_screen(void *data)
 	switch (display_state) {
 	case DISPLAY_MENU:
 		if (is_menu_need_update(present_menu))
-			gfx_action_menu_init(present_menu, true);
+			gfx_action_menu_init(present_menu);
 		break;
 	case DISPLAY_CLOCK:
 		frame_present->draw(frame_present, true);

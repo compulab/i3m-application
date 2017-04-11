@@ -58,7 +58,7 @@ static void portf_init(void)
 static void init_menu(void)
 {
 	set_menu_by_id(&present_menu, 0);
-	show_current_menu(true);
+	gfx_action_menu_init(present_menu);
 	enable_screen_saver_mode();
 }
 

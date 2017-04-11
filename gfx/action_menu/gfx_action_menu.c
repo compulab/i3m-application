@@ -71,16 +71,25 @@ static void set_present_menu(struct gfx_action_menu *action_menu)
 		update_action_visibility(&action_menu->actions[i]);
 }
 
-void gfx_action_menu_init(struct gfx_action_menu *action_menu, bool redraw)
+void gfx_action_menu_init(struct gfx_action_menu *action_menu)
 {
 	display_state = DISPLAY_MENU;
 	update_screen_timer();
-	if (redraw){
-		clear_screen();
-		set_present_menu(action_menu);
-	}
+	clear_screen();
+	set_present_menu(action_menu);
 	frame_present = 0;
-	graphic_menu_init(action_menu, redraw);
+	graphic_menu_draw(action_menu);
+	graphic_menu_select_item(action_menu, action_menu->menu->current_selection);
+	draw_standard_separator_line();
+	gfx_mono_ssd1306_put_framebuffer();
+}
+
+void gfx_action_menu_move_cursor(struct gfx_action_menu *action_menu)
+{
+	display_state = DISPLAY_MENU;
+	update_screen_timer();
+	graphic_menu_deselect_item(action_menu, action_menu->menu->last_selection);
+	graphic_menu_select_item(action_menu, action_menu->menu->current_selection);
 	draw_standard_separator_line();
 	gfx_mono_ssd1306_put_framebuffer();
 }
@@ -118,16 +127,6 @@ static void free_dmi_menu(void)
 	free(dmi_menu.menu );
 	sei();
 	is_dmi_set = false;
-}
-
-static void show_menu(struct gfx_action_menu *menu, bool redraw)
-{
-	gfx_action_menu_init(menu, redraw);
-}
-
-void show_current_menu(bool redraw)
-{
-	show_menu(present_menu, redraw);
 }
 
 void clear_screen(void)
@@ -309,24 +308,24 @@ void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode
 		case ACTION_TYPE_SHOW_MENU:
 			if (from_frame && selected_action->menu_id == MAIN_MENU_ID)
 				break;
-			show_menu(selected_action->menu, true);
+			gfx_action_menu_init(selected_action->menu);
 			break;
 		case ACTION_TYPE_SHOW_DMI_MENU:
 			if (!computer_data.details.direct_string) {
-				show_current_menu(true);
+				gfx_action_menu_init(present_menu);
 				break;
 			}
 
 			set_dmi_menu();
 			if (is_dmi_set)
-				show_menu(&dmi_menu, true);
+				gfx_action_menu_init(&dmi_menu);
 			break;
 		default:
 			break;
 		}
 		break;
 	case GFX_MONO_MENU_KEYCODE_BACK:
-		show_current_menu(true);
+		gfx_action_menu_init(present_menu);
 		break;
 	default:
 		if (from_frame && ((keycode == GFX_MONO_MENU_KEYCODE_DOWN && action_menu->menu->current_selection == 0) ||
@@ -336,7 +335,7 @@ void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode
 		 if (from_frame)
 			 gfx_action_menu_process_key(action_menu, GFX_MONO_MENU_KEYCODE_ENTER, true);
 		 else
-			 show_current_menu(false);
+			 gfx_action_menu_move_cursor(present_menu);
 		 break;
 	}
 }
