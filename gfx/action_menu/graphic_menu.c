@@ -74,6 +74,7 @@ void graphic_menu_draw(struct gfx_action_menu *action_menu)
 			draw_disable_item(&curr_image->image.postion);
 		i++;
 	}
+	draw_standard_separator_line();
 }
 
 void graphic_menu_deselect_item(struct gfx_action_menu *action_menu, uint8_t selection)
