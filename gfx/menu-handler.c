@@ -273,7 +273,7 @@ void handle_back_to_menu(void)
 	clear_screen();
 	frame_present = 0;
 	enable_screen_saver_mode();
-	gfx_action_menu_init(present_menu);
+	gfx_action_menu_display(present_menu);
 }
 
 static void handle_side_button(uint8_t keycode)

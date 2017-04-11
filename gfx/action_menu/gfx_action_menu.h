@@ -27,7 +27,7 @@ void clear_screen(void);
 
 void show_frame(struct gfx_frame *frame);
 
-void gfx_action_menu_init(struct gfx_action_menu *action_menu);
+void gfx_action_menu_display(struct gfx_action_menu *action_menu);
 
 void handle_button_pressed_by_display_mode(void);
 

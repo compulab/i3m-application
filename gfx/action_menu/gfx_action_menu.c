@@ -69,7 +69,7 @@ static void set_present_menu(struct gfx_action_menu *action_menu)
 		update_action_visibility(&action_menu->actions[i]);
 }
 
-void gfx_action_menu_init(struct gfx_action_menu *action_menu)
+void gfx_action_menu_display(struct gfx_action_menu *action_menu)
 {
 	display_state = DISPLAY_MENU;
 	update_screen_timer();
@@ -115,24 +115,24 @@ void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode
 		case ACTION_TYPE_SHOW_MENU:
 			if (from_frame && selected_action->menu_id == MAIN_MENU_ID)
 				break;
-			gfx_action_menu_init(selected_action->menu);
+			gfx_action_menu_display(selected_action->menu);
 			break;
 		case ACTION_TYPE_SHOW_DMI_MENU:
 			if (!computer_data.details.direct_string) {
-				gfx_action_menu_init(present_menu);
+				gfx_action_menu_display(present_menu);
 				break;
 			}
 
 			set_dmi_menu();
 			if (is_dmi_set)
-				gfx_action_menu_init(&dmi_menu);
+				gfx_action_menu_display(&dmi_menu);
 			break;
 		default:
 			break;
 		}
 		break;
 	case GFX_MONO_MENU_KEYCODE_BACK:
-		gfx_action_menu_init(present_menu);
+		gfx_action_menu_display(present_menu);
 		break;
 	default:
 		if (from_frame && ((keycode == GFX_MONO_MENU_KEYCODE_DOWN && action_menu->menu->current_selection == 0) ||
