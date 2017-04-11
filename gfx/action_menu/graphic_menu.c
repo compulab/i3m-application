@@ -10,10 +10,10 @@
 #include "gfx/gfx_item_action.h"
 #include "gfx/gfx_components/gfx_image.h"
 
-static void set_item_position(struct gfx_image *bitmap, uint8_t i, bool is_back_item)
+static void set_item_position(struct gfx_image *bitmap, uint8_t item_index)
 {
-	bitmap->postion.x = is_back_item ? 85 : lrint(i % 3) * 40 + 5;
-	bitmap->postion.y = is_back_item ? 26 : lrint(i / 3) * 25 + 1;
+	bitmap->postion.x = lrint(item_index % 3) * 40 + 5;
+	bitmap->postion.y = lrint(item_index / 3) * 25 + 1;
 	bitmap->postion.height = FRAME_HEIGHT;
 	bitmap->postion.width = FRAME_WIDTH;
 }
@@ -40,10 +40,10 @@ static void invert_cursor_vertical_lines(uint8_t frame_x, uint8_t frame_y)
 
 static void invert_item(uint8_t index, bool is_back_item)
 {
-	uint8_t frame_x = is_back_item ? 85 : lrint(index % 3) * 40 + 5;
-	uint8_t frame_y = is_back_item ? 26 : lrint(index / 3) * 25 + 1;
 	invert_cursor_horizontal_lines(frame_x, frame_y);
 	invert_cursor_vertical_lines(frame_x, frame_y);
+	uint8_t frame_x = lrint(index % 3) * 40 + 5;
+	uint8_t frame_y = lrint(index / 3) * 25 + 1;
 }
 
 static void draw_selected_item(char *title)
@@ -65,7 +65,7 @@ void graphic_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 		uint8_t i = 0;
 		clear_screen();
 		list_foreach(struct gfx_image_node *, action_menu->graphic_items_head, curr_image) {
-			set_item_position(&curr_image->image, i, action_menu->id != 0 && i == menu->num_elements - 1);
+		set_item_position(&curr_image->image, item_index);
 			gfx_mono_generic_put_bitmap(curr_image->image.bitmap, curr_image->image.postion.x, curr_image->image.postion.y);
 			if (!action_menu->actions[i].visible)
 				draw_disable_item(&curr_image->image.postion);
