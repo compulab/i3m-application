@@ -92,12 +92,6 @@ void gfx_action_menu_move_cursor(struct gfx_action_menu *action_menu)
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
-void clear_screen(void)
-{
-	for (int i = 0 ; i < GFX_MONO_LCD_FRAMEBUFFER_SIZE; i++)
-		framebuffer[i] = 0x00;
-}
-
 void show_frame(struct gfx_frame *frame)
 {
 	display_state = (frame == dashboard) ? DISPLAY_DASHBOARD : DISPLAY_FRAME;

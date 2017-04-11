@@ -35,4 +35,6 @@ uint8_t draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct glcd_Fon
 
 uint8_t draw_string_in_buffer(char *ch, uint8_t x, uint8_t y, struct glcd_FontConfig_t *font, uint8_t old_len);
 
+void clear_screen(void);
+
 #endif

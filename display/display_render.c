@@ -106,3 +106,9 @@ uint8_t draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct glcd_Fon
 	}
 	return print_length;
 }
+
+void clear_screen(void)
+{
+	for (int i = 0 ; i < GFX_MONO_LCD_FRAMEBUFFER_SIZE; i++)
+		framebuffer[i] = 0x00;
+}
