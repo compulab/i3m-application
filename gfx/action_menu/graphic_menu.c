@@ -65,10 +65,10 @@ static void invert_item(uint8_t index, bool is_back_item)
 	uint8_t frame_y = lrint(index / 3) * 25 + 1;
 }
 
-static void draw_selected_item(char *title)
+static void draw_selection_title(char *title)
 {
-	uint8_t start_title = (GFX_MONO_LCD_WIDTH - strlen_PF((uint16_t)title + 0x10000)) / 4;
-	gfx_mono_draw_progmem_string(title, start_title, 54, &sysfont);
+	uint8_t title_pos_x = (GFX_MONO_LCD_WIDTH - strlen_PF((uint16_t)title + 0x10000)) / 4;
+	gfx_mono_draw_progmem_string(title, title_pos_x, 54, &sysfont);
 }
 
 static void select_deselect_item(uint8_t index, enum gfx_mono_color color)
@@ -103,7 +103,7 @@ void graphic_menu_init(struct gfx_action_menu *action_menu, bool redraw)
 		gfx_mono_draw_filled_rect(0, 54, 128, 10, GFX_PIXEL_CLR);
 	}
 	invert_item(menu->current_selection, action_menu->id && menu->current_selection == menu->num_elements - 1);
-	draw_selected_item(menu->strings[menu->current_selection]);
+	draw_selection_title(menu->strings[menu->current_selection]);
 }
 
 void graphic_menu_deselect_item(struct gfx_action_menu *action_menu, uint8_t selection)
@@ -119,5 +119,5 @@ void graphic_menu_select_item(struct gfx_action_menu *action_menu, uint8_t selec
 	struct gfx_mono_menu *menu = action_menu->menu;
 	uint8_t item_index = (action_menu->id && selection == menu->num_elements - 1) ? MAX_ITEM_INDEX : selection;
 	select_deselect_item(item_index, GFX_PIXEL_SET);
-	draw_selected_item(menu->strings[selection]);
+	draw_selection_title(menu->strings[selection]);
 }
