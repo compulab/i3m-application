@@ -10,6 +10,9 @@
 #include "gfx/gfx_item_action.h"
 #include "gfx/gfx_components/gfx_image.h"
 
+#define FRAME_WIDTH	38
+#define FRAME_HEIGHT 22
+
 static void set_item_position(struct gfx_image *bitmap, uint8_t item_index)
 {
 	bitmap->postion.x = lrint(item_index % 3) * 40 + 5;
