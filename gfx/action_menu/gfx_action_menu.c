@@ -131,7 +131,7 @@ static void free_dmi_menu(void)
 
 void clear_screen(void)
 {
-	for (int i=0 ; i < GFX_MONO_LCD_FRAMEBUFFER_SIZE; i++)
+	for (int i = 0 ; i < GFX_MONO_LCD_FRAMEBUFFER_SIZE; i++)
 		framebuffer[i] = 0x00;
 }
 

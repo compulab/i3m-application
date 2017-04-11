@@ -30,19 +30,12 @@ void memcpy_config(void *dst, void *src_addr, size_t size)
 
 static void action_types_init(void)
 {
-	struct gfx_action_menu *menu;
-	struct gfx_item_action *action;
 	for (int i = 0; i < size_of_menus; i++) {
-		menu = action_menus[i];
+		struct gfx_action_menu *menu = action_menus[i];
 		for (int j = 0; j < menu->menu->num_elements; j++) {
-			action = &menu->actions[j];
-			switch (action->type) {
-			case ACTION_TYPE_SHOW_MENU:
+			struct gfx_item_action *action = &menu->actions[j];
+			if (action->type == ACTION_TYPE_SHOW_MENU)
 				set_menu_by_id(&(action->menu), action->menu_id);
-				break;
-			default:
-				break;
-			}
 		}
 	}
 }
@@ -190,7 +183,7 @@ static int set_actions(struct gfx_action_menu * menu, struct cnf_action_node *cn
 {
 	struct cnf_action_node action_node;
 	uint8_t action_index = 0;
-	while (cnf_action_node != 0) {
+	while (cnf_action_node) {
 		memcpy_config(&action_node, cnf_action_node, sizeof(struct cnf_action_node));
 		if (load_action(&(menu->actions[action_index]), action_node.action, cnf_dashboard))
 			return -1;
@@ -231,7 +224,7 @@ int load_config_block(void)
 		gfx_frame_init(clock, config_block.clock, true);
 	}
 
-	if (config_block.splash != NULL) {
+	if (config_block.splash) {
 		splash = malloc_locked(sizeof(struct gfx_frame));
 		if (splash == NULL)
 			return -1;
