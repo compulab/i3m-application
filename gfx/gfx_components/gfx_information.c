@@ -22,6 +22,11 @@ static void sprintf_sprintf(struct gfx_information *info, char *output_str)
 	sprintf(output_str, info->text.text);
 }
 
+static bool information_is_valid(struct gfx_information *info)
+{
+	return true;
+}
+
 static int gfx_information_init_generic(struct gfx_information *info, enum information_type info_type,
 										uint8_t info_data, uint8_t max_length, uint8_t x, uint8_t y, uint8_t font_id)
 {
@@ -38,6 +43,7 @@ static int gfx_information_init_generic(struct gfx_information *info, enum infor
 	info->draw_data = gfx_information_draw_string;
 	info->draw_controls = NULL;
 	info->handle_buttons = NULL;
+	info->is_valid = information_is_valid;
 
 	return 0;
 }

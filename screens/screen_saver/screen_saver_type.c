@@ -57,10 +57,16 @@ static void set_screen_saver_type_draw_graphic_signs(struct gfx_information *inf
 		draw_control_signs_arrows(computer_data.details.screen_saver_type, 0, SCREEN_SAVER_TYPE_SIZE - 1);
 }
 
+static bool screen_saver_type_is_valid(struct gfx_information *info)
+{
+	return computer_data.details.screen_saver_visible;
+}
+
 int gfx_information_init_set_screen_saver_type(struct gfx_information *info)
 {
 	info->to_string = sprintf_screen_saver_type;
 	info->draw_controls = set_screen_saver_type_draw_graphic_signs;
 	info->handle_buttons = handle_screen_saver_type_buttons;
+	info->is_valid = screen_saver_type_is_valid;
 	return 0;
 }

@@ -54,10 +54,16 @@ static void set_screen_saver_time_draw_graphic_signs(struct gfx_information *inf
 		draw_control_signs_numeric(computer_data.details.screen_saver_update_time, SCREEN_SAVER_SECOND_MIN_VALUE, SCREEN_SAVER_SECOND_MAX_VALUE);
 }
 
+static bool screen_saver_time_is_valid(struct gfx_information *info)
+{
+	return computer_data.details.screen_saver_visible;
+}
+
 int gfx_information_init_set_screen_saver_time(struct gfx_information *info)
 {
 	info->to_string = sprintf_screen_saver_time;
 	info->draw_controls = set_screen_saver_time_draw_graphic_signs;
 	info->handle_buttons = handle_screen_saver_time_buttons;
+	info->is_valid = screen_saver_time_is_valid;
 	return 0;
 }

@@ -23,40 +23,9 @@ static void update_action_visibility(struct gfx_item_action *action)
 	}
 
 	bool visible = true;
-	struct gfx_information_node * info_node = action->frame->information_head;
-	while (info_node != 0) {
-		switch(info_node->information.info_type) {
-		case SHOW_CPU_TEMPERTURE:
-			visible = BIT_ON(computer_data.packed.cpu_temp_set, info_node->information.info_data);
-			break;
-		case SHOW_CPU_FREQUENCY:
-			visible = BIT_ON(computer_data.packed.cpu_freq_set, info_node->information.info_data);
-			break;
-		case SHOW_AMBIENT_TEMPERATURE:
-			visible = computer_data.details.ambient_temp_set;
-			break;
-		case SHOW_GPU_TEMPERTURE:
-			visible = computer_data.details.gpu_temp_set;
-			break;
-		case SHOW_HDD_SIZE:
-			visible = BIT_ON(computer_data.packed.hdd_size_set, info_node->information.info_data);
-			break;
-		case SHOW_HDD_TEMPERTURE:
-			visible = BIT_ON(computer_data.packed.hdd_temp_set, info_node->information.info_data);
-			break;
-		case SHOW_MEMORY_SIZE:
-			visible = BIT_ON(computer_data.packed.mems, info_node->information.info_data);
-			break;
-		case SET_SCREEN_SAVER_TIME:
-		case SET_SCREEN_SAVER_TYPE:
-			visible = computer_data.details.screen_saver_visible;
-			break;
-		default:
-			break;
-		}
-		if (visible)
-			info_node = info_node->next;
-		else
+	list_foreach(struct gfx_information_node *, action->frame->information_head, info_node) {
+		visible = info_node->information.is_valid(&info_node->information);
+		if (!visible)
 			break;
 	}
 	action->visible = visible;
