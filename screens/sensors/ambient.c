@@ -22,8 +22,3 @@ int gfx_information_init_show_ambient_temp(struct gfx_information *info)
 	info->to_string = sprintf_ambient_temp;
 	return 0;
 }
-
-bool is_ambient_need_update(struct gfx_information *info, bool is_visible)
-{
-	return is_visible && !computer_data.details.ambient_temp_set;
-}

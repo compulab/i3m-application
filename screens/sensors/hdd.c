@@ -25,14 +25,6 @@ int gfx_information_init_show_hdd_temp(struct gfx_information *info)
 	return 0;
 }
 
-bool is_hdd_temp_need_update(struct gfx_information *info, bool is_visible)
-{
-	if (is_visible)
-		return !BIT_ON(computer_data.packed.hdd_temp_set, info->info_data);
-
-	return true;
-}
-
 static void sprintf_hdd_size(struct gfx_information *info, char *output_str)
 {
 	uint8_t hdd_id = info->info_data;
@@ -50,12 +42,4 @@ int gfx_information_init_show_hdd_size(struct gfx_information *info)
 {
 	info->to_string = sprintf_hdd_size;
 	return 0;
-}
-
-bool is_hdd_size_need_update(struct gfx_information *info, bool is_visible)
-{
-	if (is_visible)
-		return !BIT_ON(computer_data.packed.hdd_size_set, info->info_data);
-
-	return true;
 }

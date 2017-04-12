@@ -55,11 +55,3 @@ int gfx_information_init_show_memory_size(struct gfx_information *info)
 	info->to_string = sprintf_memory_size;
 	return 0;
 }
-
-bool is_mem_size_need_update(struct gfx_information *info, bool is_visible)
-{
-	if (is_visible)
-		return !BIT_ON(computer_data.packed.mems, info->info_data);
-
-	return true;
-}

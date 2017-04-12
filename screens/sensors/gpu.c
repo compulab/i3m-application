@@ -23,8 +23,3 @@ int gfx_information_init_show_gpu_temp(struct gfx_information *info)
 	info->to_string = sprintf_gpu_temp;
 	return 0;
 }
-
-bool is_gpu_temp_need_update(struct gfx_information *info, bool is_visible)
-{
-	return is_visible && !computer_data.details.gpu_temp_set;
-}
