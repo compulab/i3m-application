@@ -25,17 +25,15 @@ static void sprintf_sprintf(struct gfx_information *info, char *output_str)
 static int gfx_information_init_generic(struct gfx_information *info, enum information_type info_type,
 										uint8_t info_data, uint8_t max_length, uint8_t x, uint8_t y, uint8_t font_id)
 {
+	gfx_item_init(&info->postion, x, y, 0, 0);
+	char *text = malloc_locked(max_length);
+	if (text == NULL)
+		return -1;
+
+	gfx_text_init(&info->text, text, max_length, false, font_id);
 	info->info_type = info_type;
 	info->info_data = info_data;
 	info->last_length = 0;
-	info->text.is_progmem = false;
-	info->text.max_text_size = max_length;
-	info->text.text = malloc_locked(info->text.max_text_size);
-	if (info->text.text == NULL)
-		return -1;
-
-	gfx_item_init(&info->postion, x, y, 0, 0);
-	info->text.font = get_font_by_type(font_id);
 	info->to_string = sprintf_sprintf;
 	info->draw_data = gfx_information_draw_string;
 	info->draw_controls = NULL;
