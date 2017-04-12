@@ -5,7 +5,7 @@
  *      Author: arkadi
  */
 
-#include "graphic_menu.h"
+#include "graphic_menu_theme.h"
 #include "lib/syntax.h"
 #include "gfx/gfx_item_action.h"
 #include "gfx/gfx_components/gfx_image.h"

@@ -9,7 +9,7 @@
 #define GFX_GFX_ACTION_MENU_H_
 
 #include "gfx/menu-handler.h"
-#include "graphic_menu.h"
+#include "graphic_menu_theme/graphic_menu_theme.h"
 
 struct gfx_action_menu {
 	struct gfx_mono_menu *menu;
