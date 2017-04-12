@@ -14,7 +14,7 @@
 #include "eeprom/eeprom_layout.h"
 #include "screen_saver.h"
 
-const char *screen_saver_type_str[SCREEN_SAVER_TYPE_SIZE] = { "LOGO", "DASHBOARD", "CLOCK" };
+static const char *screen_saver_type_str[SCREEN_SAVER_TYPE_SIZE] = { "LOGO", "DASHBOARD", "CLOCK" };
 
 static void handle_screen_saver_type_buttons(uint8_t key)
 {

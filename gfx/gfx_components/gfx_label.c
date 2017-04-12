@@ -10,7 +10,7 @@
 
 static void gfx_label_draw(struct gfx_label *label)
 {
-	if (label->text.textP != NULL)
+	if (label->text.textP)
 		draw_string_in_buffer_P(label->text.textP, label->postion.x, label->postion.y, label->text.font);
 }
 

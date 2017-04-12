@@ -151,12 +151,8 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 {
 	reset_screen_saver();
 	enable_screen_saver_mode();
-	switch (display_state) {
-	case DISPLAY_DIM:
+	if (display_state == DISPLAY_DIM)
 		exit_sleep_mode();
-		break;
-	default:
+	else
 		gfx_handle_key_pressed(action_menu, keycode, from_frame);
-		break;
-	}
 }

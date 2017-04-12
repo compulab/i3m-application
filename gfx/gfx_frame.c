@@ -48,10 +48,9 @@ static int gfx_frame_set_labels(struct gfx_frame *frame, struct cnf_label_node *
 	while (cnf_label_pgmem != 0){
 		struct cnf_label_node cnf_label_node;
 		struct gfx_label_node *gfx_label_node = malloc_locked(sizeof(struct gfx_label_node));
-		if (gfx_label_node == NULL) {
-			uart_send_string("label node fail \n\r");
+		if (gfx_label_node == NULL)
 			return -1;
-		}
+
 		memcpy_config(&cnf_label_node, cnf_label_pgmem, sizeof(struct cnf_label_node));
 		gfx_label_init(&gfx_label_node->label, cnf_label_node.label.text, cnf_label_node.label.x, cnf_label_node.label.y, cnf_label_node.font_id);
 		gfx_label_node->next = 0;
