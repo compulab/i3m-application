@@ -23,4 +23,6 @@ struct gfx_frame {
 	struct gfx_information_node *information_head;
 };
 
+int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem, bool is_dashboard);
+
 #endif /* GFX_FRAME_H_ */

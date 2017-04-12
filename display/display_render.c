@@ -53,14 +53,12 @@ uint8_t draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct glcd_FontC
 	length += best_font->width;
 	clear_string_background(max(old_len, length), x, y, font);
 
-	while (str[j] != '\0')
-	{
-		if (x > 120 || str[j] == '\n')
-		{
+	while (str[j] != '\0') {
+		if (x > 120 || str[j] == '\n') {
 			y += best_font->height + 2;
 			x = 0;
 			if (str[j] == '\n')
-				j ++;
+				j++;
 			continue;
 		}
 
