@@ -11,15 +11,15 @@ static void update_action_visibility(struct gfx_item_action *action)
 {
 	if (action->type == ACTION_TYPE_SHOW_DMI_MENU) {
 		action->visible = computer_data.details.direct_string != 0;
-		return ;
-	} else if (action->type != ACTION_TYPE_SHOW_FRAME){
+		return;
+	} else if (action->type != ACTION_TYPE_SHOW_FRAME) {
 		action->visible = true;
 		return;
 	}
 
 	if (action->frame == dashboard) {
 		action->visible = true;
-		return ;
+		return;
 	}
 
 	bool visible = true;
@@ -28,6 +28,7 @@ static void update_action_visibility(struct gfx_item_action *action)
 		if (!visible)
 			break;
 	}
+
 	action->visible = visible;
 }
 
@@ -69,15 +70,12 @@ void show_frame(struct gfx_frame *frame)
 
 void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
 {
-	enum action_type type;
 	struct gfx_item_action *selected_action;
 	switch(keycode) {
 	case GFX_MONO_MENU_KEYCODE_ENTER:
 		selected_action = &action_menu->actions[(action_menu->menu)->current_selection];
-		type = selected_action->type;
 		frame_present = 0;
-		clear_screen();
-		switch (type) {
+		switch (selected_action->type) {
 		case ACTION_TYPE_SHOW_FRAME:
 			show_frame(selected_action->frame);
 			break;

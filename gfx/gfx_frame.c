@@ -15,13 +15,12 @@
 static int gfx_frame_set_images(struct gfx_frame *frame, struct cnf_image_node *cnf_image_pgmem)
 {
 	struct gfx_image_node *frame_image_last = 0;
-	while (cnf_image_pgmem != 0){
+	while (cnf_image_pgmem) {
 		struct cnf_image_node cnf_image_node;
 		struct gfx_image_node *gfx_image_node = malloc_locked(sizeof(struct gfx_image_node));
-		if (gfx_image_node == NULL){
-			uart_send_string("gfx_image_node failed\n\r");
+		if (gfx_image_node == NULL)
 			return -1;
-		}
+
 		memcpy_config(&cnf_image_node, cnf_image_pgmem, sizeof(struct cnf_image_node));
 		gfx_image_node->image.bitmap = malloc_locked(sizeof(struct gfx_mono_bitmap));
 		//TODO: Possible memory leak here fix later
@@ -45,7 +44,7 @@ static int gfx_frame_set_images(struct gfx_frame *frame, struct cnf_image_node *
 static int gfx_frame_set_labels(struct gfx_frame *frame, struct cnf_label_node *cnf_label_pgmem)
 {
 	struct gfx_label_node *frame_label_last = 0;
-	while (cnf_label_pgmem != 0){
+	while (cnf_label_pgmem) {
 		struct cnf_label_node cnf_label_node;
 		struct gfx_label_node *gfx_label_node = malloc_locked(sizeof(struct gfx_label_node));
 		if (gfx_label_node == NULL)
@@ -167,20 +166,15 @@ static void handle_buttons_back_to_menu(uint8_t keycode)
 	handle_back_to_menu();
 }
 
-static void init_frame(struct gfx_frame *frame, bool is_dashboard)
+int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem, bool is_dashboard)
 {
+	struct cnf_frame cnf_frame;
 	frame->image_head = 0;
 	frame->information_head = 0;
 	frame->label_head = 0;
 	frame->draw = is_dashboard ? gfx_dashboard_draw : gfx_frame_draw;
 	frame->handle_buttons = is_dashboard ? handle_buttons_back_to_menu : handle_buttons_scroll_to_frame;
 	frame->draw_controls = is_dashboard ?  NULL : gfx_frame_draw_control_arrows;
-}
-
-int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem, bool is_dashboard)
-{
-	struct cnf_frame cnf_frame;
-	init_frame(frame, is_dashboard);
 	if (cnf_frame_pgmem == NULL)
 		return 0;
 
