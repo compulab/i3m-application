@@ -46,15 +46,6 @@ static bool is_menu_need_update(struct gfx_action_menu *menu)
 	return false;
 }
 
-static bool is_frame_need_update(struct gfx_frame *frame)
-{
-	list_foreach(struct gfx_information_node *, frame->information_head, info_node)
-		if (is_information_need_to_change(&info_node->information))
-			return true;
-
-	return false;
-}
-
 static void update_screen(void *data)
 {
 	switch (display_state) {
@@ -66,12 +57,10 @@ static void update_screen(void *data)
 		frame_present->draw(frame_present, false);
 		break;
 	case DISPLAY_FRAME:
-		if (is_frame_need_update(frame_present))
-			frame_present->draw(frame_present, false);
+		frame_present->draw(frame_present, false);
 		break;
 	case DISPLAY_DASHBOARD:
-		if (is_frame_need_update(dashboard))
-			dashboard->draw(dashboard, false);
+		dashboard->draw(dashboard, false);
 		break;
 	default:
 		break;
