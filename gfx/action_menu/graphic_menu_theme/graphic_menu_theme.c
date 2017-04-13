@@ -7,7 +7,7 @@
 
 #include "graphic_menu_theme.h"
 #include "lib/syntax.h"
-#include "gfx/gfx_item_action.h"
+#include "gfx/action_menu/gfx_item_action.h"
 #include "gfx/gfx_components/gfx_image.h"
 
 #define FRAME_WIDTH	38

@@ -6,7 +6,7 @@
  */
 
 #include "gfx_action_menu.h"
-#include "gfx/gfx_item_action.h"
+#include "gfx/action_menu/gfx_item_action.h"
 #include "gfx/gfx_components/gfx_label.h"
 #include "lib/syntax.h"
 

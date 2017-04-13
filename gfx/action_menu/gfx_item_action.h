@@ -9,7 +9,7 @@
 #ifndef GFX_ITEM_ACTION_H_
 #define GFX_ITEM_ACTION_H_
 
-#include "gfx_frame.h"
+#include "gfx/gfx_frame.h"
 
 struct gfx_action_menu;
 

@@ -9,7 +9,7 @@
 #include <stddef.h>
 #include "twi/i2c_buffer.h"
 #include "gfx/gfx_components/gfx_information.h"
-#include "gfx/gfx_item_action.h"
+#include "gfx/action_menu/gfx_item_action.h"
 #include "gfx/action_menu/gfx_action_menu.h"
 #include "def.h"
 #include "Fp-utils.h"
