@@ -48,22 +48,11 @@ static bool is_menu_need_update(struct gfx_action_menu *menu)
 
 static void update_screen(void *data)
 {
-	switch (display_state) {
-	case DISPLAY_MENU:
+	if (display_state == DISPLAY_MENU) {
 		if (is_menu_need_update(present_menu))
 			gfx_action_menu_display(present_menu);
-		break;
-	case DISPLAY_CLOCK:
+	} else {
 		frame_present->draw(frame_present, false);
-		break;
-	case DISPLAY_FRAME:
-		frame_present->draw(frame_present, false);
-		break;
-	case DISPLAY_DASHBOARD:
-		dashboard->draw(dashboard, false);
-		break;
-	default:
-		break;
 	}
 }
 
