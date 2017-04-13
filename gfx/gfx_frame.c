@@ -106,16 +106,20 @@ static void gfx_images_draw(struct gfx_image_node *list)
 		image_node->image.draw(&image_node->image);
 }
 
-//TODO: there's a lot of code duplication with the dashboard version. Fix later.
-static void gfx_frame_draw(struct gfx_frame *frame)
+static void gfx_frame_format_generic_frame(struct gfx_frame *frame)
 {
 	update_screen_timer();
 	frame_present = frame;
 	clear_screen();
 	gfx_labels_draw(frame->label_head);
 	gfx_images_draw(frame->image_head);
-	draw_standard_separator_line();
 	gfx_infos_draw(frame->information_head);
+}
+
+static void gfx_frame_draw(struct gfx_frame *frame)
+{
+	gfx_frame_format_generic_frame(frame);
+	draw_standard_separator_line();
 	if (frame->information_head->information.draw_controls)
 		frame->information_head->information.draw_controls(&frame->information_head->information);
 	else
@@ -123,15 +127,9 @@ static void gfx_frame_draw(struct gfx_frame *frame)
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
-//TODO: there's a lot of code duplication with the frame version. Fix later.
 static void gfx_dashboard_draw(struct gfx_frame *frame)
 {
-	update_screen_timer();
-	frame_present = frame;
-	clear_screen();
-	gfx_labels_draw(frame->label_head);
-	gfx_images_draw(frame->image_head);
-	gfx_infos_draw(frame->information_head);
+	gfx_frame_format_generic_frame(frame);
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
