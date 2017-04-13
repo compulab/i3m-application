@@ -63,15 +63,15 @@ static void update_screen(void *data)
 			gfx_action_menu_display(present_menu);
 		break;
 	case DISPLAY_CLOCK:
-		frame_present->draw(frame_present, true);
+		frame_present->draw(frame_present, false);
 		break;
 	case DISPLAY_FRAME:
 		if (is_frame_need_update(frame_present))
-			frame_present->draw(frame_present, true);
+			frame_present->draw(frame_present, false);
 		break;
 	case DISPLAY_DASHBOARD:
 		if (is_frame_need_update(dashboard))
-			dashboard->draw(dashboard, true);
+			dashboard->draw(dashboard, false);
 		break;
 	default:
 		break;

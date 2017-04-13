@@ -111,7 +111,7 @@ static void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
 {
 	update_screen_timer();
 	frame_present = frame;
-	if (!redraw) {
+	if (redraw) {
 		clear_screen();
 		gfx_labels_draw(frame->label_head);
 		gfx_images_draw(frame->image_head);
@@ -131,7 +131,7 @@ static void gfx_dashboard_draw(struct gfx_frame *frame, bool redraw)
 {
 	update_screen_timer();
 	frame_present = frame;
-	if (!redraw) {
+	if (redraw) {
 		clear_screen();
 		gfx_labels_draw(frame->label_head);
 		gfx_images_draw(frame->image_head);
