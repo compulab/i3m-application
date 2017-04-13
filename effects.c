@@ -55,7 +55,7 @@ void enter_power_on_mode(void)
 
 static void exit_dim_mode(void)
 {
-	gfx_action_menu_display(present_menu);
+	present_menu->draw(present_menu);
 }
 
 void exit_power_off_mode(void)

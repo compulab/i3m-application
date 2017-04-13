@@ -82,11 +82,11 @@ void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode
 		case ACTION_TYPE_SHOW_MENU:
 			if (from_frame && selected_action->menu_id == MAIN_MENU_ID)
 				break;
-			gfx_action_menu_display(selected_action->menu);
+			selected_action->menu->draw(selected_action->menu);
 			break;
 		case ACTION_TYPE_SHOW_DMI_MENU:
 			if (!computer_data.details.direct_string) {
-				gfx_action_menu_display(present_menu);
+				present_menu->draw(present_menu);
 				break;
 			}
 
@@ -99,7 +99,7 @@ void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode
 		}
 		break;
 	case GFX_MONO_MENU_KEYCODE_BACK:
-		gfx_action_menu_display(present_menu);
+		present_menu->draw(present_menu);
 		break;
 	default:
 		if (from_frame && ((keycode == GFX_MONO_MENU_KEYCODE_DOWN && action_menu->menu->current_selection == 0) ||

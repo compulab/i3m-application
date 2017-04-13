@@ -13,11 +13,10 @@ enum display_state display_state;
 
 static void update_screen(void *data)
 {
-	if (display_state == DISPLAY_MENU) {
-			gfx_action_menu_display(present_menu);
-	} else {
+	if (display_state == DISPLAY_MENU)
+		present_menu->draw(present_menu);
+	else
 		frame_present->draw(frame_present, false);
-	}
 }
 
 static struct work update_screen_work = { .do_work = update_screen };
