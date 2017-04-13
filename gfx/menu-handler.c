@@ -248,7 +248,6 @@ int load_config_block(void)
 
 		memcpy_config(&cnf_menu, cnf_menu_node, sizeof(struct cnf_menu_node));
 		memcpy_config(&config_menu, cnf_menu.menu, sizeof(struct cnf_menu));
-		uart_send_num(config_menu.id, 16);
 		action_menus[config_menu.id]->id = config_menu.id;
 		if ((set_mono_menu(action_menus[config_menu.id], config_menu.menu)) ||
 				(set_graphic_view(action_menus[config_menu.id], config_menu.images_items_head)) ||

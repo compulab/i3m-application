@@ -9,19 +9,19 @@
 #include "gfx_components/gfx_image.h"
 
 /*Sign symbols*/
-PROGMEM_DECLARE(gfx_mono_color_t, right [5]) = {
+PROGMEM_DECLARE(gfx_mono_color_t, right[5]) = {
 	0x00, 0x7E, 0x3C, 0x18, 0x00,
 };
 
-PROGMEM_DECLARE(gfx_mono_color_t, left [5]) = {
+PROGMEM_DECLARE(gfx_mono_color_t, left[5]) = {
 	0x00, 0x18, 0x3C, 0x7E, 0x00,
 };
 
-PROGMEM_DECLARE(gfx_mono_color_t, plus [5]) = {
+PROGMEM_DECLARE(gfx_mono_color_t, plus[5]) = {
 	0x18, 0x18, 0xFF, 0x18, 0x18,
 };
 
-PROGMEM_DECLARE(gfx_mono_color_t, minus [5]) = {
+PROGMEM_DECLARE(gfx_mono_color_t, minus[5]) = {
 	0x18, 0x18, 0x18, 0x18, 0x18,
 };
 

@@ -30,8 +30,6 @@ void show_frame(struct gfx_frame *frame);
 
 void gfx_action_menu_display(struct gfx_action_menu *action_menu);
 
-void handle_button_pressed_by_display_mode(void);
-
 void gfx_action_menu_process_key(struct gfx_action_menu *action_menu,
 		uint8_t keycode, bool from_frame);
 
