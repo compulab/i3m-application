@@ -15,7 +15,7 @@ static void update_screen(void *data)
 	if (display_state == DISPLAY_MENU)
 		present_menu->draw(present_menu);
 	else
-		frame_present->draw(frame_present, false);
+		frame_present->draw(frame_present);
 }
 
 static struct work update_screen_work = { .do_work = update_screen };

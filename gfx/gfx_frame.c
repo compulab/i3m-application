@@ -107,17 +107,14 @@ static void gfx_images_draw(struct gfx_image_node *list)
 }
 
 //TODO: there's a lot of code duplication with the dashboard version. Fix later.
-static void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
+static void gfx_frame_draw(struct gfx_frame *frame)
 {
 	update_screen_timer();
 	frame_present = frame;
-	if (redraw) {
-		clear_screen();
-		gfx_labels_draw(frame->label_head);
-		gfx_images_draw(frame->image_head);
-		draw_standard_separator_line();
-	}
-
+	clear_screen();
+	gfx_labels_draw(frame->label_head);
+	gfx_images_draw(frame->image_head);
+	draw_standard_separator_line();
 	gfx_infos_draw(frame->information_head);
 	if (frame->information_head->information.draw_controls)
 		frame->information_head->information.draw_controls(&frame->information_head->information);
@@ -127,16 +124,13 @@ static void gfx_frame_draw(struct gfx_frame *frame, bool redraw)
 }
 
 //TODO: there's a lot of code duplication with the frame version. Fix later.
-static void gfx_dashboard_draw(struct gfx_frame *frame, bool redraw)
+static void gfx_dashboard_draw(struct gfx_frame *frame)
 {
 	update_screen_timer();
 	frame_present = frame;
-	if (redraw) {
-		clear_screen();
-		gfx_labels_draw(frame->label_head);
-		gfx_images_draw(frame->image_head);
-	}
-
+	clear_screen();
+	gfx_labels_draw(frame->label_head);
+	gfx_images_draw(frame->image_head);
 	gfx_infos_draw(frame->information_head);
 	gfx_mono_ssd1306_put_framebuffer();
 }

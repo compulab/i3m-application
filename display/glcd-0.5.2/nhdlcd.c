@@ -3,7 +3,7 @@
 
 void glcd_write(void)
 {
-	gfx_mono_ssd1306_put_framebuffer();
+	//gfx_mono_ssd1306_put_framebuffer();
 }
 
 void glcd_init()

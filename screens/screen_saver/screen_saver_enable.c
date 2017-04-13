@@ -41,7 +41,7 @@ static void handle_screen_saver_enable_buttons(uint8_t key)
 	}
 
 	eeprom_set_screen_saver_config(computer_data.packed.screen_saver_config);
-	frame_present->draw(frame_present, true);
+	frame_present->draw(frame_present);
 }
 
 static void sprintf_screen_saver_enable(struct gfx_information *info, char *output_str)

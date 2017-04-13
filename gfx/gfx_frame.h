@@ -17,7 +17,7 @@
 struct gfx_frame {
 	void (*handle_buttons)(uint8_t);
 	void (*draw_controls)(struct gfx_frame *info);
-	void (*draw)(struct gfx_frame *frame, bool redraw);
+	void (*draw)(struct gfx_frame *frame);
 	struct gfx_image_node *image_head;
 	struct gfx_label_node *label_head;
 	struct gfx_information_node *information_head;

@@ -65,7 +65,7 @@ void show_frame(struct gfx_frame *frame)
 	display_state = (frame == dashboard) ? DISPLAY_DASHBOARD : DISPLAY_FRAME;
 	clear_screen();
 	disable_screen_saver_mode();
-	frame->draw(frame, true);
+	frame->draw(frame);
 }
 
 void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)

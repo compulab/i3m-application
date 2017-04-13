@@ -27,7 +27,7 @@ static void handle_brightness_buttons(uint8_t key)
 	//Yes it is kind of fucked up that we update brightness by changing contrast.
 	//TODO: figure out why this is implemented this way and hopefully fix it.
 	ssd1306_set_contrast(eeprom_get_brightness_value());
-	frame_present->draw(frame_present, true);
+	frame_present->draw(frame_present);
 }
 
 static void sprintf_brightness(struct gfx_information *info, char *output_str)
