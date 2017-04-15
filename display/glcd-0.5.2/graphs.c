@@ -96,23 +96,23 @@ void glcd_scrolling_bar_graph(uint8_t x, uint8_t y, uint8_t width, uint8_t heigh
 	glcd_write();
 }
 
-static void glcd_scrolling_bar_graph_timing(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t val, uint8_t line_width, uint16_t delay)
-{
-	uint8_t n;
-	if (line_width == 0) {
-		line_width = 1;
-	}
-
-	/* Adjust graph line's width by just running glcd_scrolling_bar_graph() x number of times */
-	/* \todo This should be done differently! */
-	for (n=0; n<line_width; n++) {
-		glcd_scrolling_bar_graph(x,y,width,height,val);
-	}
-
-	if (delay) {
-		delay_ms(delay);
-	}
-}
+//static void glcd_scrolling_bar_graph_timing(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint8_t val, uint8_t line_width, uint16_t delay)
+//{
+//	uint8_t n;
+//	if (line_width == 0) {
+//		line_width = 1;
+//	}
+//
+//	/* Adjust graph line's width by just running glcd_scrolling_bar_graph() x number of times */
+//	/* \todo This should be done differently! */
+//	for (n=0; n<line_width; n++) {
+//		glcd_scrolling_bar_graph(x,y,width,height,val);
+//	}
+//
+//	if (delay) {
+//		delay_ms(delay);
+//	}
+//}
 
 static uint8_t glcd_map(uint8_t x1, uint8_t x2, uint8_t x)
 {
