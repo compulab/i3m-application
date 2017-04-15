@@ -8,7 +8,6 @@
 #ifndef GFX_GFX_UTILS_H_
 #define GFX_GFX_UTILS_H_
 
-#include "config/cnf_blk_components.h"
 #include "gfx_frame.h"
 
 struct gfx_frame *frame_present;

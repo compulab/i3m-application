@@ -6,7 +6,6 @@
  */
 
 #include <string.h>
-#include "Fp-utils.h"
 #include "screens/string_formats.h"
 #include "gfx/gfx_components/gfx_information.h"
 
