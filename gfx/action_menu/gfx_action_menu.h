@@ -33,4 +33,6 @@ void gfx_action_menu_display(struct gfx_action_menu *action_menu);
 void gfx_action_menu_process_key(struct gfx_action_menu *action_menu,
 		uint8_t keycode, bool from_frame);
 
+void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame);
+
 #endif /* GFX_GFX_ACTION_MENU_H_ */
