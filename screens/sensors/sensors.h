@@ -18,5 +18,7 @@ int gfx_information_init_show_hdd_temp(struct gfx_information *info);
 int gfx_information_init_show_hdd_size(struct gfx_information *info);
 int gfx_information_init_show_memory_size(struct gfx_information *info);
 int gfx_information_init_show_ambient_temp(struct gfx_information *info);
+int gfx_information_init_show_power_data(struct gfx_information *info);
+int gfx_information_init_show_power_state(struct gfx_information *info);
 
 #endif /* SENSORS_H_ */
