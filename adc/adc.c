@@ -54,7 +54,7 @@ static double adc_avg(void)
 	return power_sum / i;
 }
 
-void update_adc(void *data)
+static void update_adc(void *data)
 {
 	double avg = adc_avg();
 	long power = avg * 0.10137 + 2.9;

@@ -29,23 +29,10 @@ static void reset_temperatures(void)
 	clear_regs((uint8_t *)&i2c_buffer.raw[CPU0F_LSB], (uint8_t *)&i2c_buffer.raw[RESERVED83]);
 }
 
-static void handle_power_off(void)
-{
-	//	reset_ambient();
-	reset_temperatures();
-}
-
-static void handle_power_on(void)
-{
-	update_adc(NULL);
-	update_ambient_temp(NULL);
-}
-
 static void handle_power_state_changed(void *data)
 {
 	switch(current_power_state) {
 	case POWER_ON:
-		handle_power_on();
 		enter_power_on_mode();
 		break;
 	case POWER_STD:
@@ -56,7 +43,7 @@ static void handle_power_state_changed(void *data)
 		break;
 	case POWER_OFF:
 		enter_power_off_mode();
-		handle_power_off();
+		reset_temperatures();
 		break;
 	}
 	update_computer_state();

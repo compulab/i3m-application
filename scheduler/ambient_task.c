@@ -8,7 +8,7 @@
 #define AMBIENT_TWI_ADDRESS  		0x4C
 #define AMBIENT_TEMPERATURE_ADDRESS 0x00
 
-void update_ambient_temp(void *data)
+static void update_ambient_temp(void *data)
 {
 	static uint8_t ambient_update_fail_count = 0;
 
