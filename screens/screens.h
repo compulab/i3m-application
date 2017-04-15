@@ -13,5 +13,6 @@
 #include "screens/screen_saver/screen_saver.h"
 #include "screens/sensors/sensors.h"
 #include "screens/settings/brightness.h"
+#include "screens/bios/bios_data.h"
 
 #endif /* SCREENS_H_ */
