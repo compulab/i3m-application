@@ -22,4 +22,5 @@ int gfx_image_init(struct gfx_image *image, gfx_mono_color_t PROGMEM_T *bitmap_p
 	image->bitmap->data.progmem = bitmap_progmem;
 	image->bitmap->type = GFX_MONO_BITMAP_SECTION;
 	image->draw = gfx_image_draw;
+	return 0;
 }
