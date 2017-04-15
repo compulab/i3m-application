@@ -8,6 +8,7 @@
 #include <string.h>
 #include "power.h"
 #include "effects.h"
+#include "adc/adc.h"
 #include "twi/i2c_buffer.h"
 #include "work-queue/work.h"
 #include "gfx/gfx_components/gfx_information.h"

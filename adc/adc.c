@@ -9,8 +9,6 @@
 #include <string.h>
 #include "scheduler/scheduler.h"
 #include "adc/adc.h"
-#include "math.h"
-#include "asf.h"
 
 //***ADC configuration
 #define MY_ADC    ADCA
@@ -47,13 +45,13 @@ static double adc_avg(void)
 	int16_t adca1_result = 0;
 	power_sum = 0;
 	for (i = 0; i < POWER_COUNT; i++) {
-		adc_start_conversion(&MY_ADC, MY_ADC_CH);  //one conversion begins
+		adc_start_conversion(&MY_ADC, MY_ADC_CH);
 		adc_wait_for_interrupt_flag(&MY_ADC, MY_ADC_CH);
-		adca1_result = adc_get_result(&MY_ADC, MY_ADC_CH); // & 0x0FFF;
+		adca1_result = adc_get_result(&MY_ADC, MY_ADC_CH);
 		power_sum = power_sum + adca1_result;
 	}
 
-	return power_sum / (i);
+	return power_sum / i;
 }
 
 void update_adc(void *data)
@@ -74,11 +72,9 @@ void update_adc(void *data)
 
 static struct work adc_work = { .do_work = update_adc };
 
-#define UPDATE_ADC_SEC	1
-
 static double adc_get_recur_period(void)
 {
-	return UPDATE_ADC_SEC;
+	return 1;
 }
 
 struct scheduler_task adc_tick_task = {

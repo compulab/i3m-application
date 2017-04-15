@@ -145,8 +145,8 @@ static void handle_buttons_scroll_to_frame(uint8_t key)
 		return;
 	}
 
-	if (key == GFX_MONO_MENU_KEYCODE_DOWN && present_menu->menu->current_selection == 0 ||
-		key == GFX_MONO_MENU_KEYCODE_UP && present_menu->menu->current_selection == present_menu->menu->num_elements - 2)
+	if ((key == GFX_MONO_MENU_KEYCODE_DOWN && present_menu->menu->current_selection == 0) ||
+		(key == GFX_MONO_MENU_KEYCODE_UP && present_menu->menu->current_selection == present_menu->menu->num_elements - 2))
 				return;
 	 gfx_mono_menu_process_key(present_menu->menu, key, present_menu->is_progmem);
 	 //Invoke "display new frame" by simulating a KECODE ENTER event

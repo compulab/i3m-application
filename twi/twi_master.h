@@ -8,15 +8,11 @@
 
 #ifndef TWI_MASTER_H_
 #define TWI_MASTER_H_
+#include <stdio.h>
 #include <stdbool.h>
-
-//#ifndef DEBUG_H_
-#include "debug.h"
-//#endif
 
 #define TWI						TWIC
 #define TWI_MASTER_vect			TWIC_TWIM_vect
-//#define TWI_SLAVE_vect			TWIC_TWIS_vect
 
 #define TWI_BAUD_REG			65		// 100KHz, (Fclk/(2*Ftwi)) -5
 #define TWI_MASTER_INTLVL_gc	TWI_MASTER_INTLVL_MED_gc

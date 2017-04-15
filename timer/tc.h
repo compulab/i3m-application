@@ -1,7 +1,8 @@
 #ifndef TC_DRIVER_H
 #define TC_DRIVER_H
 
-#include "asf.h"
+#include <stdio.h>
+#include <stdbool.h>
 
 #define TIMER_MAX_VALUE		0xffff
 extern int tc_counter;

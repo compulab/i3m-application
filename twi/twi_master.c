@@ -13,12 +13,8 @@
 #include <avr/pgmspace.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
-
 #include <stdbool.h>
 #include <stdio.h>
-
-#include "uart/uart.h"
-
 
 enum TRANSACTION_TYPES_enum
 {

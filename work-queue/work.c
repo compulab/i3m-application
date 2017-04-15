@@ -5,7 +5,6 @@
  *      Author: arkadi
  */
 
-#include <stdbool.h>
 #include "work.h"
 #include "layout.h"
 #include "asf.h"
@@ -14,8 +13,8 @@ uint16_t works_count;
 bool wakeup;
 
 static struct work_queue work_to_do = {
-		.first =  NULL,
-		.last =  NULL,
+	.first =  NULL,
+	.last =  NULL,
 };
 
 /*

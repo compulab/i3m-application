@@ -8,9 +8,7 @@
 #ifndef UART_UART_H_
 #define UART_UART_H_
 
-#include "asf.h"
-
-//#define UART_DEBUG
+#include <stdio.h>
 
 void uart_init(void);
 void uart_send_char(char c);

@@ -12,9 +12,8 @@
 #include <avr/interrupt.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "layout.h"
 #include "config/conf_twi.h"
-#include "debug.h"
+
 /* Transaction status defines.*/
 #define TWIS_STATUS_READY                0x00
 #define TWIS_STATUS_BUSY                 0xff

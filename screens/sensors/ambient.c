@@ -8,6 +8,7 @@
 #include <string.h>
 #include "Fp-utils.h"
 #include "screens/string_formats.h"
+#include "gfx/gfx_components/gfx_information.h"
 
 static void sprintf_ambient_temp(struct gfx_information *info, char *output_str)
 {

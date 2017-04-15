@@ -43,14 +43,13 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#include "ASF/xmega/utils/compiler.h"
+
 #include "calendar.h"
 #include "uart/uart.h"
 #include "scheduler/scheduler.h"
 #include "screens/string_formats.h"
 #include "gfx/gfx_components/gfx_information.h"
-#include "Fp-utils.h"
-#include <stdio.h>
+
 
 //! Unix epoch year
 #define EPOCH_YEAR 1970
