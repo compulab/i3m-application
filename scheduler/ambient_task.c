@@ -31,10 +31,9 @@ static void update_ambient_temp(void *data)
 
 static struct work ambient_work = { .do_work = update_ambient_temp };
 
-#define UPDATE_AMBIENT_SEC		4
 static double ambient_get_recur_period(void)
 {
-	return UPDATE_AMBIENT_SEC;
+	return 4;
 }
 
 struct scheduler_task ambient_tick_task = {

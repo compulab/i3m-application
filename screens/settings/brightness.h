@@ -11,7 +11,6 @@
 
 #include "gfx/gfx_components/gfx_information.h"
 
-void set_brightness_draw_graphic_signs(void);
 int gfx_information_init_set_brightness(struct gfx_information *info);
 
 #endif /* BRIGHTNESS_H_ */
