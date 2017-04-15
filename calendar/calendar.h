@@ -80,6 +80,8 @@ struct calendar_date {
 	uint8_t dayofweek;     //!< 0 Sunday  - 6 Saturday
 };
 
+extern struct calendar_date computer_date_time;
+
 bool calendar_is_date_valid(struct calendar_date *date);
 
 void calendar_timestamp_to_date(uint32_t timestamp, struct calendar_date
