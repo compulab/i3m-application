@@ -4,7 +4,7 @@
 #include "gfx_components/gfx_label.h"
 #include "gfx_components/gfx_image.h"
 #include "gfx/action_menu/gfx_action_menu.h"
-#include "screens/screen_saver/screen_saver.h"
+#include "screen_saver/screen_saver.h"
 #include "uart/uart.h"
 
 struct gfx_mono_bitmap splash_bitmap;

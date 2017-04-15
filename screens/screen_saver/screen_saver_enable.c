@@ -10,18 +10,6 @@
 #include "gfx/action_menu/gfx_action_menu.h"
 #include "eeprom/eeprom_layout.h"
 
-bool screen_saver_mode_enabled;
-
-void enable_screen_saver_mode(void)
-{
-	screen_saver_mode_enabled = true;
-}
-
-void disable_screen_saver_mode(void)
-{
-	screen_saver_mode_enabled = false;
-}
-
 static void handle_screen_saver_enable_buttons(uint8_t key)
 {
 	switch (key) {

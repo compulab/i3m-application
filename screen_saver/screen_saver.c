@@ -5,7 +5,7 @@
  *  Author: Nikita
  */
 
-#include "screen_saver.h"
+#include "screen_saver/screen_saver.h"
 #include "scheduler/scheduler.h"
 #include "power/power.h"
 #include "lib/syntax.h"
@@ -13,6 +13,18 @@
 #include "gfx/action_menu/gfx_action_menu.h"
 
 bool reset_screen_saver_req;
+
+bool screen_saver_mode_enabled;
+
+void enable_screen_saver_mode(void)
+{
+	screen_saver_mode_enabled = true;
+}
+
+void disable_screen_saver_mode(void)
+{
+	screen_saver_mode_enabled = false;
+}
 
 static double screen_saver_get_recur_period(void)
 {

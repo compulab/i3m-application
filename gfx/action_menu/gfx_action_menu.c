@@ -2,7 +2,7 @@
 #include "gfx/action_menu/gfx_item_action.h"
 #include "gfx/gfx_components/gfx_label.h"
 #include "gfx/action_menu/gfx_action_menu_dmi.h"
-#include "screens/screen_saver/screen_saver.h"
+#include "screen_saver/screen_saver.h"
 #include "lib/syntax.h"
 
 struct gfx_action_menu *present_menu;
