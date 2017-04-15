@@ -15,5 +15,6 @@
 #include "screens/settings/brightness.h"
 #include "screens/clock/clock.h"
 #include "screens/bios/bios_data.h"
+#include "screens/debug/debug.h"
 
 #endif /* SCREENS_H_ */
