@@ -68,7 +68,7 @@ static int load_action(struct gfx_item_action *action, struct cnf_action config_
 	return 0;
 }
 
-void show_logo(struct gfx_frame *frame, bool redraw)
+void show_logo(struct gfx_frame *frame)
 {
 	update_screen_timer();
 	clear_screen();
