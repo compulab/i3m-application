@@ -280,7 +280,7 @@ static void handle_side_button(uint8_t keycode)
 {
 	switch(display_state) {
 	case DISPLAY_DIM:
-		exit_sleep_mode();
+		present_menu->draw(present_menu);
 		return;
 	default:
 		if (frame_present) {

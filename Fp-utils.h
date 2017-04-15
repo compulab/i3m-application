@@ -11,7 +11,6 @@
 #include <stdio.h>
 #include "work-queue/work.h"
 #include "calendar/calendar.h"
-#include "effects.h"
 #include "layout.h"
 #include "debug.h"
 #include "def.h"
