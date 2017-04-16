@@ -5,12 +5,13 @@
  *  Author: Nikita
  */
 
-#include "screen_saver/screen_saver.h"
+#include "screen_saver.h"
 #include "scheduler/scheduler.h"
 #include "power/power.h"
 #include "lib/syntax.h"
 #include "gfx/menu-handler.h"
 #include "gfx/action_menu/gfx_action_menu.h"
+#include "calendar/calendar.h"
 
 bool reset_screen_saver_req;
 

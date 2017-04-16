@@ -78,7 +78,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
 #include "twi_slave.h"
 #include "i2c_buffer.h"
 #include "sram/sram_handle.h"
-
+#include "config/conf_twi.h"
 
 #define UNSET_ADDRESS 0x00
 

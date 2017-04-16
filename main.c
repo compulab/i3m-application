@@ -1,4 +1,3 @@
-#include "asf.h"
 #include "twi/twi_slave.h"
 #include "scheduler/scheduler.h"
 #include "screen_saver/screen_saver.h"
@@ -13,7 +12,10 @@
 #include "adc/adc.h"
 #include "eeprom/eeprom_layout.h"
 #include "eeprom/eeprom.h"
+#include "gfx/action_menu/gfx_action_menu.h"
+#include "asf.h"
 #include "ASF/common/services/usb/udc/udc.h"
+#include "ASF/common/utils/stdio/stdio_usb/stdio_usb.h"
 
 /*
  * Power state GPIO change

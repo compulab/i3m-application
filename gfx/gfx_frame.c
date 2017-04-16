@@ -5,12 +5,11 @@
  *  Author: Nikita
  */
 
-#include <stdio.h>
 #include "gfx_frame.h"
 #include "gfx_utils.h"
-#include "Fp-utils.h"
 #include "action_menu/gfx_action_menu.h"
 #include "lib/syntax.h"
+#include <stdio.h>
 
 static int gfx_frame_set_images(struct gfx_frame *frame, struct cnf_image_node *cnf_image_pgmem)
 {

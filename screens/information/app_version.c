@@ -5,10 +5,10 @@
  *  Author: Nikita
  */
 
-#include <stdio.h>
-#include <string.h>
 #include "gfx/gfx_components/gfx_information.h"
 #include "auto_generated.h"
+#include <stdio.h>
+#include <string.h>
 
 #ifndef VERSION
 #define VERSION "Version not set"

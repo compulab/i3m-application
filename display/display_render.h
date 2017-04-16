@@ -7,12 +7,11 @@
 #ifndef DISPLAY_DISPLAY_RENDER_H_
 #define DISPLAY_DISPLAY_RENDER_H_
 
-#include <string.h>
-#include "gfx/gfx_components/gfx_text.h"
 #include "glcd-0.5.2/glcd_font.h"
 #include "glcd-0.5.2/glcd_text.h"
-
+#include "gfx/gfx_components/gfx_text.h"
 #include "gfx/menu-handler.h"
+#include <string.h>
 
 #ifndef GLCD_FONT_SUPPORT
 //struct gfx_font {

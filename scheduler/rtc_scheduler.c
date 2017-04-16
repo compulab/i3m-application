@@ -1,5 +1,7 @@
 #include "scheduler.h"
 #include "lib/syntax.h"
+#include "work-queue/work.h"
+#include "asf.h"
 
 extern struct scheduler_task screen_sec_task;
 extern struct scheduler_task time_sec_task;

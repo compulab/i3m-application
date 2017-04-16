@@ -8,11 +8,7 @@
 #ifndef TWI_SLAVE_H
 #define TWI_SLAVE_H
 
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <stdint.h>
 #include <stdbool.h>
-#include "config/conf_twi.h"
 
 /* Transaction status defines.*/
 #define TWIS_STATUS_READY                0x00

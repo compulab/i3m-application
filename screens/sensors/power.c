@@ -5,9 +5,9 @@
  *  Author: Nikita
  */
 
-#include <string.h>
 #include "gfx/gfx_components/gfx_information.h"
 #include "power/power.h"
+#include <string.h>
 
 void sprintf_power_state(struct gfx_information *info, char *output_str)
 {

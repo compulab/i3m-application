@@ -8,12 +8,11 @@
 #ifndef CONFIG_CNF_BLK_COMPONENTS_H_
 #define CONFIG_CNF_BLK_COMPONENTS_H_
 
-#include <avr/pgmspace.h>
-#include <stdbool.h>
-
 #include "def.h"
 #include "display/glcd-0.5.2/glcd_font.h"
 #include "display/glcd-0.5.2/glcd.h"
+#include <avr/pgmspace.h>
+#include <stdbool.h>
 
 # define PROGMEM_BYTE_ARRAY_T uint8_t*
 

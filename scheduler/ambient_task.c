@@ -2,6 +2,8 @@
 #include "power/power.h"
 #include "twi/twi_master.h"
 #include "twi/i2c_buffer.h"
+#include "work-queue/work.h"
+#include "layout.h"
 
 #define MAX_AMBIENT_UPDATE_FAIL	2
 

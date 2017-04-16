@@ -8,10 +8,7 @@
 #ifndef GFX_ACTION_MENU_GRAPHIC_MENU_H_
 #define GFX_ACTION_MENU_GRAPHIC_MENU_H_
 
-#include <stdbool.h>
-#include <math.h>
 #include "gfx/action_menu/gfx_action_menu.h"
-#include "gfx/gfx_components/gfx_text.h"
 
 void graphic_menu_format(struct gfx_action_menu *action_menu);
 void graphic_menu_deselect_item(struct gfx_action_menu *action_menu, uint8_t selection);

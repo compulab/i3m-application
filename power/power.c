@@ -5,12 +5,15 @@
  *  Author: Nikita
  */
 
-#include <string.h>
 #include "power.h"
 #include "adc/adc.h"
 #include "twi/i2c_buffer.h"
 #include "work-queue/work.h"
+#include "gfx/action_menu/gfx_action_menu.h"
 #include "gfx/menu-handler.h"
+#include "eeprom/eeprom_layout.h"
+#include "sram/sram_handle.h"
+#include <string.h>
 
 #define SLEEP_MSG 			"SLEEP"
 #define HIBERNATE_MSG		"HIBERNATE"

@@ -8,7 +8,6 @@
 #ifndef DEBUG_H_
 #define DEBUG_H_
 #include <stdlib.h>
-#include "asf.h"
 
 //#define DEBUG_MODE
 

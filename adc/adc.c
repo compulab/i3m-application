@@ -5,10 +5,12 @@
  *      Author: arkadi
  */
 
+#include "adc.h"
+#include "scheduler/scheduler.h"
+#include "work-queue/work.h"
+#include "asf.h"
 #include <stdio.h>
 #include <string.h>
-#include "scheduler/scheduler.h"
-#include "adc/adc.h"
 
 //***ADC configuration
 #define MY_ADC    ADCA

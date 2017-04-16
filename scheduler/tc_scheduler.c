@@ -19,6 +19,8 @@
 #include "scheduler.h"
 #include "lib/syntax.h"
 #include "timer/tc.h"
+#include "work-queue/work.h"
+#include "asf.h"
 
 extern struct scheduler_task adc_tick_task;
 extern struct scheduler_task ambient_tick_task;

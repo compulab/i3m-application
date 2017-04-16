@@ -9,6 +9,9 @@
 #ifndef GFX_ACTION_MENU_DMI_H_
 #define GFX_ACTION_MENU_DMI_H_
 
+#include "gfx_action_menu.h"
+#include <stdbool.h>
+
 extern struct gfx_action_menu dmi_menu;
 extern bool is_dmi_set;
 

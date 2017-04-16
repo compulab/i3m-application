@@ -6,9 +6,10 @@
  */
 
 #include "graphic_menu_theme.h"
-#include "lib/syntax.h"
 #include "gfx/action_menu/gfx_item_action.h"
 #include "gfx/gfx_components/gfx_image.h"
+#include "lib/syntax.h"
+#include <math.h>
 
 #define FRAME_WIDTH	38
 #define FRAME_HEIGHT 22

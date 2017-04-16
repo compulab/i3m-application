@@ -10,6 +10,7 @@
 #define GFX_GFX_COMPONENTS_H_
 
 #include "asf.h"
+#include <stdio.h>
 
 struct gfx_text {
 	char *text;

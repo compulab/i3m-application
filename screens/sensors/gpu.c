@@ -5,9 +5,9 @@
  *  Author: Nikita
  */
 
-#include <string.h>
-#include "gfx/gfx_components/gfx_information.h"
 #include "screens/string_formats.h"
+#include "gfx/gfx_components/gfx_information.h"
+#include <string.h>
 
 static void sprintf_gpu_temp(struct gfx_information *info, char *output_str)
 {

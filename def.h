@@ -56,5 +56,6 @@ enum display_state {
 	DISPLAY_CLOCK,
 };
 
+extern enum display_state display_state;
 
 #endif /* DEF_H_ */

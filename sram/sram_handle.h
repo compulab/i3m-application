@@ -7,13 +7,7 @@
 
 #ifndef SRAM_HANDLE_H_
 #define SRAM_HANDLE_H_
-#include "layout.h"
 #include "asf.h"
-#include "Fp-utils.h"
-#include "gfx/gfx_utils.h"
-#include "gfx/action_menu/gfx_action_menu.h"
-#include "work-queue/work.h"
-#include "debug.h"
 
 #define CPU_FQ_MSK 				0x1f00
 #define CPU_FQ_MSB_MSK 			0x1f

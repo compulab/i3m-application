@@ -4,8 +4,9 @@
  *  Created on: Aug 31, 2015
  *      Author: arkadi
  */
-#include <avr/io.h>
+
 #include "rtc.h"
+#include <avr/io.h>
 
 #define RTC_CYCLES_1S     (1024 - 1)
 

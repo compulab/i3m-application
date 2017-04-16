@@ -45,8 +45,9 @@
  */
 
 #include "calendar.h"
-#include "uart/uart.h"
 #include "scheduler/scheduler.h"
+#include "work-queue/work.h"
+#include "asf.h"
 
 //! Unix epoch year
 #define EPOCH_YEAR 1970

@@ -5,15 +5,14 @@
  *  Author: Nikita
  */
 
-#include <stdio.h>
-#include "lib/syntax.h"
-#include "Fp-utils.h"
+#include "screen_saver.h"
+#include "screen_saver/screen_saver.h"
 #include "gfx/gfx_components/gfx_information.h"
 #include "gfx/action_menu/gfx_action_menu.h"
 #include "gfx/gfx_utils.h"
 #include "eeprom/eeprom_layout.h"
-#include "screen_saver/screen_saver.h"
-#include "screen_saver.h"
+#include "lib/syntax.h"
+#include <stdio.h>
 
 static const char *screen_saver_type_str[SCREEN_SAVER_TYPE_SIZE] = { "LOGO", "DASHBOARD", "CLOCK" };
 

@@ -9,10 +9,10 @@
 #ifndef GFX_IMAGE_H_
 #define GFX_IMAGE_H_
 
-#include <stdio.h>
-#include <stdbool.h>
 #include "gfx_item.h"
 #include "config/cnf_blk_components.h"
+#include <stdio.h>
+#include <stdbool.h>
 
 struct gfx_image {
 	struct gfx_item postion;

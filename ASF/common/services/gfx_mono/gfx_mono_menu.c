@@ -43,10 +43,9 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
+#include "gfx_mono_menu.h"
 #include "sysfont.h"
 #include "config/conf_menu.h"
-#include "debug.h"
-#include "gfx_mono_menu.h"
 
 /**
  * \ingroup asfdoc_common2_gfx_mono_menu

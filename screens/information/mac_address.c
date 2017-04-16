@@ -5,8 +5,8 @@
  *  Author: Nikita
  */
 
-#include <stdio.h>
 #include "gfx/gfx_components/gfx_information.h"
+#include <stdio.h>
 
 static void sprintf_mac_address(struct gfx_information *info, char *output_str)
 {

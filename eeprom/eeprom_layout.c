@@ -5,9 +5,9 @@
  *  Author: Nikita
  */
 
-#include <stdio.h>
 #include "eeprom.h"
 #include "eeprom_layout.h"
+#include <stdio.h>
 
 #define SCREEN_SAVER_TIME_EEPROM_ADDRESS	0x120
 #define SCREEN_SAVER_CONFIG_EEPROM_ADDRESS	0x121

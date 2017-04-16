@@ -5,12 +5,14 @@
  *      Author: arkadi
  */
 
-#include "debug.h"
-#define SRAM_DEBUG
 #include "sram_handle.h"
 #include "power/power.h"
 #include "uart/uart.h"
 #include "twi/i2c_buffer.h"
+#include "work-queue/work.h"
+#include "calendar/calendar.h"
+#include "def.h"
+#include <string.h>
 
 uint8_t direct_write_length;
 uint8_t direct_write_index;

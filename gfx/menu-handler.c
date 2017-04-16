@@ -1,11 +1,10 @@
 #include "menu-handler.h"
 #include "gfx_components/gfx_information.h"
-#include "gfx/action_menu/gfx_item_action.h"
 #include "gfx_components/gfx_label.h"
 #include "gfx_components/gfx_image.h"
-#include "gfx/action_menu/gfx_action_menu.h"
+#include "action_menu/gfx_item_action.h"
+#include "action_menu/gfx_action_menu.h"
 #include "screen_saver/screen_saver.h"
-#include "uart/uart.h"
 
 struct gfx_mono_bitmap splash_bitmap;
 

@@ -5,9 +5,9 @@
  *  Author: Nikita
  */
 
-#include <stdbool.h>
-#include "display/glcd-0.5.2/glcd_font.h"
 #include "gfx_text.h"
+#include "display/glcd-0.5.2/glcd_font.h"
+#include <stdbool.h>
 
 void gfx_text_init(struct gfx_text *text, char *str, uint8_t max_text_size, bool is_progmem, uint8_t font_id)
 {
