@@ -11,6 +11,8 @@
 
 #include <stdio.h>
 
+#define MAC_ADDRESS_LENGTH 					6
+
 #define MIN_BRIGHTNESS_LEVEL		0
 #define MAX_BRIGHTNESS_LEVEL		10
 
@@ -23,5 +25,6 @@ uint8_t eeprom_get_screen_saver_config(void);
 void eeprom_set_screen_saver_config(uint8_t new_config);
 uint8_t eeprom_get_screen_saver_time(void);
 void eeprom_set_screen_saver_time(uint8_t new_config);
+void eeprom_get_mac_address(uint8_t output_mac_addr[MAC_ADDRESS_LENGTH], uint8_t mac_address_index);
 
 #endif /* EEPROM_LAYOUT_H_ */

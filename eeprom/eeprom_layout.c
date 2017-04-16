@@ -9,6 +9,7 @@
 #include "eeprom_layout.h"
 #include <stdio.h>
 
+#define MAC_ADDRESS_EEPROM_ADDRESS			0x04
 #define SCREEN_SAVER_TIME_EEPROM_ADDRESS	0x120
 #define SCREEN_SAVER_CONFIG_EEPROM_ADDRESS	0x121
 #define BRIGHTNESS_EEPROM_ADDRESS 			0x122
@@ -79,4 +80,11 @@ uint8_t eeprom_get_screen_saver_time(void)
 void eeprom_set_screen_saver_time(uint8_t new_time)
 {
 	eeprom_write_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS, new_time);
+}
+
+void eeprom_get_mac_address(uint8_t output_mac_addr[MAC_ADDRESS_LENGTH], uint8_t mac_address_index)
+{
+	uint8_t eeprom_addr = MAC_ADDRESS_EEPROM_ADDRESS + MAC_ADDRESS_LENGTH * mac_address_index;
+	for (int i = 0; i < MAC_ADDRESS_LENGTH; i++)
+		output_mac_addr[i] = eeprom_read_byte(eeprom_addr + i);
 }
