@@ -42,7 +42,7 @@ void sprintf_rtc_sec(struct gfx_information *info, char *output_str)
 	if (calendar_is_date_valid(&computer_date_time) && computer_date_time.second % 2)
 		sprintf(output_str, ":");
 	else
-		sprintf(output_str, "");
+		sprintf(output_str, " ");
 }
 
 int gfx_information_init_show_rtc_sec(struct gfx_information *info)
