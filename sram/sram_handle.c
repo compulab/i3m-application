@@ -903,8 +903,8 @@ static void write_data(enum i2c_addr_space addr, uint8_t data)
 }
 
 struct work update_data_work = {
-		.do_work = update_data,
-		.next = NULL,
+	.do_work = update_data,
+	.next = NULL,
 };
 
 int handle_sram_write_request(uint8_t write_address, uint8_t data)
