@@ -13,7 +13,7 @@
 static void set_mem_size_str(char *str, uint8_t mem)
 {
 	uint8_t size;
-	switch (mem){
+	switch (mem) {
 	case 0x00:
 	case 0x01:
 	case 0x02:

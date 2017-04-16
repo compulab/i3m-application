@@ -11,7 +11,7 @@
 
 void sprintf_power_state(struct gfx_information *info, char *output_str)
 {
-	switch (current_power_state){
+	switch (current_power_state) {
 	case POWER_ON:
 		strcpy(output_str, "Airtop on");
 		break;

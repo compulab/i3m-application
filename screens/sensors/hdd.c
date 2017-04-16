@@ -36,7 +36,7 @@ static void sprintf_hdd_size(struct gfx_information *info, char *output_str)
 	uint8_t hdd_id = info->info_data;
 	uint16_t size = computer_data.packed.hdd_size[hdd_id];
 	bool is_tera = BIT_ON(computer_data.packed.hdd_units_tera, hdd_id);
-	char *units = is_tera ? " TB" : " GB";
+	char *units = is_tera ? "TB" : "GB";
 
 	if (BIT_ON(computer_data.packed.hdd_size_set, hdd_id))
 		sprintf(output_str, "%d %s", size, units);
