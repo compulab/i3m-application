@@ -17,7 +17,6 @@ struct gfx_information {
 	struct gfx_item postion;
 	struct gfx_text text;
 	enum information_type info_type;
-	uint8_t last_length;
 	uint8_t metadata;	//Can be used for indexing, flagging, etc.
 
 	//to_string: sprintf the formatted data value into output_str

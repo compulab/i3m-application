@@ -28,7 +28,7 @@ static uint8_t length_P(char *str)
 	return count;
 }
 
-uint8_t draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct glcd_FontConfig_t *font, uint8_t old_len)
+uint8_t draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct glcd_FontConfig_t *font)
 {
 	uint8_t print_length = 0;
 	uint8_t j = 0;
@@ -51,7 +51,6 @@ uint8_t draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct glcd_FontC
 	glcd_set_font_from_font(best_font);
 
 	length += best_font->width;
-	clear_string_background(max(old_len, length), x, y, font);
 
 	while (str[j] != '\0') {
 		if (x > 120 || str[j] == '\n') {

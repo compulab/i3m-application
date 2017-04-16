@@ -13,8 +13,7 @@
 void gfx_information_draw_string(struct gfx_information *info)
 {
 	info->to_string(info, info->text.text);
-	//TODO: this is fucked up. This is data saved for an algorithm. It should not be here.
-	info->last_length = draw_string_in_buffer(info->text.text, info->postion.x, info->postion.y, info->text.font, info->last_length);
+	draw_string_in_buffer(info->text.text, info->postion.x, info->postion.y, info->text.font);
 }
 
 static void sprintf_sprintf(struct gfx_information *info, char *output_str)
@@ -38,7 +37,6 @@ static int gfx_information_init_generic(struct gfx_information *info, enum infor
 	gfx_text_init(&info->text, text, max_length, false, font_id);
 	info->info_type = info_type;
 	info->metadata = info_data;
-	info->last_length = 0;
 	info->to_string = sprintf_sprintf;
 	info->draw_data = gfx_information_draw_string;
 	info->draw_controls = NULL;

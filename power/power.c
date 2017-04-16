@@ -30,7 +30,7 @@ static void enter_dim_mode(char *msg)
 	clear_screen();
 	uint8_t msg_x = MSG_X - ((strlen(msg) * (get_font_by_type(font_id))->width) / 2);
 	uint8_t msg_y = 20;
-	draw_string_in_buffer(msg, msg_x, msg_y, get_font_by_type(font_id), 0);
+	draw_string_in_buffer(msg, msg_x, msg_y, get_font_by_type(font_id));
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
