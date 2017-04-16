@@ -46,6 +46,8 @@ void sram_handle_init(void);
 
 void dmi_init(void);
 
+void update_computer_state(void);
+
 enum dmi_state_t {
 	DMI_IDLE,
 	DMI_NAME_WRITE,
