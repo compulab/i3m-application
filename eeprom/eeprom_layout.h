@@ -11,6 +11,8 @@
 
 #include <stdio.h>
 
+#define PRODUCT_NAME_LENGTH					16
+#define PART_NUMBER_OPT_LENGTH				16
 #define MAC_ADDRESS_LENGTH 					6
 
 #define MIN_BRIGHTNESS_LEVEL		0
@@ -26,5 +28,7 @@ void eeprom_set_screen_saver_config(uint8_t new_config);
 uint8_t eeprom_get_screen_saver_time(void);
 void eeprom_set_screen_saver_time(uint8_t new_config);
 void eeprom_get_mac_address(uint8_t output_mac_addr[MAC_ADDRESS_LENGTH], uint8_t mac_address_index);
+void eeprom_get_product_name(char product_name[PRODUCT_NAME_LENGTH]);
+void eeprom_get_product_options(char product_options[PART_NUMBER_OPT_LENGTH], uint8_t index);
 
 #endif /* EEPROM_LAYOUT_H_ */
