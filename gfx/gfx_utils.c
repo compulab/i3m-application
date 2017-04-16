@@ -85,23 +85,13 @@ static struct gfx_image plus_sign_image = {
 	.bitmap = &plus_bitmap,
 };
 
-void print_horizontal_line(uint8_t x, uint8_t y, uint8_t length)
-{
-	gfx_mono_draw_line(x, y, x + length, y, GFX_PIXEL_SET);
-}
-
-void print_vertical_line(uint8_t x, uint8_t y, uint8_t length)
-{
-	gfx_mono_draw_line(x, y, x, y + length, GFX_PIXEL_SET);
-}
-
 void draw_standard_separator_line(void)
 {
 	gfx_mono_generic_draw_horizontal_line(0, 50, GFX_MONO_LCD_WIDTH, GFX_PIXEL_SET);
 }
 
-void draw_control_signs(uint8_t selection, uint8_t min_index, uint8_t max_index,
-						struct gfx_image *left_sign, struct gfx_image *right_sign)
+static void draw_control_signs(uint8_t selection, uint8_t min_index, uint8_t max_index,
+							   struct gfx_image *left_sign, struct gfx_image *right_sign)
 {
 	if (selection > min_index)
 		gfx_mono_put_bitmap(left_sign->bitmap, left_sign->postion.x, left_sign->postion.y);
