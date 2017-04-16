@@ -22,18 +22,22 @@
 #define BUILD_TIME "hh:mm:ss"
 #endif
 
+#define VERSION_BUILD_TIME_INDEX	0
+#define VERSION_BUILD_DATE_INDEX	1
+#define VERSION_APP_VERSION_INDEX	2
+
 static void sprintf_app_version(struct gfx_information *info, char *output_str)
 {
 	switch (info->info_data) {
-	case 0:
+	case VERSION_BUILD_TIME_INDEX:
 		strcpy(output_str, BUILD_TIME);
 		break;
 
-	case 1:
+	case VERSION_BUILD_DATE_INDEX:
 		strcpy(output_str, BUILD_DATE);
 		break;
 
-	case 2:
+	case VERSION_APP_VERSION_INDEX:
 		strcpy(output_str, "VER: " VERSION);
 		break;
 
