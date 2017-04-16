@@ -11,6 +11,7 @@
 #include "twi/i2c_buffer.h"
 #include "work-queue/work.h"
 #include "calendar/calendar.h"
+#include "eeprom/eeprom_layout.h"
 #include <string.h>
 
 uint8_t direct_write_length;

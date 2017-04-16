@@ -11,6 +11,10 @@
 
 #include <stdio.h>
 
+#define LAYOUT_VERSION_EEPROM_ADDRESS 		0x2c
+#define SERIAL_NUMBER_EEPROM_ADDRESS 		0x14
+
+#define SERIAL_NUMBER_LENGTH				12
 #define PRODUCT_NAME_LENGTH					16
 #define PART_NUMBER_OPT_LENGTH				16
 #define MAC_ADDRESS_LENGTH 					6
