@@ -28,7 +28,7 @@
 
 static void sprintf_app_version(struct gfx_information *info, char *output_str)
 {
-	switch (info->info_data) {
+	switch (info->metadata) {
 	case VERSION_BUILD_TIME_INDEX:
 		strcpy(output_str, BUILD_TIME);
 		break;

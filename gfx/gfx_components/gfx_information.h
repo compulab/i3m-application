@@ -18,11 +18,7 @@ struct gfx_information {
 	struct gfx_text text;
 	enum information_type info_type;
 	uint8_t last_length;
-	//TODO: The following is a really bad variable that at different times
-	//holds anything from hardware enumeration index, to mac address index, to
-	//other types of identifiers. This should be refactored the hell out of
-	//here.
-	uint8_t info_data;
+	uint8_t metadata;	//Can be used for indexing, flagging, etc.
 
 	//to_string: sprintf the formatted data value into output_str
 	void (*to_string)(struct gfx_information *info, char *output_str);
