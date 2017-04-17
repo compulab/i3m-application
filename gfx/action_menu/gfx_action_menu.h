@@ -27,6 +27,7 @@ extern struct gfx_action_menu *present_menu;
 void clear_screen(void);
 
 void show_frame(struct gfx_frame *frame);
+void show_current_frame(void);
 
 void gfx_action_menu_display(struct gfx_action_menu *action_menu);
 
