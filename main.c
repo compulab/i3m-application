@@ -238,7 +238,6 @@ int main(int argc, char *argv[])
 		task();
 		wakeup = false;
 		if (!work_handler()) {
-			sleepmgr_enter_sleep();
 			sleep_interuptable(1000); /* 1 ms */
 		} else {
 			wdt_reset();
