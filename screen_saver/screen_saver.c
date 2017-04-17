@@ -39,19 +39,17 @@ static void update_screen_saver(void *data)
 
 	switch(computer_data.details.screen_saver_type) {
 	case SCREEN_SAVER_SPLASH:
-		show_frame(splash);
+		gfx_show_screen_saver(DISPLAY_LOGO);
 		break;
 
 	case SCREEN_SAVER_DASHBOARD:
-		if (current_power_state != POWER_OFF && dashboard != NULL)
-			show_frame(dashboard);
+		if (current_power_state != POWER_OFF)
+			gfx_show_screen_saver(DISPLAY_DASHBOARD);
 		break;
 
 	case SCREEN_SAVER_CLOCK:
-		if (clock != NULL && calendar_is_date_valid(&computer_date_time)) {
-			show_frame(clock);
-			display_state = DISPLAY_CLOCK;
-		}
+		if (calendar_is_date_valid(&computer_date_time))
+			gfx_show_screen_saver(DISPLAY_CLOCK);
 		break;
 	}
 }

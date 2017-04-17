@@ -74,6 +74,25 @@ static void show_frame(struct gfx_frame *frame, enum display_state new_state)
 	frame->draw(frame);
 }
 
+void gfx_show_screen_saver(enum display_state state)
+{
+	switch (state) {
+	case DISPLAY_CLOCK:
+		if (clock)
+			show_frame(clock, DISPLAY_CLOCK);
+		break;
+	case DISPLAY_DASHBOARD:
+		if (dashboard)
+			show_frame(dashboard, DISPLAY_DASHBOARD);
+		break;
+	case DISPLAY_LOGO:
+		show_logo(splash);
+		break;
+	default:
+		break;
+	}
+}
+
 void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
 {
 	struct gfx_item_action *selected_action;
