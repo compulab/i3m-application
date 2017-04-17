@@ -60,11 +60,17 @@ void gfx_action_menu_move_cursor(struct gfx_action_menu *action_menu)
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
-void show_frame(struct gfx_frame *frame)
+void show_current_frame(void)
 {
-	display_state = (frame == dashboard) ? DISPLAY_DASHBOARD : DISPLAY_FRAME;
-	clear_screen();
+	frame_present->draw(frame_present);
+}
+
+static void show_frame(struct gfx_frame *frame, enum display_state new_state)
+{
+	update_screen_timer();
+	display_state = new_state;
 	disable_screen_saver_mode();
+	frame_present = frame;
 	frame->draw(frame);
 }
 
