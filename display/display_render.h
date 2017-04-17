@@ -10,7 +10,7 @@
 #include "glcd-0.5.2/glcd_font.h"
 #include "glcd-0.5.2/glcd_text.h"
 #include "gfx/gfx_components/gfx_text.h"
-#include "gfx/menu-handler.h"
+#include "gfx/action_menu/menu-handler.h"
 #include <string.h>
 
 struct gfx_font {

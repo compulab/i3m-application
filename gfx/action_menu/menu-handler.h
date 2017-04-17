@@ -8,7 +8,7 @@
 #ifndef GFX_MENU_HANDLER_H_
 #define GFX_MENU_HANDLER_H_
 
-#include "gfx_utils.h"
+#include "gfx/gfx_utils.h"
 #include "timer/tc.h"
 #include "display/display_render.h"
 #include "display/glcd-0.5.2/glcd_font.h"

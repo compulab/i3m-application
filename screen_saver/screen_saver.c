@@ -9,7 +9,7 @@
 #include "scheduler/scheduler.h"
 #include "power/power.h"
 #include "lib/syntax.h"
-#include "gfx/menu-handler.h"
+#include "gfx/action_menu/menu-handler.h"
 #include "gfx/action_menu/gfx_action_menu.h"
 #include "calendar/calendar.h"
 
