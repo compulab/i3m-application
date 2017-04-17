@@ -83,7 +83,7 @@ void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode
 		frame_present = 0;
 		switch (selected_action->type) {
 		case ACTION_TYPE_SHOW_FRAME:
-			show_frame(selected_action->frame);
+			show_frame(selected_action->frame, DISPLAY_FRAME);
 			break;
 		case ACTION_TYPE_SHOW_MENU:
 			if (from_frame && selected_action->menu_id == MAIN_MENU_ID)
