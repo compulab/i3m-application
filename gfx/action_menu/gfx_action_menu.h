@@ -19,21 +19,11 @@ struct gfx_action_menu {
 	void (*draw)(struct gfx_action_menu *action_menu);
 };
 
-#define MAIN_MENU_ID 	0
-
 extern struct gfx_action_menu *present_menu;
 
 void clear_screen(void);
-
 void gfx_show_screen_saver(enum display_state state);
-
-void show_current_frame(void);
-
-void gfx_action_menu_display(struct gfx_action_menu *action_menu);
-
-void gfx_action_menu_process_key(struct gfx_action_menu *action_menu,
-		uint8_t keycode, bool from_frame);
-
+void gfx_redraw_current_frame(void);
 void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame);
 
 #endif /* GFX_GFX_ACTION_MENU_H_ */

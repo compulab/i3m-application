@@ -8,7 +8,6 @@
 #ifndef GFX_GFX_UTILS_H_
 #define GFX_GFX_UTILS_H_
 
-struct gfx_frame *frame_present;
 #include <stdio.h>
 
 void draw_control_signs_numeric(uint8_t selection, uint8_t min_index, uint8_t max_index);

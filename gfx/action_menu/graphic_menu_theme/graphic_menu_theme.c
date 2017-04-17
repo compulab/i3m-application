@@ -13,16 +13,15 @@
 
 #define FRAME_WIDTH	38
 #define FRAME_HEIGHT 22
+#define MAX_ITEM_INDEX	5
 
-static void set_item_position(struct gfx_image *bitmap, uint8_t item_index)
+static void set_icon_position(struct gfx_image *bitmap, uint8_t icon_index)
 {
-	bitmap->postion.x = lrint(item_index % 3) * 40 + 5;
-	bitmap->postion.y = lrint(item_index / 3) * 25 + 1;
+	bitmap->postion.x = lrint(icon_index % 3) * 40 + 5;
+	bitmap->postion.y = lrint(icon_index / 3) * 25 + 1;
 	bitmap->postion.height = FRAME_HEIGHT;
 	bitmap->postion.width = FRAME_WIDTH;
 }
-
-#define MAX_ITEM_INDEX	5
 
 static void set_clr_cursor_horizontal_lines(uint8_t frame_x, uint8_t frame_y, enum gfx_mono_color color)
 {
@@ -56,7 +55,7 @@ static void select_deselect_item(uint8_t index, enum gfx_mono_color color)
 	set_clr_cursor_vertical_lines(frame_x, frame_y, color);
 }
 
-static void draw_disable_item(struct gfx_item *pos)
+static void draw_disabled_item(struct gfx_item *pos)
 {
 	for (int y = pos->y + 1; y < pos->y + pos->height; y += 2)
 		gfx_mono_draw_horizontal_line(pos->x, y, pos->width, GFX_PIXEL_CLR);
@@ -69,10 +68,10 @@ void graphic_menu_format(struct gfx_action_menu *action_menu)
 	clear_screen();
 	list_foreach(struct gfx_image_node *, action_menu->graphic_items_head, curr_image) {
 		uint8_t item_index = (action_menu->id && i == menu->num_elements - 1) ? MAX_ITEM_INDEX : i;
-		set_item_position(&curr_image->image, item_index);
+		set_icon_position(&curr_image->image, item_index);
 		gfx_mono_generic_put_bitmap(curr_image->image.bitmap, curr_image->image.postion.x, curr_image->image.postion.y);
 		if (!action_menu->actions[i].visible)
-			draw_disable_item(&curr_image->image.postion);
+			draw_disabled_item(&curr_image->image.postion);
 		i++;
 	}
 	draw_standard_separator_line();

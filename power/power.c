@@ -18,20 +18,12 @@
 #define SLEEP_MSG 			"SLEEP"
 #define HIBERNATE_MSG		"HIBERNATE"
 #define POWER_OFF_MSG		"OFF"
-
 #define SLEEP_BRIGHTNESS 	100
-#define MSG_X				GFX_MONO_LCD_WIDTH / 2
 
 static void enter_dim_mode(char *msg)
 {
-	uint16_t font_id = fonts_size > 1 ? 2 : GLCD_FONT_SYSFONT_5X7;
-	display_state = DISPLAY_DIM;
 	ssd1306_set_contrast(SLEEP_BRIGHTNESS);
-	clear_screen();
-	uint8_t msg_x = MSG_X - ((strlen(msg) * (get_font_by_type(font_id))->width) / 2);
-	uint8_t msg_y = 20;
-	draw_string_in_buffer(msg, msg_x, msg_y, get_font_by_type(font_id));
-	gfx_mono_ssd1306_put_framebuffer();
+	gfx_display_msg(msg);
 }
 
 enum power_state current_power_state = POWER_ON;

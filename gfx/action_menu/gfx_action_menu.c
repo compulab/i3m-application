@@ -6,16 +6,22 @@
 #include "screen_saver/screen_saver.h"
 #include "lib/syntax.h"
 
+#define MAIN_MENU_ID 	0
+
+enum display_state display_state;
+
 struct gfx_frame *frame_present;
 struct gfx_action_menu *present_menu;
-
-struct gfx_frame *dashboard;
-struct gfx_frame *clock;
-struct gfx_frame *splash;
 
 bool ok_button = false;
 bool left_button = false;
 bool right_button = false;
+
+void gfx_action_menu_init(void)
+{
+	set_menu_by_id(&present_menu, 0);
+	present_menu->draw(present_menu);
+}
 
 static void update_action_visibility(struct gfx_item_action *action)
 {
@@ -23,11 +29,6 @@ static void update_action_visibility(struct gfx_item_action *action)
 		action->visible = computer_data.details.direct_string != 0;
 		return;
 	} else if (action->type != ACTION_TYPE_SHOW_FRAME) {
-		action->visible = true;
-		return;
-	}
-
-	if (action->frame == dashboard) {
 		action->visible = true;
 		return;
 	}
@@ -42,56 +43,32 @@ static void update_action_visibility(struct gfx_item_action *action)
 	action->visible = visible;
 }
 
-static void set_present_menu(struct gfx_action_menu *action_menu)
-{
-	present_menu = action_menu;
-	for (int i = 0; i < action_menu->menu->num_elements; i++)
-		update_action_visibility(&action_menu->actions[i]);
-}
-
-void show_logo(struct gfx_frame *frame)
+static void gfx_action_menu_move_cursor(struct gfx_action_menu *action_menu)
 {
 	update_screen_timer();
-	clear_screen();
-	frame_present = frame;
-	display_state = DISPLAY_LOGO;
-	gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 0);
-	gfx_mono_ssd1306_put_framebuffer();
-}
-
-void gfx_action_menu_display(struct gfx_action_menu *action_menu)
-{
-	display_state = DISPLAY_MENU;
-	update_screen_timer();
-	clear_screen();
-	set_present_menu(action_menu);
-	frame_present = 0;
-	graphic_menu_format(action_menu);
-	graphic_menu_select_item(action_menu, action_menu->menu->current_selection);
-	gfx_mono_ssd1306_put_framebuffer();
-}
-
-void gfx_action_menu_move_cursor(struct gfx_action_menu *action_menu)
-{
-	display_state = DISPLAY_MENU;
-	update_screen_timer();
+	action_menu->draw(action_menu);
 	graphic_menu_deselect_item(action_menu, action_menu->menu->last_selection);
 	graphic_menu_select_item(action_menu, action_menu->menu->current_selection);
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
-void show_current_frame(void)
-{
-	frame_present->draw(frame_present);
-}
-
-static void show_frame(struct gfx_frame *frame, enum display_state new_state)
+void gfx_action_menu_display(struct gfx_action_menu *action_menu)
 {
 	update_screen_timer();
-	display_state = new_state;
-	disable_screen_saver_mode();
-	frame_present = frame;
-	frame->draw(frame);
+	frame_present = 0;
+	present_menu = action_menu;
+	for (int i = 0; i < action_menu->menu->num_elements; i++)
+		update_action_visibility(&action_menu->actions[i]);
+	clear_screen();
+	graphic_menu_format(action_menu);
+	graphic_menu_select_item(action_menu, action_menu->menu->current_selection);
+	gfx_mono_ssd1306_put_framebuffer();
+	display_state = DISPLAY_MENU;
+}
+
+void gfx_redraw_current_frame(void)
+{
+	frame_present->draw(frame_present);
 }
 
 void gfx_show_screen_saver(enum display_state state)
@@ -99,11 +76,11 @@ void gfx_show_screen_saver(enum display_state state)
 	switch (state) {
 	case DISPLAY_CLOCK:
 		if (clock)
-			show_frame(clock, DISPLAY_CLOCK);
+			switch_to_frame(clock, DISPLAY_CLOCK);
 		break;
 	case DISPLAY_DASHBOARD:
 		if (dashboard)
-			show_frame(dashboard, DISPLAY_DASHBOARD);
+			switch_to_frame(dashboard, DISPLAY_DASHBOARD);
 		break;
 	case DISPLAY_LOGO:
 		show_logo(splash);
@@ -111,6 +88,36 @@ void gfx_show_screen_saver(enum display_state state)
 	default:
 		break;
 	}
+}
+
+struct gfx_frame *dashboard;
+struct gfx_frame *clock;
+struct gfx_frame *splash;
+
+void show_logo(struct gfx_frame *frame)
+{
+	update_screen_timer();
+	frame_present = frame;
+	clear_screen();
+	gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 0);
+	gfx_mono_ssd1306_put_framebuffer();
+	display_state = DISPLAY_LOGO;
+}
+
+static void switch_to_frame(struct gfx_frame *frame, enum display_state new_state)
+{
+	update_screen_timer();
+	disable_screen_saver_mode();
+	frame_present = frame;
+	frame->draw(frame);
+	display_state = new_state;
+}
+
+static void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
+{
+	reset_screen_saver();
+	enable_screen_saver_mode();
+	gfx_handle_key_pressed(action_menu, keycode, from_frame);
 }
 
 void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
@@ -122,7 +129,7 @@ void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode
 		frame_present = 0;
 		switch (selected_action->type) {
 		case ACTION_TYPE_SHOW_FRAME:
-			show_frame(selected_action->frame, DISPLAY_FRAME);
+			switch_to_frame(selected_action->frame, DISPLAY_FRAME);
 			break;
 		case ACTION_TYPE_SHOW_MENU:
 			if (from_frame && selected_action->menu_id == MAIN_MENU_ID)
@@ -143,9 +150,6 @@ void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode
 			break;
 		}
 		break;
-	case GFX_MONO_MENU_KEYCODE_BACK:
-		present_menu->draw(present_menu);
-		break;
 	default:
 		if (from_frame && ((keycode == GFX_MONO_MENU_KEYCODE_DOWN && action_menu->menu->current_selection == 0) ||
 					(keycode == GFX_MONO_MENU_KEYCODE_UP && action_menu->menu->current_selection == action_menu->menu->num_elements - 2)))
@@ -159,16 +163,6 @@ void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode
 	}
 }
 
-void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
-{
-	reset_screen_saver();
-	enable_screen_saver_mode();
-	if (display_state == DISPLAY_DIM)
-		present_menu->draw(present_menu);
-	else
-		gfx_handle_key_pressed(action_menu, keycode, from_frame);
-}
-
 void handle_back_to_menu(void)
 {
 	reset_screen_saver();
@@ -178,24 +172,28 @@ void handle_back_to_menu(void)
 	present_menu->draw(present_menu);
 }
 
+void gfx_display_msg(char *msg)
+{
+	uint16_t font_id = fonts_size > 1 ? 2 : GLCD_FONT_SYSFONT_5X7;
+	display_state = DISPLAY_WAIT_FOR_USER_ACK;
+	clear_screen();
+	uint8_t msg_x = GFX_MONO_LCD_WIDTH / 2 - ((strlen(msg) * (get_font_by_type(font_id))->width) / 2);
+	uint8_t msg_y = 20;
+	draw_string_in_buffer(msg, msg_x, msg_y, get_font_by_type(font_id));
+	gfx_mono_ssd1306_put_framebuffer();
+}
+
 static void handle_side_button(uint8_t keycode)
 {
-	switch(display_state) {
-	case DISPLAY_DIM:
-		present_menu->draw(present_menu);
-		return;
-	default:
-		if (frame_present) {
-			if (frame_present->information_head && frame_present->information_head->information.handle_buttons)
-				frame_present->information_head->information.handle_buttons(keycode);
-			else
-				frame_present->handle_buttons(keycode);
-		} else {
-			gfx_action_menu_process_key(present_menu, keycode, false);
-		}
-
+	if (!frame_present) {
+		gfx_action_menu_process_key(present_menu, keycode, false);
 		return;
 	}
+
+	if (frame_present->information_head && frame_present->information_head->information.handle_buttons)
+		frame_present->information_head->information.handle_buttons(keycode);
+	else
+		frame_present->handle_buttons(keycode);
 }
 
 static void handle_buttons(void *data)
@@ -226,11 +224,9 @@ void handle_button_pressed(void)
 	insert_work(&button_work);
 }
 
-enum display_state display_state;
-
 static void update_screen(void *data)
 {
-	if (display_state == DISPLAY_DIM)
+	if (display_state == DISPLAY_WAIT_FOR_USER_ACK)
 		return;
 
 	if (display_state == DISPLAY_MENU)

@@ -21,15 +21,11 @@ enum display_state {
 	DISPLAY_ACTION_FRAME,
 	DISPLAY_LOGO,
 	DISPLAY_DASHBOARD,
-	DISPLAY_DIM,
+	DISPLAY_WAIT_FOR_USER_ACK,
 	DISPLAY_CLOCK,
 };
 
 extern struct gfx_mono_bitmap splash_bitmap;
-
-extern enum display_state display_state;
-
-extern bool is_screen_saver_on;
 
 struct gfx_action_menu **action_menus;
 

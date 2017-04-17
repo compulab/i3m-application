@@ -30,7 +30,7 @@ static void handle_screen_saver_enable_buttons(uint8_t key)
 	}
 
 	eeprom_set_screen_saver_config(computer_data.packed.screen_saver_config);
-	show_current_frame();
+	gfx_redraw_current_frame();
 }
 
 static void sprintf_screen_saver_enable(struct gfx_information *info, char *output_str)

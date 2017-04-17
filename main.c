@@ -56,16 +56,6 @@ static void portf_init(void)
 }
 
 /*
- * Init first menu shown
- */
-static void init_menu(void)
-{
-	set_menu_by_id(&present_menu, 0);
-	present_menu->draw(present_menu);
-	enable_screen_saver_mode();
-}
-
-/*
  * Init current power state
  */
 static void power_state_init(void)
@@ -176,7 +166,8 @@ static void init(void)
 	power_state_init();
 	twi_slave_init();
 	TWI_init();
-	init_menu();
+	gfx_action_menu_init();
+	enable_screen_saver_mode();//TODO: this used to be part of init_menu. DO we really need this?
 	sei();
 	sleepmgr_init();
 	tc_init();

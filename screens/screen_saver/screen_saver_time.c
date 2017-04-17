@@ -38,7 +38,7 @@ static void handle_screen_saver_time_buttons(uint8_t key)
 	}
 
 	eeprom_set_screen_saver_time(computer_data.packed.screen_saver_update_time);
-	show_current_frame();
+	gfx_redraw_current_frame();
 }
 
 static void sprintf_screen_saver_time(struct gfx_information *info, char *output_str)
