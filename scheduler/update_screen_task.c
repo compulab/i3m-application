@@ -12,6 +12,9 @@ enum display_state display_state;
 
 static void update_screen(void *data)
 {
+	if (display_state == DISPLAY_DIM)
+		return;
+
 	if (display_state == DISPLAY_MENU)
 		present_menu->draw(present_menu);
 	else
