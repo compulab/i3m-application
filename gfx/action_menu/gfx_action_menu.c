@@ -2,10 +2,20 @@
 #include "gfx_item_action.h"
 #include "gfx_action_menu_dmi.h"
 #include "gfx/gfx_components/gfx_label.h"
+#include "gfx/action_menu/graphic_menu_theme/graphic_menu_theme.h"
 #include "screen_saver/screen_saver.h"
 #include "lib/syntax.h"
 
+struct gfx_frame *frame_present;
 struct gfx_action_menu *present_menu;
+
+struct gfx_frame *dashboard;
+struct gfx_frame *clock;
+struct gfx_frame *splash;
+
+bool ok_button = false;
+bool left_button = false;
+bool right_button = false;
 
 static void update_action_visibility(struct gfx_item_action *action)
 {
@@ -37,6 +47,16 @@ static void set_present_menu(struct gfx_action_menu *action_menu)
 	present_menu = action_menu;
 	for (int i = 0; i < action_menu->menu->num_elements; i++)
 		update_action_visibility(&action_menu->actions[i]);
+}
+
+void show_logo(struct gfx_frame *frame)
+{
+	update_screen_timer();
+	clear_screen();
+	frame_present = frame;
+	display_state = DISPLAY_LOGO;
+	gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 0);
+	gfx_mono_ssd1306_put_framebuffer();
 }
 
 void gfx_action_menu_display(struct gfx_action_menu *action_menu)
@@ -148,3 +168,85 @@ void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t ke
 	else
 		gfx_handle_key_pressed(action_menu, keycode, from_frame);
 }
+
+void handle_back_to_menu(void)
+{
+	reset_screen_saver();
+	clear_screen();
+	frame_present = 0;
+	enable_screen_saver_mode();
+	present_menu->draw(present_menu);
+}
+
+static void handle_side_button(uint8_t keycode)
+{
+	switch(display_state) {
+	case DISPLAY_DIM:
+		present_menu->draw(present_menu);
+		return;
+	default:
+		if (frame_present) {
+			if (frame_present->information_head && frame_present->information_head->information.handle_buttons)
+				frame_present->information_head->information.handle_buttons(keycode);
+			else
+				frame_present->handle_buttons(keycode);
+		} else {
+			gfx_action_menu_process_key(present_menu, keycode, false);
+		}
+
+		return;
+	}
+}
+
+static void handle_buttons(void *data)
+{
+	if (ok_button) {
+		handle_side_button(GFX_MONO_MENU_KEYCODE_ENTER);
+		return;
+	}
+
+	if (left_button) {
+		handle_side_button(GFX_MONO_MENU_KEYCODE_DOWN);
+		return;
+	}
+
+	if (right_button) {
+		handle_side_button(GFX_MONO_MENU_KEYCODE_UP);
+		return;
+	}
+}
+
+struct work button_work = { .do_work = handle_buttons, .data = NULL, .next = NULL, };
+
+void handle_button_pressed(void)
+{
+	left_button = gpio_pin_is_high(FP_LEFT_BUTTON);
+	right_button = gpio_pin_is_high(FP_RIGHT_BUTTON);
+	ok_button = gpio_pin_is_high(FP_OK_BUTTON);
+	insert_work(&button_work);
+}
+
+enum display_state display_state;
+
+static void update_screen(void *data)
+{
+	if (display_state == DISPLAY_DIM)
+		return;
+
+	if (display_state == DISPLAY_MENU)
+		present_menu->draw(present_menu);
+	else
+		frame_present->draw(frame_present);
+}
+
+static struct work update_screen_work = { .do_work = update_screen };
+
+static double screen_get_recur_period(void)
+{
+    return 1;
+}
+
+struct scheduler_task screen_sec_task = {
+    .work = &update_screen_work,
+    .get_recur_period = screen_get_recur_period,
+};

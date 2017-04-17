@@ -9,6 +9,7 @@
 #define GFX_ACTION_MENU_GRAPHIC_MENU_H_
 
 #include "gfx/action_menu/gfx_action_menu.h"
+#include <stdio.h>
 
 void graphic_menu_format(struct gfx_action_menu *action_menu);
 void graphic_menu_deselect_item(struct gfx_action_menu *action_menu, uint8_t selection);

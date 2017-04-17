@@ -8,7 +8,6 @@
 #ifndef GFX_GFX_ACTION_MENU_H_
 #define GFX_GFX_ACTION_MENU_H_
 
-#include "graphic_menu_theme/graphic_menu_theme.h"
 #include "gfx/action_menu/menu-handler.h"
 
 struct gfx_action_menu {
@@ -26,7 +25,6 @@ extern struct gfx_action_menu *present_menu;
 
 void clear_screen(void);
 
-void show_frame(struct gfx_frame *frame);
 void gfx_show_screen_saver(enum display_state state);
 
 void show_current_frame(void);

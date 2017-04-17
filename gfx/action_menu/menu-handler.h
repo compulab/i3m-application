@@ -15,28 +15,28 @@
 #include "work-queue/work.h"
 #include "scheduler/scheduler.h"
 
-#define CONFIG_SECTION_ADDRESS 0xA000
+enum display_state {
+	DISPLAY_MENU,
+	DISPLAY_FRAME,
+	DISPLAY_ACTION_FRAME,
+	DISPLAY_LOGO,
+	DISPLAY_DASHBOARD,
+	DISPLAY_DIM,
+	DISPLAY_CLOCK,
+};
 
-extern struct gfx_frame *dashboard;
+extern struct gfx_mono_bitmap splash_bitmap;
 
-extern struct gfx_frame *clock;
-
-extern struct gfx_frame *splash;
+extern enum display_state display_state;
 
 extern bool is_screen_saver_on;
 
 struct gfx_action_menu **action_menus;
 
-//struct gfx_font** fonts;
-
 int load_config_block(void);
-
 void set_menu_by_id(struct gfx_action_menu **menu, uint8_t index);
-
 void memcpy_config(void *dst, void *src_addr, size_t size);
-
 void handle_back_to_menu(void);
-
 void handle_button_pressed(void);
 
 #endif /* GFX_MENU_HANDLER_H_ */

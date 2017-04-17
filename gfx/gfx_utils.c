@@ -7,6 +7,7 @@
 
 #include "gfx_utils.h"
 #include "gfx_components/gfx_image.h"
+#include "asf.h"
 
 /*Sign symbols*/
 PROGMEM_DECLARE(gfx_mono_color_t, right[5]) = {

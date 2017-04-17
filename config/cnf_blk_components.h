@@ -51,18 +51,6 @@ enum action_type {
 	ACTION_TYPE_SET_BIOS_STATE
 };
 
-enum display_state {
-	DISPLAY_MENU,
-	DISPLAY_FRAME,
-	DISPLAY_ACTION_FRAME,
-	DISPLAY_LOGO,
-	DISPLAY_DASHBOARD,
-	DISPLAY_DIM,
-	DISPLAY_CLOCK,
-};
-
-extern enum display_state display_state;
-
 # define PROGMEM_BYTE_ARRAY_T uint8_t*
 
 typedef uint8_t gfx_mono_color_t;

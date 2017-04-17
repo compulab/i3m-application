@@ -6,20 +6,15 @@
 #include "gfx/gfx_components/gfx_image.h"
 #include "screen_saver/screen_saver.h"
 
+#define CONFIG_SECTION_ADDRESS 0xA000
+
 struct gfx_mono_bitmap splash_bitmap;
 
-struct gfx_frame *dashboard;
-
-struct gfx_frame *clock;
-
-struct gfx_frame *splash;
-
-bool ok_button = false;
-bool left_button = false;
-bool right_button = false;
+extern struct gfx_frame *dashboard;
+extern struct gfx_frame *clock;
+extern struct gfx_frame *splash;
 
 uint8_t size_of_menus;
-
 uint8_t new_fonts_size;
 
 void memcpy_config(void *dst, void *src_addr, size_t size)
@@ -67,16 +62,6 @@ static int load_action(struct gfx_item_action *action, struct cnf_action config_
 	return 0;
 }
 
-void show_logo(struct gfx_frame *frame)
-{
-	update_screen_timer();
-	clear_screen();
-	frame_present = frame;
-	display_state = DISPLAY_LOGO;
-	gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 0);
-	gfx_mono_ssd1306_put_framebuffer();
-}
-
 static int graphic_item_init(struct gfx_image *menu_image, struct cnf_image * image_node)
 {
 	menu_image->bitmap = malloc_locked(sizeof(struct gfx_mono_bitmap));
@@ -89,6 +74,8 @@ static int graphic_item_init(struct gfx_image *menu_image, struct cnf_image * im
 	menu_image->bitmap->type = GFX_MONO_BITMAP_SECTION;
 	return 0;
 }
+
+void show_logo(struct gfx_frame *frame);//TODO: temporary forward declaration. Remove later.
 
 static void splash_init(struct cnf_blk config_block)
 {
@@ -264,61 +251,4 @@ void set_menu_by_id(struct gfx_action_menu **menu, uint8_t index)
 {
 	if (index < size_of_menus)
 		*menu = action_menus[index];
-}
-
-void handle_back_to_menu(void)
-{
-	reset_screen_saver();
-	clear_screen();
-	frame_present = 0;
-	enable_screen_saver_mode();
-	present_menu->draw(present_menu);
-}
-
-static void handle_side_button(uint8_t keycode)
-{
-	switch(display_state) {
-	case DISPLAY_DIM:
-		present_menu->draw(present_menu);
-		return;
-	default:
-		if (frame_present) {
-			if (frame_present->information_head && frame_present->information_head->information.handle_buttons)
-				frame_present->information_head->information.handle_buttons(keycode);
-			else
-				frame_present->handle_buttons(keycode);
-		} else {
-			gfx_action_menu_process_key(present_menu, keycode, false);
-		}
-
-		return;
-	}
-}
-
-static void handle_buttons(void *data)
-{
-	if (ok_button) {
-		handle_side_button(GFX_MONO_MENU_KEYCODE_ENTER);
-		return;
-	}
-
-	if (left_button) {
-		handle_side_button(GFX_MONO_MENU_KEYCODE_DOWN);
-		return;
-	}
-
-	if (right_button) {
-		handle_side_button(GFX_MONO_MENU_KEYCODE_UP);
-		return;
-	}
-}
-
-struct work button_work = { .do_work = handle_buttons, .data = NULL, .next = NULL, };
-
-void handle_button_pressed(void)
-{
-	left_button = gpio_pin_is_high(FP_LEFT_BUTTON);
-	right_button = gpio_pin_is_high(FP_RIGHT_BUTTON);
-	ok_button = gpio_pin_is_high(FP_OK_BUTTON);
-	insert_work(&button_work);
 }

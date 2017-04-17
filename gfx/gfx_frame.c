@@ -107,8 +107,6 @@ static void gfx_images_draw(struct gfx_image_node *list)
 
 static void gfx_frame_format_generic_frame(struct gfx_frame *frame)
 {
-	update_screen_timer();
-	frame_present = frame;
 	clear_screen();
 	gfx_labels_draw(frame->label_head);
 	gfx_images_draw(frame->image_head);
