@@ -71,6 +71,19 @@ void gfx_redraw_current_frame(void)
 	frame_present->draw(frame_present);
 }
 
+struct gfx_frame *dashboard;
+struct gfx_frame *clock;
+struct gfx_frame *splash;
+
+static void switch_to_frame(struct gfx_frame *frame, enum display_state new_state)
+{
+	update_screen_timer();
+	disable_screen_saver_mode();
+	frame_present = frame;
+	frame->draw(frame);
+	display_state = new_state;
+}
+
 void gfx_show_screen_saver(enum display_state state)
 {
 	switch (state) {
@@ -90,10 +103,6 @@ void gfx_show_screen_saver(enum display_state state)
 	}
 }
 
-struct gfx_frame *dashboard;
-struct gfx_frame *clock;
-struct gfx_frame *splash;
-
 void show_logo(struct gfx_frame *frame)
 {
 	update_screen_timer();
@@ -102,15 +111,6 @@ void show_logo(struct gfx_frame *frame)
 	gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 0);
 	gfx_mono_ssd1306_put_framebuffer();
 	display_state = DISPLAY_LOGO;
-}
-
-static void switch_to_frame(struct gfx_frame *frame, enum display_state new_state)
-{
-	update_screen_timer();
-	disable_screen_saver_mode();
-	frame_present = frame;
-	frame->draw(frame);
-	display_state = new_state;
 }
 
 static void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
