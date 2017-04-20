@@ -4,7 +4,6 @@
 #include "gfx/gfx_components/gfx_information.h"
 #include "gfx/gfx_components/gfx_label.h"
 #include "gfx/gfx_components/gfx_image.h"
-#include "screen_saver/screen_saver.h"
 
 #define CONFIG_SECTION_ADDRESS 0xA000
 

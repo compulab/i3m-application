@@ -22,7 +22,6 @@ struct gfx_action_menu {
 extern struct gfx_action_menu *present_menu;
 
 void clear_screen(void);
-void gfx_show_screen_saver(enum display_state state);
 void gfx_redraw_current_frame(void);
 void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame);
 

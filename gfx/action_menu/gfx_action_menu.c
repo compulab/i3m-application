@@ -3,7 +3,6 @@
 #include "gfx_action_menu_dmi.h"
 #include "gfx/gfx_components/gfx_label.h"
 #include "gfx/action_menu/graphic_menu_theme/graphic_menu_theme.h"
-#include "screen_saver/screen_saver.h"
 #include "lib/syntax.h"
 
 #define MAIN_MENU_ID 	0
@@ -75,29 +74,9 @@ struct gfx_frame *splash;
 
 static void switch_to_frame(struct gfx_frame *frame, enum display_state new_state)
 {
-	disable_screen_saver_mode();
 	frame_present = frame;
 	frame->draw(frame);
 	display_state = new_state;
-}
-
-void gfx_show_screen_saver(enum display_state state)
-{
-	switch (state) {
-	case DISPLAY_CLOCK:
-		if (clock)
-			switch_to_frame(clock, DISPLAY_CLOCK);
-		break;
-	case DISPLAY_DASHBOARD:
-		if (dashboard)
-			switch_to_frame(dashboard, DISPLAY_DASHBOARD);
-		break;
-	case DISPLAY_LOGO:
-		show_logo(splash);
-		break;
-	default:
-		break;
-	}
 }
 
 void show_logo(struct gfx_frame *frame)
@@ -111,8 +90,6 @@ void show_logo(struct gfx_frame *frame)
 
 static void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
 {
-	reset_screen_saver();
-	enable_screen_saver_mode();
 	gfx_handle_key_pressed(action_menu, keycode, from_frame);
 }
 
@@ -161,10 +138,8 @@ void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode
 
 void handle_back_to_menu(void)
 {
-	reset_screen_saver();
 	clear_screen();
 	frame_present = 0;
-	enable_screen_saver_mode();
 	present_menu->draw(present_menu);
 }
 
