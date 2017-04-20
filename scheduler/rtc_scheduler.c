@@ -20,14 +20,6 @@ static void sec_task_set_timer(int task_index)
 	sec_tasks_to_do[task_index].secs_left = sec_tasks_to_do[task_index].get_recur_period();
 }
 
-//Note: murder this thing with fire ASAP
-#define UPDATE_SCREEN_TASK		1
-#define UPDATE_SCREEN_TIME		1
-void update_screen_timer(void)
-{
-	sec_tasks_to_do[UPDATE_SCREEN_TASK].secs_left = UPDATE_SCREEN_TIME;
-}
-
 static struct scheduler_sec_task new_sec_task(struct scheduler_task task)
 {
 	struct scheduler_sec_task res = {{ 0 }};

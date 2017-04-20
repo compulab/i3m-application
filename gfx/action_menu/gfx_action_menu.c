@@ -45,7 +45,6 @@ static void update_action_visibility(struct gfx_item_action *action)
 
 static void gfx_action_menu_move_cursor(struct gfx_action_menu *action_menu)
 {
-	update_screen_timer();
 	action_menu->draw(action_menu);
 	graphic_menu_deselect_item(action_menu, action_menu->menu->last_selection);
 	graphic_menu_select_item(action_menu, action_menu->menu->current_selection);
@@ -54,7 +53,6 @@ static void gfx_action_menu_move_cursor(struct gfx_action_menu *action_menu)
 
 void gfx_action_menu_display(struct gfx_action_menu *action_menu)
 {
-	update_screen_timer();
 	frame_present = 0;
 	present_menu = action_menu;
 	for (int i = 0; i < action_menu->menu->num_elements; i++)
@@ -77,7 +75,6 @@ struct gfx_frame *splash;
 
 static void switch_to_frame(struct gfx_frame *frame, enum display_state new_state)
 {
-	update_screen_timer();
 	disable_screen_saver_mode();
 	frame_present = frame;
 	frame->draw(frame);
@@ -105,7 +102,6 @@ void gfx_show_screen_saver(enum display_state state)
 
 void show_logo(struct gfx_frame *frame)
 {
-	update_screen_timer();
 	frame_present = frame;
 	clear_screen();
 	gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 0);

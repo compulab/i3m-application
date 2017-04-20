@@ -23,7 +23,6 @@ void switch_tc_interrupt_schedule(bool on);
 void switch_rtc_interrupt_schedule(bool on);
 
 void reset_screen_saver(void);
-void update_screen_timer(void);
 void tasks_init(void);
 
 #endif
