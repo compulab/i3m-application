@@ -150,6 +150,7 @@ static void write_hdd_status(void)
 				computer_data.packed.hdd_temp[i] = i2c_buffer.raw[HDD0T + i];
 			bit = bit << 1;
 		}
+		computer_data.packed.hdd_temp_set |= i2c_buffer.raw[HDDTS];
 	}
 	i2c_buffer.layout.hddtr = 0;
 	clear_req();
