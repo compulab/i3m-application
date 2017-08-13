@@ -145,7 +145,7 @@ void usb_init(void)
 {
 	udc_start();
 }
-
+extern struct gfx_frame *splash;
 static void init(void)
 {
 	wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_2KCLK);
@@ -172,6 +172,7 @@ static void init(void)
 	rtc_init();
 	usb_init();
 	tasks_init();
+	switch_to_frame(splash, DISPLAY_LOGO);
 }
 
 /*

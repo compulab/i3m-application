@@ -72,7 +72,7 @@ struct gfx_frame *dashboard;
 struct gfx_frame *clock;
 struct gfx_frame *splash;
 
-static void switch_to_frame(struct gfx_frame *frame, enum display_state new_state)
+void switch_to_frame(struct gfx_frame *frame, enum display_state new_state)
 {
 	frame_present = frame;
 	frame->draw(frame);
