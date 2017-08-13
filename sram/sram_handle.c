@@ -88,26 +88,26 @@ static void write_hd_sz_msb(uint8_t hdd_addr)
 {
 	int8_t index = (hdd_addr - HDD0_SZ_MSB) / 2;
 	if (!is_valid_register(index, MAX_HDD))
-		return ;
+		return;
 	if (i2c_buffer.raw[hdd_addr] & HDD_SZ_STATUS_MSK) {
 		computer_data.packed.hdd_size[index] = (i2c_buffer.raw[hdd_addr - 1] & ~ MSB_MSK) | ((i2c_buffer.raw[hdd_addr] & HDD_SZ_MSK) << 8);
-		computer_data.packed.hdd_size_set |= (0x01 << index);
-		uint8_t factor = (i2c_buffer.raw[hdd_addr] & HDD_SZ_UNIT_MSK) != 0 ? 1 : 0;
-		computer_data.packed.hdd_units_tera |= (0x01 << index) & factor;
+		computer_data.packed.hdd_size_set |= (1 << index);
+		uint8_t factor = (i2c_buffer.raw[hdd_addr] & HDD_SZ_UNIT_MSK) ? 1 : 0;
+		computer_data.packed.hdd_units_tera |= (1 << index) & factor;
 	} else {
-		computer_data.packed.hdd_size_set &= ~(0x01 << index);
+		computer_data.packed.hdd_size_set &= ~(1 << index);
 	}
 }
 
 static void software_reset(void)
 {
-  uint8_t oldInterruptState = SREG;  // no real need to store the interrupt context as the reset will pre-empt its restoration
-  cli();
+	uint8_t oldInterruptState = SREG;  // no real need to store the interrupt context as the reset will pre-empt its restoration
+	cli();
 
-  CCP = 0xD8;                        // Configuration change protection: allow protected IO regiser write
-  RST.CTRL = RST_SWRST_bm;           // Request software reset by writing to protected IO register
+	CCP = 0xD8;                        // Configuration change protection: allow protected IO regiser write
+	RST.CTRL = RST_SWRST_bm;           // Request software reset by writing to protected IO register
 
-  SREG=oldInterruptState;            // Restore interrupts enabled/disabled state (out of common decency - this line will never be reached because the reset will pre-empt it)
+	SREG=oldInterruptState;            // Restore interrupts enabled/disabled state (out of common decency - this line will never be reached because the reset will pre-empt it)
 }
 
 static void reset_to_bootloader(void)
@@ -123,12 +123,12 @@ static void write_cpu_status(void)
 {
 	i2c_buffer.layout.cputr = 0;
 	clear_req();
-	if (i2c_buffer.raw[CPUTS] == 0){
+	if (i2c_buffer.raw[CPUTS] == 0) {
 		computer_data.packed.cpu_temp_set = 0;
 	} else {
 		computer_data.packed.cpu_temp_set |= i2c_buffer.raw[CPUTS];
 		uint8_t bit = 0x01;
-		for (uint8_t i = 0 ; i < MAX_CPU; i++){
+		for (uint8_t i = 0; i < MAX_CPU; i++) {
 			if (i2c_buffer.raw[CPUTS] & bit) {
 				if (computer_data.packed.cpu_temp[i] != i2c_buffer.raw[CPU0T + i]) {
 					computer_data.packed.cpu_temp[i] = i2c_buffer.raw[CPU0T + i];
@@ -139,17 +139,15 @@ static void write_cpu_status(void)
 	}
 }
 
-
-
 static void write_hdd_status(void)
 {
-	if (i2c_buffer.raw[HDDTS]  == 0){
+	if (i2c_buffer.raw[HDDTS] == 0) {
 		computer_data.packed.hdd_temp_set = 0;
 	} else {
 		uint8_t bit = 0x01;
-		for (uint8_t i = 0 ; i < MAX_CPU; i++){
-			if (i2c_buffer.raw[CPUTS] & bit)
-				computer_data.packed.hdd_temp[i] = i2c_buffer.raw[CPU0T + i];
+		for (uint8_t i = 0 ; i < MAX_CPU; i++) {
+			if (i2c_buffer.raw[HDDTS] & bit)
+				computer_data.packed.hdd_temp[i] = i2c_buffer.raw[HDD0T + i];
 			bit = bit << 1;
 		}
 	}
@@ -219,8 +217,7 @@ static void write_rtc_month(void)
 
 static void write_rtc_year(void)
 {
-	uint16_t new_year = (i2c_buffer.raw[RTCD] & 0x7f) + 2000;
-	computer_date_time.year = new_year;
+	computer_date_time.year = (i2c_buffer.raw[RTCD] & 0x7f) + 2000;
 }
 
 static void write_rtc_date(void)
@@ -313,7 +310,7 @@ static void write_memory(uint8_t mem_addr) //Todo: change memory status set
 
 static void read_bios_post_code(enum i2c_addr_space post_code_address, uint8_t *data)
 {
-	switch(post_code_address){
+	switch (post_code_address) {
 	case POST_CODE_LSB:
 		*data = computer_data.details.post_code_lsb;
 		break;
@@ -332,7 +329,7 @@ static void read_layout(uint8_t *data)
 
 static void read_power_state(uint8_t *data)
 {
-	switch (current_power_state){
+	switch (current_power_state) {
 	case POWER_ON:
 		*data = POWER_ON_BM;
 		break;
@@ -350,7 +347,7 @@ static void read_power_state(uint8_t *data)
 
 static void read_ambient(uint8_t *data)
 {
-	if (i2c_buffer.layout.ambs != 0)
+	if (i2c_buffer.layout.ambs)
 		*data = i2c_buffer.layout.ambt;
 	else
 		*data = DEFAULT_DATA;
@@ -358,7 +355,7 @@ static void read_ambient(uint8_t *data)
 
 static void free_direct_string(void)
 {
-	if (direct_string_to_add != NULL){
+	if (direct_string_to_add != NULL) {
 		free(direct_string_to_add->content);
 		free(direct_string_to_add->type);
 	}
@@ -369,7 +366,7 @@ static void free_direct_string(void)
 
 static void read_fp_control(uint8_t *data)
 {
-        *data = i2c_buffer.layout.iwren << 7;
+	*data = i2c_buffer.layout.iwren << 7;
 }
 
 static void read_adc(enum i2c_addr_space adc_address, uint8_t *data)
@@ -377,15 +374,15 @@ static void read_adc(enum i2c_addr_space adc_address, uint8_t *data)
 	switch (adc_address) {
 	case ADC_LSB:
 		if (computer_data.details.adc_set)
-				*data = LSB(computer_data.packed.adc);
+			*data = LSB(computer_data.packed.adc);
 		else
-				*data = 0xff;
+			*data = 0xff;
 		break;
 	case ADC_MSB:
 		if (computer_data.details.adc_set)
-				*data = MSB(computer_data.packed.adc);
+			*data = MSB(computer_data.packed.adc);
 		else
-				*data = 0xff;
+			*data = 0xff;
 		break;
 	default:
 		break;
@@ -486,7 +483,6 @@ static void update_dmi_backup(struct direct_string_item *dmi)
 
 static void add_direct_string(void)
 {
-	uart_send_string("direct string added");
 	struct direct_string_item *curr = computer_data.details.direct_string;
 	while (curr != NULL) {
 		if (strcmp(direct_string_to_add->type, curr->type))
@@ -517,17 +513,15 @@ static void add_direct_string(void)
 
 static void end_direct_string(bool is_name_byte)
 {
-	if(is_name_byte && dmi_curr_state == DMI_NAME_WRITE){
-		direct_string_to_add->type[direct_write_length]='\0';
+	if (is_name_byte && dmi_curr_state == DMI_NAME_WRITE) {
+		direct_string_to_add->type[direct_write_length] = '\0';
 		dmi_curr_state = DMI_VALUE_WRITE;
-		uart_send_string("now value turn\n\r");
 		clear_direct_help_vars();
-	} else if (dmi_curr_state == DMI_VALUE_WRITE){
-		direct_string_to_add->content[direct_write_length]='\0';
+	} else if (dmi_curr_state == DMI_VALUE_WRITE) {
+		direct_string_to_add->content[direct_write_length] = '\0';
 		add_direct_string();
-	} else{
+	} else {
 		init_direct_write_vars();
-		return;
 	}
 }
 
@@ -545,68 +539,53 @@ static void write_byte_direct_string(bool is_written_type, uint8_t data)
 	else
 		direct_string_to_add->content[direct_write_index] = data;
 	direct_write_index++;
-	uart_send_string(" direct write index: ");
-	uart_send_num(direct_write_index, 10);
-	uart_send_string(" direct write length: ");
-	uart_send_num(direct_write_length, 10);
-	uart_send_string("\n\r");
 }
 
 static void set_written_length(bool is_written_name, uint8_t data)
 {
 	direct_write_length = data;
 	direct_write_index = 0;
-	uart_send_string(" length set: ");
-	uart_send_num(data, 16);
-	uart_send_string("\t \n\r");
 	is_length_set = true;
-	if (is_written_name){
-		if (direct_string_to_add == 0){
-			if (set_direct_string() != 0) {
-				uart_send_string("malloc failed\n\r");
-				free_direct_string();
-				return ;
-			} else {
-				direct_string_to_add->type = malloc_locked(sizeof(char *) * direct_write_length + 1);
-				if (direct_string_to_add->type == NULL) {
-					uart_send_string("malloc failed ");
-					free_direct_string();
-					return ;
-				}
-				uart_send_string(" num of chars in string: ");
-				uart_send_num(data, 10);
-			}
-		} else {
-			uart_send_string("written value not name!!\n\r");
+
+	if (is_written_name) {
+		if (direct_string_to_add) {
 			free_direct_string();
 			return;
 		}
-	} else if (dmi_curr_state == DMI_VALUE_WRITE){
+
+		if (set_direct_string()) {
+			free_direct_string();
+			return;
+		}
+
+		direct_string_to_add->type = malloc_locked(sizeof(char *) * direct_write_length + 1);
+		if (direct_string_to_add->type == NULL)
+			free_direct_string();
+
+		return;
+	}
+
+	if (dmi_curr_state == DMI_VALUE_WRITE) {
 		direct_string_to_add->content = malloc_locked(sizeof(char *) * direct_write_length + 1);
 		if (direct_string_to_add->content == NULL) {
 			free(direct_string_to_add->type);
 			free(direct_string_to_add);
 			clear_direct_help_vars();
-			return ;
 		}
-	} else {
-		init_direct_write_vars();
 		return;
 	}
+
+	init_direct_write_vars();
 }
 
 static void write_direct_byte(bool is_written_type, uint8_t data)
 {
-	uart_send_num(data, 16);
-	if (is_length_set){
-		uart_send_string(" byte added ");
+	if (is_length_set) {
 		write_byte_direct_string(is_written_type, data);
 		if (direct_write_length == direct_write_index) {
-			uart_send_string(" last byte in written ");
 			end_direct_string(is_written_type);
 		}
 	} else {
-		uart_send_string(" first byte is written ");
 		set_written_length(is_written_type, data);
 		if (is_written_type)
 			dmi_curr_state = DMI_NAME_WRITE;
@@ -615,28 +594,23 @@ static void write_direct_byte(bool is_written_type, uint8_t data)
 
 static void write_direct(enum i2c_addr_space write_address)
 {
-	switch (write_address){
+	switch (write_address) {
 	case DMIN:
-		uart_send_string("direct write name byte ");
 		if (dmi_curr_state == DMI_VALUE_WRITE) {
-			uart_send_string("DMI reset- START NEW NAME\n\r");
 			free_direct_string();
 			break;
 		}
 		write_direct_byte(true, i2c_buffer.layout.dmi_name);
 		break;
 	case DMIV:
-		if (dmi_curr_state != DMI_VALUE_WRITE) {
-			uart_send_string("DMI reset - NOT NAME WRITE TIME\n\r");
+		if (dmi_curr_state != DMI_VALUE_WRITE)
 			break;
-		}
-		uart_send_string("direct write value byte");
+
 		write_direct_byte(false,i2c_buffer.layout.dmi_value);
 		break;
 	default:
 		break;
 	}
-	uart_send_string("write direct end \n\r");
 }
 
 void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
@@ -704,7 +678,7 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 	case HDD5_SZ_MSB:
 	case HDD6_SZ_MSB:
 	case HDD7_SZ_MSB:
-	case MEM_LSB :
+	case MEM_LSB:
 	case MEM_MSB:
 	case CPU0T:
 	case CPU1T:
@@ -744,19 +718,18 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 static void write_gpu_temp(void)
 {
 	computer_data.details.gpu_temp_set = i2c_buffer.layout.gpus;
-	if (computer_data.details.gpu_temp_set == 1) {
-		if (i2c_buffer.layout.gput != computer_data.details.gpu_temp) {
-			computer_data.details.gpu_temp = i2c_buffer.layout.gput;
-		}
-	}
+	if (computer_data.details.gpu_temp_set)
+		computer_data.details.gpu_temp = i2c_buffer.layout.gput;
+
 	i2c_buffer.layout.gpu_temp_request = 0;
 	clear_req();
 }
+
 extern bool is_twi_busy; //See below in update_data
 static void update_data(void *write_address)
 {
 	uint8_t addr = (uint16_t)write_address;
-	switch (addr){
+	switch (addr) {
 		case GPUT:
 			write_gpu_temp();
 			break;
@@ -790,7 +763,7 @@ static void update_data(void *write_address)
 			write_temp_control();
 			break;
 		case POST_CODE_LSB:
-		write_post_code_lsb();
+			write_post_code_lsb();
 			break;
 		case HDD0_SZ_MSB:
 		case HDD1_SZ_MSB:
