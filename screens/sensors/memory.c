@@ -12,33 +12,21 @@
 
 static void set_mem_size_str(char *str, uint8_t mem)
 {
-	uint8_t size;
 	switch (mem) {
 	case 0x00:
+		sprintf(str, "Empty");
+		return;
 	case 0x01:
 	case 0x02:
-		size = mem;
-		break;
 	case 0x03:
-		size = 4;
-		break;
 	case 0x04:
-		size = 8;
-		break;
 	case 0x05:
-		size = 16;
-		break;
+		sprintf(str, "%d GB", 1 << (mem - 1));
+		return;
 	default:
-		size = -1;
-		break;
-	}
-
-	if (size < 0)
 		sprintf_inval_data(str);
-	else if (size == 0)
-		sprintf(str, "Empty");
-	else
-		sprintf(str, "%d GB", size);
+		return;
+	}
 }
 
 static void sprintf_memory_size(struct gfx_information *info, char *output_str)
