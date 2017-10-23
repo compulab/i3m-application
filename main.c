@@ -172,7 +172,7 @@ static void init(void)
 	rtc_init();
 	usb_init();
 	tasks_init();
-	switch_to_frame(splash, DISPLAY_LOGO);
+	show_logo(splash);
 }
 
 /*

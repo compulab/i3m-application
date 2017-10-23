@@ -25,7 +25,7 @@ extern struct gfx_action_menu *present_menu;
 void clear_screen(void);
 void gfx_display_msg(char *msg);
 void gfx_action_menu_init(void);
-void switch_to_frame(struct gfx_frame *frame, enum display_state new_state);
+void switch_to_frame(struct gfx_frame *frame);
 void gfx_redraw_current_frame(void);
 void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame);
 

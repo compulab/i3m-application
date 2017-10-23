@@ -71,11 +71,11 @@ struct gfx_frame *dashboard;
 struct gfx_frame *clock;
 struct gfx_frame *splash;
 
-void switch_to_frame(struct gfx_frame *frame, enum display_state new_state)
+void switch_to_frame(struct gfx_frame *frame)
 {
 	frame_present = frame;
 	frame->draw(frame);
-	display_state = new_state;
+	display_state = DISPLAY_FRAME;
 }
 
 void show_logo(struct gfx_frame *frame)
@@ -101,7 +101,7 @@ void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode
 		frame_present = 0;
 		switch (selected_action->type) {
 		case ACTION_TYPE_SHOW_FRAME:
-			switch_to_frame(selected_action->frame, DISPLAY_FRAME);
+			switch_to_frame(selected_action->frame);
 			break;
 		case ACTION_TYPE_SHOW_MENU:
 			if (from_frame && selected_action->menu_id == MAIN_MENU_ID)
