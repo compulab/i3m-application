@@ -81,38 +81,6 @@ ioport_configure_pin(LED5_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
 ioport_configure_pin(LED6_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
 ioport_configure_pin(LED7_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
 
-//STK600 standard:
-/*	
-	ioport_configure_pin(LED0_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-	ioport_configure_pin(LED1_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-	ioport_configure_pin(LED2_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-	ioport_configure_pin(LED3_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-	ioport_configure_pin(LED4_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-	ioport_configure_pin(LED5_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-	ioport_configure_pin(LED6_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-	ioport_configure_pin(LED7_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-
-	ioport_configure_pin(GPIO_PUSH_BUTTON_0, IOPORT_DIR_INPUT
-			| IOPORT_PULL_UP);
-	ioport_configure_pin(GPIO_PUSH_BUTTON_1, IOPORT_DIR_INPUT
-			| IOPORT_PULL_UP);
-	ioport_configure_pin(GPIO_PUSH_BUTTON_2, IOPORT_DIR_INPUT
-			| IOPORT_PULL_UP);
-	ioport_configure_pin(GPIO_PUSH_BUTTON_3, IOPORT_DIR_INPUT
-			| IOPORT_PULL_UP);
-	ioport_configure_pin(GPIO_PUSH_BUTTON_4, IOPORT_DIR_INPUT
-			| IOPORT_PULL_UP);
-#if !(XMEGA_A3B || XMEGA_A3BU)
-	ioport_configure_pin(GPIO_PUSH_BUTTON_5, IOPORT_DIR_INPUT
-			| IOPORT_PULL_UP);
-#endif
-	ioport_configure_pin(GPIO_PUSH_BUTTON_6, IOPORT_DIR_INPUT
-			| IOPORT_PULL_UP);
-	ioport_configure_pin(GPIO_PUSH_BUTTON_7, IOPORT_DIR_INPUT
-			| IOPORT_PULL_UP);
-*/
-//END of STK600 standard
-
 #ifdef CONF_BOARD_AT45DBX
 	ioport_configure_pin(AT45DBX_MASTER_SCK,IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
 	ioport_configure_pin(AT45DBX_MASTER_MOSI,IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
@@ -162,5 +130,5 @@ ioport_configure_pin(LED7_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
 			| IOPORT_INIT_HIGH);
 	ioport_configure_pin(IOPORT_CREATE_PIN(PORTF, 2), IOPORT_DIR_INPUT);
 # endif
-#endif	
+#endif
 }
