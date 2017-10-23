@@ -143,7 +143,7 @@ void gfx_display_msg(char *msg)
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
-static void handle_side_button(uint8_t keycode)
+static void handle_button(uint8_t keycode)
 {
 	if (!frame_present) {
 		gfx_action_menu_process_key(present_menu, keycode, false);
@@ -159,17 +159,17 @@ static void handle_side_button(uint8_t keycode)
 static void handle_buttons(void *data)
 {
 	if (ok_button) {
-		handle_side_button(GFX_MONO_MENU_KEYCODE_ENTER);
+		handle_button(GFX_MONO_MENU_KEYCODE_ENTER);
 		return;
 	}
 
 	if (left_button) {
-		handle_side_button(GFX_MONO_MENU_KEYCODE_DOWN);
+		handle_button(GFX_MONO_MENU_KEYCODE_DOWN);
 		return;
 	}
 
 	if (right_button) {
-		handle_side_button(GFX_MONO_MENU_KEYCODE_UP);
+		handle_button(GFX_MONO_MENU_KEYCODE_UP);
 		return;
 	}
 }
