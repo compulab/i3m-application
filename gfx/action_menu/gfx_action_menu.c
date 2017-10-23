@@ -1,6 +1,5 @@
 #include "gfx_action_menu.h"
 #include "gfx_item_action.h"
-#include "gfx_action_menu_dmi.h"
 #include "gfx/gfx_components/gfx_label.h"
 #include "gfx/action_menu/graphic_menu_theme/graphic_menu_theme.h"
 #include "lib/syntax.h"
@@ -108,16 +107,6 @@ void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode
 			if (from_frame && selected_action->menu_id == MAIN_MENU_ID)
 				break;
 			selected_action->menu->draw(selected_action->menu);
-			break;
-		case ACTION_TYPE_SHOW_DMI_MENU:
-			if (!computer_data.details.direct_string) {
-				present_menu->draw(present_menu);
-				break;
-			}
-
-			set_dmi_menu();
-			if (is_dmi_set)
-				gfx_action_menu_display(&dmi_menu);
 			break;
 		default:
 			break;
