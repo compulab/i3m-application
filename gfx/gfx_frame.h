@@ -3,8 +3,15 @@
  *
  * Created: 3/27/2017 6:18:04 PM
  *  Author: Nikita
+ *
+ * FRAME SUMMARY:
+ * A frame is a collection of images, labels, and information artifacts.
+ * A frame has a default behavior when responding to side buttons, which is to
+ * scroll to the next frame in the current menu. It will also draw the appropriate
+ * controls to match this behavior.
+ * The default behavior of the frame can be overridden by the information artifact.
+ * The information artifact can also override draw_controls accordingly.
  */
-
 
 #ifndef GFX_FRAME_H_
 #define GFX_FRAME_H_
