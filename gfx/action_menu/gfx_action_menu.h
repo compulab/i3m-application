@@ -28,5 +28,6 @@ void gfx_action_menu_init(void);
 void switch_to_frame(struct gfx_frame *frame);
 void gfx_redraw_current_frame(void);
 void gfx_menu_handle_button(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame);
+void gfx_handle_button(uint8_t keycode);
 
 #endif /* GFX_GFX_ACTION_MENU_H_ */

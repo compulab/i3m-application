@@ -11,10 +11,6 @@ enum display_state display_state;
 struct gfx_frame *frame_present;
 struct gfx_action_menu *present_menu;
 
-bool ok_button = false;
-bool left_button = false;
-bool right_button = false;
-
 void gfx_action_menu_init(void)
 {
 	set_menu_by_id(&present_menu, 0);
@@ -138,7 +134,7 @@ void gfx_display_msg(char *msg)
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
-static void handle_button(uint8_t keycode)
+void gfx_handle_button(uint8_t keycode)
 {
 	if (!frame_present) {
 		gfx_menu_handle_button(present_menu, keycode, false);
@@ -149,34 +145,6 @@ static void handle_button(uint8_t keycode)
 		frame_present->information_head->information.handle_buttons(keycode);
 	else
 		frame_present->handle_buttons(keycode);
-}
-
-static void handle_buttons(void *data)
-{
-	if (ok_button) {
-		handle_button(GFX_MONO_MENU_KEYCODE_ENTER);
-		return;
-	}
-
-	if (left_button) {
-		handle_button(GFX_MONO_MENU_KEYCODE_DOWN);
-		return;
-	}
-
-	if (right_button) {
-		handle_button(GFX_MONO_MENU_KEYCODE_UP);
-		return;
-	}
-}
-
-struct work button_work = { .do_work = handle_buttons, .data = NULL, .next = NULL, };
-
-void handle_button_pressed(void)
-{
-	left_button = gpio_pin_is_high(FP_LEFT_BUTTON);
-	right_button = gpio_pin_is_high(FP_RIGHT_BUTTON);
-	ok_button = gpio_pin_is_high(FP_OK_BUTTON);
-	insert_work(&button_work);
 }
 
 static void update_screen(void *data)
