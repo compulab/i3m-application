@@ -76,7 +76,7 @@ static bool is_scroll_past_last_frame(uint8_t key)
 static void handle_buttons_scroll_to_frame(uint8_t key)
 {
 	if (key == GFX_MONO_MENU_KEYCODE_ENTER) {
-		handle_back_to_menu();
+		gfx_go_back_to_menu();
 		return;
 	}
 
@@ -89,7 +89,7 @@ static void handle_buttons_scroll_to_frame(uint8_t key)
 
 static void handle_buttons_back_to_menu(uint8_t keycode)
 {
-	handle_back_to_menu();
+	gfx_go_back_to_menu();
 }
 
 /*

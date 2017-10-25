@@ -21,5 +21,6 @@ enum display_state {
 
 void gfx_action_menu_goto_main(void);
 void gfx_redraw_current_frame(void);
+void gfx_display_menu(struct gfx_action_menu *action_menu);
 
 #endif /* GFX_GUI_H_ */

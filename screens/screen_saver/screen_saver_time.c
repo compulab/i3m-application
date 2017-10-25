@@ -21,7 +21,7 @@ static void handle_screen_saver_time_buttons(uint8_t key)
 
 	switch (key) {
 	case GFX_MONO_MENU_KEYCODE_ENTER:
-		handle_back_to_menu();
+		gfx_go_back_to_menu();
 		return;
 	case GFX_MONO_MENU_KEYCODE_DOWN:
 		if (computer_data.details.screen_saver_update_time <= SCREEN_SAVER_SECOND_MIN_VALUE)
