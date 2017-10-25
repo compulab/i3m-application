@@ -33,6 +33,19 @@ static void action_types_init(void)
 	}
 }
 
+static bool is_action_frame(struct cnf_frame *cnf_frame_pgmem)
+{
+	struct cnf_frame cnf_frame;
+	memcpy_config(&cnf_frame, cnf_frame_pgmem, sizeof(cnf_frame));
+	struct cnf_info_node cnf_info_node;
+	memcpy_config(&cnf_info_node, (void *)cnf_frame.infos_head, sizeof(struct cnf_info_node));
+	enum information_type info_type = cnf_info_node.info.info_type;
+
+	return (info_type == SET_BRIGHTNESS) || (info_type == SET_SCREEN_SAVER_ENABLE) ||
+		   (info_type == SET_SCREEN_SAVER_TIME) || (info_type == SET_SCREEN_SAVER_TYPE);
+	return 0;
+}
+
 static int load_action(struct gfx_item_action *action, struct cnf_action config_action, struct cnf_frame * cnf_dashboard)
 {
 	action->type = config_action.type;
@@ -48,7 +61,13 @@ static int load_action(struct gfx_item_action *action, struct cnf_action config_
 		if (action->frame == NULL)
 			return -1;
 
-		if (gfx_frame_init(action->frame, config_action.frame, false))
+		int retval;
+		if (is_action_frame(config_action.frame))
+			retval = gfx_action_frame_init(action->frame, config_action.frame);
+		else
+			retval = gfx_context_frame_init(action->frame, config_action.frame);
+
+		if (retval)
 			return -1;
 
 		break;
@@ -78,7 +97,7 @@ void show_logo(struct gfx_frame *frame);//TODO: temporary forward declaration. R
 
 static void splash_init(struct cnf_blk config_block)
 {
-	gfx_frame_init(splash, NULL, true);
+	gfx_frame_init(splash, NULL);
 	splash->draw = show_logo;
 	splash_bitmap.width = config_block.splash_width;
 	splash_bitmap.height = config_block.splash_height;
@@ -201,14 +220,14 @@ int load_config_block(void)
 		dashboard = malloc_locked(sizeof(struct gfx_frame));
 		if (dashboard == NULL)
 			return -1;
-		gfx_frame_init(dashboard, config_block.dashboard, true);
+		gfx_frame_init(dashboard, config_block.dashboard);
 	}
 
 	if (config_block.clock) {
 		clock = malloc_locked(sizeof(struct gfx_frame));
 		if (clock == NULL)
 			return -1;
-		gfx_frame_init(clock, config_block.clock, true);
+		gfx_frame_init(clock, config_block.clock);
 	}
 
 	if (config_block.splash) {

@@ -23,13 +23,15 @@
 
 struct gfx_frame {
 	void (*handle_buttons)(uint8_t);
-	void (*draw_controls)(struct gfx_frame *info);
+	void (*draw_controls)(struct gfx_frame *frame);
 	void (*draw)(struct gfx_frame *frame);
 	struct gfx_image_node *image_head;
 	struct gfx_label_node *label_head;
 	struct gfx_information_node *information_head;
 };
 
-int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem, bool is_dashboard);
+int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem);
+int gfx_context_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem);
+int gfx_action_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem);
 
 #endif /* GFX_FRAME_H_ */

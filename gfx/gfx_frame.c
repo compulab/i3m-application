@@ -116,23 +116,26 @@ static void gfx_frame_format_generic_frame(struct gfx_frame *frame)
 static void gfx_frame_draw(struct gfx_frame *frame)
 {
 	gfx_frame_format_generic_frame(frame);
-	draw_standard_separator_line();
-	if (frame->information_head->information.draw_controls)
-		frame->information_head->information.draw_controls(&frame->information_head->information);
-	else
-		frame->draw_controls(frame);
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
-static void gfx_dashboard_draw(struct gfx_frame *frame)
+static void gfx_functional_frame_draw(struct gfx_frame *frame)
 {
 	gfx_frame_format_generic_frame(frame);
+	draw_standard_separator_line();
+	frame->draw_controls(frame);
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
 static void gfx_frame_draw_control_arrows(struct gfx_frame *info)
 {
 	draw_control_signs_arrows(present_menu->menu->current_selection, 0, present_menu->menu->num_elements - 2);
+}
+
+static void gfx_frame_draw_control_from_info(struct gfx_frame *frame)
+{
+	if (frame->information_head->information.draw_controls)
+		frame->information_head->information.draw_controls(&frame->information_head->information);
 }
 
 static void handle_buttons_scroll_to_frame(uint8_t key)
@@ -155,15 +158,25 @@ static void handle_buttons_back_to_menu(uint8_t keycode)
 	handle_back_to_menu();
 }
 
-int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem, bool is_dashboard)
+/*
+ * BASIC FRAME: displays images, labels, and dynamic info.
+ * Does not respond functionally to user actions. Key presses just return user to
+ * current menu. Since it has no functionality, it does not display controls.
+ *
+ * This frame is suitable for invocation in any situation, because it has no
+ * prerequisites. Thus, it can be used for splash screens, dashboards, random
+ * messages to the user, as well as being invoked from a menu.
+ */
+int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
 {
 	struct cnf_frame cnf_frame;
 	frame->image_head = 0;
 	frame->information_head = 0;
 	frame->label_head = 0;
-	frame->draw = is_dashboard ? gfx_dashboard_draw : gfx_frame_draw;
-	frame->handle_buttons = is_dashboard ? handle_buttons_back_to_menu : handle_buttons_scroll_to_frame;
-	frame->draw_controls = is_dashboard ?  NULL : gfx_frame_draw_control_arrows;
+
+	frame->draw = gfx_frame_draw;
+	frame->handle_buttons = handle_buttons_back_to_menu;
+	frame->draw_controls = NULL;
 	if (cnf_frame_pgmem == NULL)
 		return 0;
 
@@ -171,5 +184,48 @@ int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem, b
 	int retval = gfx_frame_set_images(frame, cnf_frame.images_head);
 	retval |= gfx_frame_set_labels(frame, cnf_frame.labels_head);
 	retval |= gfx_frame_set_infos(frame, cnf_frame.infos_head);
+	return retval;
+}
+
+/*
+ * CONTEXT FRAME: same abilities as BASIC FRAME, but exists within the context of a menu.
+ * Thus, it is not suitable for spontaneous invocation (like a user message or a splash
+ * screen), and must be invoked from a specific menu.
+ *
+ * Its context awareness means that pressing left and right scrolls display to next or
+ * previous frame in the current menu. OK takes us back to the menu. Appropriate controls
+ * are displayed.
+ */
+int gfx_context_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
+{
+	int retval = gfx_frame_init(frame, cnf_frame_pgmem);
+
+	frame->draw = gfx_functional_frame_draw;
+	frame->handle_buttons = handle_buttons_scroll_to_frame;
+	frame->draw_controls = gfx_frame_draw_control_arrows;
+
+	return retval;
+}
+
+/*
+ * ACTION FRAME: similar in appearance to the CONTEXT FRAME, it differs from the CONTEXT
+ * FRAME in functionality. The functionality of the CONTEXT FRAME is that pressing left or
+ * right moves the view within the context of the current menu. ACTION FRAME replaces this
+ * functionality with a custom function that depends on the assigned info artifact.
+ *
+ * The info artifact is responsible for implementing the functionality, so it should provide
+ * a method for reacting to buttons. If no such method is provided, the default functionality
+ * of the standard frame (back to menu) is invoked. The info artifact may also provide a
+ * draw_controls method. Otherwise, no controls will be drawn.
+ */
+int gfx_action_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
+{
+	int retval = gfx_frame_init(frame, cnf_frame_pgmem);
+
+	frame->draw = gfx_functional_frame_draw;
+	if (frame->information_head->information.handle_buttons)
+		frame->handle_buttons = frame->information_head->information.handle_buttons;
+	frame->draw_controls = gfx_frame_draw_control_from_info;
+
 	return retval;
 }
