@@ -30,8 +30,11 @@ struct gfx_frame {
 	struct gfx_information_node *information_head;
 };
 
-int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem);
-int gfx_context_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem);
-int gfx_action_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem);
+void gfx_frame_init(struct gfx_frame *frame, struct gfx_image_node *image_head,
+					struct gfx_label_node *label_head, struct gfx_information_node *info_head);
+void gfx_context_frame_init(struct gfx_frame *frame, struct gfx_image_node *image_head,
+							struct gfx_label_node *label_head, struct gfx_information_node *info_head);
+void gfx_action_frame_init(struct gfx_frame *frame, struct gfx_image_node *image_head,
+						   struct gfx_label_node *label_head, struct gfx_information_node *info_head);
 
 #endif /* GFX_FRAME_H_ */

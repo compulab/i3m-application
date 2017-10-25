@@ -11,82 +11,6 @@
 #include "lib/syntax.h"
 #include <stdio.h>
 
-static int gfx_frame_set_images(struct gfx_frame *frame, struct cnf_image_node *cnf_image_pgmem)
-{
-	struct gfx_image_node *frame_image_last = 0;
-	while (cnf_image_pgmem) {
-		struct cnf_image_node cnf_image_node;
-		struct gfx_image_node *gfx_image_node = malloc_locked(sizeof(struct gfx_image_node));
-		if (gfx_image_node == NULL)
-			return -1;
-
-		memcpy_config(&cnf_image_node, cnf_image_pgmem, sizeof(struct cnf_image_node));
-		gfx_image_node->image.bitmap = malloc_locked(sizeof(struct gfx_mono_bitmap));
-		//TODO: Possible memory leak here fix later
-		if (gfx_image_node->image.bitmap == NULL)
-			return -1;
-
-		gfx_image_init(&gfx_image_node->image, cnf_image_node.image.bitmap_progmem, cnf_image_node.image.height,
-				cnf_image_node.image.width, cnf_image_node.image.x, cnf_image_node.image.y);
-
-		gfx_image_node->next = 0;
-		if (frame->image_head == 0)
-			frame->image_head = gfx_image_node;
-		else
-			frame_image_last->next = gfx_image_node;
-		frame_image_last = gfx_image_node;
-		cnf_image_pgmem = cnf_image_node.next;
-	}
-	return 0;
-}
-
-static int gfx_frame_set_labels(struct gfx_frame *frame, struct cnf_label_node *cnf_label_pgmem)
-{
-	struct gfx_label_node *frame_label_last = 0;
-	while (cnf_label_pgmem) {
-		struct cnf_label_node cnf_label_node;
-		struct gfx_label_node *gfx_label_node = malloc_locked(sizeof(struct gfx_label_node));
-		if (gfx_label_node == NULL)
-			return -1;
-
-		memcpy_config(&cnf_label_node, cnf_label_pgmem, sizeof(struct cnf_label_node));
-		gfx_label_init(&gfx_label_node->label, cnf_label_node.label.text, cnf_label_node.label.x, cnf_label_node.label.y, cnf_label_node.font_id);
-		gfx_label_node->next = 0;
-		if (frame->label_head == 0)
-			frame->label_head = gfx_label_node;
-		else
-			frame_label_last->next = gfx_label_node;
-		frame_label_last = gfx_label_node;
-		cnf_label_pgmem = cnf_label_node.next;
-	}
-	return 0;
-}
-
-static int gfx_frame_set_infos(struct gfx_frame *frame, struct cnf_info_node *cnf_info_pgmem)
-{
-	struct gfx_information_node *frame_information_last = 0;
-	while (cnf_info_pgmem) {
-		struct cnf_info_node cnf_info_node;
-		struct gfx_information_node *gfx_information_node = malloc_locked(sizeof(struct gfx_information_node));
-		if (gfx_information_node == NULL)
-			return -1;
-
-		memcpy_config(&cnf_info_node, (void *)cnf_info_pgmem, sizeof(struct cnf_info_node));
-		struct cnf_info cnf_info = cnf_info_node.info;
-		if (gfx_information_init(&gfx_information_node->information, &cnf_info, cnf_info_node.font_id))
-			return -1;
-
-		gfx_information_node->next = 0;
-		if (frame->information_head)
-			frame_information_last->next = gfx_information_node;
-		else
-			frame->information_head = gfx_information_node;
-		frame_information_last = gfx_information_node;
-		cnf_info_pgmem = cnf_info_node.next;
-	}
-	return 0;
-}
-
 static void gfx_labels_draw(struct gfx_label_node *list)
 {
 	list_foreach(struct gfx_label_node *, list, curr_label_node)
@@ -167,24 +91,15 @@ static void handle_buttons_back_to_menu(uint8_t keycode)
  * prerequisites. Thus, it can be used for splash screens, dashboards, random
  * messages to the user, as well as being invoked from a menu.
  */
-int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
+void gfx_frame_init(struct gfx_frame *frame, struct gfx_image_node *image_head,
+					struct gfx_label_node *label_head, struct gfx_information_node *info_head)
 {
-	struct cnf_frame cnf_frame;
-	frame->image_head = 0;
-	frame->information_head = 0;
-	frame->label_head = 0;
-
+	frame->image_head = image_head;
+	frame->label_head = label_head;
+	frame->information_head = info_head;
 	frame->draw = gfx_frame_draw;
 	frame->handle_buttons = handle_buttons_back_to_menu;
 	frame->draw_controls = NULL;
-	if (cnf_frame_pgmem == NULL)
-		return 0;
-
-	memcpy_config(&cnf_frame, cnf_frame_pgmem, sizeof(cnf_frame));
-	int retval = gfx_frame_set_images(frame, cnf_frame.images_head);
-	retval |= gfx_frame_set_labels(frame, cnf_frame.labels_head);
-	retval |= gfx_frame_set_infos(frame, cnf_frame.infos_head);
-	return retval;
 }
 
 /*
@@ -196,15 +111,13 @@ int gfx_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
  * previous frame in the current menu. OK takes us back to the menu. Appropriate controls
  * are displayed.
  */
-int gfx_context_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
+void gfx_context_frame_init(struct gfx_frame *frame, struct gfx_image_node *image_head,
+							struct gfx_label_node *label_head, struct gfx_information_node *info_head)
 {
-	int retval = gfx_frame_init(frame, cnf_frame_pgmem);
-
+	gfx_frame_init(frame, image_head, label_head, info_head);
 	frame->draw = gfx_functional_frame_draw;
 	frame->handle_buttons = handle_buttons_scroll_to_frame;
 	frame->draw_controls = gfx_frame_draw_control_arrows;
-
-	return retval;
 }
 
 /*
@@ -218,14 +131,12 @@ int gfx_context_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_
  * of the standard frame (back to menu) is invoked. The info artifact may also provide a
  * draw_controls method. Otherwise, no controls will be drawn.
  */
-int gfx_action_frame_init(struct gfx_frame *frame, struct cnf_frame *cnf_frame_pgmem)
+void gfx_action_frame_init(struct gfx_frame *frame, struct gfx_image_node *image_head,
+						   struct gfx_label_node *label_head, struct gfx_information_node *info_head)
 {
-	int retval = gfx_frame_init(frame, cnf_frame_pgmem);
-
+	gfx_frame_init(frame, image_head, label_head, info_head);
 	frame->draw = gfx_functional_frame_draw;
 	if (frame->information_head->information.handle_buttons)
 		frame->handle_buttons = frame->information_head->information.handle_buttons;
 	frame->draw_controls = gfx_frame_draw_control_from_info;
-
-	return retval;
 }

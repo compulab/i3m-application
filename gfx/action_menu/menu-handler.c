@@ -16,9 +16,88 @@ extern struct gfx_frame *splash;
 uint8_t size_of_menus;
 uint8_t new_fonts_size;
 
-void memcpy_config(void *dst, void *src_addr, size_t size)
+static void memcpy_config(void *dst, void *src_addr, size_t size)
 {
 	memcpy_PF(dst, (uint_farptr_t) (0x00010000 + (uint16_t)src_addr), size);
+}
+
+static struct gfx_image_node *load_frame_images(struct cnf_image_node *cnf_image_pgmem)
+{
+	struct gfx_image_node *frame_image_last = 0;
+	struct gfx_image_node *image_head = NULL;
+	while (cnf_image_pgmem) {
+		struct cnf_image_node cnf_image_node;
+		struct gfx_image_node *gfx_image_node = malloc_locked(sizeof(struct gfx_image_node));
+		if (gfx_image_node == NULL)
+			return NULL;
+
+		memcpy_config(&cnf_image_node, cnf_image_pgmem, sizeof(struct cnf_image_node));
+		gfx_image_node->image.bitmap = malloc_locked(sizeof(struct gfx_mono_bitmap));
+		//TODO: Possible memory leak here fix later
+		if (gfx_image_node->image.bitmap == NULL)
+			return NULL;
+
+		gfx_image_init(&gfx_image_node->image, cnf_image_node.image.bitmap_progmem, cnf_image_node.image.height,
+					   cnf_image_node.image.width, cnf_image_node.image.x, cnf_image_node.image.y);
+
+		gfx_image_node->next = 0;
+		if (image_head == NULL)
+			image_head = gfx_image_node;
+		else
+			frame_image_last->next = gfx_image_node;
+		frame_image_last = gfx_image_node;
+		cnf_image_pgmem = cnf_image_node.next;
+	}
+	return image_head;
+}
+
+static struct gfx_label_node *load_frame_labels(struct cnf_label_node *cnf_label_pgmem)
+{
+	struct gfx_label_node *frame_label_last = 0;
+	struct gfx_label_node *label_head = NULL;
+	while (cnf_label_pgmem) {
+		struct cnf_label_node cnf_label_node;
+		struct gfx_label_node *gfx_label_node = malloc_locked(sizeof(struct gfx_label_node));
+		if (gfx_label_node == NULL)
+			return NULL;
+
+		memcpy_config(&cnf_label_node, cnf_label_pgmem, sizeof(struct cnf_label_node));
+		gfx_label_init(&gfx_label_node->label, cnf_label_node.label.text, cnf_label_node.label.x, cnf_label_node.label.y, cnf_label_node.font_id);
+		gfx_label_node->next = 0;
+		if (label_head == 0)
+			label_head = gfx_label_node;
+		else
+			frame_label_last->next = gfx_label_node;
+		frame_label_last = gfx_label_node;
+		cnf_label_pgmem = cnf_label_node.next;
+	}
+	return label_head;
+}
+
+static struct gfx_information_node *load_frame_infos(struct cnf_info_node *cnf_info_pgmem)
+{
+	struct gfx_information_node *frame_information_last = 0;
+	struct gfx_information_node *information_head = NULL;
+	while (cnf_info_pgmem) {
+		struct cnf_info_node cnf_info_node;
+		struct gfx_information_node *gfx_information_node = malloc_locked(sizeof(struct gfx_information_node));
+		if (gfx_information_node == NULL)
+			return NULL;
+
+		memcpy_config(&cnf_info_node, (void *)cnf_info_pgmem, sizeof(struct cnf_info_node));
+		struct cnf_info cnf_info = cnf_info_node.info;
+		if (gfx_information_init(&gfx_information_node->information, &cnf_info, cnf_info_node.font_id))
+			return NULL;
+
+		gfx_information_node->next = 0;
+		if (information_head)
+			frame_information_last->next = gfx_information_node;
+		else
+			information_head = gfx_information_node;
+		frame_information_last = gfx_information_node;
+		cnf_info_pgmem = cnf_info_node.next;
+	}
+	return information_head;
 }
 
 static void action_types_init(void)
@@ -33,12 +112,10 @@ static void action_types_init(void)
 	}
 }
 
-static bool is_action_frame(struct cnf_frame *cnf_frame_pgmem)
+static bool is_action_frame(struct cnf_frame *cnf_frame)
 {
-	struct cnf_frame cnf_frame;
-	memcpy_config(&cnf_frame, cnf_frame_pgmem, sizeof(cnf_frame));
 	struct cnf_info_node cnf_info_node;
-	memcpy_config(&cnf_info_node, (void *)cnf_frame.infos_head, sizeof(struct cnf_info_node));
+	memcpy_config(&cnf_info_node, (void *)cnf_frame->infos_head, sizeof(struct cnf_info_node));
 	enum information_type info_type = cnf_info_node.info.info_type;
 
 	return (info_type == SET_BRIGHTNESS) || (info_type == SET_SCREEN_SAVER_ENABLE) ||
@@ -61,14 +138,17 @@ static int load_action(struct gfx_item_action *action, struct cnf_action config_
 		if (action->frame == NULL)
 			return -1;
 
-		int retval;
-		if (is_action_frame(config_action.frame))
-			retval = gfx_action_frame_init(action->frame, config_action.frame);
-		else
-			retval = gfx_context_frame_init(action->frame, config_action.frame);
-
-		if (retval)
-			return -1;
+		struct cnf_frame cnf_frame;
+		memcpy_config(&cnf_frame, config_action.frame, sizeof(cnf_frame));
+		if (is_action_frame(&cnf_frame)) {
+			gfx_action_frame_init(action->frame, load_frame_images(cnf_frame.images_head),
+								  load_frame_labels(cnf_frame.labels_head),
+								  load_frame_infos(cnf_frame.infos_head));
+		} else {
+			gfx_context_frame_init(action->frame, load_frame_images(cnf_frame.images_head),
+								   load_frame_labels(cnf_frame.labels_head),
+								   load_frame_infos(cnf_frame.infos_head));
+		}
 
 		break;
 	case ACTION_TYPE_SHOW_MENU:
@@ -97,7 +177,7 @@ void show_logo(struct gfx_frame *frame);//TODO: temporary forward declaration. R
 
 static void splash_init(struct cnf_blk config_block)
 {
-	gfx_frame_init(splash, NULL);
+	gfx_frame_init(splash, NULL, NULL, NULL);
 	splash->draw = show_logo;
 	splash_bitmap.width = config_block.splash_width;
 	splash_bitmap.height = config_block.splash_height;
@@ -206,6 +286,7 @@ int load_config_block(void)
 	struct cnf_blk config_block;
 	struct cnf_menu config_menu;
 	struct cnf_menu_node cnf_menu;
+	struct cnf_frame cnf_frame;
 
 	memcpy_config(&config_block, (void *)CONFIG_SECTION_ADDRESS, sizeof(struct cnf_blk));
 	size_of_menus = config_block.menu_size;
@@ -220,14 +301,18 @@ int load_config_block(void)
 		dashboard = malloc_locked(sizeof(struct gfx_frame));
 		if (dashboard == NULL)
 			return -1;
-		gfx_frame_init(dashboard, config_block.dashboard);
+		memcpy_config(&cnf_frame, config_block.dashboard, sizeof(cnf_frame));
+		gfx_frame_init(dashboard, load_frame_images(cnf_frame.images_head), load_frame_labels(cnf_frame.labels_head),
+						load_frame_infos(cnf_frame.infos_head));
 	}
 
 	if (config_block.clock) {
 		clock = malloc_locked(sizeof(struct gfx_frame));
 		if (clock == NULL)
 			return -1;
-		gfx_frame_init(clock, config_block.clock);
+		memcpy_config(&cnf_frame, config_block.clock, sizeof(cnf_frame));
+		gfx_frame_init(clock, load_frame_images(cnf_frame.images_head), load_frame_labels(cnf_frame.labels_head),
+						load_frame_infos(cnf_frame.infos_head));
 	}
 
 	if (config_block.splash) {
