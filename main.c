@@ -199,7 +199,7 @@ static void init(void)
 	rtc_init();
 	usb_init();
 	tasks_init();
-	show_logo(splash);
+	//show_logo(splash);
 }
 
 /*

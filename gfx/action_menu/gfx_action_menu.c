@@ -63,10 +63,6 @@ void gfx_redraw_current_frame(void)
 	frame_present->draw(frame_present);
 }
 
-struct gfx_frame *dashboard;
-struct gfx_frame *clock;
-struct gfx_frame *splash;
-
 void switch_to_frame(struct gfx_frame *frame)
 {
 	frame_present = frame;

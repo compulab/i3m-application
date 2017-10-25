@@ -9,9 +9,9 @@
 
 struct gfx_mono_bitmap splash_bitmap;
 
-extern struct gfx_frame *dashboard;
-extern struct gfx_frame *clock;
-extern struct gfx_frame *splash;
+static struct gfx_frame *dashboard;
+static struct gfx_frame *clock;
+static struct gfx_frame *splash;
 
 uint8_t size_of_menus;
 uint8_t new_fonts_size;
