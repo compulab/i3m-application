@@ -4,6 +4,16 @@
 #include "gfx/action_menu/graphic_menu_theme/graphic_menu_theme.h"
 #include "lib/syntax.h"
 
+enum display_state {
+	DISPLAY_MENU,
+	DISPLAY_FRAME,
+	DISPLAY_ACTION_FRAME,
+	DISPLAY_LOGO,
+	DISPLAY_DASHBOARD,
+	DISPLAY_WAIT_FOR_USER_ACK,
+	DISPLAY_CLOCK,
+};
+
 #define MAIN_MENU_ID 	0
 
 enum display_state display_state;

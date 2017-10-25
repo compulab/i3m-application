@@ -15,16 +15,6 @@
 #include "work-queue/work.h"
 #include "scheduler/scheduler.h"
 
-enum display_state {
-	DISPLAY_MENU,
-	DISPLAY_FRAME,
-	DISPLAY_ACTION_FRAME,
-	DISPLAY_LOGO,
-	DISPLAY_DASHBOARD,
-	DISPLAY_WAIT_FOR_USER_ACK,
-	DISPLAY_CLOCK,
-};
-
 extern struct gfx_mono_bitmap splash_bitmap;
 
 struct gfx_action_menu **action_menus;

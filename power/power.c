@@ -48,7 +48,6 @@ static void handle_power_state_changed(void *data)
 	switch(current_power_state) {
 	case POWER_ON:
 		ssd1306_set_contrast(eeprom_get_brightness_value());
-		//gfx_show_screen_saver(DISPLAY_LOGO);
 		break;
 	case POWER_STD:
 		enter_dim_mode(HIBERNATE_MSG);
