@@ -5,14 +5,6 @@
 #include "gfx/action_menu/graphic_menu_theme/graphic_menu_theme.h"
 #include "lib/syntax.h"
 
-#define MAIN_MENU_ID 	0
-
-void gfx_action_menu_init(void)
-{
-	set_menu_by_id(&present_menu, MAIN_MENU_ID);
-	present_menu->draw(present_menu);
-}
-
 static void update_action_visibility(struct gfx_item_action *action)
 {
 	if (action->type == ACTION_TYPE_SHOW_DMI_MENU) {

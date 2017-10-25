@@ -22,7 +22,7 @@ struct gfx_action_menu {
 extern struct gfx_action_menu *present_menu;
 
 void clear_screen(void);
-void gfx_action_menu_init(void);
+void gfx_gui_init(void);
 void gfx_switch_to_frame(struct gfx_frame *frame);
 void gfx_redraw_current_frame(void);
 void gfx_menu_handle_button(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame);

@@ -13,9 +13,18 @@
 #include "lib/syntax.h"
 
 enum display_state display_state;
+#define MAIN_MENU_ID 	0
 
 struct gfx_frame *frame_present;
 struct gfx_action_menu *present_menu;
+
+void gfx_gui_init(void)
+{
+	set_menu_by_id(&present_menu, MAIN_MENU_ID);
+	frame_present = 0;
+	display_state = DISPLAY_MENU;
+	present_menu->draw(present_menu);
+}
 
 void gfx_menu_handle_button(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
 {

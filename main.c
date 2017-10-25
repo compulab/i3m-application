@@ -193,7 +193,7 @@ static void init(void)
 	power_state_init();
 	twi_slave_init();
 	TWI_init();
-	gfx_action_menu_init();
+	gfx_gui_init();
 	sei();
 	sleepmgr_init();
 	tc_init();
