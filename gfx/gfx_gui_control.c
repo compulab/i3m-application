@@ -38,7 +38,7 @@ void gfx_menu_handle_button(struct gfx_action_menu *action_menu, uint8_t keycode
 			gfx_switch_to_frame(selected_action->frame);
 			break;
 		case ACTION_TYPE_SHOW_MENU:
-			if (from_frame && selected_action->menu_id == 0)
+			if (from_frame && selected_action->menu_id == MAIN_MENU_ID)
 				break;
 			selected_action->menu->draw(selected_action->menu);
 			break;
@@ -100,13 +100,8 @@ void gfx_display_msg(char *msg)
 
 void gfx_handle_button(uint8_t keycode)
 {
-	if (!frame_present) {
+	if (!frame_present)
 		gfx_menu_handle_button(present_menu, keycode, false);
-		return;
-	}
-
-	if (frame_present->information_head && frame_present->information_head->information.handle_buttons)
-		frame_present->information_head->information.handle_buttons(keycode);
 	else
 		frame_present->handle_buttons(keycode);
 }
