@@ -2,6 +2,8 @@
 #include "gfx_item_action.h"
 #include "gfx/gfx_components/gfx_label.h"
 #include "gfx/action_menu/graphic_menu_theme/graphic_menu_theme.h"
+#include "work-queue/work.h"
+#include "scheduler/scheduler.h"
 #include "lib/syntax.h"
 
 enum display_state {

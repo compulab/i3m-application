@@ -1,6 +1,6 @@
-#include "menu-handler.h"
-#include "gfx_item_action.h"
-#include "gfx_action_menu.h"
+#include "config_block.h"
+#include "gfx/action_menu/gfx_item_action.h"
+#include "gfx/action_menu/gfx_action_menu.h"
 #include "gfx/gfx_components/gfx_information.h"
 #include "gfx/gfx_components/gfx_label.h"
 #include "gfx/gfx_components/gfx_image.h"
@@ -150,14 +150,13 @@ static int load_action(struct gfx_item_action *action, struct cnf_action config_
 								   load_frame_infos(cnf_frame.infos_head));
 		}
 
-		break;
+		return 0;
 	case ACTION_TYPE_SHOW_MENU:
 		action->menu_id = config_action.menu_id;
-		break;
+		return 0;
 	default:
-		break;
+		return 0;
 	}
-	return 0;
 }
 
 static int graphic_item_init(struct gfx_image *menu_image, struct cnf_image * image_node)

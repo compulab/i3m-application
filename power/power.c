@@ -10,7 +10,6 @@
 #include "twi/i2c_buffer.h"
 #include "work-queue/work.h"
 #include "gfx/action_menu/gfx_action_menu.h"
-#include "gfx/action_menu/menu-handler.h"
 #include "eeprom/eeprom_layout.h"
 #include "sram/sram_handle.h"
 #include <string.h>

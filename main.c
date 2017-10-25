@@ -11,6 +11,7 @@
 #include "adc/adc.h"
 #include "eeprom/eeprom_layout.h"
 #include "eeprom/eeprom.h"
+#include "work-queue/work.h"
 #include "gfx/action_menu/gfx_action_menu.h"
 #include "asf.h"
 #include "ASF/common/services/usb/udc/udc.h"
