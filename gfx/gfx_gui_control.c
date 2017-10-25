@@ -63,6 +63,7 @@ void gfx_go_back_to_menu(void)
 {
 	clear_screen();
 	frame_present = 0;
+	display_state = DISPLAY_MENU;
 	present_menu->draw(present_menu);
 }
 
@@ -74,8 +75,8 @@ void gfx_redraw_current_frame(void)
 void gfx_switch_to_frame(struct gfx_frame *frame)
 {
 	frame_present = frame;
-	frame->draw(frame);
 	display_state = DISPLAY_FRAME;
+	frame->draw(frame);
 }
 
 void gfx_display_menu(struct gfx_action_menu *action_menu)
