@@ -82,15 +82,6 @@ void switch_to_frame(struct gfx_frame *frame)
 	display_state = DISPLAY_FRAME;
 }
 
-void show_logo(struct gfx_frame *frame)
-{
-	frame_present = frame;
-	clear_screen();
-	gfx_mono_generic_put_bitmap(&splash_bitmap, 0, 0);
-	gfx_mono_ssd1306_put_framebuffer();
-	display_state = DISPLAY_LOGO;
-}
-
 void gfx_menu_handle_button(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
 {
 	struct gfx_item_action *selected_action;

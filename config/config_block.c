@@ -27,12 +27,12 @@ static struct gfx_image_node *load_frame_images(struct cnf_image_node *cnf_image
 	struct gfx_image_node *image_head = NULL;
 	while (cnf_image_pgmem) {
 		struct cnf_image_node cnf_image_node;
-		struct gfx_image_node *gfx_image_node = malloc_locked(sizeof(struct gfx_image_node));
+		struct gfx_image_node *gfx_image_node = (struct gfx_image_node *)malloc_locked(sizeof(struct gfx_image_node));
 		if (gfx_image_node == NULL)
 			return NULL;
 
 		memcpy_config(&cnf_image_node, cnf_image_pgmem, sizeof(struct cnf_image_node));
-		gfx_image_node->image.bitmap = malloc_locked(sizeof(struct gfx_mono_bitmap));
+		gfx_image_node->image.bitmap = (struct gfx_mono_bitmap *)malloc_locked(sizeof(struct gfx_mono_bitmap));
 		//TODO: Possible memory leak here fix later
 		if (gfx_image_node->image.bitmap == NULL)
 			return NULL;
@@ -57,7 +57,7 @@ static struct gfx_label_node *load_frame_labels(struct cnf_label_node *cnf_label
 	struct gfx_label_node *label_head = NULL;
 	while (cnf_label_pgmem) {
 		struct cnf_label_node cnf_label_node;
-		struct gfx_label_node *gfx_label_node = malloc_locked(sizeof(struct gfx_label_node));
+		struct gfx_label_node *gfx_label_node = (struct gfx_label_node *)malloc_locked(sizeof(struct gfx_label_node));
 		if (gfx_label_node == NULL)
 			return NULL;
 
@@ -80,7 +80,7 @@ static struct gfx_information_node *load_frame_infos(struct cnf_info_node *cnf_i
 	struct gfx_information_node *information_head = NULL;
 	while (cnf_info_pgmem) {
 		struct cnf_info_node cnf_info_node;
-		struct gfx_information_node *gfx_information_node = malloc_locked(sizeof(struct gfx_information_node));
+		struct gfx_information_node *gfx_information_node = (struct gfx_information_node *)malloc_locked(sizeof(struct gfx_information_node));
 		if (gfx_information_node == NULL)
 			return NULL;
 
@@ -134,7 +134,7 @@ static int load_action(struct gfx_item_action *action, struct cnf_action config_
 			return 0;
 		}
 
-		action->frame = malloc_locked(sizeof(struct gfx_frame));
+		action->frame = (struct gfx_frame *)malloc_locked(sizeof(struct gfx_frame));
 		if (action->frame == NULL)
 			return -1;
 
@@ -161,7 +161,7 @@ static int load_action(struct gfx_item_action *action, struct cnf_action config_
 
 static int graphic_item_init(struct gfx_image *menu_image, struct cnf_image * image_node)
 {
-	menu_image->bitmap = malloc_locked(sizeof(struct gfx_mono_bitmap));
+	menu_image->bitmap = (struct gfx_mono_bitmap *)malloc_locked(sizeof(struct gfx_mono_bitmap));
 	if (menu_image->bitmap == NULL)
 		return -1;
 
@@ -172,16 +172,30 @@ static int graphic_item_init(struct gfx_image *menu_image, struct cnf_image * im
 	return 0;
 }
 
-void show_logo(struct gfx_frame *frame);//TODO: temporary forward declaration. Remove later.
-
 static void splash_init(struct cnf_blk config_block)
 {
-	gfx_frame_init(splash, NULL, NULL, NULL);
-	splash->draw = show_logo;
-	splash_bitmap.width = config_block.splash_width;
-	splash_bitmap.height = config_block.splash_height;
-	splash_bitmap.data.progmem = config_block.splash;
-	splash_bitmap.type = GFX_MONO_BITMAP_SECTION;
+	struct cnf_image_node cnf_image_node;
+	cnf_image_node.next = NULL;
+	cnf_image_node.image.height = config_block.splash_height;
+	cnf_image_node.image.width = config_block.splash_width;
+	cnf_image_node.image.x = 0;
+	cnf_image_node.image.y = 0;
+	cnf_image_node.image.bitmap_progmem = config_block.splash;
+
+	struct gfx_image_node *gfx_image_node = (struct gfx_image_node *)malloc_locked(sizeof(struct gfx_image_node));
+	if (gfx_image_node == NULL)
+		return;
+
+	gfx_image_node->image.bitmap = (struct gfx_mono_bitmap *)malloc_locked(sizeof(struct gfx_mono_bitmap));
+	//TODO: Possible memory leak here fix later
+	if (gfx_image_node->image.bitmap == NULL)
+		return;
+
+	gfx_image_init(&gfx_image_node->image, cnf_image_node.image.bitmap_progmem, cnf_image_node.image.height,
+				   cnf_image_node.image.width, cnf_image_node.image.x, cnf_image_node.image.y);
+
+	gfx_image_node->next = 0;
+	gfx_frame_init(splash, gfx_image_node, NULL, NULL);
 }
 
 static int load_fonts(struct cnf_font_node *cnf_font_node)
@@ -193,7 +207,7 @@ static int load_fonts(struct cnf_font_node *cnf_font_node)
 
 	while (cnf_font_node != 0) {
 		memcpy_config(&font_node, cnf_font_node, sizeof(struct cnf_font_node));
-		font = malloc_locked(sizeof(struct glcd_FontConfig_t));
+		font = (struct glcd_FontConfig_t *)malloc_locked(sizeof(struct glcd_FontConfig_t));
 		if (font == NULL)
 			return -1;
 
@@ -218,7 +232,7 @@ static int set_graphic_view(struct gfx_action_menu *action_menu, struct cnf_imag
 		return 0;
 	}
 
-	action_menu->graphic_items_head = malloc_locked(sizeof(struct gfx_image_node));
+	action_menu->graphic_items_head = (struct gfx_image_node *)malloc_locked(sizeof(struct gfx_image_node));
 	if (action_menu->graphic_items_head == NULL)
 		return -1;
 
@@ -232,7 +246,7 @@ static int set_graphic_view(struct gfx_action_menu *action_menu, struct cnf_imag
 
 		cnf_graphic_item_node = cnf_image.next;
 		if (i < mono_menu->num_elements - 1){
-			image_node->next = malloc_locked(sizeof(struct gfx_image_node));
+			image_node->next = (struct gfx_image_node *)malloc_locked(sizeof(struct gfx_image_node));
 			if (image_node->next == NULL)
 				return -1;
 
@@ -248,14 +262,14 @@ static int set_graphic_view(struct gfx_action_menu *action_menu, struct cnf_imag
 
 static int set_mono_menu(struct gfx_action_menu *action_menu, struct gfx_mono_menu *menu)
 {
-	struct gfx_mono_menu *mono_menu = malloc_locked(sizeof(struct gfx_mono_menu));
+	struct gfx_mono_menu *mono_menu = (struct gfx_mono_menu *)malloc_locked(sizeof(struct gfx_mono_menu));
 	if (mono_menu == NULL)
 		return -1;
 
 	memcpy_config(mono_menu, menu, sizeof(struct gfx_mono_menu));
 	action_menu->is_progmem = true;
 	action_menu->menu= mono_menu;
-	action_menu->actions = malloc_locked(sizeof(struct gfx_item_action) * mono_menu->num_elements);
+	action_menu->actions = (struct gfx_item_action *)malloc_locked(sizeof(struct gfx_item_action) * mono_menu->num_elements);
 	if (action_menu->actions == NULL)
 		return -1;
 
@@ -297,7 +311,7 @@ int load_config_block(void)
 
 	dashboard = clock = splash = NULL;
 	if (config_block.dashboard) {
-		dashboard = malloc_locked(sizeof(struct gfx_frame));
+		dashboard = (struct gfx_frame *)malloc_locked(sizeof(struct gfx_frame));
 		if (dashboard == NULL)
 			return -1;
 		memcpy_config(&cnf_frame, config_block.dashboard, sizeof(cnf_frame));
@@ -306,7 +320,7 @@ int load_config_block(void)
 	}
 
 	if (config_block.clock) {
-		clock = malloc_locked(sizeof(struct gfx_frame));
+		clock = (struct gfx_frame *)malloc_locked(sizeof(struct gfx_frame));
 		if (clock == NULL)
 			return -1;
 		memcpy_config(&cnf_frame, config_block.clock, sizeof(cnf_frame));
@@ -315,19 +329,19 @@ int load_config_block(void)
 	}
 
 	if (config_block.splash) {
-		splash = malloc_locked(sizeof(struct gfx_frame));
+		splash = (struct gfx_frame *)malloc_locked(sizeof(struct gfx_frame));
 		if (splash == NULL)
 			return -1;
 		splash_init(config_block);
 	}
 
-	action_menus = malloc_locked(sizeof(struct gfx_action_menu *) * size_of_menus);
+	action_menus = (struct gfx_action_menu **)malloc_locked(sizeof(struct gfx_action_menu *) * size_of_menus);
 	if (action_menus == NULL)
 		return -1;
 
 	struct cnf_menu_node *cnf_menu_node = config_block.menus_head;
 	for (int i = 0; i < size_of_menus; i++) {
-		action_menus[i] = malloc_locked(sizeof(struct gfx_action_menu));
+		action_menus[i] = (struct gfx_action_menu *)malloc_locked(sizeof(struct gfx_action_menu));
 		if (action_menus[i] == NULL)
 			return -1;
 	}
