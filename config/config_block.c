@@ -4,6 +4,7 @@
 #include "gfx/gfx_components/gfx_information.h"
 #include "gfx/gfx_components/gfx_label.h"
 #include "gfx/gfx_components/gfx_image.h"
+#include "gfx/gfx_gui_control.h"
 
 #define CONFIG_SECTION_ADDRESS 0xA000
 
@@ -358,7 +359,7 @@ int load_config_block(void)
 				(set_actions(action_menus[i], config_menu.actions_head, config_block.dashboard))) {
 			return -1;
 		}
-		action_menus[config_menu.id]->draw = gfx_action_menu_display;
+		action_menus[config_menu.id]->draw = gfx_display_menu;
 		cnf_menu_node = cnf_menu.next;
 	}
 	action_types_init();

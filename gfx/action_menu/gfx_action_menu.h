@@ -22,7 +22,6 @@ struct gfx_action_menu {
 extern struct gfx_action_menu *present_menu;
 
 void clear_screen(void);
-void gfx_display_msg(char *msg);
 void gfx_action_menu_init(void);
 void switch_to_frame(struct gfx_frame *frame);
 void gfx_redraw_current_frame(void);
