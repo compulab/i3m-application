@@ -87,11 +87,6 @@ void show_logo(struct gfx_frame *frame)
 	display_state = DISPLAY_LOGO;
 }
 
-static void gfx_action_menu_process_key(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
-{
-	gfx_handle_key_pressed(action_menu, keycode, from_frame);
-}
-
 void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
 {
 	struct gfx_item_action *selected_action;
@@ -118,7 +113,7 @@ void gfx_handle_key_pressed(struct gfx_action_menu *action_menu, uint8_t keycode
 			return;
 		 gfx_mono_menu_process_key(action_menu->menu, keycode, action_menu->is_progmem);
 		 if (from_frame)
-			 gfx_action_menu_process_key(action_menu, GFX_MONO_MENU_KEYCODE_ENTER, true);
+			 gfx_handle_key_pressed(action_menu, GFX_MONO_MENU_KEYCODE_ENTER, true);
 		 else
 			 gfx_action_menu_move_cursor(present_menu);
 		 break;
@@ -146,7 +141,7 @@ void gfx_display_msg(char *msg)
 static void handle_button(uint8_t keycode)
 {
 	if (!frame_present) {
-		gfx_action_menu_process_key(present_menu, keycode, false);
+		gfx_handle_key_pressed(present_menu, keycode, false);
 		return;
 	}
 
