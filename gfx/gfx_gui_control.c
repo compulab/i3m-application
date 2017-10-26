@@ -74,7 +74,8 @@ void gfx_switch_to_current_menu(void)
 
 void gfx_redraw_current_frame(void)
 {
-	current_frame->draw(current_frame);
+	if (current_frame)
+		current_frame->draw(current_frame);
 }
 
 void gfx_switch_to_frame(struct gfx_frame *frame)
