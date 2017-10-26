@@ -357,7 +357,7 @@ int load_config_block(void)
 				(set_actions(action_menus[i], config_menu.actions_head, config_block.dashboard))) {
 			return -1;
 		}
-		action_menus[config_menu.id]->draw = gfx_switch_to_menu;
+		action_menus[config_menu.id]->draw = gfx_action_menu_display;
 		action_menus[config_menu.id]->handle_button = gfx_menu_handle_button;
 		cnf_menu_node = cnf_menu.next;
 	}

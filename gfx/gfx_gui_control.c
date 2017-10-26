@@ -26,17 +26,12 @@ static bool gfx_in_menu(void)
 void gfx_gui_init(void)
 {
 	set_menu_by_id(&current_menu, MAIN_MENU_ID);
-	current_frame = 0;
-	display_state = DISPLAY_MENU;
-	current_menu->draw(current_menu);
+	gfx_switch_to_menu(current_menu);
 }
 
 void gfx_switch_to_current_menu(void)
 {
-	clear_screen();
-	current_frame = 0;
-	display_state = DISPLAY_MENU;
-	current_menu->draw(current_menu);
+	gfx_switch_to_menu(current_menu);
 }
 
 void gfx_redraw_current_frame(void)
@@ -56,8 +51,8 @@ void gfx_switch_to_menu(struct gfx_action_menu *action_menu)
 {
 	current_frame = 0;
 	current_menu = action_menu;
-	gfx_action_menu_display(action_menu);
 	display_state = DISPLAY_MENU;
+	action_menu->draw(action_menu);
 }
 
 void gfx_display_msg(char *msg)
