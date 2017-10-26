@@ -224,32 +224,29 @@ static int load_fonts(struct cnf_font_node *cnf_font_node)
 	return 0;
 }
 
-static int set_graphic_view(struct gfx_action_menu *action_menu, struct cnf_image_node *cnf_graphic_item_node)
+static struct gfx_image_node *load_graphic_view(int num_elements, struct cnf_image_node *cnf_graphic_item_node)
 {
 	struct cnf_image_node cnf_image;
-	struct gfx_mono_menu *mono_menu = action_menu->menu;
-	if (cnf_graphic_item_node == 0) {
-		action_menu->graphic_items_head = 0;
-		return 0;
-	}
+	if (cnf_graphic_item_node == 0)
+		return NULL;
 
-	action_menu->graphic_items_head = (struct gfx_image_node *)malloc_locked(sizeof(struct gfx_image_node));
-	if (action_menu->graphic_items_head == NULL)
-		return -1;
+	struct gfx_image_node *graphic_items_head = (struct gfx_image_node *)malloc_locked(sizeof(struct gfx_image_node));
+	if (graphic_items_head == NULL)
+		return NULL;
 
-	struct gfx_image_node *image_node = action_menu->graphic_items_head;
-	for (uint8_t i = 0; i < mono_menu->num_elements; i++){
+	struct gfx_image_node *image_node = graphic_items_head;
+	for (uint8_t i = 0; i < num_elements; i++){
 		if (cnf_graphic_item_node == 0)
 			break;
 		memcpy_config(&cnf_image, cnf_graphic_item_node, sizeof(struct cnf_image_node));
 		if (graphic_item_init(&image_node->image, &cnf_image.image))
-			return -1;
+			return NULL;
 
 		cnf_graphic_item_node = cnf_image.next;
-		if (i < mono_menu->num_elements - 1){
+		if (i < num_elements - 1){
 			image_node->next = (struct gfx_image_node *)malloc_locked(sizeof(struct gfx_image_node));
 			if (image_node->next == NULL)
-				return -1;
+				return NULL;
 
 			image_node = image_node->next;
 		} else {
@@ -257,40 +254,34 @@ static int set_graphic_view(struct gfx_action_menu *action_menu, struct cnf_imag
 		}
 	}
 
-	return 0;
-
+	return graphic_items_head;
 }
 
-static int set_mono_menu(struct gfx_action_menu *action_menu, struct gfx_mono_menu *menu)
+static struct gfx_mono_menu *load_mono_menu(struct gfx_mono_menu *menu)
 {
 	struct gfx_mono_menu *mono_menu = (struct gfx_mono_menu *)malloc_locked(sizeof(struct gfx_mono_menu));
 	if (mono_menu == NULL)
-		return -1;
+		return NULL;
 
 	memcpy_config(mono_menu, menu, sizeof(struct gfx_mono_menu));
-	action_menu->is_progmem = true;
-	action_menu->menu= mono_menu;
-	action_menu->actions = (struct gfx_item_action *)malloc_locked(sizeof(struct gfx_item_action) * mono_menu->num_elements);
-	if (action_menu->actions == NULL)
-		return -1;
 
-	return 0;
+	return mono_menu;
 }
 
-static int set_actions(struct gfx_action_menu * menu, struct cnf_action_node *cnf_action_node, struct cnf_frame * cnf_dashboard)
+static struct gfx_item_action *load_menu_actions(int num_of_actions, struct cnf_action_node *cnf_action_node, struct cnf_frame * cnf_dashboard)
 {
 	struct cnf_action_node action_node;
-	uint8_t action_index = 0;
-	while (cnf_action_node) {
-		memcpy_config(&action_node, cnf_action_node, sizeof(struct cnf_action_node));
-		if (load_action(&(menu->actions[action_index]), action_node.action, cnf_dashboard))
-			return -1;
+	struct gfx_item_action *actions = (struct gfx_item_action *)malloc_locked(sizeof(struct gfx_item_action) * num_of_actions);
+	if (actions == NULL)
+		return NULL;
 
-		action_index++;
-		cnf_action_node = action_node.next;
+	for (uint8_t action_index = 0; cnf_action_node; action_index++, cnf_action_node = action_node.next) {
+		memcpy_config(&action_node, cnf_action_node, sizeof(struct cnf_action_node));
+		if (load_action(&(actions[action_index]), action_node.action, cnf_dashboard))
+			return NULL;
 	}
 
-	return 0;
+	return actions;
 }
 
 int load_config_block(void)
@@ -351,14 +342,9 @@ int load_config_block(void)
 
 		memcpy_config(&cnf_menu, cnf_menu_node, sizeof(struct cnf_menu_node));
 		memcpy_config(&config_menu, cnf_menu.menu, sizeof(struct cnf_menu));
-		action_menus[config_menu.id]->id = config_menu.id;
-		if ((set_mono_menu(action_menus[config_menu.id], config_menu.menu)) ||
-				(set_graphic_view(action_menus[config_menu.id], config_menu.images_items_head)) ||
-				(set_actions(action_menus[i], config_menu.actions_head, config_block.dashboard))) {
-			return -1;
-		}
-		action_menus[config_menu.id]->draw = gfx_action_menu_display;
-		action_menus[config_menu.id]->handle_button = gfx_menu_handle_button;
+		gfx_action_menu_init(action_menus[config_menu.id], config_menu.id, true, load_mono_menu(config_menu.menu),
+							 load_menu_actions(action_menus[i]->menu->num_elements, config_menu.actions_head, config_block.dashboard),
+							 load_graphic_view(action_menus[i]->menu->num_elements, config_menu.images_items_head));
 		cnf_menu_node = cnf_menu.next;
 	}
 	action_types_init();

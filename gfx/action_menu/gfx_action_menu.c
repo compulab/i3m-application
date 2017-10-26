@@ -25,7 +25,7 @@ static void update_action_visibility(struct gfx_item_action *action)
 	action->visible = visible;
 }
 
-void gfx_menu_handle_button(struct gfx_action_menu *action_menu, uint8_t keycode)
+static void gfx_menu_handle_button(struct gfx_action_menu *action_menu, uint8_t keycode)
 {
 	if (keycode != GFX_MONO_MENU_KEYCODE_ENTER) {
 		gfx_mono_menu_process_key(action_menu->menu, keycode, action_menu->is_progmem);
@@ -48,7 +48,7 @@ void gfx_action_menu_move_cursor(struct gfx_action_menu *action_menu)
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
-void gfx_action_menu_display(struct gfx_action_menu *action_menu)
+static void gfx_action_menu_display(struct gfx_action_menu *action_menu)
 {
 	for (int i = 0; i < action_menu->menu->num_elements; i++)
 		update_action_visibility(&action_menu->actions[i]);
@@ -58,3 +58,15 @@ void gfx_action_menu_display(struct gfx_action_menu *action_menu)
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
+void gfx_action_menu_init(struct gfx_action_menu *action_menu, uint8_t id, bool is_progmem,
+						  struct gfx_mono_menu *menu, struct gfx_item_action *actions,
+						  struct gfx_image_node *graphic_items_head)
+{
+	action_menu->id = id;
+	action_menu->is_progmem = is_progmem;
+	action_menu->menu = menu;
+	action_menu->actions = actions;
+	action_menu->graphic_items_head = graphic_items_head;
+	action_menu->draw = gfx_action_menu_display;
+	action_menu->handle_button = gfx_menu_handle_button;
+}
