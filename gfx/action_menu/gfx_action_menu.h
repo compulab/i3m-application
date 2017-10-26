@@ -19,7 +19,7 @@ struct gfx_action_menu {
 	void (*draw)(struct gfx_action_menu *action_menu);
 };
 
-extern struct gfx_action_menu *present_menu;
+extern struct gfx_action_menu *current_menu;
 
 void clear_screen(void);
 void gfx_gui_init(void);

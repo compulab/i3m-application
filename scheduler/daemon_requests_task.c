@@ -30,8 +30,8 @@ static bool need_to_update_req(enum information_type info_type)
 //		return is_type_in_frame(info_type, frame_present->information_head);
 
 	struct gfx_item_action *action;
-	for (int i = 0; i < present_menu->menu->num_elements; i++) {
-		action = &present_menu->actions[i];
+	for (int i = 0; i < current_menu->menu->num_elements; i++) {
+		action = &current_menu->actions[i];
 		if (action->type == ACTION_TYPE_SHOW_FRAME && is_type_in_frame(info_type, action->frame->information_head))
 			return true;
 	}

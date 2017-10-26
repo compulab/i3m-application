@@ -15,15 +15,15 @@
 enum display_state display_state;
 #define MAIN_MENU_ID 	0
 
-struct gfx_frame *frame_present;
-struct gfx_action_menu *present_menu;
+struct gfx_frame *current_frame;
+struct gfx_action_menu *current_menu;
 
 void gfx_gui_init(void)
 {
-	set_menu_by_id(&present_menu, MAIN_MENU_ID);
-	frame_present = 0;
+	set_menu_by_id(&current_menu, MAIN_MENU_ID);
+	current_frame = 0;
 	display_state = DISPLAY_MENU;
-	present_menu->draw(present_menu);
+	current_menu->draw(current_menu);
 }
 
 void gfx_menu_handle_button(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
@@ -32,7 +32,7 @@ void gfx_menu_handle_button(struct gfx_action_menu *action_menu, uint8_t keycode
 	switch(keycode) {
 	case GFX_MONO_MENU_KEYCODE_ENTER:
 		selected_action = &action_menu->actions[(action_menu->menu)->current_selection];
-		frame_present = 0;
+		current_frame = 0;
 		switch (selected_action->type) {
 		case ACTION_TYPE_SHOW_FRAME:
 			gfx_switch_to_frame(selected_action->frame);
@@ -54,7 +54,7 @@ void gfx_menu_handle_button(struct gfx_action_menu *action_menu, uint8_t keycode
 		 if (from_frame)
 			 gfx_menu_handle_button(action_menu, GFX_MONO_MENU_KEYCODE_ENTER, true);
 		 else
-			 gfx_action_menu_move_cursor(present_menu);
+			 gfx_action_menu_move_cursor(current_menu);
 		 break;
 	}
 }
@@ -62,27 +62,27 @@ void gfx_menu_handle_button(struct gfx_action_menu *action_menu, uint8_t keycode
 void gfx_go_back_to_menu(void)
 {
 	clear_screen();
-	frame_present = 0;
+	current_frame = 0;
 	display_state = DISPLAY_MENU;
-	present_menu->draw(present_menu);
+	current_menu->draw(current_menu);
 }
 
 void gfx_redraw_current_frame(void)
 {
-	frame_present->draw(frame_present);
+	current_frame->draw(current_frame);
 }
 
 void gfx_switch_to_frame(struct gfx_frame *frame)
 {
-	frame_present = frame;
+	current_frame = frame;
 	display_state = DISPLAY_FRAME;
 	frame->draw(frame);
 }
 
 void gfx_display_menu(struct gfx_action_menu *action_menu)
 {
-	frame_present = 0;
-	present_menu = action_menu;
+	current_frame = 0;
+	current_menu = action_menu;
 	gfx_action_menu_display(action_menu);
 	display_state = DISPLAY_MENU;
 }
@@ -100,10 +100,10 @@ void gfx_display_msg(char *msg)
 
 void gfx_handle_button(uint8_t keycode)
 {
-	if (!frame_present)
-		gfx_menu_handle_button(present_menu, keycode, false);
+	if (!current_frame)
+		gfx_menu_handle_button(current_menu, keycode, false);
 	else
-		frame_present->handle_buttons(keycode);
+		current_frame->handle_buttons(keycode);
 }
 
 static void update_screen(void *data)
@@ -112,9 +112,9 @@ static void update_screen(void *data)
 		return;
 
 	if (display_state == DISPLAY_MENU)
-		present_menu->draw(present_menu);
+		current_menu->draw(current_menu);
 	else
-		frame_present->draw(frame_present);
+		current_frame->draw(current_frame);
 }
 
 static struct work update_screen_work = { .do_work = update_screen };

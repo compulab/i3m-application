@@ -53,7 +53,7 @@ static void gfx_functional_frame_draw(struct gfx_frame *frame)
 
 static void gfx_frame_draw_control_arrows(struct gfx_frame *info)
 {
-	draw_control_signs_arrows(present_menu->menu->current_selection, 0, present_menu->menu->num_elements - 2);
+	draw_control_signs_arrows(current_menu->menu->current_selection, 0, current_menu->menu->num_elements - 2);
 }
 
 static void gfx_frame_draw_control_from_info(struct gfx_frame *frame)
@@ -64,13 +64,13 @@ static void gfx_frame_draw_control_from_info(struct gfx_frame *frame)
 
 static bool is_scroll_before_first_frame(uint8_t key)
 {
-	return (key == GFX_MONO_MENU_KEYCODE_DOWN) && (present_menu->menu->current_selection == 0);
+	return (key == GFX_MONO_MENU_KEYCODE_DOWN) && (current_menu->menu->current_selection == 0);
 }
 
 static bool is_scroll_past_last_frame(uint8_t key)
 {
 	return (key == GFX_MONO_MENU_KEYCODE_UP) &&
-		   (present_menu->menu->current_selection == present_menu->menu->num_elements - 2);
+		   (current_menu->menu->current_selection == current_menu->menu->num_elements - 2);
 }
 
 static void handle_buttons_scroll_to_frame(uint8_t key)
@@ -82,9 +82,9 @@ static void handle_buttons_scroll_to_frame(uint8_t key)
 
 	if (is_scroll_before_first_frame(key) || is_scroll_past_last_frame(key))
 				return;
-	 gfx_mono_menu_process_key(present_menu->menu, key, present_menu->is_progmem);
+	 gfx_mono_menu_process_key(current_menu->menu, key, current_menu->is_progmem);
 	 //Invoke "display new frame" by simulating a KECODE ENTER event
-	 gfx_menu_handle_button(present_menu, GFX_MONO_MENU_KEYCODE_ENTER, true);
+	 gfx_menu_handle_button(current_menu, GFX_MONO_MENU_KEYCODE_ENTER, true);
 }
 
 static void handle_buttons_back_to_menu(uint8_t keycode)
