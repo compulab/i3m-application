@@ -293,8 +293,6 @@ static int set_actions(struct gfx_action_menu * menu, struct cnf_action_node *cn
 	return 0;
 }
 
-void gfx_action_menu_display(struct gfx_action_menu *action_menu); //TODO: temporary forward declaration
-
 int load_config_block(void)
 {
 	struct cnf_blk config_block;
