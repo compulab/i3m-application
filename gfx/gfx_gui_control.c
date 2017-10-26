@@ -18,6 +18,11 @@ enum display_state display_state;
 struct gfx_frame *current_frame;
 struct gfx_action_menu *current_menu;
 
+static bool gfx_in_menu(void)
+{
+	return !current_frame;
+}
+
 void gfx_gui_init(void)
 {
 	set_menu_by_id(&current_menu, MAIN_MENU_ID);
@@ -100,7 +105,7 @@ void gfx_display_msg(char *msg)
 
 void gfx_handle_button(uint8_t keycode)
 {
-	if (!current_frame)
+	if (gfx_in_menu())
 		gfx_menu_handle_button(current_menu, keycode, false);
 	else
 		current_frame->handle_buttons(keycode);
@@ -111,7 +116,7 @@ static void update_screen(void *data)
 	if (display_state == DISPLAY_WAIT_FOR_USER_ACK)
 		return;
 
-	if (display_state == DISPLAY_MENU)
+	if (gfx_in_menu())
 		current_menu->draw(current_menu);
 	else
 		current_frame->draw(current_frame);
