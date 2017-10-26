@@ -84,7 +84,7 @@ static void handle_buttons_scroll_to_frame(uint8_t key)
 				return;
 	 gfx_mono_menu_process_key(current_menu->menu, key, current_menu->is_progmem);
 	 //Invoke "display new frame" by simulating a KECODE ENTER event
-	 gfx_menu_handle_button(current_menu, GFX_MONO_MENU_KEYCODE_ENTER, true);
+	 gfx_menu_handle_button(current_menu, GFX_MONO_MENU_KEYCODE_ENTER);
 }
 
 static void handle_buttons_back_to_menu(uint8_t keycode)

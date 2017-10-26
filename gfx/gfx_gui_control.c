@@ -31,37 +31,19 @@ void gfx_gui_init(void)
 	current_menu->draw(current_menu);
 }
 
-void gfx_menu_handle_button(struct gfx_action_menu *action_menu, uint8_t keycode, bool from_frame)
+void gfx_menu_handle_button(struct gfx_action_menu *action_menu, uint8_t keycode)
 {
-	struct gfx_item_action *selected_action;
-	switch(keycode) {
-	case GFX_MONO_MENU_KEYCODE_ENTER:
-		selected_action = &action_menu->actions[(action_menu->menu)->current_selection];
-		current_frame = 0;
-		switch (selected_action->type) {
-		case ACTION_TYPE_SHOW_FRAME:
-			gfx_switch_to_frame(selected_action->frame);
-			break;
-		case ACTION_TYPE_SHOW_MENU:
-			if (from_frame && selected_action->menu_id == MAIN_MENU_ID)
-				break;
-			selected_action->menu->draw(selected_action->menu);
-			break;
-		default:
-			break;
-		}
-		break;
-	default:
-		if (from_frame && ((keycode == GFX_MONO_MENU_KEYCODE_DOWN && action_menu->menu->current_selection == 0) ||
-					(keycode == GFX_MONO_MENU_KEYCODE_UP && action_menu->menu->current_selection == action_menu->menu->num_elements - 2)))
-			return;
-		 gfx_mono_menu_process_key(action_menu->menu, keycode, action_menu->is_progmem);
-		 if (from_frame)
-			 gfx_menu_handle_button(action_menu, GFX_MONO_MENU_KEYCODE_ENTER, true);
-		 else
-			 gfx_action_menu_move_cursor(current_menu);
-		 break;
+	if (keycode != GFX_MONO_MENU_KEYCODE_ENTER) {
+		gfx_mono_menu_process_key(action_menu->menu, keycode, action_menu->is_progmem);
+		gfx_action_menu_move_cursor(current_menu);
+		return;
 	}
+
+	struct gfx_item_action *selected_action = &action_menu->actions[(action_menu->menu)->current_selection];
+	if (selected_action->type == ACTION_TYPE_SHOW_FRAME)
+		gfx_switch_to_frame(selected_action->frame);
+	else if (selected_action->type == ACTION_TYPE_SHOW_MENU)
+		gfx_switch_to_menu(selected_action->menu);
 }
 
 void gfx_switch_to_current_menu(void)
@@ -107,7 +89,7 @@ void gfx_display_msg(char *msg)
 void gfx_handle_button(uint8_t keycode)
 {
 	if (gfx_in_menu())
-		gfx_menu_handle_button(current_menu, keycode, false);
+		gfx_menu_handle_button(current_menu, keycode);
 	else
 		current_frame->handle_buttons(keycode);
 }
