@@ -63,34 +63,34 @@ static void draw_disabled_item(struct gfx_item *pos)
 		gfx_mono_draw_horizontal_line(pos->x, y, pos->width, GFX_PIXEL_CLR);
 }
 
-void graphic_menu_format(struct gfx_action_menu *action_menu)
+void graphic_menu_format(struct gfx_graphic_menu *graphic_menu)
 {
-	struct gfx_mono_menu *menu = action_menu->menu;
+	struct gfx_mono_menu *menu = graphic_menu->menu;
 	uint8_t i = 0;
 	clear_screen();
-	list_foreach(struct gfx_image_node *, action_menu->graphic_items_head, curr_image) {
-		uint8_t item_index = (action_menu->id && i == menu->num_elements - 1) ? MAX_ITEM_INDEX : i;
+	list_foreach(struct gfx_image_node *, graphic_menu->graphic_items_head, curr_image) {
+		uint8_t item_index = (graphic_menu->id && i == menu->num_elements - 1) ? MAX_ITEM_INDEX : i;
 		set_icon_position(&curr_image->image, item_index);
 		gfx_mono_generic_put_bitmap(curr_image->image.bitmap, curr_image->image.postion.x, curr_image->image.postion.y);
-		if (!action_menu->actions[i].visible)
+		if (!graphic_menu->actions[i].visible)
 			draw_disabled_item(&curr_image->image.postion);
 		i++;
 	}
 	draw_standard_separator_line();
 }
 
-void graphic_menu_deselect_item(struct gfx_action_menu *action_menu, uint8_t selection)
+void graphic_menu_deselect_item(struct gfx_graphic_menu *graphic_menu, uint8_t selection)
 {
-	struct gfx_mono_menu *menu = action_menu->menu;
-	uint8_t item_index = (action_menu->id && selection == menu->num_elements - 1) ? MAX_ITEM_INDEX : selection;
+	struct gfx_mono_menu *menu = graphic_menu->menu;
+	uint8_t item_index = (graphic_menu->id && selection == menu->num_elements - 1) ? MAX_ITEM_INDEX : selection;
 	select_deselect_item(item_index, GFX_PIXEL_CLR);
 	gfx_mono_draw_filled_rect(0, 54, 128, 10, GFX_PIXEL_CLR);
 }
 
-void graphic_menu_select_item(struct gfx_action_menu *action_menu, uint8_t selection)
+void graphic_menu_select_item(struct gfx_graphic_menu *graphic_menu, uint8_t selection)
 {
-	struct gfx_mono_menu *menu = action_menu->menu;
-	uint8_t item_index = (action_menu->id && selection == menu->num_elements - 1) ? MAX_ITEM_INDEX : selection;
+	struct gfx_mono_menu *menu = graphic_menu->menu;
+	uint8_t item_index = (graphic_menu->id && selection == menu->num_elements - 1) ? MAX_ITEM_INDEX : selection;
 	select_deselect_item(item_index, GFX_PIXEL_SET);
 	draw_selection_title(menu->strings[selection]);
 }

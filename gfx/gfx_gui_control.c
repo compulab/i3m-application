@@ -5,7 +5,7 @@
  *  Author: Nikita
  */
 
-#include "gfx/action_menu/gfx_action_menu.h"
+#include "gfx/action_menu/gfx_graphic_menu.h"
 #include "gfx/action_menu/gfx_item_action.h"
 #include "gfx/gfx_gui_control.h"
 #include "config/config_block.h"
@@ -17,7 +17,7 @@ enum display_state display_state;
 #define MAIN_MENU_ID 	0
 
 struct gfx_frame *current_frame;
-struct gfx_action_menu *current_menu;
+struct gfx_graphic_menu *current_menu;
 
 static bool gfx_in_menu(void)
 {
@@ -48,12 +48,12 @@ void gfx_switch_to_frame(struct gfx_frame *frame)
 	frame->draw(frame);
 }
 
-void gfx_switch_to_menu(struct gfx_action_menu *action_menu)
+void gfx_switch_to_menu(struct gfx_graphic_menu *graphic_menu)
 {
 	current_frame = 0;
-	current_menu = action_menu;
+	current_menu = graphic_menu;
 	display_state = DISPLAY_MENU;
-	action_menu->draw(action_menu);
+	graphic_menu->draw(graphic_menu);
 }
 
 void gfx_display_msg(char *msg)

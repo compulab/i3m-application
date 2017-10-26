@@ -1,6 +1,6 @@
 #include "config_block.h"
 #include "gfx/action_menu/gfx_item_action.h"
-#include "gfx/action_menu/gfx_action_menu.h"
+#include "gfx/action_menu/gfx_graphic_menu.h"
 #include "gfx/gfx_components/gfx_information.h"
 #include "gfx/gfx_components/gfx_label.h"
 #include "gfx/gfx_components/gfx_image.h"
@@ -105,7 +105,7 @@ static struct gfx_information_node *load_frame_infos(struct cnf_info_node *cnf_i
 static void action_types_init(void)
 {
 	for (int i = 0; i < size_of_menus; i++) {
-		struct gfx_action_menu *menu = action_menus[i];
+		struct gfx_graphic_menu *menu = graphic_menus[i];
 		for (int j = 0; j < menu->menu->num_elements; j++) {
 			struct gfx_item_action *action = &menu->actions[j];
 			if (action->type == ACTION_TYPE_SHOW_MENU)
@@ -326,14 +326,14 @@ int load_config_block(void)
 		splash_init(config_block);
 	}
 
-	action_menus = (struct gfx_action_menu **)malloc_locked(sizeof(struct gfx_action_menu *) * size_of_menus);
-	if (action_menus == NULL)
+	graphic_menus = (struct gfx_graphic_menu **)malloc_locked(sizeof(struct gfx_graphic_menu *) * size_of_menus);
+	if (graphic_menus == NULL)
 		return -1;
 
 	struct cnf_menu_node *cnf_menu_node = config_block.menus_head;
 	for (int i = 0; i < size_of_menus; i++) {
-		action_menus[i] = (struct gfx_action_menu *)malloc_locked(sizeof(struct gfx_action_menu));
-		if (action_menus[i] == NULL)
+		graphic_menus[i] = (struct gfx_graphic_menu *)malloc_locked(sizeof(struct gfx_graphic_menu));
+		if (graphic_menus[i] == NULL)
 			return -1;
 	}
 
@@ -343,17 +343,17 @@ int load_config_block(void)
 
 		memcpy_config(&cnf_menu, cnf_menu_node, sizeof(struct cnf_menu_node));
 		memcpy_config(&config_menu, cnf_menu.menu, sizeof(struct cnf_menu));
-		gfx_action_menu_init(action_menus[config_menu.id], config_menu.id, true, load_mono_menu(config_menu.menu),
-							 load_menu_actions(action_menus[i]->menu->num_elements, config_menu.actions_head, config_block.dashboard),
-							 load_graphic_view(action_menus[i]->menu->num_elements, config_menu.images_items_head));
+		gfx_graphic_menu_init(graphic_menus[config_menu.id], config_menu.id, true, load_mono_menu(config_menu.menu),
+							 load_menu_actions(graphic_menus[i]->menu->num_elements, config_menu.actions_head, config_block.dashboard),
+							 load_graphic_view(graphic_menus[i]->menu->num_elements, config_menu.images_items_head));
 		cnf_menu_node = cnf_menu.next;
 	}
 	action_types_init();
 	return 0;
 }
 
-void set_menu_by_id(struct gfx_action_menu **menu, uint8_t index)
+void set_menu_by_id(struct gfx_graphic_menu **menu, uint8_t index)
 {
 	if (index < size_of_menus)
-		*menu = action_menus[index];
+		*menu = graphic_menus[index];
 }

@@ -47,7 +47,7 @@ Change Activity:
 */
 
 #include "glcd_text.h"
-#include "gfx/action_menu/gfx_action_menu.h"
+#include "gfx/action_menu/gfx_graphic_menu.h"
 #if defined(FP_XMEGA)
 #include "glcd_font.h"
 #endif

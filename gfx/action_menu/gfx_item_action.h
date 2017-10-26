@@ -11,13 +11,13 @@
 
 #include "gfx/gfx_frame.h"
 
-struct gfx_action_menu;
+struct gfx_graphic_menu;
 
 struct gfx_item_action {
 	enum action_type type;
 	uint8_t menu_id;
 	bool visible;
-	struct gfx_action_menu *menu;
+	struct gfx_graphic_menu *menu;
 	struct gfx_frame *frame;
 };
 
