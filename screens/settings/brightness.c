@@ -14,7 +14,7 @@ static void handle_brightness_buttons(uint8_t key)
 {
 	switch (key) {
 	case GFX_MONO_MENU_KEYCODE_ENTER:
-		gfx_go_back_to_menu();
+		gfx_switch_to_current_menu();
 		return;
 	case GFX_MONO_MENU_KEYCODE_DOWN:
 		eeprom_decrese_brightness_level();

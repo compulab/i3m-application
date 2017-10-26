@@ -59,7 +59,7 @@ void gfx_menu_handle_button(struct gfx_action_menu *action_menu, uint8_t keycode
 	}
 }
 
-void gfx_go_back_to_menu(void)
+void gfx_switch_to_current_menu(void)
 {
 	clear_screen();
 	current_frame = 0;
@@ -79,7 +79,7 @@ void gfx_switch_to_frame(struct gfx_frame *frame)
 	frame->draw(frame);
 }
 
-void gfx_display_menu(struct gfx_action_menu *action_menu)
+void gfx_switch_to_menu(struct gfx_action_menu *action_menu)
 {
 	current_frame = 0;
 	current_menu = action_menu;
