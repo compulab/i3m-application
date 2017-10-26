@@ -6,7 +6,7 @@
  */
 
 #include "graphic_menu_theme.h"
-#include "gfx/action_menu/gfx_item_action.h"
+#include "gfx/gfx_item_action.h"
 #include "gfx/gfx_components/gfx_image.h"
 #include "gfx/gfx_utils.h"
 #include "display/display_render.h"

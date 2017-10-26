@@ -8,7 +8,7 @@
 #ifndef GFX_ACTION_MENU_GRAPHIC_MENU_H_
 #define GFX_ACTION_MENU_GRAPHIC_MENU_H_
 
-#include "gfx/action_menu/gfx_graphic_menu.h"
+#include "gfx/gfx_graphic_menu.h"
 #include <stdio.h>
 
 void graphic_menu_format(struct gfx_graphic_menu *graphic_menu);

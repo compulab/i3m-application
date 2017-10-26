@@ -1,6 +1,6 @@
 #include "config_block.h"
-#include "gfx/action_menu/gfx_item_action.h"
-#include "gfx/action_menu/gfx_graphic_menu.h"
+#include "gfx/gfx_item_action.h"
+#include "gfx/gfx_graphic_menu.h"
 #include "gfx/gfx_components/gfx_information.h"
 #include "gfx/gfx_components/gfx_label.h"
 #include "gfx/gfx_components/gfx_image.h"
