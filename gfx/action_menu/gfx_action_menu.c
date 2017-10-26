@@ -3,6 +3,7 @@
 #include "gfx/gfx_gui_control.h"
 #include "gfx/gfx_components/gfx_label.h"
 #include "gfx/action_menu/graphic_menu_theme/graphic_menu_theme.h"
+#include "display/display_render.h"
 #include "lib/syntax.h"
 
 static void update_action_visibility(struct gfx_item_action *action)

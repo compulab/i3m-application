@@ -9,6 +9,8 @@
 #ifndef GFX_GUI_H_
 #define GFX_GUI_H_
 
+#include "gfx/action_menu/gfx_action_menu.h"
+
 enum display_state {
 	DISPLAY_MENU,
 	DISPLAY_FRAME,
@@ -19,8 +21,11 @@ enum display_state {
 	DISPLAY_CLOCK,
 };
 
-void gfx_action_menu_goto_main(void);
+void gfx_gui_init(void);
 void gfx_redraw_current_frame(void);
+void gfx_switch_to_current_menu(void);
+void gfx_switch_to_frame(struct gfx_frame *frame);
 void gfx_switch_to_menu(struct gfx_action_menu *action_menu);
+void gfx_handle_button(uint8_t keycode);
 
 #endif /* GFX_GUI_H_ */

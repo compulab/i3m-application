@@ -7,7 +7,9 @@
 
 #include "gfx_frame.h"
 #include "gfx_utils.h"
+#include "gfx/gfx_gui_control.h"
 #include "action_menu/gfx_action_menu.h"
+#include "display/display_render.h"
 #include "lib/syntax.h"
 #include <stdio.h>
 

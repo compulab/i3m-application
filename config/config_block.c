@@ -5,6 +5,7 @@
 #include "gfx/gfx_components/gfx_label.h"
 #include "gfx/gfx_components/gfx_image.h"
 #include "gfx/gfx_gui_control.h"
+#include "work-queue/work.h"
 
 #define CONFIG_SECTION_ADDRESS 0xA000
 

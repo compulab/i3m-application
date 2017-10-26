@@ -5,7 +5,9 @@
  *  Author: Nikita
  */
 
+#include "display/display_render.h"
 #include "gfx/gfx_utils.h"
+#include "gfx/gfx_gui_control.h"
 #include "gfx/action_menu/gfx_action_menu.h"
 #include "gfx/gfx_components/gfx_information.h"
 #include "eeprom/eeprom_layout.h"
