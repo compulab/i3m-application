@@ -25,6 +25,21 @@ static void update_action_visibility(struct gfx_item_action *action)
 	action->visible = visible;
 }
 
+void gfx_menu_handle_button(struct gfx_action_menu *action_menu, uint8_t keycode)
+{
+	if (keycode != GFX_MONO_MENU_KEYCODE_ENTER) {
+		gfx_mono_menu_process_key(action_menu->menu, keycode, action_menu->is_progmem);
+		gfx_action_menu_move_cursor(current_menu);
+		return;
+	}
+
+	struct gfx_item_action *selected_action = &action_menu->actions[(action_menu->menu)->current_selection];
+	if (selected_action->type == ACTION_TYPE_SHOW_FRAME)
+		gfx_switch_to_frame(selected_action->frame);
+	else if (selected_action->type == ACTION_TYPE_SHOW_MENU)
+		gfx_switch_to_menu(selected_action->menu);
+}
+
 void gfx_action_menu_move_cursor(struct gfx_action_menu *action_menu)
 {
 	action_menu->draw(action_menu);

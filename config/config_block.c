@@ -358,6 +358,7 @@ int load_config_block(void)
 			return -1;
 		}
 		action_menus[config_menu.id]->draw = gfx_switch_to_menu;
+		action_menus[config_menu.id]->handle_button = gfx_menu_handle_button;
 		cnf_menu_node = cnf_menu.next;
 	}
 	action_types_init();
