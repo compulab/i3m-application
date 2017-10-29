@@ -4,7 +4,6 @@
 #include "sram/sram_handle.h"
 #include "wdt/wdt.h"
 #include "timer/tc.h"
-#include "twi/twi_master.h"
 #include "twi/i2c_buffer.h"
 #include "power/power.h"
 #include "uart/uart.h"
@@ -195,7 +194,6 @@ static void init(void)
 	portf_init();
 	power_state_init();
 	twi_slave_init();
-	TWI_init();
 	gfx_gui_init();
 	sei();
 	sleepmgr_init();
