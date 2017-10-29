@@ -1,5 +1,4 @@
 #include "config_block.h"
-#include "gfx/gfx_item_action.h"
 #include "gfx/gfx_graphic_menu.h"
 #include "gfx/gfx_components/gfx_information.h"
 #include "gfx/gfx_components/gfx_label.h"
@@ -107,7 +106,7 @@ static void action_types_init(void)
 	for (int i = 0; i < size_of_menus; i++) {
 		struct gfx_graphic_menu *menu = graphic_menus[i];
 		for (int j = 0; j < menu->menu->num_elements; j++) {
-			struct gfx_item_action *action = &menu->actions[j];
+			struct gfx_graphic_menu_action *action = &menu->actions[j];
 			if (action->type == ACTION_TYPE_SHOW_MENU)
 				set_menu_by_id(&(action->menu), action->menu_id);
 		}
@@ -125,7 +124,7 @@ static bool is_action_frame(struct cnf_frame *cnf_frame)
 	return 0;
 }
 
-static int load_action(struct gfx_item_action *action, struct cnf_action config_action, struct cnf_frame * cnf_dashboard)
+static int load_action(struct gfx_graphic_menu_action *action, struct cnf_action config_action, struct cnf_frame * cnf_dashboard)
 {
 	action->type = config_action.type;
 	switch(config_action.type){
@@ -269,10 +268,10 @@ static struct gfx_mono_menu *load_mono_menu(struct gfx_mono_menu *menu)
 	return mono_menu;
 }
 
-static struct gfx_item_action *load_menu_actions(int num_of_actions, struct cnf_action_node *cnf_action_node, struct cnf_frame * cnf_dashboard)
+static struct gfx_graphic_menu_action *load_menu_actions(int num_of_actions, struct cnf_action_node *cnf_action_node, struct cnf_frame * cnf_dashboard)
 {
 	struct cnf_action_node action_node;
-	struct gfx_item_action *actions = (struct gfx_item_action *)malloc_locked(sizeof(struct gfx_item_action) * num_of_actions);
+	struct gfx_graphic_menu_action *actions = (struct gfx_graphic_menu_action *)malloc_locked(sizeof(struct gfx_graphic_menu_action) * num_of_actions);
 	if (actions == NULL)
 		return NULL;
 

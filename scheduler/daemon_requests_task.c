@@ -7,7 +7,6 @@
 
 #include "twi/i2c_buffer.h"
 #include "gfx/gfx_components/gfx_information.h"
-#include "gfx/gfx_item_action.h"
 #include "gfx/gfx_graphic_menu.h"
 #include "work-queue/work.h"
 #include "scheduler/scheduler.h"
@@ -29,7 +28,7 @@ static bool need_to_update_req(enum information_type info_type)
 //	if (frame_present)
 //		return is_type_in_frame(info_type, frame_present->information_head);
 
-	struct gfx_item_action *action;
+	struct gfx_graphic_menu_action *action;
 	for (int i = 0; i < current_menu->menu->num_elements; i++) {
 		action = &current_menu->actions[i];
 		if (action->type == ACTION_TYPE_SHOW_FRAME && is_type_in_frame(info_type, action->frame->information_head))

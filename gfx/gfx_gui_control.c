@@ -6,7 +6,6 @@
  */
 
 #include "gfx/gfx_graphic_menu.h"
-#include "gfx/gfx_item_action.h"
 #include "gfx/gfx_gui_control.h"
 #include "config/config_block.h"
 #include "work-queue/work.h"

@@ -1,12 +1,11 @@
 #include "gfx_graphic_menu.h"
-#include "gfx_item_action.h"
 #include "gfx/gfx_gui_control.h"
 #include "gfx/gfx_components/gfx_label.h"
 #include "gfx/graphic_menu_theme/graphic_menu_theme.h"
 #include "display/display_render.h"
 #include "lib/syntax.h"
 
-static void update_action_visibility(struct gfx_item_action *action)
+static void update_action_visibility(struct gfx_graphic_menu_action *action)
 {
 	if (action->type == ACTION_TYPE_SHOW_DMI_MENU) {
 		action->visible = computer_data.details.direct_string != 0;
@@ -34,7 +33,7 @@ static void gfx_menu_handle_button(struct gfx_graphic_menu *graphic_menu, uint8_
 		return;
 	}
 
-	struct gfx_item_action *selected_action = &graphic_menu->actions[(graphic_menu->menu)->current_selection];
+	struct gfx_graphic_menu_action *selected_action = &graphic_menu->actions[(graphic_menu->menu)->current_selection];
 	if (selected_action->type == ACTION_TYPE_SHOW_FRAME)
 		gfx_switch_to_frame(selected_action->frame);
 	else if (selected_action->type == ACTION_TYPE_SHOW_MENU)
@@ -60,7 +59,7 @@ static void gfx_graphic_menu_display(struct gfx_graphic_menu *graphic_menu)
 }
 
 void gfx_graphic_menu_init(struct gfx_graphic_menu *graphic_menu, uint8_t id, bool is_progmem,
-						  struct gfx_mono_menu *menu, struct gfx_item_action *actions,
+						  struct gfx_mono_menu *menu, struct gfx_graphic_menu_action *actions,
 						  struct gfx_image_node *graphic_items_head)
 {
 	graphic_menu->id = id;
