@@ -6,7 +6,6 @@
  */
 
 #include "gfx/gfx_components/gfx_information.h"
-#include "auto_generated.h"
 #include "information.h"
 #include <stdio.h>
 #include <string.h>
@@ -16,11 +15,11 @@
 #endif
 
 #ifndef BUILD_DATE
-#define BUILD_DATE "Some day"
+#define BUILD_DATE __DATE__
 #endif
 
 #ifndef BUILD_TIME
-#define BUILD_TIME "hh:mm:ss"
+#define BUILD_TIME __TIME__
 #endif
 
 #define VERSION_BUILD_TIME_INDEX	0
