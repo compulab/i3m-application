@@ -252,15 +252,12 @@ int main(int argc, char *argv[])
 	}
 */
 	init();
-	wdt_reset();
 	while (true) {
+		wdt_reset();
 		task();
 		wakeup = false;
-		if (!work_handler()) {
+		if (!work_handler())
 			sleep_interuptable(1000); /* 1 ms */
-		} else {
-			wdt_reset();
-		}
 	}
 
 	return 0;
