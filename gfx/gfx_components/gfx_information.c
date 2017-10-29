@@ -7,7 +7,7 @@
 
 #include "gfx_information.h"
 #include "gfx_item.h"
-#include "gfx/gfx_graphic_menu.h"
+#include "gfx/gfx_components/gfx_graphic_menu.h"
 #include "display/display_render.h"
 #include "screens/screens.h"
 #include "work-queue/work.h"

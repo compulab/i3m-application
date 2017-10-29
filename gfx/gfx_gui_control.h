@@ -9,7 +9,7 @@
 #ifndef GFX_GUI_H_
 #define GFX_GUI_H_
 
-#include "gfx/gfx_graphic_menu.h"
+#include "gfx/gfx_components/gfx_graphic_menu.h"
 
 enum display_state {
 	DISPLAY_MENU,

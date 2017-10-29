@@ -1,7 +1,7 @@
 #include "gfx_graphic_menu.h"
 #include "gfx/gfx_gui_control.h"
-#include "gfx/gfx_components/gfx_label.h"
-#include "gfx/graphic_menu_theme/graphic_menu_theme.h"
+#include "gfx_label.h"
+#include "graphic_menu_theme/graphic_menu_theme.h"
 #include "display/display_render.h"
 #include "lib/syntax.h"
 

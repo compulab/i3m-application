@@ -15,7 +15,7 @@
 #include "work-queue/work.h"
 #include "config/config_block.h"
 #include "gfx/gfx_gui_control.h"
-#include "gfx/gfx_graphic_menu.h"
+#include "gfx/gfx_components/gfx_graphic_menu.h"
 #include "asf.h"
 #include "ASF/common/services/usb/udc/udc.h"
 #include "ASF/common/utils/stdio/stdio_usb/stdio_usb.h"

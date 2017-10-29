@@ -7,7 +7,7 @@
 
 #include "twi/i2c_buffer.h"
 #include "gfx/gfx_components/gfx_information.h"
-#include "gfx/gfx_graphic_menu.h"
+#include "gfx/gfx_components/gfx_graphic_menu.h"
 #include "work-queue/work.h"
 #include "scheduler/scheduler.h"
 #include <stdbool.h>

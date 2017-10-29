@@ -8,7 +8,7 @@
 #ifndef GFX_GFX_ACTION_MENU_H_
 #define GFX_GFX_ACTION_MENU_H_
 
-#include "gfx/gfx_frame.h"
+#include "gfx_frame.h"
 
 struct gfx_graphic_menu {
 	struct gfx_mono_menu *menu;
