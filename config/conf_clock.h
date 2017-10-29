@@ -47,9 +47,9 @@
 #define CONF_CLOCK_H_INCLUDED
 
 //sysclk sourced from the 2MHz internal oscilator, upscaled to 32MHz by a PLL
-#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLL
-#define CONFIG_PLL0_SOURCE			PLL_SRC_RC2MHZ
-#define CONFIG_PLL0_MUL             16
+#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RC32MHZ
+#define CONFIG_PLL0_SOURCE          PLL_SRC_XOSC
+#define CONFIG_PLL0_MUL             1
 #define CONFIG_PLL0_DIV             1
 
 //Do not apply prescaler on sysclk output. Thus, all peripherals, RAM, NVM, and
@@ -58,16 +58,15 @@
 #define CONFIG_SYSCLK_PSBCDIV         SYSCLK_PSBCDIV_1_1
 
 /* DFLL autocalibration */
-#define CONFIG_OSC_AUTOCAL_RC2MHZ_REF_OSC  OSC_ID_RC32KHZ
-#define CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC OSC_ID_USBSOF
+#define CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC OSC_ID_RC32KHZ
 
 /* The following configures the USB controller clock
  * source to use the internal (nominally) 32MHz RC oscillator, up-calibrated to
  * run at 48MHz via the periodic 1ms USB Start Of Frame packets sent by the host.
  */
-#define CONFIG_USBCLK_SOURCE                USBCLK_SRC_RCOSC
-#define CONFIG_OSC_RC32_CAL                 48000000UL
-#define CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC  OSC_ID_USBSOF
+#define CONFIG_USBCLK_SOURCE                USBCLK_SRC_PLL
+//#define CONFIG_OSC_RC32_CAL                 48000000UL
+//#define CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC  OSC_ID_USBSOF
 
 /* RTC uses the internal 32.768KHz oscillator, divided by 32 */
 #define CONFIG_RTC_SOURCE					SYSCLK_RTCSRC_RCOSC
