@@ -199,7 +199,7 @@ static void init(void)
 	sleepmgr_init();
 	tc_init();
 	rtc_init();
-	usb_init();
+	//usb_init();
 	tasks_init();
 	//show_logo(splash);
 }
@@ -246,11 +246,11 @@ int main(int argc, char *argv[])
 	computer_data.details.error_count = 0;
 	works_count = 0;
 
-	if (USB.CTRLB & USB_ATTACH_bm) {
+/*	if (USB.CTRLB & USB_ATTACH_bm) {
 		USB.CTRLB &= ~USB_ATTACH_bm;
 		ccp_write_io((uint8_t *)&RST.CTRL, RST.CTRL | RST_SWRST_bm);
 	}
-
+*/
 	init();
 	wdt_reset();
 	while (true) {
