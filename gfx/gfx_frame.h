@@ -22,7 +22,7 @@
 #include "gfx_components/gfx_information.h"
 
 struct gfx_frame {
-	void (*handle_buttons)(uint8_t);
+	void (*handle_buttons)(struct gfx_frame *frame, uint8_t keycode);
 	void (*draw_controls)(struct gfx_frame *frame);
 	void (*draw)(struct gfx_frame *frame);
 	struct gfx_image_node *image_head;

@@ -72,7 +72,7 @@ void gfx_handle_button(uint8_t keycode)
 	if (gfx_in_menu())
 		current_menu->handle_button(current_menu, keycode);
 	else
-		current_frame->handle_buttons(keycode);
+		current_frame->handle_buttons(current_frame, keycode);
 }
 
 static void update_screen(void *data)

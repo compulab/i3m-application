@@ -75,23 +75,31 @@ static bool is_scroll_past_last_frame(uint8_t key)
 		   (current_menu->menu->current_selection == current_menu->menu->num_elements - 2);
 }
 
-static void handle_buttons_scroll_to_frame(uint8_t key)
+static void handle_buttons_scroll_to_frame(struct gfx_frame *frame, uint8_t keycode)
 {
-	if (key == GFX_MONO_MENU_KEYCODE_ENTER) {
+	if (keycode == GFX_MONO_MENU_KEYCODE_ENTER) {
 		gfx_switch_to_current_menu();
 		return;
 	}
 
-	if (is_scroll_before_first_frame(key) || is_scroll_past_last_frame(key))
+	if (is_scroll_before_first_frame(keycode) || is_scroll_past_last_frame(keycode))
 		return;
-	 gfx_mono_menu_process_key(current_menu->menu, key, current_menu->is_progmem);
+	 gfx_mono_menu_process_key(current_menu->menu, keycode, current_menu->is_progmem);
 	 //Invoke "display new frame" by simulating a KECODE ENTER event
 	 current_menu->handle_button(current_menu, GFX_MONO_MENU_KEYCODE_ENTER);
 }
 
-static void handle_buttons_back_to_menu(uint8_t keycode)
+static void handle_buttons_back_to_menu(struct gfx_frame *frame, uint8_t keycode)
 {
 	gfx_switch_to_current_menu();
+}
+
+static void handle_buttons_with_information(struct gfx_frame *frame, uint8_t keycode)
+{
+	if (frame->information_head->information.handle_buttons)
+		frame->information_head->information.handle_buttons(keycode);
+	else
+		handle_buttons_back_to_menu(frame, keycode);
 }
 
 /*
@@ -148,7 +156,6 @@ void gfx_action_frame_init(struct gfx_frame *frame, struct gfx_image_node *image
 {
 	gfx_frame_init(frame, image_head, label_head, info_head);
 	frame->draw = gfx_functional_frame_draw;
-	if (frame->information_head->information.handle_buttons)
-		frame->handle_buttons = frame->information_head->information.handle_buttons;
+	frame->handle_buttons = handle_buttons_with_information;
 	frame->draw_controls = gfx_frame_draw_control_from_info;
 }
