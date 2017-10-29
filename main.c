@@ -171,7 +171,7 @@ static void init_updateable_data(void)
 		p_computer_data[i] = 0;
 }
 
-void usb_init(void)
+static void usb_init(void)
 {
 	udc_start();
 }
@@ -229,7 +229,7 @@ void my_callback_cdc_disable(void)
 const int BUF_SIZE = 1;
 char buf[1] = "C";
 bool no_error = true;
-void task(void)
+static void task(void)
 {
 	if (udi_cdc_is_rx_ready()) {
 		buf[0] = udi_cdc_getc();

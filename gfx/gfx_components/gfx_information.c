@@ -12,7 +12,7 @@
 #include "screens/screens.h"
 #include "work-queue/work.h"
 
-void gfx_information_draw_string(struct gfx_information *info)
+static void gfx_information_draw_string(struct gfx_information *info)
 {
 	info->to_string(info, info->text.text);
 	draw_string_in_buffer(info->text.text, info->postion.x, info->postion.y, info->text.font);

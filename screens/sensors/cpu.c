@@ -8,6 +8,7 @@
 #include "screens/string_formats.h"
 #include "gfx/gfx_components/gfx_information.h"
 #include "lib/syntax.h"
+#include "sensors.h"
 #include <string.h>
 
 static void sprintf_cpu_temp(struct gfx_information *info, char *output_str)

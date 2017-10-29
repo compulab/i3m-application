@@ -11,6 +11,7 @@
 #include "gfx/gfx_components/gfx_graphic_menu.h"
 #include "gfx/gfx_components/gfx_information.h"
 #include "eeprom/eeprom_layout.h"
+#include "screen_saver.h"
 #include <stdbool.h>
 
 static void handle_screen_saver_enable_buttons(uint8_t key)

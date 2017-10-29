@@ -7,6 +7,7 @@
 
 #include "gfx/gfx_components/gfx_information.h"
 #include "twi/i2c_buffer.h"
+#include "bios_data.h"
 #include <stdio.h>
 
 static void sprintf_post_code(struct gfx_information *info, char *output_str)

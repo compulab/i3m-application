@@ -38,7 +38,7 @@ static bool need_to_update_req(enum information_type info_type)
 	return false;
 }
 
-void update_requests(void *data)
+static void update_requests(void *data)
 {
 	i2c_buffer.layout.hddtr = !i2c_buffer.layout.hddtr && need_to_update_req(SHOW_HDD_TEMPERTURE);
 	i2c_buffer.layout.cpufr = !i2c_buffer.layout.cpufr && need_to_update_req(SHOW_CPU_FREQUENCY);

@@ -10,6 +10,7 @@
 #include "gfx/gfx_components/gfx_graphic_menu.h"
 #include "gfx/gfx_components/gfx_information.h"
 #include "eeprom/eeprom_layout.h"
+#include "brightness.h"
 
 static void handle_brightness_buttons(uint8_t key)
 {

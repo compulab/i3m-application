@@ -8,6 +8,7 @@
 #include "screens/string_formats.h"
 #include "gfx/gfx_components/gfx_information.h"
 #include "lib/syntax.h"
+#include "sensors.h"
 #include <string.h>
 
 static void set_mem_size_str(char *str, uint8_t mem)

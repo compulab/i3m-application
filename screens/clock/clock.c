@@ -8,6 +8,7 @@
 #include "screens/string_formats.h"
 #include "gfx/gfx_components/gfx_information.h"
 #include "calendar/calendar.h"
+#include "clock.h"
 
 static void sprintf_rtc_hour(struct gfx_information *info, char *output_str)
 {

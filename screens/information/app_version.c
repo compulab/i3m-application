@@ -7,6 +7,7 @@
 
 #include "gfx/gfx_components/gfx_information.h"
 #include "auto_generated.h"
+#include "information.h"
 #include <stdio.h>
 #include <string.h>
 

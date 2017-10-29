@@ -7,9 +7,10 @@
 
 #include "gfx/gfx_components/gfx_information.h"
 #include "power/power.h"
+#include "sensors.h"
 #include <string.h>
 
-void sprintf_power_state(struct gfx_information *info, char *output_str)
+static void sprintf_power_state(struct gfx_information *info, char *output_str)
 {
 	switch (current_power_state) {
 	case POWER_ON:
