@@ -1,12 +1,12 @@
 /*
- * gfx_utils.h
+ * gfx_assets.h
  *
  *  Created on: Aug 6, 2015
  *      Author: arkadi
  */
 
-#ifndef GFX_GFX_UTILS_H_
-#define GFX_GFX_UTILS_H_
+#ifndef GFX_GFX_ASSETS_H_
+#define GFX_GFX_ASSETS_H_
 
 #include <stdio.h>
 
@@ -15,4 +15,4 @@ void draw_control_signs_arrows(uint8_t selection, uint8_t min_index, uint8_t max
 void draw_standard_separator_line(void);
 void gfx_display_msg(char *msg);
 
-#endif /* GFX_GFX_UTILS_H_ */
+#endif /* GFX_GFX_ASSETS_H_ */

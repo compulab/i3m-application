@@ -8,7 +8,7 @@
 #include "screen_saver.h"
 #include "gfx/gfx_components/gfx_information.h"
 #include "gfx/gfx_components/gfx_graphic_menu.h"
-#include "gfx/gfx_utils.h"
+#include "gfx/gfx_assets.h"
 #include "gfx/gfx_gui_control.h"
 #include "eeprom/eeprom_layout.h"
 #include <stdio.h>

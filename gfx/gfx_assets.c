@@ -1,11 +1,11 @@
 /*
- * gfx_utils.c
+ * gfx_assets.c
  *
  *  Created on: Aug 6, 2015
  *      Author: arkadi
  */
 
-#include "gfx_utils.h"
+#include "gfx_assets.h"
 #include "gfx_components/gfx_image.h"
 #include "asf.h"
 

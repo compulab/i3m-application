@@ -6,7 +6,7 @@
  */
 
 #include "gfx_frame.h"
-#include "gfx/gfx_utils.h"
+#include "gfx/gfx_assets.h"
 #include "gfx/gfx_gui_control.h"
 #include "gfx_graphic_menu.h"
 #include "display/display_render.h"

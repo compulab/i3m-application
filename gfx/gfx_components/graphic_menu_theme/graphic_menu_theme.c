@@ -7,7 +7,7 @@
 
 #include "graphic_menu_theme.h"
 #include "gfx/gfx_components/gfx_image.h"
-#include "gfx/gfx_utils.h"
+#include "gfx/gfx_assets.h"
 #include "display/display_render.h"
 #include "lib/syntax.h"
 #include <math.h>
