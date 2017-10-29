@@ -242,8 +242,6 @@ void task(void)
 
 int main(int argc, char *argv[])
 {
-
-	computer_data.details.error_count = 0;
 	works_count = 0;
 
 /*	if (USB.CTRLB & USB_ATTACH_bm) {

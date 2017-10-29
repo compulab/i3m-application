@@ -137,7 +137,6 @@ union updatable_info {
 		uint8_t screen_saver_visible:1;
 		uint8_t screen_saver_type:3;
 		uint8_t screen_saver_reserved:4;
-		uint32_t error_count;
 	} details;
 	struct {
 		uint16_t post_code;
@@ -161,7 +160,6 @@ union updatable_info {
 		struct direct_string_item *direct_string;
 		uint8_t screen_saver_update_time;
 		uint8_t screen_saver_config;
-		uint32_t error_count;
 	} packed;
 };
 
