@@ -18,7 +18,7 @@
 
 static const char *screen_saver_type_str[SCREEN_SAVER_TYPE_SIZE] = { "LOGO", "DASHBOARD", "CLOCK" };
 
-static void handle_screen_saver_type_buttons(uint8_t key)
+static void handle_screen_saver_type_buttons(struct gfx_information *info, uint8_t key)
 {
 	if (!computer_data.details.screen_saver_visible &&
 		(key == GFX_MONO_MENU_KEYCODE_DOWN || key == GFX_MONO_MENU_KEYCODE_UP)) {

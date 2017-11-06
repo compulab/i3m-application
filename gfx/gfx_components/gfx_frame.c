@@ -97,7 +97,7 @@ static void handle_buttons_back_to_menu(struct gfx_frame *frame, uint8_t keycode
 static void handle_buttons_with_information(struct gfx_frame *frame, uint8_t keycode)
 {
 	if (frame->information_head->information.handle_buttons)
-		frame->information_head->information.handle_buttons(keycode);
+		frame->information_head->information.handle_buttons(&frame->information_head->information, keycode);
 	else
 		handle_buttons_back_to_menu(frame, keycode);
 }

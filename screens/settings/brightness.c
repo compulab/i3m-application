@@ -12,7 +12,7 @@
 #include "eeprom/eeprom_layout.h"
 #include "brightness.h"
 
-static void handle_brightness_buttons(uint8_t key)
+static void handle_brightness_buttons(struct gfx_information *info, uint8_t key)
 {
 	switch (key) {
 	case GFX_MONO_MENU_KEYCODE_ENTER:

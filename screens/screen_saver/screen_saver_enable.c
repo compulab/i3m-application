@@ -14,7 +14,7 @@
 #include "screen_saver.h"
 #include <stdbool.h>
 
-static void handle_screen_saver_enable_buttons(uint8_t key)
+static void handle_screen_saver_enable_buttons(struct gfx_information *info, uint8_t key)
 {
 	switch (key) {
 	case GFX_MONO_MENU_KEYCODE_ENTER:
