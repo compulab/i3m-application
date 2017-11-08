@@ -80,8 +80,6 @@ struct calendar_date {
 	uint8_t dayofweek;     //!< 0 Sunday  - 6 Saturday
 };
 
-extern struct calendar_date computer_date_time;
-
 bool calendar_is_date_valid(struct calendar_date *date);
 
 void calendar_timestamp_to_date(uint32_t timestamp, struct calendar_date
@@ -203,7 +201,5 @@ void calendar_add_second_to_date(struct calendar_date *date);
  *   - \code calendar_time_between_dates(&end_date, &start_date, &result);
 \endcode
  */
-
-void switch_rtc_interrupt_schedule(bool on);
 
 #endif /* _CALENDAR_H_INCLUDED_ */

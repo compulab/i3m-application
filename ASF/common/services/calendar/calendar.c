@@ -43,11 +43,9 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-
+#include "ASF/xmega/utils/compiler.h"
 #include "calendar.h"
-#include "scheduler/scheduler.h"
-#include "work-queue/work.h"
-#include "asf.h"
+#include <stdio.h>
 
 //! Unix epoch year
 #define EPOCH_YEAR 1970
@@ -65,15 +63,6 @@
 const uint8_t month[2][12] = {
 	{ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 },
 	{ 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }
-};
-
-struct calendar_date computer_date_time = {
-    .second = 40,
-    .minute = 02,
-    .hour = 11,
-    .date = 26,
-    .month = 11,
-    .year = 2015
 };
 
 /**
@@ -500,35 +489,4 @@ void calendar_add_second_to_date(struct calendar_date *date)
 		date->second = 0;
 		calendar_add_minute_to_date(date);
 	}
-}
-
-static void calendar_time_task(void *data)
-{
-	calendar_add_second_to_date(&computer_date_time);
-}
-
-static double time_get_recur_period(void)
-{
-	return 1;
-}
-
-static struct work time_work = { .do_work = calendar_time_task };
-
-struct scheduler_task time_sec_task = {
-    .work = &time_work,
-    .get_recur_period = time_get_recur_period,
-};
-
-static bool rtc_can_schedule = false;
-void switch_rtc_interrupt_schedule(bool on)
-{
-	rtc_can_schedule = on;
-}
-
-ISR(RTC_OVF_vect)
-{
-	if (!rtc_can_schedule)
-		return;
-
-	insert_work(time_sec_task.work);
 }

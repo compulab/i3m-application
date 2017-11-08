@@ -1,5 +1,4 @@
 #include "twi/twi_slave.h"
-#include "calendar/calendar.h"
 #include "scheduler/scheduler.h"
 #include "screens/screen_saver/screen_saver.h"
 #include "sram/sram_handle.h"
@@ -17,6 +16,7 @@
 #include "gfx/gfx_gui_control.h"
 #include "gfx/gfx_components/gfx_graphic_menu.h"
 #include "asf.h"
+#include "ASF/common/services/calendar/calendar.h"
 #include "ASF/common/services/usb/udc/udc.h"
 #include "ASF/common/utils/stdio/stdio_usb/stdio_usb.h"
 

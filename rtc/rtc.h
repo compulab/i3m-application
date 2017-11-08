@@ -9,5 +9,6 @@
 #define RTC_RTC_H_
 
 void rtc_init(void);
+extern struct calendar_date computer_date_time;
 
 #endif /* RTC_RTC_H_ */
