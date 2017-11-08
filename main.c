@@ -244,11 +244,6 @@ int main(int argc, char *argv[])
 {
 	works_count = 0;
 
-/*	if (USB.CTRLB & USB_ATTACH_bm) {
-		USB.CTRLB &= ~USB_ATTACH_bm;
-		ccp_write_io((uint8_t *)&RST.CTRL, RST.CTRL | RST_SWRST_bm);
-	}
-*/
 	init();
 	while (true) {
 		wdt_reset();
