@@ -92,7 +92,7 @@ static double screen_get_recur_period(void)
     return 1;
 }
 
-struct scheduler_task screen_sec_task = {
+struct scheduler_task screen_tick_task = {
     .work = &update_screen_work,
     .get_recur_period = screen_get_recur_period,
 };
