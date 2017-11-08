@@ -1,5 +1,5 @@
 /*
- *	tc_scheduler.c
+ *	scheduler.c
  *
  * 	This scheduler uses the Timer/Counter facilities to implement a task scheduling mechanism that
  * 	supports a fine granularity of schedule timing (ticks as a time unit).

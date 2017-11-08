@@ -204,4 +204,6 @@ void calendar_add_second_to_date(struct calendar_date *date);
 \endcode
  */
 
+void switch_rtc_interrupt_schedule(bool on);
+
 #endif /* _CALENDAR_H_INCLUDED_ */

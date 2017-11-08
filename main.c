@@ -1,4 +1,5 @@
 #include "twi/twi_slave.h"
+#include "calendar/calendar.h"
 #include "scheduler/scheduler.h"
 #include "screens/screen_saver/screen_saver.h"
 #include "sram/sram_handle.h"
@@ -118,7 +119,6 @@ static void init_ambient(void)
 
 void tasks_init(void)
 {
-	rtc_scheduler_init();
 	tc_scheduler_init();
 	switch_rtc_interrupt_schedule(true);
 	switch_tc_interrupt_schedule(true);

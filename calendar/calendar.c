@@ -518,3 +518,17 @@ struct scheduler_task time_sec_task = {
     .work = &time_work,
     .get_recur_period = time_get_recur_period,
 };
+
+static bool rtc_can_schedule = false;
+void switch_rtc_interrupt_schedule(bool on)
+{
+	rtc_can_schedule = on;
+}
+
+ISR(RTC_OVF_vect)
+{
+	if (!rtc_can_schedule)
+		return;
+
+	insert_work(time_sec_task.work);
+}

@@ -17,10 +17,8 @@ struct scheduler_task {
 
 extern bool reset_screen_saver_req;
 
-void rtc_scheduler_init(void);
 void tc_scheduler_init(void);
 void switch_tc_interrupt_schedule(bool on);
-void switch_rtc_interrupt_schedule(bool on);
 
 void tasks_init(void);
 
