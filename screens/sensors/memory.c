@@ -39,14 +39,8 @@ static void sprintf_memory_size(struct gfx_information *info, char *output_str)
 		sprintf_inval_data(output_str);
 }
 
-static bool memory_size_is_valid(struct gfx_information *info)
-{
-	return BIT_ON(computer_data.packed.mems, info->metadata);
-}
-
 int gfx_information_init_show_memory_size(struct gfx_information *info)
 {
 	info->to_string = sprintf_memory_size;
-	info->is_valid = memory_size_is_valid;
 	return 0;
 }

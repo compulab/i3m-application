@@ -18,14 +18,8 @@ static void sprintf_gpu_temp(struct gfx_information *info, char *output_str)
 		sprintf_inval_data(output_str);
 }
 
-static bool gpu_temp_is_valid(struct gfx_information *info)
-{
-	return computer_data.details.gpu_temp_set;
-}
-
 int gfx_information_init_show_gpu_temp(struct gfx_information *info)
 {
 	info->to_string = sprintf_gpu_temp;
-	info->is_valid = gpu_temp_is_valid;
 	return 0;
 }

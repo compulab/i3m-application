@@ -20,15 +20,9 @@ static void sprintf_hdd_temp(struct gfx_information *info, char *output_str)
 		sprintf_inval_data(output_str);
 }
 
-static bool hdd_temp_is_valid(struct gfx_information *info)
-{
-	return BIT_ON(computer_data.packed.hdd_temp_set, info->metadata);
-}
-
 int gfx_information_init_show_hdd_temp(struct gfx_information *info)
 {
 	info->to_string = sprintf_hdd_temp;
-	info->is_valid = hdd_temp_is_valid;
 	return 0;
 }
 
@@ -45,14 +39,8 @@ static void sprintf_hdd_size(struct gfx_information *info, char *output_str)
 		sprintf_inval_data(output_str);
 }
 
-static bool hdd_size_is_valid(struct gfx_information *info)
-{
-	return BIT_ON(computer_data.packed.hdd_size_set, info->metadata);
-}
-
 int gfx_information_init_show_hdd_size(struct gfx_information *info)
 {
 	info->to_string = sprintf_hdd_size;
-	info->is_valid = hdd_size_is_valid;
 	return 0;
 }
