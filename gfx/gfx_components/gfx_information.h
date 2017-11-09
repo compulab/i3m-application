@@ -34,6 +34,8 @@ struct gfx_information_node {
 	struct gfx_information_node *next;
 };
 
-int gfx_information_init(struct gfx_information *info, struct cnf_info *cnf_info, uint8_t font_id);
+int gfx_information_init_config(struct gfx_information *info, struct cnf_info *cnf_info, uint8_t font_id);
+int gfx_information_init(struct gfx_information *info, enum information_type info_type,
+						 uint8_t info_data, uint8_t max_length, uint8_t x, uint8_t y, uint8_t font_id);
 
 #endif /* GFX_INFORMATION_H_ */

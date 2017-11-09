@@ -96,24 +96,28 @@ static int gfx_information_init_type(struct gfx_information *info, enum informat
 	case SHOW_USB_SERIAL_INPUT://TODO:THIS IS TEMPORARY, KILL THIS WHEN NO LONGER NEEDED
 		//info->to_string = set_usb_serial_string;
 		return 0;
+	case SHOW_CUSTOM_MESSAGE:
+		return gfx_information_init_custom_message(info);
 	default:
 		return -1;
 	}
 };
 
+int gfx_information_init(struct gfx_information *info, enum information_type info_type,
+						 uint8_t info_data, uint8_t max_length, uint8_t x, uint8_t y, uint8_t font_id)
+{
+	int retval = gfx_information_init_generic(info, info_type, info_data, max_length, x, y, font_id);
+	if (retval)
+		return retval;
+
+	return gfx_information_init_type(info, info_type);
+}
+
 //TODO: for some reason font_id is part of cnf_info_node, instead of cnf_info.
 //Fix this later.
-int gfx_information_init(struct gfx_information *info, struct cnf_info *cnf_info, uint8_t font_id)
+int gfx_information_init_config(struct gfx_information *info, struct cnf_info *cnf_info, uint8_t font_id)
 {
-	int retval = gfx_information_init_generic(info,
-											  cnf_info->info_type,
-											  cnf_info->information,
-											  cnf_info->max_length,
-											  cnf_info->x,
-											  cnf_info->y,
-											  font_id);
-	if (retval)
-		return -1;
-
-	return gfx_information_init_type(info, cnf_info->info_type);
+	return gfx_information_init(info, cnf_info->info_type, cnf_info->information,
+								cnf_info->max_length, cnf_info->x, cnf_info->y, font_id);
 }
+

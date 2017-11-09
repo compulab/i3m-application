@@ -87,7 +87,7 @@ static struct gfx_information_node *load_frame_infos(struct cnf_info_node *cnf_i
 
 		memcpy_config(&cnf_info_node, (void *)cnf_info_pgmem, sizeof(struct cnf_info_node));
 		struct cnf_info cnf_info = cnf_info_node.info;
-		if (gfx_information_init(&gfx_information_node->information, &cnf_info, cnf_info_node.font_id))
+		if (gfx_information_init_config(&gfx_information_node->information, &cnf_info, cnf_info_node.font_id))
 			return NULL;
 
 		gfx_information_node->next = 0;

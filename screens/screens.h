@@ -17,4 +17,6 @@
 #include "screens/bios/bios_data.h"
 #include "screens/debug/debug.h"
 
+int gfx_information_init_custom_message(struct gfx_information *info);
+
 #endif /* SCREENS_H_ */
