@@ -33,13 +33,12 @@ static bool gfx_in_menu(void)
 	return !current_frame;
 }
 
-void gfx_gui_init(void)
+void gfx_gui_init(struct gfx_graphic_menu **graphic_menus, uint8_t num_elements)
 {
 	gfx_information_init(&custom_message_info.information, SHOW_CUSTOM_MESSAGE,
 						 0, 64, 0, 0, GLCD_FONT_SYSFONT_5X7);
 	gfx_frame_init(&custom_message, NULL, NULL, &custom_message_info);
-	set_menu_by_id(&current_menu, MAIN_MENU_ID);
-	gfx_switch_to_menu(current_menu);
+	current_menu = graphic_menus[MAIN_MENU_ID];
 }
 
 void gfx_switch_to_current_menu(void)

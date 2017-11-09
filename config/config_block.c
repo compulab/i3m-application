@@ -8,6 +8,8 @@
 
 #define CONFIG_SECTION_ADDRESS 0xA000
 
+struct gfx_graphic_menu **graphic_menus;
+
 struct gfx_mono_bitmap splash_bitmap;
 
 static struct gfx_frame *dashboard;
@@ -107,8 +109,11 @@ static void action_types_init(void)
 		struct gfx_graphic_menu *menu = graphic_menus[i];
 		for (int j = 0; j < menu->menu->num_elements; j++) {
 			struct gfx_graphic_menu_action *action = &menu->actions[j];
-			if (action->type == ACTION_TYPE_SHOW_MENU)
-				set_menu_by_id(&(action->menu), action->menu_id);
+			if (action->type == ACTION_TYPE_SHOW_MENU) {
+				if (action->menu_id < size_of_menus) {
+					action->menu = graphic_menus[action->menu_id];
+				}
+			}
 		}
 	}
 }
@@ -348,11 +353,6 @@ int load_config_block(void)
 		cnf_menu_node = cnf_menu.next;
 	}
 	action_types_init();
+	gfx_gui_init(graphic_menus, graphic_menus[0]->menu->num_elements);
 	return 0;
-}
-
-void set_menu_by_id(struct gfx_graphic_menu **menu, uint8_t index)
-{
-	if (index < size_of_menus)
-		*menu = graphic_menus[index];
 }

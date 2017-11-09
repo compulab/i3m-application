@@ -194,7 +194,6 @@ static void init(void)
 	portf_init();
 	power_state_init();
 	twi_slave_init();
-	gfx_gui_init();
 	sei();
 	sleepmgr_init();
 	tc_init();
