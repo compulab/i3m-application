@@ -5,6 +5,7 @@
 #include "gfx/gfx_components/gfx_image.h"
 #include "gfx/gfx_gui_control.h"
 #include "work-queue/work.h"
+#include <string.h>
 
 #define CONFIG_SECTION_ADDRESS 0xA000
 
@@ -54,6 +55,22 @@ static struct gfx_image_node *load_frame_images(struct cnf_image_node *cnf_image
 	return image_head;
 }
 
+static bool is_valid_char(char ch)
+{
+	return ch != '\0' && ch != '\n';
+}
+
+static uint8_t length_P(char *str)
+{
+	uint8_t count = 0;
+	uint8_t temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)(str++));
+	while (is_valid_char(temp_char)) {
+		count++;
+		temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)(str++));
+	}
+	return count;
+}
+
 static struct gfx_label_node *load_frame_labels(struct cnf_label_node *cnf_label_pgmem)
 {
 	struct gfx_label_node *frame_label_last = 0;
@@ -65,7 +82,9 @@ static struct gfx_label_node *load_frame_labels(struct cnf_label_node *cnf_label
 			return NULL;
 
 		memcpy_config(&cnf_label_node, cnf_label_pgmem, sizeof(struct cnf_label_node));
-		gfx_label_init(&gfx_label_node->label, cnf_label_node.label.text, cnf_label_node.label.x, cnf_label_node.label.y, cnf_label_node.font_id);
+		char *label = malloc_locked(sizeof(char) * length_P(cnf_label_node.label.text));
+		memcpy_config(label, cnf_label_node.label.text, length_P(cnf_label_node.label.text));
+		gfx_label_init(&gfx_label_node->label, label, cnf_label_node.label.x, cnf_label_node.label.y, cnf_label_node.font_id);
 		gfx_label_node->next = 0;
 		if (label_head == 0)
 			label_head = gfx_label_node;

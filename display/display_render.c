@@ -7,22 +7,6 @@
 
 #include "display_render.h"
 
-static bool is_valid_char(char ch)
-{
-	return ch != '\0' && ch != '\n';
-}
-
-static uint8_t length_P(char *str)
-{
-	uint8_t count = 0;
-	uint8_t temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)(str++));
-	while (is_valid_char(temp_char)) {
-		count++;
-		temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)(str++));
-	}
-	return count;
-}
-
 uint8_t draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct glcd_FontConfig_t *font)
 {
 	uint8_t print_length = 0;
@@ -63,39 +47,6 @@ uint8_t draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct glcd_FontC
 		j++;
 	}
 
-	return print_length;
-}
-
-uint8_t draw_string_in_buffer_P(char *str, uint8_t x, uint8_t y, struct glcd_FontConfig_t *font)
-{
-	uint8_t print_length = 0;
-	uint8_t length = length_P(str) * (font->width + 1);
-
-	if (length >= GFX_MONO_LCD_WIDTH) {
-			gfx_mono_draw_string(str, 0, y, &sysfont);
-	} else {
-		if (x == 0)
-			x = (GFX_MONO_LCD_WIDTH - length - 30) / 2;
-
-		uint8_t temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)(str++));
-
-		glcd_set_font_from_font(font);
-
-		while (temp_char){
-			if (temp_char == '\n' || x > 120){
-				draw_string_in_buffer_P(str, x, y + font->height + 2, font);
-				break;
-			}
-
-			glcd_draw_char_xy(x, y, temp_char);
-
-			x += font->width +  1;
-			print_length += 8;
-			temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)(str++));
-		}
-
-		glcd_write();
-	}
 	return print_length;
 }
 
