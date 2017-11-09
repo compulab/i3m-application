@@ -19,7 +19,7 @@ struct gfx_font {
 	bool is_numeric_only;
 };
 
-uint8_t draw_string_in_buffer(char *ch, uint8_t x, uint8_t y, struct glcd_FontConfig_t *font);
+void draw_string_in_buffer(char *ch, uint8_t x, uint8_t y, struct glcd_FontConfig_t *font);
 
 void clear_screen(void);
 
