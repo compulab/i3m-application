@@ -11,6 +11,6 @@
 
 #include "gfx/gfx_components/gfx_information.h"
 
-void set_usb_serial_string(struct gfx_information *info, char *output_str);
+int gfx_information_init_show_usb_serial(struct gfx_information *info);
 
 #endif /* DEBUG_H_ */

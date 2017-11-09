@@ -94,8 +94,7 @@ static int gfx_information_init_type(struct gfx_information *info, enum informat
 	case SHOW_RTC_SEC:
 		return gfx_information_init_show_rtc_sec(info);
 	case SHOW_USB_SERIAL_INPUT://TODO:THIS IS TEMPORARY, KILL THIS WHEN NO LONGER NEEDED
-		//info->to_string = set_usb_serial_string;
-		return 0;
+		return gfx_information_init_show_usb_serial(info);
 	case SHOW_CUSTOM_MESSAGE:
 		return gfx_information_init_custom_message(info);
 	default:

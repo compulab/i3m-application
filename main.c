@@ -198,7 +198,7 @@ static void init(void)
 	sleepmgr_init();
 	tc_init();
 	rtc_init();
-	//usb_init();
+	usb_init();
 	tasks_init();
 	//show_logo(splash);
 }
@@ -222,23 +222,27 @@ void my_callback_cdc_disable(void)
 {
 	stdio_usb_disable();
 }
-
+/*
 #include "ASF/common/services/usb/class/cdc/device/udi_cdc.h"
 
-const int BUF_SIZE = 1;
-char buf[1] = "C";
-bool no_error = true;
+char buf[1024] = { 0 };
+int i = 0;
+
 static void task(void)
 {
-	if (udi_cdc_is_rx_ready()) {
-		buf[0] = udi_cdc_getc();
-		no_error = udi_cdc_putc(buf[0]);
+	while (udi_cdc_is_rx_ready()) {
+		wdt_reset();
+		buf[i] = udi_cdc_getc();
+		bool no_error = udi_cdc_putc(buf[i]);
 		if (!no_error) {
-			buf[0] = '!';
+			buf[i] = '!';
 		}
+
+		i++;
+		i = i >= (1024) ? 0 : i;
 	}
 }
-
+*/
 int main(int argc, char *argv[])
 {
 	works_count = 0;
@@ -246,7 +250,7 @@ int main(int argc, char *argv[])
 	init();
 	while (true) {
 		wdt_reset();
-		task();
+//		task();
 		wakeup = false;
 		if (!work_handler())
 			sleep_interuptable(1000); /* 1 ms */
