@@ -45,7 +45,7 @@
  */
 #ifndef _WDT_H_
 #define _WDT_H_
-#include "asf.h"
+
 /// @cond 0
 /**INDENT-OFF**/
 #ifdef __cplusplus
@@ -54,6 +54,7 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
+#include "ASF/xmega/utils/compiler.h"
 
 /**
  * \defgroup wdt_group Watchdog Timer (WDT)

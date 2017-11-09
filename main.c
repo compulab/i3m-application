@@ -2,7 +2,7 @@
 #include "scheduler/scheduler.h"
 #include "screens/screen_saver/screen_saver.h"
 #include "sram/sram_handle.h"
-#include "wdt/wdt.h"
+#include "ASF/xmega/drivers/wdt/wdt.h"
 #include "timer/tc.h"
 #include "twi/i2c_buffer.h"
 #include "power/power.h"

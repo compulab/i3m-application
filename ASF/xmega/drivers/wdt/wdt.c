@@ -43,7 +43,8 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-
+#include "ASF/xmega/utils/compiler.h"
+#include "ASF/xmega/drivers/cpu/ccp.h"
 #include "wdt.h"
 
 /*! \brief Set Watchdog timeout period.

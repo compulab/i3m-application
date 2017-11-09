@@ -5,7 +5,7 @@
  *  Author: Nikita
  */
 
-#include "wdt/wdt.h"
+#include "ASF/xmega/drivers/wdt/wdt.h"
 #include "gfx/gfx_components/gfx_information.h"
 #include "ASF/common/services/usb/class/cdc/device/udi_cdc.h"
 #include <string.h>
