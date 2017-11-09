@@ -85,7 +85,7 @@ static struct work update_screen_work = { .do_work = update_screen };
 
 static double screen_get_recur_period(void)
 {
-    return 1;
+    return 0.1;
 }
 
 struct scheduler_task screen_tick_task = {
