@@ -12,13 +12,6 @@
 #include "gfx/gfx_components/gfx_text.h"
 #include <string.h>
 
-struct gfx_font {
-	PROGMEM_BYTE_ARRAY_T source;
-	uint8_t width;
-	uint8_t height;
-	bool is_numeric_only;
-};
-
 void draw_string_in_buffer(char *ch, uint8_t x, uint8_t y, struct glcd_FontConfig_t *font);
 
 void clear_screen(void);
