@@ -12,11 +12,6 @@ static bool is_valid_char(char ch)
 	return ch != '\0' && ch != '\n';
 }
 
-void clear_string_background(uint8_t length, uint8_t x, uint8_t y, struct glcd_FontConfig_t *font)
-{
-	gfx_mono_draw_filled_rect(x, y, length, font->height + 3, GFX_PIXEL_CLR);
-}
-
 static uint8_t length_P(char *str)
 {
 	uint8_t count = 0;
