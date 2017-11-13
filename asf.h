@@ -101,9 +101,6 @@
 #include "ASF/common/components/display/ssd1306/font.h"
 #include "ASF/common/components/display/ssd1306/ssd1306.h"
 
-// From module: STK600-RC064X LED support enabled
-#include "ASF/xmega/boards/stk600/rc064x/led.h"
-
 // From module: Sleep Controller driver
 #include "ASF/xmega/drivers/sleep/sleep.h"
 
