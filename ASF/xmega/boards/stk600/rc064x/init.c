@@ -53,82 +53,31 @@
 
 void board_init(void)
 {
-//Buttons:
-ioport_configure_pin(FP_RIGHT_BUTTON, IOPORT_DIR_INPUT | IOPORT_PULL_UP);
-ioport_configure_pin(FP_OK_BUTTON, IOPORT_DIR_INPUT | IOPORT_PULL_UP);
-ioport_configure_pin(FP_LEFT_BUTTON, IOPORT_DIR_INPUT | IOPORT_PULL_UP);
+	//Buttons:
+	ioport_configure_pin(FP_RIGHT_BUTTON, IOPORT_DIR_INPUT | IOPORT_PULL_UP);
+	ioport_configure_pin(FP_OK_BUTTON, IOPORT_DIR_INPUT | IOPORT_PULL_UP);
+	ioport_configure_pin(FP_LEFT_BUTTON, IOPORT_DIR_INPUT | IOPORT_PULL_UP);
 
+	ioport_configure_pin(FP_S3, IOPORT_DIR_INPUT | IOPORT_PULL_UP);
+	ioport_configure_pin(FP_S4, IOPORT_DIR_INPUT | IOPORT_PULL_UP);
+	ioport_configure_pin(FP_S5, IOPORT_DIR_INPUT | IOPORT_PULL_UP);
 
-ioport_configure_pin(FP_S3, IOPORT_DIR_INPUT | IOPORT_PULL_UP);
-ioport_configure_pin(FP_S4, IOPORT_DIR_INPUT | IOPORT_PULL_UP);
-ioport_configure_pin(FP_S5, IOPORT_DIR_INPUT | IOPORT_PULL_UP);
+	//Display interface:
+	ioport_configure_pin(FP_DC, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+	ioport_configure_pin(FP_CS, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+	ioport_configure_pin(FP_RST, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+	ioport_configure_pin(FP_MOSI, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+	ioport_configure_pin(FP_SCK, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+	//This pin needs to be an output in order for SPI Master mode to work:
+	ioport_configure_pin(FP_SPI_SS, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH); //NOT IN USE
 
-//Display interface:
-ioport_configure_pin(FP_DC, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-ioport_configure_pin(FP_CS, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-ioport_configure_pin(FP_RST, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-ioport_configure_pin(FP_MOSI, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-ioport_configure_pin(FP_SCK, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-//This pin needs to be an output in order for SPI Master mode to work:
-ioport_configure_pin(FP_SPI_SS, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH); //NOT IN USE
+	//Misc.:
+	ioport_configure_pin(FP_VCC_EN, IOPORT_DIR_OUTPUT | IOPORT_INIT_LOW);
 
-//Misc.:
-ioport_configure_pin(FP_VCC_EN, IOPORT_DIR_OUTPUT | IOPORT_INIT_LOW);
+	//Debug LEDs:
+	ioport_configure_pin(LED3_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+	ioport_configure_pin(LED5_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+	ioport_configure_pin(LED6_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
+	ioport_configure_pin(LED7_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
 
-//Debug LEDs:
-ioport_configure_pin(LED3_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-ioport_configure_pin(LED5_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-ioport_configure_pin(LED6_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-ioport_configure_pin(LED7_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-
-#ifdef CONF_BOARD_AT45DBX
-	ioport_configure_pin(AT45DBX_MASTER_SCK,IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-	ioport_configure_pin(AT45DBX_MASTER_MOSI,IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-	ioport_configure_pin(AT45DBX_MASTER_MISO, IOPORT_DIR_INPUT);
-	ioport_configure_pin(AT45DBX_CS, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
-#endif
-
-#ifdef CONF_BOARD_ENABLE_USARTC0
-	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 3), IOPORT_DIR_OUTPUT
-			| IOPORT_INIT_HIGH);
-	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 2), IOPORT_DIR_INPUT);
-#endif
-
-#ifdef CONF_BOARD_ENABLE_USARTC1
-	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 7), IOPORT_DIR_OUTPUT
-			| IOPORT_INIT_HIGH);
-	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 6), IOPORT_DIR_INPUT);
-#endif
-
-#ifdef CONF_BOARD_ENABLE_USARTD0
-	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 3), IOPORT_DIR_OUTPUT
-			| IOPORT_INIT_HIGH);
-	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 2), IOPORT_DIR_INPUT);
-#endif
-
-#ifdef CONF_BOARD_ENABLE_USARTD1
-	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 7), IOPORT_DIR_OUTPUT
-			| IOPORT_INIT_HIGH);
-	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 6), IOPORT_DIR_INPUT);
-#endif
-
-#if !(XMEGA_B3)
-# ifdef CONF_BOARD_ENABLE_USARTE0
-	ioport_configure_pin(IOPORT_CREATE_PIN(PORTE, 3), IOPORT_DIR_OUTPUT
-			| IOPORT_INIT_HIGH);
-	ioport_configure_pin(IOPORT_CREATE_PIN(PORTE, 2), IOPORT_DIR_INPUT);
-# endif
-
-# ifdef CONF_BOARD_ENABLE_USARTE1
-	ioport_configure_pin(IOPORT_CREATE_PIN(PORTE, 7), IOPORT_DIR_OUTPUT
-			| IOPORT_INIT_HIGH);
-	ioport_configure_pin(IOPORT_CREATE_PIN(PORTE, 6), IOPORT_DIR_INPUT);
-# endif
-
-# ifdef CONF_BOARD_ENABLE_USARTF0
-	ioport_configure_pin(IOPORT_CREATE_PIN(PORTF, 3), IOPORT_DIR_OUTPUT
-			| IOPORT_INIT_HIGH);
-	ioport_configure_pin(IOPORT_CREATE_PIN(PORTF, 2), IOPORT_DIR_INPUT);
-# endif
-#endif
 }
