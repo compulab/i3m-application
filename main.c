@@ -6,7 +6,6 @@
 #include "timer/tc.h"
 #include "twi/i2c_buffer.h"
 #include "power/power.h"
-#include "uart/uart.h"
 #include "rtc/rtc.h"
 #include "adc/adc.h"
 #include "eeprom/eeprom_layout.h"
@@ -84,7 +83,6 @@ static void init(void)
 	wdt_enable();
 	sysclk_init();
 	board_init();
-	uart_init();
 	load_config_block();
 	cli();
 	gfx_mono_init();

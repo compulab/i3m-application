@@ -7,7 +7,6 @@
 
 #include "sram_handle.h"
 #include "power/power.h"
-#include "uart/uart.h"
 #include "twi/i2c_buffer.h"
 #include "work-queue/work.h"
 #include "rtc/rtc.h"
