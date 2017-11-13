@@ -80,4 +80,19 @@ void board_init(void)
 	ioport_configure_pin(LED6_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
 	ioport_configure_pin(LED7_GPIO, IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH);
 
+	//PORTF contains the UI buttons and the power states
+	uint8_t sreg = SREG;
+	uint8_t power_pin_cfg =(uint8_t)  PORT_ISC_BOTHEDGES_gc | PORT_OPC_PULLUP_gc;
+	uint8_t buttons_pin_cfg = PIN4_bm | PIN5_bm | PIN6_bm;
+	PORTF.PIN4CTRL = PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+	PORTF.PIN5CTRL = PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+	PORTF.PIN6CTRL = PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+	PORTF.PIN0CTRL = power_pin_cfg;
+	PORTF.PIN1CTRL = power_pin_cfg;
+	PORTF.PIN2CTRL = power_pin_cfg;
+	/* Restore status register. */
+	SREG = sreg;
+	PORTF.INTCTRL =  PORT_INT0LVL_MED_gc | PORT_INT1LVL_MED_gc;
+	PORTF.INT0MASK = PIN0_bm | PIN1_bm |PIN2_bm;
+	PORTF.INT1MASK = buttons_pin_cfg;
 }
