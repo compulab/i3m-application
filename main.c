@@ -20,22 +20,6 @@
 #include "ASF/common/utils/stdio/stdio_usb/stdio_usb.h"
 
 /*
- * Power state GPIO change
- */
-ISR(PORTF_INT0_vect)
-{
-	update_power_state();
-}
-
-/*
- * Init current power state
- */
-static void power_state_init(void)
-{
-	update_power_state();
-}
-
-/*
  * Update screen saver configuration as they saved in EEPROM
  */
 static void update_screen_saver_from_eeprom(void)

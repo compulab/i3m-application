@@ -18,6 +18,6 @@ enum power_state {
 
 extern enum power_state current_power_state;
 
-void update_power_state(void);
+void power_state_init(void);
 
 #endif /* POWER_H_ */

@@ -65,7 +65,7 @@ static void handle_power_state_changed(void *data)
 
 struct work power_state_work = { .do_work = handle_power_state_changed, .data = NULL, .next = NULL };
 
-void update_power_state(void)
+static void update_power_state(void)
 {
 	enum power_state  last_power_state = current_power_state;
 
@@ -89,3 +89,12 @@ void update_power_state(void)
 	}
 }
 
+void power_state_init(void)
+{
+	update_power_state();
+}
+
+ISR(PORTF_INT0_vect)
+{
+	update_power_state();
+}
