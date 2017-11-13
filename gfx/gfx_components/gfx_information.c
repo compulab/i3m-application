@@ -87,12 +87,6 @@ static int gfx_information_init_type(struct gfx_information *info, enum informat
 		return gfx_information_init_show_ambient_temp(info);
 	case SHOW_POST_CODE:
 		return gfx_information_init_show_post_code(info);
-	case SHOW_RTC_HOUR:
-		return gfx_information_init_show_rtc_hour(info);
-	case SHOW_RTC_MIN:
-		return gfx_information_init_show_rtc_min(info);
-	case SHOW_RTC_SEC:
-		return gfx_information_init_show_rtc_sec(info);
 	case SHOW_USB_SERIAL_INPUT://TODO:THIS IS TEMPORARY, KILL THIS WHEN NO LONGER NEEDED
 		return gfx_information_init_show_usb_serial(info);
 	case SHOW_CUSTOM_MESSAGE:

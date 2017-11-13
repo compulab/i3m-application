@@ -9,7 +9,6 @@
 #include "power/power.h"
 #include "twi/i2c_buffer.h"
 #include "work-queue/work.h"
-#include "rtc/rtc.h"
 #include "ASF/common/services/calendar/calendar.h"
 #include "eeprom/eeprom_layout.h"
 #include <string.h>
@@ -183,110 +182,6 @@ static void write_post_code_lsb(void)
 {
 	computer_data.packed.post_code = i2c_buffer.layout.bios_post_code;
 	update_computer_state();
-}
-
-#define RTC_DATE_DAY		0
-#define RTC_DATE_MONTH		1
-
-#define RTC_TIME_HOUR		0
-#define RTC_TIME_MIN		1
-#define RTC_TIME_SEC		2
-
-static void write_rtc_day(void)
-{
-	uint8_t old_date = computer_date_time.date;
-	uint8_t new_date = i2c_buffer.raw[RTCD] & 0x1f;
-
-	if (new_date > 30)
-		return;
-	computer_date_time.date = new_date;
-	if (!calendar_is_date_valid(&computer_date_time))
-		computer_date_time.date = old_date;
-}
-
-static void write_rtc_month(void)
-{
-	uint8_t old_month = computer_date_time.month;
-	uint8_t new_month = i2c_buffer.raw[RTCD] & 0x0f;
-
-	if (new_month > 11)
-		return;
-	computer_date_time.month = new_month;
-	if (!calendar_is_date_valid(&computer_date_time))
-		computer_date_time.month = old_month;
-}
-
-static void write_rtc_year(void)
-{
-	computer_date_time.year = (i2c_buffer.raw[RTCD] & 0x7f) + 2000;
-}
-
-static void write_rtc_date(void)
-{
-	switch (i2c_buffer.layout.rtcdc) {
-	case RTC_DATE_DAY:
-		write_rtc_day();
-		break;
-	case RTC_DATE_MONTH:
-		write_rtc_month();
-		break;
-	default:
-		write_rtc_year();
-		break;
-	}
-}
-
-static void write_rtc_hour(void)
-{
-	uint8_t old_hour = computer_date_time.hour;
-	uint8_t new_hour = i2c_buffer.raw[RTCT] & 0x1f;
-
-	if (new_hour > 23)
-		return;
-	computer_date_time.hour = new_hour;
-	if (!calendar_is_date_valid(&computer_date_time))
-		computer_date_time.hour = old_hour;
-}
-
-static void write_rtc_min(void)
-{
-	uint8_t old_min = computer_date_time.minute;
-	uint8_t new_min = i2c_buffer.raw[RTCT] & 0x3f;
-
-	if (new_min > 59)
-		return;
-	computer_date_time.minute = new_min;
-	if (!calendar_is_date_valid(&computer_date_time))
-		computer_date_time.minute = old_min;
-}
-
-static void write_rtc_sec(void)
-{
-	uint8_t old_sec = computer_date_time.second;
-	uint8_t new_sec = i2c_buffer.raw[RTCT] & 0x1f;
-
-	if (new_sec > 23)
-		return;
-	computer_date_time.second = new_sec;
-	if (!calendar_is_date_valid(&computer_date_time))
-		computer_date_time.second = old_sec;
-}
-
-static void write_rtc_time(void)
-{
-	switch (i2c_buffer.layout.rtctc) {
-	case RTC_TIME_HOUR:
-		write_rtc_hour();
-		break;
-	case RTC_TIME_MIN:
-		write_rtc_min();
-		break;
-	case RTC_TIME_SEC:
-		write_rtc_sec();
-		break;
-	default:
-		break;
-	}
 }
 
 static void write_memory(uint8_t mem_addr) //Todo: change memory status set
@@ -753,12 +648,6 @@ static void update_data(void *write_address)
 		case MEM_LSB :
 		case MEM_MSB:
 			write_memory(addr);
-			break;
-		case RTCT:
-			write_rtc_time();
-			break;
-		case RTCD:
-			write_rtc_date();
 			break;
 		case SENSORT:
 			write_temp_control();

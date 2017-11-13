@@ -6,7 +6,6 @@
 #include "timer/tc.h"
 #include "twi/i2c_buffer.h"
 #include "power/power.h"
-#include "rtc/rtc.h"
 #include "adc/adc.h"
 #include "eeprom/eeprom_layout.h"
 #include "eeprom/eeprom.h"
