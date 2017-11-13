@@ -15,8 +15,6 @@ struct scheduler_task {
 	double (*get_recur_period)(void);
 };
 
-extern bool reset_screen_saver_req;
-
 void scheduler_init(void);
 
 #endif

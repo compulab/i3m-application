@@ -45,12 +45,6 @@ static void reset_screen_saver_config(void)
 #define APPLICATION_VER_LSB 1
 #endif
 
-/*
- * Initialize and validate Screen Saver configuration
- * Initialize ambient sensor
- * validate application version
- * validate screen brightness
- */
 static void init_information(void)
 {
 	update_screen_saver_from_eeprom();
