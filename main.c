@@ -15,9 +15,8 @@
 #include "config/config_block.h"
 #include "gfx/gfx_components/gfx_graphic_menu.h"
 #include "asf.h"
+#include "usb/usb.h"
 #include "ASF/common/services/calendar/calendar.h"
-#include "ASF/common/services/usb/udc/udc.h"
-#include "ASF/common/utils/stdio/stdio_usb/stdio_usb.h"
 
 /*
  * Update screen saver configuration as they saved in EEPROM
@@ -91,10 +90,6 @@ static void init_updateable_data(void)
 		p_computer_data[i] = 0;
 }
 
-static void usb_init(void)
-{
-	udc_start();
-}
 extern struct gfx_frame *splash;
 static void init(void)
 {
@@ -131,15 +126,6 @@ static bool sleep_interuptable(uint32_t timeout_us)
 		delay_us(1);
 
 	return wakeup;
-}
-
-bool my_callback_cdc_enable(void)
-{
-	return stdio_usb_enable();
-}
-void my_callback_cdc_disable(void)
-{
-	stdio_usb_disable();
 }
 
 int main(int argc, char *argv[])
