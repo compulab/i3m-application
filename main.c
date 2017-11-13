@@ -40,7 +40,6 @@ static void reset_screen_saver_config(void)
 void tasks_init(void)
 {
 	tc_scheduler_init();
-	switch_rtc_interrupt_schedule(true);
 }
 
 #ifndef APPLICATION_VER_MSB
@@ -109,7 +108,6 @@ static void init(void)
 	twi_slave_init();
 	sleepmgr_init();
 	tc_init();
-	rtc_init();
 	usb_init();
 	tasks_init();
 	sei();
