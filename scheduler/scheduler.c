@@ -44,12 +44,6 @@ static struct tc_scheduler_task new_tick_task(struct scheduler_task task)
 	return res;
 }
 
-static bool tc_can_schedule = false;
-void switch_tc_interrupt_schedule(bool on)
-{
-	tc_can_schedule = on;
-}
-
 static uint32_t get_ticks_in_sec(void)
 {
 	return sysclk_get_cpu_hz() / tc_get_div();
@@ -106,9 +100,6 @@ void tc_scheduler_init(void)
 
 ISR(TCC0_CCA_vect)
 {
-	if (!tc_can_schedule)
-		return;
-
 	/* Find expired task and add it to the work queue */
 	array_foreach(struct tc_scheduler_task, tick_tasks_to_do, index) {
 		if (tick_tasks_to_do[index].overlaps_count == 0 &&  tick_tasks_to_do[index].offset <= TCC0.CNT) {
@@ -122,9 +113,6 @@ ISR(TCC0_CCA_vect)
 
 ISR(TCC0_OVF_vect)
 {
-	if (!tc_can_schedule)
-		return;
-
 	array_foreach(struct tc_scheduler_task, tick_tasks_to_do, index) {
 		if (tick_tasks_to_do[index].overlaps_count <= 0)
 			continue;

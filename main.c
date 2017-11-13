@@ -41,7 +41,6 @@ void tasks_init(void)
 {
 	tc_scheduler_init();
 	switch_rtc_interrupt_schedule(true);
-	switch_tc_interrupt_schedule(true);
 }
 
 #ifndef APPLICATION_VER_MSB
@@ -108,12 +107,12 @@ static void init(void)
 	pmic_init();
 	power_state_init();
 	twi_slave_init();
-	sei();
 	sleepmgr_init();
 	tc_init();
 	rtc_init();
 	usb_init();
 	tasks_init();
+	sei();
 	//show_logo(splash);
 }
 
