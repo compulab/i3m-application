@@ -86,7 +86,7 @@ static void task_set_timer(int task_index)
 	}
 }
 
-void tc_scheduler_init(void)
+void scheduler_init(void)
 {
     tick_tasks_to_do[0] = new_tick_task(pending_req_tick_task);
 	tick_tasks_to_do[1] = new_tick_task(adc_tick_task);

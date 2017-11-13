@@ -17,7 +17,6 @@ struct scheduler_task {
 
 extern bool reset_screen_saver_req;
 
-void tc_scheduler_init(void);
-void tasks_init(void);
+void scheduler_init(void);
 
 #endif

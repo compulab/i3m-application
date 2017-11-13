@@ -37,11 +37,6 @@ static void reset_screen_saver_config(void)
 	update_screen_saver_from_eeprom();
 }
 
-void tasks_init(void)
-{
-	tc_scheduler_init();
-}
-
 #ifndef APPLICATION_VER_MSB
 #define APPLICATION_VER_MSB 0
 #endif
@@ -109,7 +104,7 @@ static void init(void)
 	sleepmgr_init();
 	tc_init();
 	usb_init();
-	tasks_init();
+	scheduler_init();
 	sei();
 	//show_logo(splash);
 }
