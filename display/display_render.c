@@ -9,7 +9,6 @@
 
 void draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct glcd_FontConfig_t *font)
 {
-	uint8_t j = 0;
 	uint16_t str_len = strlen(str);
 	struct glcd_FontConfig_t *best_font = font;
 

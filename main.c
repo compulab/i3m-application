@@ -38,11 +38,6 @@ static void reset_screen_saver_config(void)
 	update_screen_saver_from_eeprom();
 }
 
-static void init_ambient(void)
-{
-	i2c_buffer.layout.ambs = 0;
-}
-
 void tasks_init(void)
 {
 	tc_scheduler_init();
@@ -75,7 +70,6 @@ static void init_information(void)
 	else
 		computer_data.packed.screen_saver_update_time = eeprom_get_screen_saver_time();
 
-	init_ambient();
 	i2c_buffer.layout.iwren = 0;
 
 	if (eeprom_read_byte(APPLICATION_VER_MSB_EEPROM_ADDRESS) != APPLICATION_VER_MSB)
@@ -147,27 +141,7 @@ void my_callback_cdc_disable(void)
 {
 	stdio_usb_disable();
 }
-/*
-#include "ASF/common/services/usb/class/cdc/device/udi_cdc.h"
 
-char buf[1024] = { 0 };
-int i = 0;
-
-static void task(void)
-{
-	while (udi_cdc_is_rx_ready()) {
-		wdt_reset();
-		buf[i] = udi_cdc_getc();
-		bool no_error = udi_cdc_putc(buf[i]);
-		if (!no_error) {
-			buf[i] = '!';
-		}
-
-		i++;
-		i = i >= (1024) ? 0 : i;
-	}
-}
-*/
 int main(int argc, char *argv[])
 {
 	works_count = 0;
@@ -175,7 +149,6 @@ int main(int argc, char *argv[])
 	init();
 	while (true) {
 		wdt_reset();
-//		task();
 		wakeup = false;
 		if (!work_handler())
 			sleep_interuptable(1000); /* 1 ms */
