@@ -10,15 +10,19 @@
 
 #include "display/glcd-0.5.2/glcd_font.h"
 #include "display/glcd-0.5.2/glcd.h"
-#include <avr/pgmspace.h>
 #include <stdbool.h>
+#include <avr/pgmspace.h>
+
+typedef uint8_t gfx_mono_color_t;
+
+#define PROGMEM_BYTE_ARRAY_T uint8_t*
 
 enum information_type {
 	SET_BRIGHTNESS,
 	SET_SCREEN_SAVER_ENABLE,
 	SET_SCREEN_SAVER_TIME,
 	SET_SCREEN_SAVER_TYPE,
-	SET_SCREEN_SAVER_TIME_UNIT,//Kill this after updating the fp-config project
+	SET_SCREEN_SAVER_TIME_UNIT,
 	SHOW_SERIAL_NUMBER,
 	SHOW_APP_VERSION,
 	SHOW_PART_NUMBER,
@@ -42,6 +46,7 @@ enum information_type {
 	SHOW_RTC_DAY,
 	SHOW_USB_SERIAL_INPUT,
 	SHOW_CUSTOM_MESSAGE,
+	SHOW_SCREEN_SAVER,
 };
 
 enum action_type {
@@ -49,12 +54,7 @@ enum action_type {
 	ACTION_TYPE_SHOW_MENU,
 	ACTION_TYPE_SHOW_DMI_MENU,
 	ACTION_TYPE_SHOW_FRAME,
-	ACTION_TYPE_SET_BIOS_STATE
 };
-
-# define PROGMEM_BYTE_ARRAY_T uint8_t*
-
-typedef uint8_t gfx_mono_color_t;
 
 struct cnf_label {
 	char *text;
@@ -120,19 +120,11 @@ struct cnf_menu_node {
 	struct cnf_menu_node *next;
 };
 
-//struct cnf_font {
-//	PROGMEM_BYTE_ARRAY_T source;
-//	uint8_t width;
-//	uint8_t height;
-//	bool is_numeric_only;
-//};
-
 struct cnf_font_node {
 	struct glcd_FontConfig_t font;
 	uint8_t id;
 	struct cnf_font_node *next;
 };
-
 
 struct cnf_blk {
 	struct cnf_menu_node *menus_head;
