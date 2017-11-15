@@ -9,18 +9,17 @@
 #include "eeprom.h"
 
 #define EEPROM_BYTE_ADDRESS_MASK    0x1f
+#define PAGE_ADDR(reg_addr)			(reg_addr / EEPROM_PAGESIZE)
+#define BYTE_OFFSET(reg_addr)		(reg_addr & EEPROM_BYTE_ADDRESS_MASK)
+
 void eeprom_write_byte(uint16_t reg_addr, uint8_t value)
 {
-	uint8_t page_addr = reg_addr / EEPROM_PAGESIZE;
-	uint8_t byte_addr = reg_addr & EEPROM_BYTE_ADDRESS_MASK;
-	EEPROM_WriteByte(page_addr, byte_addr, value);
+	EEPROM_WriteByte(PAGE_ADDR(reg_addr), BYTE_OFFSET(reg_addr), value);
 }
 
 uint8_t eeprom_read_byte(uint16_t reg_addr)
 {
-	uint8_t page_addr = reg_addr / EEPROM_PAGESIZE;
-	uint8_t byte_addr = reg_addr & EEPROM_BYTE_ADDRESS_MASK;
-	return EEPROM_ReadByte(page_addr, byte_addr);
+	return EEPROM_ReadByte(PAGE_ADDR(reg_addr), BYTE_OFFSET(reg_addr));
 }
 
 void eeprom_write_str(char *str, uint16_t addr)
