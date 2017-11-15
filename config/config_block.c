@@ -13,9 +13,9 @@ struct gfx_graphic_menu **graphic_menus;
 
 struct gfx_mono_bitmap splash_bitmap;
 
-static struct gfx_frame *dashboard;
+struct gfx_frame *dashboard;
 static struct gfx_frame *clock;
-static struct gfx_frame *splash;
+struct gfx_frame *splash;
 
 uint8_t size_of_menus;
 uint8_t new_fonts_size;
@@ -144,7 +144,7 @@ static bool is_action_frame(struct cnf_frame *cnf_frame)
 	enum information_type info_type = cnf_info_node.info.info_type;
 
 	return (info_type == SET_BRIGHTNESS) || (info_type == SET_SCREEN_SAVER_ENABLE) ||
-		   (info_type == SET_SCREEN_SAVER_TIME) || (info_type == SET_SCREEN_SAVER_TYPE);
+		   (info_type == SET_SCREEN_SAVER_TIME) || (info_type == SET_SCREEN_SAVER_TYPE) || (info_type == SHOW_SCREEN_SAVER);
 	return 0;
 }
 

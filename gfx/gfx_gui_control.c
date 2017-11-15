@@ -58,6 +58,11 @@ void gfx_switch_to_frame(struct gfx_frame *frame)
 	frame->draw(frame);
 }
 
+void gfx_display_frame(struct gfx_frame *frame)
+{
+	frame->draw(frame);
+}
+
 void gfx_switch_to_menu(struct gfx_graphic_menu *graphic_menu)
 {
 	current_frame = 0;

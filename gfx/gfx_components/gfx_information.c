@@ -55,6 +55,8 @@ static int gfx_information_init_type(struct gfx_information *info, enum informat
 		return gfx_information_init_set_brightness(info);
 	case SET_SCREEN_SAVER_ENABLE:
 		return gfx_information_init_set_screen_saver_enable(info);
+	case SHOW_SCREEN_SAVER:
+		return gfx_information_init_show_screen_saver(info);
 	case SET_SCREEN_SAVER_TIME:
 		return gfx_information_init_set_screen_saver_time(info);
 	case SET_SCREEN_SAVER_TYPE:
