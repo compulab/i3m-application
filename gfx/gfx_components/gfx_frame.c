@@ -48,13 +48,13 @@ static void gfx_frame_draw(struct gfx_frame *frame)
 static void gfx_functional_frame_draw(struct gfx_frame *frame)
 {
 	gfx_frame_format_generic_frame(frame);
-	draw_standard_separator_line();
 	frame->draw_controls(frame);
 	gfx_mono_ssd1306_put_framebuffer();
 }
 
 static void gfx_frame_draw_control_arrows(struct gfx_frame *info)
 {
+	draw_standard_separator_line();
 	draw_control_signs_arrows(current_menu->menu->current_selection, 0, current_menu->menu->num_elements - 2);
 }
 
