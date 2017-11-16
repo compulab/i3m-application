@@ -12,6 +12,7 @@
 #include "work-queue/work.h"
 #include "config/config_block.h"
 #include "gfx/gfx_components/gfx_graphic_menu.h"
+#include "lib/sleep.h"
 #include "asf.h"
 #include "usb/usb.h"
 #include "ASF/common/services/calendar/calendar.h"
@@ -98,17 +99,6 @@ static void init(void)
 	scheduler_init();
 	sei();
 	//show_logo(splash);
-}
-
-/*
- * Sleep function makes the system Idle for timeout_us microseconds or until wakeup flag will be set
- */
-static bool sleep_interuptable(uint32_t timeout_us)
-{
-	for (uint32_t us = 0; us < timeout_us && !wakeup; us++)
-		delay_us(1);
-
-	return wakeup;
 }
 
 int main(int argc, char *argv[])
