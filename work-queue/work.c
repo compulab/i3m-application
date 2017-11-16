@@ -9,7 +9,6 @@
 #include "layout.h"
 #include "asf.h"
 
-uint16_t works_count;
 bool wakeup;
 
 static struct work_queue work_to_do = {
@@ -47,7 +46,6 @@ int insert_work(struct work *work)
 		work_to_do.first = new_work;
 
 	work_to_do.last = new_work;
-	works_count++;
 	wakeup = true;
 	sei();
 	return 0;
@@ -70,7 +68,6 @@ bool work_handler(void)
 	} else {
 		work_to_do.first = work_to_do.first->next;
 	}
-	works_count--;
 	sei();
 	work->do_work(work->data);
 	cli();

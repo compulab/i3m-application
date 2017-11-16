@@ -22,7 +22,6 @@ struct work_queue {
 	struct work *last;
 };
 
-extern uint16_t works_count;
 extern bool wakeup;
 
 void *malloc_locked(size_t size);

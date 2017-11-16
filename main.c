@@ -103,7 +103,6 @@ static void init(void)
 
 int main(int argc, char *argv[])
 {
-	works_count = 0;
 
 	init();
 	while (true) {
