@@ -11,6 +11,7 @@
 #include "eeprom/eeprom.h"
 #include "work-queue/work.h"
 #include "config/config_block.h"
+#include "config/menus/fp_menus_config.h"
 #include "gfx/gfx_components/gfx_graphic_menu.h"
 #include "lib/sleep.h"
 #include "asf.h"
@@ -103,7 +104,10 @@ static void init(void)
 
 int main(int argc, char *argv[])
 {
+	//prevent config section from being optimized out
+	volatile struct cnf_blk *config_block = &menus_config;
 
+#ifndef CONFIG_SECTION_ONLY
 	init();
 	while (true) {
 		wdt_reset();
@@ -111,6 +115,9 @@ int main(int argc, char *argv[])
 		if (!work_handler())
 			sleep_interuptable(1000); /* 1 ms */
 	}
+#else
+	memcpy_P(&config_block, &menus_config, sizeof(struct cnf_blk));
+#endif
 
 	return 0;
 }

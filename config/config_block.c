@@ -161,7 +161,6 @@ static int load_action(struct gfx_graphic_menu_action *action, struct cnf_action
 {
 	action->type = config_action.type;
 	switch(config_action.type){
-	case ACTION_TYPE_SET_BIOS_STATE:
 	case ACTION_TYPE_SHOW_FRAME:
 		if (config_action.frame == cnf_dashboard) {
 			action->frame = dashboard;

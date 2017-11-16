@@ -15,6 +15,10 @@
 
 enum glcd_font_type {
 	GLCD_FONT_SYSFONT_5X7 = 0,
+	GLCD_FONT_COURIER_NEW_7X11,
+//	GLCD_FONT_COURIER_NEW_10X16,
+	GLCD_FONT_COURIER_NEW_13X21,
+	GLCD_FONT_CONSOLAS_18X28_NUM,
 };
 
 extern struct glcd_FontConfig_t **fonts;

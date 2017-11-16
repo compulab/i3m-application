@@ -1,4 +1,5 @@
 /Release/
+/Config Section/
 *.d
 *.o
 *.elf
