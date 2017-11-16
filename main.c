@@ -66,9 +66,6 @@ static void init_information(void)
 		eeprom_set_brigntness_value(BRIGHTNESS_DEFAULT);
 }
 
-/*
- * Initializing of computer data struct for new data
- */
 static void init_updateable_data(void)
 {
 	init_information();
@@ -77,7 +74,6 @@ static void init_updateable_data(void)
 		p_computer_data[i] = 0;
 }
 
-extern struct gfx_frame *splash;
 static void init(void)
 {
 	wdt_set_timeout_period(WDT_TIMEOUT_PERIOD_2KCLK);
@@ -99,7 +95,6 @@ static void init(void)
 	usb_init();
 	scheduler_init();
 	sei();
-	//show_logo(splash);
 }
 
 int main(int argc, char *argv[])
@@ -113,7 +108,7 @@ int main(int argc, char *argv[])
 		wdt_reset();
 		wakeup = false;
 		if (!work_handler())
-			sleep_interuptable(1000); /* 1 ms */
+			sleep_interuptable(1000);
 	}
 #else
 	memcpy_P(&config_block, &menus_config, sizeof(struct cnf_blk));
