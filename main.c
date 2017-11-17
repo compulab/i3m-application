@@ -56,8 +56,6 @@ static void init_information(void)
 	else
 		computer_data.packed.screen_saver_update_time = eeprom_get_screen_saver_time();
 
-	i2c_buffer.layout.iwren = 0;
-
 	if (eeprom_read_byte(APPLICATION_VER_MSB_EEPROM_ADDRESS) != APPLICATION_VER_MSB)
 		eeprom_write_byte(APPLICATION_VER_MSB_EEPROM_ADDRESS, APPLICATION_VER_MSB);
 	if (eeprom_read_byte(APPLICATION_VER_LSB_EEPROM_ADDRESS) != APPLICATION_VER_LSB)

@@ -421,13 +421,6 @@ static void end_direct_string(bool is_name_byte)
 	}
 }
 
-static bool is_iwren_mode(void)
-{
-	bool res = i2c_buffer.layout.iwren != 0;
-	i2c_buffer.layout.iwren = 0;
-	return res;
-}
-
 static void write_byte_direct_string(bool is_written_type, uint8_t data)
 {
 	if (is_written_type)
@@ -535,78 +528,8 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 	case FPCTRL:
 		read_fp_control(data);
 		break;
-	case SIG0:
-	case SIG1:
-	case SIG2:
-	case SIG3:
-	case MAJOR_LSB:
-	case MAJOR_MSB:
-	case MINOR_LSB:
-	case MINOR_MSB:
-	case RTCT:
-	case RTCD:
-	case REQ:
-	case PENDR0:
-		*data = i2c_buffer.raw[addr];
-		break;
-	case HDD0T:
-	case HDD1T:
-	case HDD2T:
-	case HDD3T:
-	case HDD4T:
-	case HDD5T:
-	case HDD6T:
-	case HDD7T:
-	case HDDTS:
-	case HDD0_SZ_LSB:
-	case HDD1_SZ_LSB:
-	case HDD2_SZ_LSB:
-	case HDD3_SZ_LSB:
-	case HDD4_SZ_LSB:
-	case HDD5_SZ_LSB:
-	case HDD6_SZ_LSB:
-	case HDD7_SZ_LSB:
-	case HDD0_SZ_MSB:
-	case HDD1_SZ_MSB:
-	case HDD2_SZ_MSB:
-	case HDD3_SZ_MSB:
-	case HDD4_SZ_MSB:
-	case HDD5_SZ_MSB:
-	case HDD6_SZ_MSB:
-	case HDD7_SZ_MSB:
-	case MEM_LSB:
-	case MEM_MSB:
-	case CPU0T:
-	case CPU1T:
-	case CPU2T:
-	case CPU3T:
-	case CPU4T:
-	case CPU5T:
-	case CPU6T:
-	case CPU7T:
-	case CPUTS:
-	case CPU0F_MSB:
-	case CPU1F_MSB:
-	case CPU2F_MSB:
-	case CPU3F_MSB:
-	case CPU4F_MSB:
-	case CPU5F_MSB:
-	case CPU6F_MSB:
-	case CPU7F_MSB:
-	case CPU0F_LSB:
-	case CPU1F_LSB:
-	case CPU2F_LSB:
-	case CPU3F_LSB:
-	case CPU4F_LSB:
-	case CPU5F_LSB:
-	case CPU6F_LSB:
-	case CPU7F_LSB:
-	case GPUT:
-	case DMIN:
-	case DMIV:
 	default:
-		if (is_iwren_mode())
-			*data = i2c_buffer.raw[addr];
+		*data = i2c_buffer.raw[addr];
 		break;
 	}
 }
@@ -680,90 +603,7 @@ static void update_data(void *write_address)
 
 static void write_data(enum i2c_addr_space addr, uint8_t data)
 {
-	switch (addr) {
-	case RTCT:
-	case RTCD:
-	case GPUT:
-	case CPU0T:
-	case CPU1T:
-	case CPU2T:
-	case CPU3T:
-	case CPU4T:
-	case CPU5T:
-	case CPU6T:
-	case CPU7T:
-	case CPUTS:
-	case HDD0T:
-	case HDD1T:
-	case HDD2T:
-	case HDD3T:
-	case HDD4T:
-	case HDD5T:
-	case HDD6T:
-	case HDD7T:
-	case HDDTS:
-	case CPU0F_MSB:
-	case CPU1F_MSB:
-	case CPU2F_MSB:
-	case CPU3F_MSB:
-	case CPU4F_MSB:
-	case CPU5F_MSB:
-	case CPU6F_MSB:
-	case CPU7F_MSB:
-	case CPU0F_LSB:
-	case CPU1F_LSB:
-	case CPU2F_LSB:
-	case CPU3F_LSB:
-	case CPU4F_LSB:
-	case CPU5F_LSB:
-	case CPU6F_LSB:
-	case CPU7F_LSB:
-	case MEM_LSB :
-	case MEM_MSB:
-	case SENSORT:
-	case POST_CODE_LSB:
-	case POST_CODE_MSB:
-	case HDD0_SZ_LSB:
-	case HDD1_SZ_LSB:
-	case HDD2_SZ_LSB:
-	case HDD3_SZ_LSB:
-	case HDD4_SZ_LSB:
-	case HDD5_SZ_LSB:
-	case HDD6_SZ_LSB:
-	case HDD7_SZ_LSB:
-	case HDD0_SZ_MSB:
-	case HDD1_SZ_MSB:
-	case HDD2_SZ_MSB:
-	case HDD3_SZ_MSB:
-	case HDD4_SZ_MSB:
-	case HDD5_SZ_MSB:
-	case HDD6_SZ_MSB:
-	case HDD7_SZ_MSB:
-	case DMIN:
-	case DMIV:
-	case FPCTRL:
-		i2c_buffer.raw[addr] = data;
-		break;
-	case SIG0:
-	case SIG1:
-	case SIG2:
-	case SIG3:
-	case LAYOUT_VER:
-	case MAJOR_LSB:
-	case MAJOR_MSB:
-	case MINOR_LSB:
-	case MINOR_MSB:
-	case AMBT:
-	case ADC_LSB:
-	case ADC_MSB:
-	case REQ:
-	case PENDR0:
-	case POWER_STATE:
-	default:
-		if (is_iwren_mode())
-			i2c_buffer.raw[addr] = data;
-		break;
-	}
+	i2c_buffer.raw[addr] = data;
 }
 
 struct work update_data_work = {
