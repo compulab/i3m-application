@@ -9,6 +9,7 @@
 #include "gfx/gfx_components/gfx_information.h"
 #include "display/glcd-0.5.2/glcd_font.h"
 #include "ASF/common/services/gfx_mono/gfx_mono.h"
+#include "screens.h"
 #include <string.h>
 
 static void draw_custom_message(struct gfx_information *info)
