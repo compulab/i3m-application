@@ -9,8 +9,9 @@
 #ifndef FP_HDD_MENU_H_
 #define FP_HDD_MENU_H_
 
-#include "menus_id.h"
+#include "config/cnf_blk_components.h"
 #include "config/fonts.h"
+#include "menus_id.h"
 
 char __attribute__((section (".configData"))) airtop_hdd_menu_title[] = "Hard Drive";
 char __attribute__((section (".configData"))) hdd_temperature_title_progmem[] = "HDD temperature";

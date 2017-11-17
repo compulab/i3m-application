@@ -8,6 +8,8 @@
 #ifndef FP_MENU_FP_DASHBOARD_H_
 #define FP_MENU_FP_DASHBOARD_H_
 
+#include "config/cnf_blk_components.h"
+
 char __attribute__((section (".configData"))) dashboard_cput_progmem[] = "CPU ";
 char __attribute__((section (".configData"))) dashboard_gpu_progmem[] = "GPU ";
 

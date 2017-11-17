@@ -7,8 +7,9 @@
 
 #ifndef FP_INFO_MENU_H
 #define FP_INFO_MENU_H
-#include "menus_id.h"
+#include "config/cnf_blk_components.h"
 #include "config/fonts.h"
+#include "menus_id.h"
 
 char __attribute__((section (".configData"))) airtop_info_menu_title[] = "Information";
 char __attribute__((section (".configData"))) app_version_title_progmem[] = "Application Ver";

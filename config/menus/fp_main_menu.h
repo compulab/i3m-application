@@ -2,9 +2,10 @@
 #ifndef GFX_SAMPLEMENUS_SAMPLEMAINMENU_H_
 #define GFX_SAMPLEMENUS_SAMPLEMAINMENU_H_
 
-#include "menus_id.h"
+#include "config/cnf_blk_components.h"
 #include "config/logos.h"
 #include "config/fonts.h"
+#include "menus_id.h"
 
 #define PAGE_SPACING 8
 

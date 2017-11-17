@@ -9,8 +9,9 @@
 #ifndef FP_GPU_MENU_H_
 #define FP_GPU_MENU_H_
 
-#include "menus_id.h"
+#include "config/cnf_blk_components.h"
 #include "config/fonts.h"
+#include "menus_id.h"
 
 char __attribute__((section (".configData"))) gpu_menu_title[] = "GPU";
 char __attribute__((section (".configData"))) gpu_temperature_title_progmem[] = "GPU temperature";

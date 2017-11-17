@@ -7,8 +7,9 @@
 
 #ifndef FP_DEBUG_MENU_H
 #define FP_DEBUG_MENU_H
-#include "menus_id.h"
+#include "config/cnf_blk_components.h"
 #include "config/fonts.h"
+#include "menus_id.h"
 
 #define PAGE_SPACING 8
 
