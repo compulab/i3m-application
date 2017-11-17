@@ -43,7 +43,7 @@ static void init(void)
 int main(int argc, char *argv[])
 {
 	//prevent config section from being optimized out
-	volatile struct cnf_blk *config_block = &menus_config;
+	volatile struct cnf_blk * __attribute__((unused)) config_block = &menus_config;
 
 #ifndef CONFIG_SECTION_ONLY
 	init();
