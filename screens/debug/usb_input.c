@@ -6,12 +6,14 @@
  */
 
 #include "ASF/xmega/drivers/wdt/wdt.h"
+#include "gfx/gfx_gui_control.h"
 #include "gfx/gfx_components/gfx_information.h"
 #include "ASF/common/services/usb/class/cdc/device/udi_cdc.h"
+#include "debug.h"
 #include <string.h>
 
 char buf[1024] = { 0 };
-static void usb_show_frame()
+static void usb_show_frame(struct gfx_information *info)
 {
 	int i = 0;
 	while (udi_cdc_is_rx_ready()) {
@@ -20,7 +22,14 @@ static void usb_show_frame()
 		i++;
 		i = i >= (1024) ? 0 : i;
 	}
-	struct gfx_mono_bitmap bitmap = { 128 , 64, GFX_MONO_BITMAP_RAM, NULL };
+	struct gfx_mono_bitmap bitmap = {
+		.width = 128,
+		.height = 64,
+		.type = GFX_MONO_BITMAP_RAM,
+		.data = {
+			.pixmap = NULL,
+		},
+	};
 	bitmap.data.pixmap = buf;
 	gfx_mono_generic_put_bitmap(&bitmap, 0, 0);
 }

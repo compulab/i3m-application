@@ -21,6 +21,7 @@ static inline void sprintf_disabled(char *output_string)
 	sprintf(output_string, "DISABLED");
 }
 
+int gfx_information_init_show_screen_saver(struct gfx_information *info);
 int gfx_information_init_set_screen_saver_type(struct gfx_information *info);
 int gfx_information_init_set_screen_saver_time(struct gfx_information *info);
 int gfx_information_init_set_screen_saver_enable(struct gfx_information *info);

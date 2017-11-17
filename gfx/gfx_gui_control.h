@@ -14,6 +14,7 @@
 void gfx_gui_init(struct gfx_graphic_menu **graphic_menus, uint8_t num_elements);
 void gfx_redraw_current_frame(void);
 void gfx_switch_to_current_menu(void);
+void gfx_display_frame(struct gfx_frame *frame);
 void gfx_switch_to_frame(struct gfx_frame *frame);
 void gfx_switch_to_menu(struct gfx_graphic_menu *graphic_menu);
 void gfx_handle_button(uint8_t keycode);

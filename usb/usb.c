@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include "ASF/common/services/usb/udc/udc.h"
 #include "ASF/common/utils/stdio/stdio_usb/stdio_usb.h"
+#include "usb.h"
 
 bool my_callback_cdc_enable(void)
 {

@@ -7,6 +7,7 @@
 
 #include "work-queue/work.h"
 #include "asf.h"
+#include "sleep.h"
 #include <stdbool.h>
 
 /*
