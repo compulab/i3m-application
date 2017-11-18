@@ -77,8 +77,6 @@ static int gfx_information_init_type(struct gfx_information *info, enum informat
 		return gfx_information_init_show_cpu_temp(info);
 	case SHOW_GPU_TEMPERTURE:
 		return gfx_information_init_show_gpu_temp(info);
-	case SHOW_AMBIENT_TEMPERATURE:
-		return gfx_information_init_show_ambient_temp(info);
 	case SHOW_POST_CODE:
 		return gfx_information_init_show_post_code(info);
 	case SHOW_USB_SERIAL_INPUT://TODO:THIS IS TEMPORARY, KILL THIS WHEN NO LONGER NEEDED

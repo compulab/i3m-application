@@ -1007,9 +1007,6 @@
     <Compile Include="screens\sensors\power.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="screens\sensors\ambient.c">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="screens\sensors\cpu.c">
       <SubType>compile</SubType>
     </Compile>
