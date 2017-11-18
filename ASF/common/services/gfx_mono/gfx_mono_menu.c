@@ -159,7 +159,7 @@ void gfx_mono_menu_init(struct gfx_mono_menu *menu, bool redraw, bool is_progmem
  *
  * \retval selected menu option or status code
  */
-uint8_t gfx_mono_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode, bool is_progmem)
+uint8_t gfx_mono_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode)
 {
 	menu->last_selection = menu->current_selection;
 	switch (keycode) {
@@ -170,9 +170,6 @@ uint8_t gfx_mono_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode, b
 			menu->current_selection++;
 		}
 
-
-		/* Update menu on display */
-//		menu_draw(menu, false, is_progmem);
 		/* Nothing selected yet */
 		return GFX_MONO_MENU_EVENT_IDLE;
 
@@ -183,8 +180,6 @@ uint8_t gfx_mono_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode, b
 			menu->current_selection = menu->num_elements - 1;
 		}
 
-		/* Update menu on display */
-//		menu_draw(menu, false, is_progmem);
 		/* Nothing selected yet */
 		return GFX_MONO_MENU_EVENT_IDLE;
 

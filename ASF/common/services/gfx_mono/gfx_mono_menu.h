@@ -126,7 +126,7 @@ struct gfx_mono_menu {
 };
 
 void gfx_mono_menu_init(struct gfx_mono_menu *menu, bool redraw, bool is_progmem);
-uint8_t gfx_mono_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode, bool is_progmem);
+uint8_t gfx_mono_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode);
 
 /** @} */
 

@@ -366,7 +366,7 @@ int load_config_block(void)
 
 		memcpy_config(&cnf_menu, cnf_menu_node, sizeof(struct cnf_menu_node));
 		memcpy_config(&config_menu, cnf_menu.menu, sizeof(struct cnf_menu));
-		gfx_graphic_menu_init(graphic_menus[config_menu.id], config_menu.id, true, load_mono_menu(config_menu.menu),
+		gfx_graphic_menu_init(graphic_menus[config_menu.id], config_menu.id, load_mono_menu(config_menu.menu),
 							 load_menu_actions(graphic_menus[i]->menu->num_elements, config_menu.actions_head, config_block.dashboard),
 							 load_graphic_view(graphic_menus[i]->menu->num_elements, config_menu.images_items_head));
 		cnf_menu_node = cnf_menu.next;
