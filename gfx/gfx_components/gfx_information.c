@@ -36,7 +36,7 @@ static int gfx_information_init_generic(struct gfx_information *info, enum infor
 	if (text == NULL)
 		return -1;
 
-	gfx_text_init(&info->text, text, max_length, false, font_id);
+	gfx_text_init(&info->text, text, max_length, font_id);
 	info->info_type = info_type;
 	info->metadata = info_data;
 	info->to_string = sprintf_sprintf;
