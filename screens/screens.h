@@ -12,7 +12,6 @@
 #include "screens/information/information.h"
 #include "screens/screen_saver/screen_saver.h"
 #include "screens/sensors/sensors.h"
-#include "screens/settings/brightness.h"
 #include "screens/bios/bios_data.h"
 #include "screens/debug/debug.h"
 

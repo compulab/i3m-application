@@ -18,7 +18,6 @@ typedef uint8_t gfx_mono_color_t;
 #define PROGMEM_BYTE_ARRAY_T uint8_t*
 
 enum information_type {
-	SET_BRIGHTNESS,
 	SHOW_SERIAL_NUMBER,
 	SHOW_APP_VERSION,
 	SHOW_PART_NUMBER,
