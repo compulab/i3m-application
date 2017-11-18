@@ -13,7 +13,6 @@
 #include "lib/sleep.h"
 #include "asf.h"
 #include "usb/usb.h"
-#include "ASF/common/services/calendar/calendar.h"
 
 void apply_app_settings(void);
 

@@ -31,7 +31,6 @@
   <options>
     <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.components.display.ssd1306" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="common.services.calendar" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.services.gfx_mono" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.services.gfx_mono.menu" value="Add" config="" content-id="Atmel.ASF" />
     <option id="common.services.basic.gpio" value="Add" config="" content-id="Atmel.ASF" />
@@ -403,12 +402,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="ASF\common\components\display\ssd1306\ssd1306.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="ASF\common\services\calendar\calendar.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="ASF\common\services\calendar\calendar.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="ASF\common\services\clock\genclk.h">
@@ -1011,15 +1004,6 @@
     <Compile Include="screens\screen_saver\screen_saver.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="screens\screen_saver\screen_saver_enable.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="screens\screen_saver\screen_saver_time.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="screens\screen_saver\screen_saver_type.c">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="screens\sensors\power.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1186,7 +1170,6 @@
     <Folder Include="ASF\common\components\display\" />
     <Folder Include="ASF\common\components\display\ssd1306\" />
     <Folder Include="ASF\common\services\" />
-    <Folder Include="ASF\common\services\calendar\" />
     <Folder Include="ASF\common\services\clock\" />
     <Folder Include="ASF\common\services\clock\xmega\" />
     <Folder Include="ASF\common\services\delay\" />

@@ -14,7 +14,6 @@ struct gfx_graphic_menu **graphic_menus;
 struct gfx_mono_bitmap splash_bitmap;
 
 struct gfx_frame *dashboard;
-static struct gfx_frame *clock;
 struct gfx_frame *splash;
 
 uint8_t size_of_menus;
@@ -143,9 +142,7 @@ static bool is_action_frame(struct cnf_frame *cnf_frame)
 	memcpy_config(&cnf_info_node, (void *)cnf_frame->infos_head, sizeof(struct cnf_info_node));
 	enum information_type info_type = cnf_info_node.info.info_type;
 
-	return (info_type == SET_BRIGHTNESS) || (info_type == SET_SCREEN_SAVER_ENABLE) ||
-		   (info_type == SET_SCREEN_SAVER_TIME) || (info_type == SET_SCREEN_SAVER_TYPE) || (info_type == SHOW_SCREEN_SAVER);
-	return 0;
+	return (info_type == SET_BRIGHTNESS) || (info_type == SHOW_SCREEN_SAVER);
 }
 
 static bool is_debug_frame(struct cnf_frame *cnf_frame)
@@ -335,22 +332,13 @@ int load_config_block(void)
 	if (new_fonts_size > 0 && config_block.fonts_head && load_fonts(config_block.fonts_head))
 			return -1;
 
-	dashboard = clock = splash = NULL;
+	dashboard = splash = NULL;
 	if (config_block.dashboard) {
 		dashboard = (struct gfx_frame *)malloc_locked(sizeof(struct gfx_frame));
 		if (dashboard == NULL)
 			return -1;
 		memcpy_config(&cnf_frame, config_block.dashboard, sizeof(cnf_frame));
 		gfx_frame_init(dashboard, load_frame_images(cnf_frame.images_head), load_frame_labels(cnf_frame.labels_head),
-						load_frame_infos(cnf_frame.infos_head));
-	}
-
-	if (config_block.clock) {
-		clock = (struct gfx_frame *)malloc_locked(sizeof(struct gfx_frame));
-		if (clock == NULL)
-			return -1;
-		memcpy_config(&cnf_frame, config_block.clock, sizeof(cnf_frame));
-		gfx_frame_init(clock, load_frame_images(cnf_frame.images_head), load_frame_labels(cnf_frame.labels_head),
 						load_frame_infos(cnf_frame.infos_head));
 	}
 

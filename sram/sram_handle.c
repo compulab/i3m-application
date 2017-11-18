@@ -9,7 +9,6 @@
 #include "power/power.h"
 #include "twi/i2c_buffer.h"
 #include "work-queue/work.h"
-#include "ASF/common/services/calendar/calendar.h"
 #include "eeprom/eeprom_layout.h"
 #include <string.h>
 
