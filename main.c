@@ -43,7 +43,7 @@ static void init(void)
 int main(int argc, char *argv[])
 {
 	//prevent config section from being optimized out
-	volatile struct cnf_blk * __attribute__((unused)) config_block = &menus_config;
+	volatile int __attribute__((unused)) dont_optimize_this_away = pgm_read_byte_far(&menus_config);
 
 #ifndef CONFIG_SECTION_ONLY
 	init();
@@ -53,8 +53,6 @@ int main(int argc, char *argv[])
 		if (!work_handler())
 			sleep_interuptable(1000);
 	}
-#else
-	memcpy_P(&config_block, &menus_config, sizeof(struct cnf_blk));
 #endif
 
 	return 0;
