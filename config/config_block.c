@@ -142,7 +142,7 @@ static bool is_action_frame(struct cnf_frame *cnf_frame)
 	memcpy_config(&cnf_info_node, (void *)cnf_frame->infos_head, sizeof(struct cnf_info_node));
 	enum information_type info_type = cnf_info_node.info.info_type;
 
-	return (info_type == SET_BRIGHTNESS) || (info_type == SHOW_SCREEN_SAVER);
+	return (info_type == SHOW_SCREEN_SAVER);
 }
 
 static bool is_debug_frame(struct cnf_frame *cnf_frame)
