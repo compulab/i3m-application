@@ -8,12 +8,6 @@
 #ifndef GFX_LOGOS_H_
 #define GFX_LOGOS_H_
 
-#define v_width 50
-#define v_height 40
-
-#define compulab_width 128
-#define compulab_height 64
-
 #define logo_width 38
 #define logo_height 24
 

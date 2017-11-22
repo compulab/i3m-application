@@ -61,7 +61,6 @@ struct cnf_action_node __attribute__((section (".configData"))) gpu_menu_go_back
 	.next = 0
 };
 
-
 struct cnf_action_node __attribute__((section (".configData"))) gpu_temperature_action = {
 	.action = {
 		.type = ACTION_TYPE_SHOW_FRAME,

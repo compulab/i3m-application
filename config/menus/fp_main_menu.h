@@ -1,13 +1,11 @@
 
-#ifndef GFX_SAMPLEMENUS_SAMPLEMAINMENU_H_
-#define GFX_SAMPLEMENUS_SAMPLEMAINMENU_H_
+#ifndef FP_MAIN_MENU_H_
+#define FP_MAIN_MENU_H_
 
 #include "config/cnf_blk_components.h"
 #include "config/logos.h"
 #include "config/fonts.h"
 #include "menus_id.h"
-
-#define PAGE_SPACING 8
 
 char __attribute__((section (".configData"))) main_menu_title[] = "Main Menu";
 char __attribute__((section (".configData"))) main_menu_0[] = "Information";
@@ -200,4 +198,4 @@ struct cnf_menu   __attribute__((section (".configData"))) fp_main_menu_cnf = {
 	.images_items_head = &main_info_image
 };
 
-#endif /* GFX_SAMPLEMENUS_SAMPLEMAINMENU_H_ */
+#endif /* FP_MAIN_MENU_H_ */

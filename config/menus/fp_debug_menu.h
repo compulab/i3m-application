@@ -11,8 +11,6 @@
 #include "config/fonts.h"
 #include "menus_id.h"
 
-#define PAGE_SPACING 8
-
 char __attribute__((section (".configData"))) debug_menu_title[] = "Debug";
 char __attribute__((section (".configData"))) debug_usb_serial_input_title_text[] = "USB Serial Input";
 char __attribute__((section (".configData"))) debug_go_back_to_main[] = "Back";

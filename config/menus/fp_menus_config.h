@@ -1,5 +1,5 @@
 /*
- * sampleConfig.h
+ * fp_menus_config.h
  *
  *  Created on: Aug 17, 2015
  *      Author: arkadi

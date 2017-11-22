@@ -1,5 +1,5 @@
 /*
- * HDD_Menu.h
+ * fp_info_menu.h
  *
  *  Created on: Sep 27, 2015
  *      Author: arkadi
@@ -64,7 +64,6 @@ struct cnf_info_node __attribute__((section (".configData"))) part_number_info =
 	.next = &serial_number_info
 };
 
-
 struct cnf_info_node __attribute__((section (".configData"))) app_version2_info = {
 	.info = {
 		.info_type = SHOW_APP_VERSION,
@@ -101,7 +100,6 @@ struct cnf_info_node __attribute__((section (".configData"))) app_version0_info 
 	.next = &app_version1_info,
 };
 
-
 struct cnf_info_node __attribute__((section (".configData"))) mac2_address_info = {
 	.info = {
 			.info_type = SHOW_MAC_ADDRESS,
@@ -113,7 +111,6 @@ struct cnf_info_node __attribute__((section (".configData"))) mac2_address_info 
 	.font_id = GLCD_FONT_SYSFONT_5X7,
 	.next = 0
 };
-
 
 struct cnf_label_node __attribute__((section (".configData"))) app_version_title = {
 	.label = {
