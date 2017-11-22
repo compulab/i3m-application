@@ -150,7 +150,7 @@ struct cnf_image_node  __attribute__((section (".configData"))) main_power_image
 
 struct cnf_image_node  __attribute__((section (".configData"))) screen_saver_image = {
 	.image = {
-		.bitmap_progmem = settings_bits,
+		.bitmap_progmem = screensaver_bits,
 		.width = logo_width,
 		.height = logo_height
 	},

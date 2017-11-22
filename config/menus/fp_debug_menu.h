@@ -80,7 +80,7 @@ struct cnf_image_node  __attribute__((section (".configData"))) debug_back_to_ma
 
 struct cnf_image_node  __attribute__((section (".configData")))debug_usb_serial_output_image = {
 	.image = {
-		.bitmap_progmem = sensors_bits,
+		.bitmap_progmem = size_bits,
 		.width = logo_width,
 		.height = logo_height
 	},
