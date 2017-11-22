@@ -16,7 +16,7 @@ char __attribute__((section (".configData"))) app_version_title_progmem[] = "App
 char __attribute__((section (".configData"))) serial_number_title_progmem[] = "Serial Number";
 char __attribute__((section (".configData"))) part_number_title_progmem[] = "Part Number";
 char __attribute__((section (".configData"))) mac_address_title_progmem[] = "MAC Addresses";
-char __attribute__((section (".configData"))) memory_title_progmem[] = "Memory";
+char __attribute__((section (".configData"))) post_code_title_progmem[] = "POST code";
 char __attribute__((section (".configData"))) airtop_info_go_back_to_main_progmem[] = "Back";
 
 struct gfx_mono_menu  __attribute__((section (".configData"))) airtop_info_menu = {
@@ -25,15 +25,15 @@ struct gfx_mono_menu  __attribute__((section (".configData"))) airtop_info_menu 
 	.strings[1] = serial_number_title_progmem,
 	.strings[2] = part_number_title_progmem,
 	.strings[3] = mac_address_title_progmem,
-	.strings[4] = memory_title_progmem,
 	.strings[5] = airtop_info_go_back_to_main_progmem,
 	.num_elements = 6,
+	.strings[4] = post_code_title_progmem,
 	.current_selection = 0
 };
 
-struct cnf_info_node __attribute__((section (".configData"))) memory_info = {
+struct cnf_info_node __attribute__((section (".configData"))) post_code_info = {
 	.info = {
-		.info_type = SHOW_MEMORY_SIZE,
+		.info_type = SHOW_POST_CODE,
 		.information = 20,
 		.x = 0,
 		.y = 15,
@@ -48,8 +48,8 @@ struct cnf_info_node __attribute__((section (".configData"))) serial_number_info
 		.info_type = SHOW_SERIAL_NUMBER,
 		.information = 20,
 		.x = 0,
-		.y = 15,
-		.max_length = 25
+		.y = 35,
+		.max_length = 40
 	},
 	.font_id = GLCD_FONT_SYSFONT_5X7,
 	.next = 0
@@ -145,19 +145,9 @@ struct cnf_info_node __attribute__((section (".configData"))) mac_address_info =
 	.next = &mac2_address_info,
 };
 
-struct cnf_label_node __attribute__((section (".configData"))) memory_title = {
+struct cnf_label_node __attribute__((section (".configData"))) post_code_title = {
 	.label = {
-		.text = memory_title_progmem,
-		.x = (92 - 5 * 5) / 2,
-		.y = 55,
-	},
-	.font_id = GLCD_FONT_SYSFONT_5X7,
-	.next = 0
-};
-
-struct cnf_label_node __attribute__((section (".configData"))) serial_number_title = {
-	.label = {
-		.text = serial_number_title_progmem,
+		.text = post_code_title_progmem,
 		.x = (92 - 5 * 5) / 2,
 		.y = 55,
 	},
@@ -185,9 +175,9 @@ struct cnf_label_node __attribute__((section (".configData"))) mac_address_title
 	.next = 0
 };
 
-struct cnf_frame __attribute__((section (".configData"))) memory_frame = {
-	.labels_head = &memory_title,
-	.infos_head = &memory_info,
+struct cnf_frame __attribute__((section (".configData"))) post_code_frame = {
+	.labels_head = &post_code_title,
+	.infos_head = &post_code_info,
 	.images_head = 0
 };
 
@@ -217,10 +207,10 @@ struct cnf_action_node __attribute__((section (".configData"))) info_menu_go_bac
 	.next = 0
 };
 
-struct cnf_action_node __attribute__((section (".configData"))) memory_action = {
+struct cnf_action_node __attribute__((section (".configData"))) post_code_action = {
 	.action = {
 		.type = ACTION_TYPE_SHOW_FRAME,
-		.frame = &memory_frame
+		.frame = &post_code_frame
 	},
 	.next = &info_menu_go_back_action
 };
@@ -230,7 +220,7 @@ struct cnf_action_node __attribute__((section (".configData"))) mac_address_acti
 		.type = ACTION_TYPE_SHOW_FRAME,
 		.frame = &mac_address_frame
 	},
-	.next = &memory_action
+	.next = &post_code_action
 };
 
 struct cnf_action_node __attribute__((section (".configData"))) part_number_action = {
@@ -266,9 +256,9 @@ struct cnf_image_node  __attribute__((section (".configData"))) info_back_to_mai
 	.next = 0
 };
 
-struct cnf_image_node  __attribute__((section (".configData"))) memory_image = {
+struct cnf_image_node  __attribute__((section (".configData"))) post_code_image = {
 	.image = {
-		.bitmap_progmem = mac_bits,
+		.bitmap_progmem = post_code_bits,
 		.width = logo_width,
 		.height = logo_height
 	},
@@ -281,7 +271,7 @@ struct cnf_image_node  __attribute__((section (".configData"))) info_mac_address
 		.width = logo_width,
 		.height = logo_height
 	},
-	.next = &memory_image
+	.next = &post_code_image
 };
 
 struct cnf_image_node  __attribute__((section (".configData"))) info_part_number_image = {
