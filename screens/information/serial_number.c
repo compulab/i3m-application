@@ -35,7 +35,7 @@ static void sprintf_serial_number(struct gfx_information *info, char *output_str
 	serial[serial_index - 5] = '-';
 	serial[serial_index] = '\0';
 
-	sprintf(output_str, serial);
+	sprintf(output_str, "S/N: %s", serial);
 }
 
 int gfx_information_init_show_serial_number(struct gfx_information *info)
