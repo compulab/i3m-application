@@ -72,14 +72,9 @@ struct cnf_font_node __attribute__((section (".configData"))) courier_new_13X21_
 	.next = &consolas_18x28_num_font,
 };
 
-struct cnf_menu_node __attribute__((section (".configData"))) airtop_debug_menu_node = {
-	.menu = &airtop_debug_menu_cnf,
-	.next = 0
-};
-
 struct cnf_menu_node __attribute__((section (".configData"))) airtop_hdd_menu_node = {
 	.menu = &airtop_hdd_menu_cnf,
-	.next = &airtop_debug_menu_node
+	.next = 0
 };
 
 struct cnf_menu_node __attribute__((section (".configData"))) airtop_gpu_menu_node = {
