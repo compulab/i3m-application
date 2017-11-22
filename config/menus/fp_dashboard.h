@@ -17,7 +17,7 @@ struct cnf_info_node __attribute__((section (".configData"))) gpu_info = {
 	.info = {
 		.info_type = SHOW_GPU_TEMPERTURE,
 		.information = 0,
-		.x = 15,
+		.x = 72,
 		.y = 30,
 		.max_length = 5
 	},
@@ -28,7 +28,7 @@ struct cnf_info_node __attribute__((section (".configData"))) gpu_info = {
 struct cnf_label_node __attribute__((section (".configData"))) gpu_title = {
 	.label = {
 		.text = dashboard_gpu_progmem,
-		.x = 70,
+		.x = 72,
 		.y = 5,
 	},
 	.font_id = GLCD_FONT_COURIER_NEW_13X21,
@@ -39,7 +39,7 @@ struct cnf_info_node __attribute__((section (".configData"))) cput_info = {
 	.info = {
 		.info_type = SHOW_CPU_TEMPERTURE,
 		.information = 0,
-		.x = 90,
+		.x = 10,
 		.y = 30,
 		.max_length = 5
 	},
@@ -50,7 +50,7 @@ struct cnf_info_node __attribute__((section (".configData"))) cput_info = {
 struct cnf_label_node __attribute__((section (".configData"))) cput_title = {
 	.label = {
 		.text = dashboard_cput_progmem,
-		.x = 0,
+		.x = 10,
 		.y = 5,
 	},
 	.font_id = GLCD_FONT_COURIER_NEW_13X21,
