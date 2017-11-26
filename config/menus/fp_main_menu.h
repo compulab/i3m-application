@@ -9,9 +9,9 @@
 
 char __attribute__((section (".configData"))) main_menu_title[] = "Main Menu";
 char __attribute__((section (".configData"))) main_menu_0[] = "Information";
-char __attribute__((section (".configData"))) main_menu_1[] = "CPU";
-char __attribute__((section (".configData"))) main_menu_2[] = "GPU";
-char __attribute__((section (".configData"))) main_menu_3[] = "HDD";
+char __attribute__((section (".configData"))) main_menu_1[] = "    CPU";
+char __attribute__((section (".configData"))) main_menu_2[] = "    GPU";
+char __attribute__((section (".configData"))) main_menu_3[] = " Hard Drive";
 char __attribute__((section (".configData"))) main_menu_4[] = "Screen Saver";
 char __attribute__((section (".configData"))) main_menu_5[] = " Power State";
 
