@@ -238,19 +238,23 @@ static void twi_save_address(void)
 	twi_clear_dif();
 }
 
-void twi_slave_interrupt_handler(void)
+/*
+ * Managing I2C requests as described in
+ * http://droid/mirror/mediawiki/index.php/Airtop_FrontPanel_I2C_Registers_Layout
+ */
+ISR(TWIE_TWIS_vect)
 {
 	uint8_t current_status = TWI_SLAVE_BASE.STATUS;
-	if (current_status & TWI_SLAVE_BUSERR_bm) {    		/* If bus error. */
+	if (current_status & TWI_SLAVE_BUSERR_bm) {    		/* bus error */
 		twi_end_transmission();
-	} else if (current_status & TWI_SLAVE_COLL_bm) { 		/* If transmit collision. */
+	} else if (current_status & TWI_SLAVE_COLL_bm) { 	/* transmit collision */
 		twi_end_transmission();
-	} else if ((current_status & TWI_SLAVE_APIF_bm) && 	/* If address match. */
+	} else if ((current_status & TWI_SLAVE_APIF_bm) && 	/* address match */
 			(current_status & TWI_SLAVE_AP_bm)) {
 		twi_slave_address_match_handler();
-	} else if (current_status & TWI_SLAVE_APIF_bm) {		/* If stop (only enabled through slave read transaction). */
+	} else if (current_status & TWI_SLAVE_APIF_bm) {	/* stop (only enabled through slave read transaction) */
 		twi_slave_stop_handler();
-	} else if (current_status & TWI_SLAVE_DIF_bm) {		/* If data interrupt. */
+	} else if (current_status & TWI_SLAVE_DIF_bm) {		/* data interrupt */
 		if (current_status & TWI_SLAVE_DIR_bm) {
 			twi_slave_read_data_handler();
 		} else if (!set_address) {
@@ -258,16 +262,7 @@ void twi_slave_interrupt_handler(void)
 		} else {
 			twi_slave_write_data_handler();
 		}
-	} else { 												/* If unexpected state. */
+	} else { 											/* unexpected state */
 		twi_end_transmission();
 	}
-}
-
-/*
- * Managing I2C requests as described in
- * http://droid/mirror/mediawiki/index.php/Airtop_FrontPanel_I2C_Registers_Layout
- */
-ISR(TWIE_TWIS_vect)
-{
-	twi_slave_interrupt_handler();
 }
