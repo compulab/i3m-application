@@ -79,6 +79,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
 #include "i2c_buffer.h"
 #include "sram/sram_handle.h"
 #include "config/conf_twi.h"
+#include <stdbool.h>
 
 #define UNSET_ADDRESS 0x00
 
@@ -88,7 +89,6 @@ static uint8_t reg_address = UNSET_ADDRESS;
 static bool set_address;
 static bool data_sent;
 static bool is_read_request;
-bool is_twi_busy;
 
 bool twi_enabled;
 
@@ -111,7 +111,6 @@ void twi_slave_init(void)
                 TWI_SLAVE_APIEN_bm |
                 TWI_SLAVE_ENABLE_bm |
 				TWI_SLAVE_PIEN_bm;
-        is_twi_busy = false;
         twi_enable();
 }
 
@@ -192,7 +191,6 @@ static int twi_handle_write(uint8_t data)
 static void twi_slave_address_match_handler(void)
 {
 	if (twi_enabled) {
-		is_twi_busy = true;
 		is_read_request = (TWI_SLAVE_BASE.STATUS & TWI_SLAVE_DIR_bm) == TWI_SLAVE_DIR_bm;
 		data_sent = false;
 		uint8_t address = (TWI_SLAVE_BASE.DATA >>1);
@@ -209,7 +207,6 @@ static void twi_slave_address_match_handler(void)
 
 static void twi_slave_stop_handler(void)
 {
-	is_twi_busy = false;
 	clear();
 	clear_addresses();
 	twi_clear_apif();

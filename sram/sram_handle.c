@@ -543,7 +543,6 @@ static void write_gpu_temp(void)
 	clear_req();
 }
 
-extern bool is_twi_busy; //See below in update_data
 static void update_data(void *write_address)
 {
 	uint8_t addr = (uint16_t)write_address;
@@ -594,10 +593,6 @@ static void update_data(void *write_address)
 			write_reset();
 			break;
 	}
-	//TODO: I don't know what this is doing here. It makes no sense, but
-	//I also don't have the time to check this, so leave it as is for now and get back
-	//to it later.
-	is_twi_busy = false;
 }
 
 static void write_data(enum i2c_addr_space addr, uint8_t data)
