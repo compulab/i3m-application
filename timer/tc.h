@@ -5,10 +5,6 @@
 #include <stdbool.h>
 
 #define TIMER_MAX_VALUE		0xffff
-extern int tc_counter;
-
-extern int standby_counter;
-
 
 void tc_init(void);
 

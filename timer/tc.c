@@ -68,16 +68,10 @@
 #include "tc.h"
 #include "asf.h"
 
-int tc_counter;
-
-int standby_counter;
-
 bool cmp_enable;
 
 void tc_init()
 {
-	tc_counter = 0;
-	standby_counter = 0;
 	TCC0.CTRLA = TC_TC0_CLKSEL_DIV1024_gc;
 	TCC0.CTRLB = (TCC0.CTRLB & ~TC0_WGMODE_gm) | TC_TC0_WGMODE_NORMAL_gc;
 	TCC0.CTRLE = TC_TC0_BYTEM_NORMAL_gc;
