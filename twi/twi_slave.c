@@ -89,19 +89,18 @@ static uint8_t reg_address = UNSET_ADDRESS;
 static bool set_address;
 static bool data_sent;
 static bool is_read_request;
-
 static bool twi_enabled = false;
 
 void twi_slave_init(void)
 {
-		TWI_SLAVE_BASE.ADDR = TWI_SLAVE_ADDRESS << 1;
-		TWI_SLAVE_BASE.ADDRMASK = TWI_SLAVE_MSK << 1;
-        TWI_SLAVE_BASE.CTRLA = TWI_SLAVE_INTLVL_MED_gc |
-                TWI_SLAVE_DIEN_bm |
-                TWI_SLAVE_APIEN_bm |
-                TWI_SLAVE_ENABLE_bm |
-				TWI_SLAVE_PIEN_bm;
-        twi_enabled = true;
+	TWI_SLAVE_BASE.ADDR = TWI_SLAVE_ADDRESS << 1;
+	TWI_SLAVE_BASE.ADDRMASK = TWI_SLAVE_MSK << 1;
+	TWI_SLAVE_BASE.CTRLA = TWI_SLAVE_INTLVL_MED_gc |
+						   TWI_SLAVE_DIEN_bm |
+						   TWI_SLAVE_APIEN_bm |
+						   TWI_SLAVE_ENABLE_bm |
+						   TWI_SLAVE_PIEN_bm;
+	twi_enabled = true;
 }
 
 static void clear(void)
@@ -123,7 +122,7 @@ static void twi_ack(void)
 static void twi_nack(void)
 {
 	TWI_SLAVE_BASE.CTRLB = TWI_SLAVE_ACKACT_bm |
-            TWI_SLAVE_CMD_COMPTRANS_gc;
+						   TWI_SLAVE_CMD_COMPTRANS_gc;
 }
 
 static void twi_clear_status_bit (uint8_t bit)
