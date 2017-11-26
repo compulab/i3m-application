@@ -129,15 +129,6 @@ static void twi_clear_status_bit (uint8_t bit)
 {
 	TWI_SLAVE_BASE.STATUS |= bit;
 }
-static void twi_clear_apif(void)
-{
-	twi_clear_status_bit(TWI_SLAVE_APIF_bm);
-}
-
-static void twi_clear_dif(void)
-{
-	twi_clear_status_bit(TWI_SLAVE_DIF_bm);
-}
 
 static void twi_end_transmission(void)
 {
@@ -187,7 +178,7 @@ static void twi_slave_address_match_handler(void)
 			clear_addresses();
 
 		slave_address = address;
-		twi_clear_apif();
+		twi_clear_status_bit(TWI_SLAVE_APIF_bm);
 		twi_ack();
 	} else {
 		twi_nack();
@@ -198,7 +189,7 @@ static void twi_slave_stop_handler(void)
 {
 	clear();
 	clear_addresses();
-	twi_clear_apif();
+	twi_clear_status_bit(TWI_SLAVE_APIF_bm);
 }
 
 static void twi_slave_read_data_handler(void)
@@ -210,7 +201,7 @@ static void twi_slave_read_data_handler(void)
 	} else {
 		twi_handle_read(reg_address);
 		data_sent = true;
-		twi_clear_dif();
+		twi_clear_status_bit(TWI_SLAVE_DIF_bm);
 		twi_ack();
 	}
 
@@ -223,7 +214,7 @@ static void twi_slave_write_data_handler(void)
 	else
 		twi_ack();
 
-	twi_clear_dif();
+	twi_clear_status_bit(TWI_SLAVE_DIF_bm);
 }
 
 static void twi_save_address(void)
@@ -234,7 +225,7 @@ static void twi_save_address(void)
 		twi_slave_read_data_handler();
 	 else
 		twi_ack();
-	twi_clear_dif();
+	twi_clear_status_bit(TWI_SLAVE_DIF_bm);
 }
 
 /*
