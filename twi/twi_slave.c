@@ -90,17 +90,7 @@ static bool set_address;
 static bool data_sent;
 static bool is_read_request;
 
-bool twi_enabled;
-
-void twi_disable(void)
-{
-	twi_enabled = false;
-}
-
-void twi_enable(void)
-{
-	twi_enabled = true;
-}
+static bool twi_enabled = false;
 
 void twi_slave_init(void)
 {
@@ -111,7 +101,7 @@ void twi_slave_init(void)
                 TWI_SLAVE_APIEN_bm |
                 TWI_SLAVE_ENABLE_bm |
 				TWI_SLAVE_PIEN_bm;
-        twi_enable();
+        twi_enabled = true;
 }
 
 static void clear(void)
