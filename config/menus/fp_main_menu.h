@@ -39,11 +39,10 @@ struct cnf_info_node __attribute__((section (".configData"))) screen_saver_info 
 	.next = 0
 };
 
-
-char __attribute__((section (".configData"))) temp_title_progmem[] = "Application Ver";
-struct cnf_label_node __attribute__((section (".configData"))) temp_title = {
+char __attribute__((section (".configData"))) screen_saver_title_progmem[] = "Screen Saver";
+struct cnf_label_node __attribute__((section (".configData"))) screen_saver_title = {
 	.label = {
-		.text = temp_title_progmem,
+		.text = screen_saver_title_progmem,
 		.x = (92 - 10 * 5) / 2,
 		.y = 55,
 	},
@@ -52,7 +51,7 @@ struct cnf_label_node __attribute__((section (".configData"))) temp_title = {
 };
 
 struct cnf_frame __attribute__((section (".configData"))) screen_saver_frame = {
-	.labels_head = &temp_title,
+	.labels_head = &screen_saver_title,
 	.infos_head = &screen_saver_info,
 	.images_head = 0
 };
