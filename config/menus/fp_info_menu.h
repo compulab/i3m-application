@@ -115,7 +115,7 @@ struct cnf_info_node __attribute__((section (".configData"))) mac2_address_info 
 struct cnf_label_node __attribute__((section (".configData"))) app_version_title = {
 	.label = {
 		.text = app_version_title_progmem,
-		.x = (92 - 10 * 5) / 2,
+		.x = (92 - 11 * 5) / 2,
 		.y = 55,
 	},
 	.font_id = GLCD_FONT_SYSFONT_5X7,
