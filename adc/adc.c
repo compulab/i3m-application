@@ -20,8 +20,6 @@
 
 long current_power;
 int32_t power_sum;
-float gain = 0;
-float vcc = 3.3;
 
 void adc_init(void)
 {
@@ -35,7 +33,7 @@ void adc_init(void)
 	adc_set_conversion_trigger(&adc_conf, ADC_TRIG_EVENT_SINGLE, 1, 0);
 	adc_set_clock_rate(&adc_conf, 100000UL); // 100KHz. Up to 200000UL=200KHz
 
-	adcch_set_input(&adcch_conf, ADCCH_POS_PIN1, ADCCH_NEG_INTERNAL_GND, gain); // GAIN = 0.5
+	adcch_set_input(&adcch_conf, ADCCH_POS_PIN1, ADCCH_NEG_INTERNAL_GND, 0);
 	adc_write_configuration(&MY_ADC, &adc_conf);
 	adcch_write_configuration(&MY_ADC, MY_ADC_CH, &adcch_conf);
 	adc_enable(&MY_ADC);
