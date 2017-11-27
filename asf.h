@@ -135,4 +135,7 @@
 #include "ASF/common/services/usb/udc/udc.h"
 #include "ASF/common/services/usb/udc/udd.h"
 
+// From module: TC - Timer Counter
+#include "ASF/xmega/drivers/tc/tc.h"
+
 #endif // ASF_H
