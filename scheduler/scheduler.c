@@ -31,6 +31,8 @@ struct tc_scheduler_task {
 	uint16_t offset;
 };
 
+volatile void *tc_module = NULL;
+
 static bool cmp_enable = false;
 
 #define TIMER_MAX_VALUE			0xffff
@@ -49,7 +51,7 @@ static struct tc_scheduler_task new_tick_task(struct scheduler_task task)
 static bool task_due_before_scheduled(uint8_t task_id)
 {
 	return tick_tasks_to_do[task_id].overlaps_count == 0 &&
-			(!cmp_enable || tick_tasks_to_do[task_id].offset < tc_read_cc(&TCC0, TC_CCA));
+			(!cmp_enable || tick_tasks_to_do[task_id].offset < tc_read_cc(tc_module, TC_CCA));
 }
 
 static void schedule_closest_task(void)
@@ -57,16 +59,16 @@ static void schedule_closest_task(void)
 	bool scheduled_task_exists = false;
 	array_foreach(struct tc_scheduler_task, tick_tasks_to_do, index) {
 		if (task_due_before_scheduled(index)) {
-			tc_write_cc(&TCC0, TC_CCA, tick_tasks_to_do[index].offset);
+			tc_write_cc(tc_module, TC_CCA, tick_tasks_to_do[index].offset);
 			scheduled_task_exists = true;
 		}
 	}
 
 	if (scheduled_task_exists) {
-		tc_enable_cc_channels(&TCC0, TC_CCAEN);
+		tc_enable_cc_channels(tc_module, TC_CCAEN);
 		cmp_enable = true;
 	} else {
-		tc_disable_cc_channels(&TCC0, TC_CCAEN);
+		tc_disable_cc_channels(tc_module, TC_CCAEN);
 		cmp_enable = false;
 	}
 }
@@ -75,11 +77,11 @@ static void task_set_timer(int task_index)
 {
 	struct tc_scheduler_task *task = &tick_tasks_to_do[task_index];
 	//tc_get_resolution corresponds to ticks/sec
-	uint32_t ticks = task->task.get_recur_period() * tc_get_resolution(&TCC0);
-	uint16_t ticks_to_overflow = TIMER_MAX_VALUE - TCC0.CNT;
+	uint32_t ticks = task->task.get_recur_period() * tc_get_resolution(tc_module);
+	uint16_t ticks_to_overflow = TIMER_MAX_VALUE - tc_read_count(tc_module);
 	if (ticks < ticks_to_overflow) {
 		task->overlaps_count = 0;
-		task->offset = ticks + TCC0.CNT;
+		task->offset = ticks + tc_read_count(tc_module);
 	} else {
 		ticks -= ticks_to_overflow;
 		task->overlaps_count = ticks / TIMER_MAX_VALUE + 1;
@@ -91,7 +93,7 @@ static void tc_cca_callback(void)
 {
 	/* Find expired task and add it to the work queue */
 	array_foreach(struct tc_scheduler_task, tick_tasks_to_do, index) {
-		if (tick_tasks_to_do[index].overlaps_count == 0 &&  tick_tasks_to_do[index].offset <= TCC0.CNT) {
+		if (tick_tasks_to_do[index].overlaps_count == 0 &&  tick_tasks_to_do[index].offset <= tc_read_count(tc_module)) {
 			insert_work(tick_tasks_to_do[index].task.work);
 			task_set_timer(index);
 		}
@@ -102,7 +104,7 @@ static void tc_cca_callback(void)
 
 static void tc_overflow_callback(void)
 {
-	tc_clear_overflow(&TCC0);
+	tc_clear_overflow(tc_module);
 	array_foreach(struct tc_scheduler_task, tick_tasks_to_do, index) {
 		if (tick_tasks_to_do[index].overlaps_count <= 0)
 			continue;
@@ -113,21 +115,13 @@ static void tc_overflow_callback(void)
 	schedule_closest_task();
 }
 
-static void tc_init(void)
+void scheduler_init(volatile void *tc)
 {
-	tc_set_wgm(&TCC0, TC_WG_NORMAL);
-	tc_set_overflow_interrupt_callback(&TCC0, tc_overflow_callback);
-	tc_set_overflow_interrupt_level(&TCC0, TC_INT_LVL_HI);
-	tc_set_cca_interrupt_callback(&TCC0, tc_cca_callback);
-	tc_set_cca_interrupt_level(&TCC0, TC_INT_LVL_HI);
-	tc_write_period(&TCC0, TIMER_MAX_VALUE);
-	tc_disable_cc_channels(&TCC0, TC_CCAEN);
-	tc_write_clock_source(&TCC0, TC_CLKSEL_DIV1024_gc);
-}
-
-void scheduler_init(void)
-{
-	tc_init();
+	tc_module = tc;
+	tc_set_overflow_interrupt_callback(tc_module, tc_overflow_callback);
+	tc_set_overflow_interrupt_level(tc_module, TC_INT_LVL_HI);
+	tc_set_cca_interrupt_callback(tc_module, tc_cca_callback);
+	tc_set_cca_interrupt_level(tc_module, TC_INT_LVL_HI);
 
     tick_tasks_to_do[0] = new_tick_task(pending_req_tick_task);
 	tick_tasks_to_do[1] = new_tick_task(adc_tick_task);
@@ -137,5 +131,4 @@ void scheduler_init(void)
 		task_set_timer(index);
 
 	schedule_closest_task();
-	tc_enable(&TCC0);
 }

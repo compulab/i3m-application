@@ -15,6 +15,6 @@ struct scheduler_task {
 	double (*get_recur_period)(void);
 };
 
-void scheduler_init(void);
+void scheduler_init(volatile void *tc);
 
 #endif

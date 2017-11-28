@@ -15,6 +15,15 @@
 
 void apply_app_settings(void);
 
+static void tc_init(void)
+{
+	void *tc = &TCC0;
+	tc_set_wgm(tc, TC_WG_NORMAL);
+	tc_write_period(tc, 0xFFFF);
+	tc_disable_cc_channels(tc, TC_CCAEN);
+	tc_write_clock_source(tc, TC_CLKSEL_DIV1024_gc);
+}
+
 bool my_callback_cdc_enable(void)
 {
 	return stdio_usb_enable();
@@ -68,7 +77,9 @@ static void init(void)
 	twi_slave_init();
 	sleepmgr_init();
 	usb_init();
-	scheduler_init();
+	tc_init();
+	scheduler_init(&TCC0);
+	tc_enable(&TCC0);
 	sei();
 }
 
