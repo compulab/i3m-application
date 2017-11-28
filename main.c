@@ -8,11 +8,27 @@
 #include "config/config_block.h"
 #include "config/menus/fp_menus_config.h"
 #include "gfx/gfx_components/gfx_graphic_menu.h"
+#include "ASF/common/services/usb/udc/udc.h"
+#include "ASF/common/utils/stdio/stdio_usb/stdio_usb.h"
 #include "lib/sleep.h"
 #include "asf.h"
-#include "usb/usb.h"
 
 void apply_app_settings(void);
+
+bool my_callback_cdc_enable(void)
+{
+	return stdio_usb_enable();
+}
+
+void my_callback_cdc_disable(void)
+{
+	stdio_usb_disable();
+}
+
+static void usb_init(void)
+{
+	udc_start();
+}
 
 static void adc_init(void)
 {
