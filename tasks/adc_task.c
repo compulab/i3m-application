@@ -5,7 +5,6 @@
  *      Author: arkadi
  */
 
-#include "adc.h"
 #include "scheduler/scheduler.h"
 #include "work-queue/work.h"
 #include "asf.h"
@@ -20,24 +19,6 @@
 
 long current_power;
 int32_t power_sum;
-
-void adc_init(void)
-{
-	struct adc_config adc_conf;
-	struct adc_channel_config adcch_conf;
-
-	adc_read_configuration(&MY_ADC, &adc_conf);
-	adcch_read_configuration(&MY_ADC, MY_ADC_CH, &adcch_conf);
-
-	adc_set_conversion_parameters(&adc_conf, ADC_SIGN_ON, ADC_RES_12, ADC_REFSEL_INTVCC2_gc);  //signed, 12-bit resolution, VREF = VCC/2
-	adc_set_conversion_trigger(&adc_conf, ADC_TRIG_EVENT_SINGLE, 1, 0);
-	adc_set_clock_rate(&adc_conf, 100000UL); // 100KHz. Up to 200000UL=200KHz
-
-	adcch_set_input(&adcch_conf, ADCCH_POS_PIN1, ADCCH_NEG_INTERNAL_GND, 0);
-	adc_write_configuration(&MY_ADC, &adc_conf);
-	adcch_write_configuration(&MY_ADC, MY_ADC_CH, &adcch_conf);
-	adc_enable(&MY_ADC);
-}
 
 static double adc_avg(void)
 {

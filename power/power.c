@@ -6,7 +6,6 @@
  */
 
 #include "power.h"
-#include "adc/adc.h"
 #include "twi/i2c_buffer.h"
 #include "work-queue/work.h"
 #include "gfx/gfx_assets.h"
