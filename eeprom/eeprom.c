@@ -28,13 +28,11 @@ void eeprom_write_str(char *str, uint16_t addr)
 		eeprom_write_byte(addr++, str[i]);
 }
 
-#define ASCII_FIELD_LENGTH			16
-
-void eeprom_read_str(char *output_str, uint8_t addr)
+void eeprom_read_str(char *output_str, uint8_t addr, uint8_t str_length)
 {
-	for (int i = 0; i < ASCII_FIELD_LENGTH; i++)
+	for (int i = 0; i < str_length; i++)
 		output_str[i] = eeprom_read_byte(addr + i);
 
-	output_str[ASCII_FIELD_LENGTH - 1] = '\0';
+	output_str[str_length - 1] = '\0';
 }
 

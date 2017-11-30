@@ -15,13 +15,13 @@
 static void sprintf_part_number(struct gfx_information *info, char *output_str)
 {
 	char product_name[PRODUCT_NAME_LENGTH] = { 0 };
-	char product_opts1[PART_NUMBER_OPT_LENGTH] = { 0 };
-	char product_opts2[PART_NUMBER_OPT_LENGTH] = { 0 };
-	char product_opts3[PART_NUMBER_OPT_LENGTH] = { 0 };
-	eeprom_read_str(product_name, PRODUCT_NAME_EEPROM_ADDRESS);
-	eeprom_read_str(product_opts1, PRODUCT_OPTIONS_EEPROM_ADDRESS + 0 * PART_NUMBER_OPT_LENGTH);
-	eeprom_read_str(product_opts2, PRODUCT_OPTIONS_EEPROM_ADDRESS + 1 * PART_NUMBER_OPT_LENGTH);
-	eeprom_read_str(product_opts3, PRODUCT_OPTIONS_EEPROM_ADDRESS + 2 * PART_NUMBER_OPT_LENGTH);
+	char product_opts1[PRODUCT_OPTIONS_LENGTH] = { 0 };
+	char product_opts2[PRODUCT_OPTIONS_LENGTH] = { 0 };
+	char product_opts3[PRODUCT_OPTIONS_LENGTH] = { 0 };
+	eeprom_read_str(product_name, PRODUCT_NAME_EEPROM_ADDRESS, ASCII_FIELD_LENGTH);
+	eeprom_read_str(product_opts1, PRODUCT_OPTIONS_EEPROM_ADDRESS + 0 * PRODUCT_OPTIONS_LENGTH, ASCII_FIELD_LENGTH);
+	eeprom_read_str(product_opts2, PRODUCT_OPTIONS_EEPROM_ADDRESS + 1 * PRODUCT_OPTIONS_LENGTH, ASCII_FIELD_LENGTH);
+	eeprom_read_str(product_opts3, PRODUCT_OPTIONS_EEPROM_ADDRESS + 2 * PRODUCT_OPTIONS_LENGTH, ASCII_FIELD_LENGTH);
 	sprintf(output_str, "%s\n%s\n%s\n%s", product_name, product_opts1, product_opts2, product_opts3);
 }
 

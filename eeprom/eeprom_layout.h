@@ -32,5 +32,6 @@
 #define BRIGHTNESS_EEPROM_ADDRESS 			0x122
 
 void eeprom_get_mac_address(uint8_t output_mac_addr[MAC_ADDRESS_LENGTH], uint8_t mac_address_index);
+#define ASCII_FIELD_LENGTH					16
 
 #endif /* EEPROM_LAYOUT_H_ */
