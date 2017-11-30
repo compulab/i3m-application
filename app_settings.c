@@ -20,8 +20,8 @@
 
 static void setup_screen_saver_settings(void)
 {
-	computer_data.packed.screen_saver_config = eeprom_get_screen_saver_config();
-	computer_data.packed.screen_saver_update_time = eeprom_get_screen_saver_time();
+	computer_data.packed.screen_saver_config = eeprom_read_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS);
+	computer_data.packed.screen_saver_update_time = eeprom_read_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS);
 
 	if (computer_data.packed.screen_saver_config == 0xff || computer_data.packed.screen_saver_update_time == 0xff) {
 		computer_data.packed.screen_saver_config = SCREEN_SAVER_CONFIGURATION_DEFAULT;
@@ -31,7 +31,7 @@ static void setup_screen_saver_settings(void)
 	if (computer_data.details.screen_saver_update_time < SCREEN_SAVER_SECOND_MIN_VALUE) {
 		computer_data.details.screen_saver_update_time = DEFAULT_SCREEN_SAVER_TIME;
 	} else {
-		computer_data.packed.screen_saver_update_time = eeprom_get_screen_saver_time();
+		computer_data.packed.screen_saver_update_time = eeprom_read_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS);
 	}
 }
 

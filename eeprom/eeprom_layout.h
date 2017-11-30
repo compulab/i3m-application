@@ -31,10 +31,6 @@
 #define SCREEN_SAVER_CONFIG_EEPROM_ADDRESS	0x121
 #define BRIGHTNESS_EEPROM_ADDRESS 			0x122
 
-uint8_t eeprom_get_screen_saver_config(void);
-void eeprom_set_screen_saver_config(uint8_t new_config);
-uint8_t eeprom_get_screen_saver_time(void);
-void eeprom_set_screen_saver_time(uint8_t new_config);
 void eeprom_get_mac_address(uint8_t output_mac_addr[MAC_ADDRESS_LENGTH], uint8_t mac_address_index);
 void eeprom_get_product_name(char product_name[PRODUCT_NAME_LENGTH]);
 void eeprom_get_product_options(char product_options[PART_NUMBER_OPT_LENGTH], uint8_t index);

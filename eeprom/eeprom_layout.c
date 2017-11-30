@@ -20,26 +20,6 @@ static void eeprom_get_ascii_field(char *output_ascii_field, uint8_t addr)
 	return;
 }
 
-uint8_t eeprom_get_screen_saver_config(void)
-{
-	return eeprom_read_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS);
-}
-
-void eeprom_set_screen_saver_config(uint8_t new_config)
-{
-	eeprom_write_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS, new_config);
-}
-
-uint8_t eeprom_get_screen_saver_time(void)
-{
-	return eeprom_read_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS);
-}
-
-void eeprom_set_screen_saver_time(uint8_t new_time)
-{
-	eeprom_write_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS, new_time);
-}
-
 void eeprom_get_mac_address(uint8_t output_mac_addr[MAC_ADDRESS_LENGTH], uint8_t mac_address_index)
 {
 	uint8_t eeprom_addr = MAC_ADDRESS_EEPROM_ADDRESS + MAC_ADDRESS_LENGTH * mac_address_index;
