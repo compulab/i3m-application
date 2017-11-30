@@ -878,12 +878,6 @@
     <Compile Include="eeprom\eeprom.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="eeprom\eeprom_driver.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="eeprom\eeprom_driver.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="eeprom\eeprom_layout.h">
       <SubType>compile</SubType>
     </Compile>
