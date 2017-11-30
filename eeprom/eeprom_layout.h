@@ -32,7 +32,5 @@
 #define BRIGHTNESS_EEPROM_ADDRESS 			0x122
 
 void eeprom_get_mac_address(uint8_t output_mac_addr[MAC_ADDRESS_LENGTH], uint8_t mac_address_index);
-void eeprom_get_product_name(char product_name[PRODUCT_NAME_LENGTH]);
-void eeprom_get_product_options(char product_options[PART_NUMBER_OPT_LENGTH], uint8_t index);
 
 #endif /* EEPROM_LAYOUT_H_ */
