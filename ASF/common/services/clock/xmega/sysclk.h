@@ -46,16 +46,15 @@
 #ifndef XMEGA_SYSCLK_H_INCLUDED
 #define XMEGA_SYSCLK_H_INCLUDED
 
-#include "ASF/common/boards/board.h"
-#include "ASF/xmega/utils/compiler.h"
-#include "ASF/common/utils/parts.h"
-#include "ASF/xmega/drivers/cpu/ccp.h"
-#include "ASF/common/services/clock/osc.h"
-#include "ASF/common/services/clock/pll.h"
+#include <board.h>
+#include <compiler.h>
+#include <parts.h>
+#include <ccp.h>
+#include <osc.h>
+#include <pll.h>
 
 // Include clock configuration for the project.
-#include "config/conf_clock.h"
-
+#include <conf_clock.h>
 
 #ifdef __cplusplus
 extern "C" {

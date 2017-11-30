@@ -52,10 +52,10 @@
 #ifndef _SPI_MASTER_H_
 #define _SPI_MASTER_H_
 
-#include "ASF/xmega/utils/compiler.h"
-#include "ASF/xmega/utils/status_codes.h"
-#include "ASF/common/services/ioport/ioport.h"
-#include "ASF/xmega/drivers/spi/spi.h"
+#include "compiler.h"
+#include "status_codes.h"
+#include "ioport.h"
+#include "spi.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -75,7 +75,7 @@ extern "C" {
 /*! \name Spi Master Management Configuration
  */
 //! @{
-#include "../../../../../config/conf_spi_master.h"
+#include "conf_spi_master.h"
 
 //! Default Config Spi Master Dummy Field
 #ifndef CONFIG_SPI_MASTER_DUMMY

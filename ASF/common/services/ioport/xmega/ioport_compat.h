@@ -46,7 +46,8 @@
  */
 #ifndef IOPORT_XMEGA_COMPAT_H_
 #define IOPORT_XMEGA_COMPAT_H_
-#include <stdbool.h>
+
+#include "../ioport.h"
 
 /**
  * \brief A pin mask

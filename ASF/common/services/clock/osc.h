@@ -46,8 +46,8 @@
 #ifndef OSC_H_INCLUDED
 #define OSC_H_INCLUDED
 
-#include "ASF/common/utils/parts.h"
-#include "config/conf_clock.h"
+#include "parts.h"
+#include "conf_clock.h"
 
 #if SAM3S
 # include "sam3s/osc.h"

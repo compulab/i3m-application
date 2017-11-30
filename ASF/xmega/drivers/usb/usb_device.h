@@ -47,7 +47,7 @@
 #ifndef _USB_DEVICE_H_
 #define _USB_DEVICE_H_
 
-#include "ASF/xmega/drivers/nvm/nvm.h"
+#include <nvm.h>
 
 /**
  * \ingroup udd_group

@@ -48,8 +48,8 @@
 
 #include <stdint.h>
 
-#include "ASF/xmega/utils/compiler.h"
-#include "ASF/xmega/utils/progmem.h"
+#include "compiler.h"
+#include "progmem.h"
 #ifdef CONFIG_HAVE_HUGEMEM
 # include "hugemem.h"
 #endif
@@ -113,13 +113,12 @@ enum gfx_mono_bitmap_type {
 //#elif defined(GFX_MONO_C12832_A1Z)
 //# include "gfx_mono_c12832_a1z.h"
 //#elif defined(GFX_MONO_UG_2832HSWEG04)
-//# include "gfx_mono_ug_2832hsweg04.h"
+# include "gfx_mono_ug_2832hsweg04.h"
 //#else
 ///* NULL driver by default */
 //# include "gfx_mono_null.h"
 //#endif
 #include "gfx_mono_generic.h"
-# include "gfx_mono_ug_2832hsweg04.h"
 
 /** \name Circle Sector Definitions */
 /** @{ */

@@ -46,12 +46,13 @@
 #ifndef _TC_H_
 #define _TC_H_
 
-#include "ASF/xmega/utils/compiler.h"
-#include "ASF/common/utils/parts.h"
-#include "ASF/xmega/utils/status_codes.h"
-#include "ASF/xmega/drivers/pmic/pmic.h"
-#include "ASF/common/services/sleepmgr/sleepmgr.h"
-#include "ASF/common/services/clock/sysclk.h"
+#include <compiler.h>
+#include <parts.h>
+#include "status_codes.h"
+#include "pmic.h"
+#include <sleepmgr.h>
+#include <sysclk.h>
+
 
 #ifdef __cplusplus
 extern "C" {

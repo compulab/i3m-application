@@ -44,8 +44,8 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#include "ASF/xmega/utils/compiler.h"
-#include "adc.h"
+#include <compiler.h>
+#include <adc.h>
 
 /**
  * \ingroup adc_module_group

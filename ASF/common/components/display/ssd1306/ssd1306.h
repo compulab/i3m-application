@@ -46,14 +46,14 @@
 #ifndef SSD1306_H_INCLUDED
 #define SSD1306_H_INCLUDED
 
-#include "ASF/xmega/utils/compiler.h"
-#include "ASF/common/services/clock/sysclk.h"
-#include "ASF/common/services/ioport/ioport.h"
-#include "ASF/xmega/utils/status_codes.h"
-#include "ASF/common/services/delay/delay.h"
+#include <compiler.h>
+#include <sysclk.h>
+#include <ioport.h>
+#include <status_codes.h>
+#include <delay.h>
 #include "ASF/common/services/gfx_mono/gfx_mono_framebuffer.h"
 // controller and OLED configuration file
-#include "config/conf_ssd1306.h"
+#include "conf_ssd1306.h"
 #include "eeprom/eeprom.h"
 #include "layout.h"
 
@@ -173,7 +173,7 @@ extern "C" {
 #if defined(SSD1306_USART_SPI_INTERFACE)
 # include <usart_spi.h>
 #elif defined(SSD1306_SPI_INTERFACE)
-# include "../../../services/spi/spi_master.h"
+# include <spi_master.h>
 #else
 #error "Interface not supported by the driver"
 #endif

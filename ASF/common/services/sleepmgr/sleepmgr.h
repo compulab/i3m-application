@@ -46,8 +46,8 @@
 #ifndef SLEEPMGR_H
 #define SLEEPMGR_H
 
-#include "ASF/xmega/utils/compiler.h"
-#include "ASF/common/utils/parts.h"
+#include <compiler.h>
+#include <parts.h>
 
 #if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
 # include "sam/sleepmgr.h"

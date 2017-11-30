@@ -46,8 +46,8 @@
 #ifndef XMEGA_OSC_H_INCLUDED
 #define XMEGA_OSC_H_INCLUDED
 
-#include "ASF/xmega/utils/compiler.h"
-#include "ASF/common/boards/board.h"
+#include <compiler.h>
+#include <board.h>
 
 /**
  * \weakgroup osc_group

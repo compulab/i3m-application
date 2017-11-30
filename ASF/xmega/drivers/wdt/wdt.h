@@ -54,7 +54,7 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-#include "ASF/xmega/utils/compiler.h"
+#include "compiler.h"
 
 /**
  * \defgroup wdt_group Watchdog Timer (WDT)

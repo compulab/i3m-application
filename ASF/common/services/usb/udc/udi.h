@@ -47,8 +47,8 @@
 #ifndef _UDI_H_
 #define _UDI_H_
 
-#include "config/conf_usb.h"
-#include "ASF/common/services/usb/usb_protocol.h"
+#include "conf_usb.h"
+#include "usb_protocol.h"
 
 #ifdef __cplusplus
 extern "C" {

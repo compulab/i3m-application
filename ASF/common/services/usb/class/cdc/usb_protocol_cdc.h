@@ -46,7 +46,7 @@
 #ifndef _USB_PROTOCOL_CDC_H_
 #define _USB_PROTOCOL_CDC_H_
 
-#include "ASF/xmega/utils/compiler.h"
+#include "compiler.h"
 
 /**
  * \ingroup usb_protocol_group

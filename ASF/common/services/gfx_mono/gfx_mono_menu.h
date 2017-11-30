@@ -46,10 +46,8 @@
 #ifndef GFX_MONO_MENU_H
 #define GFX_MONO_MENU_H
 
-#include "ASF/xmega/utils/compiler.h"
-#include "config/conf_menu.h"
-#include "config/conf_sysfont.h"
-#include "gfx_mono.h"
+#include "compiler.h"
+#include "conf_menu.h"
 
 #ifdef __cplusplus
 extern "C" {

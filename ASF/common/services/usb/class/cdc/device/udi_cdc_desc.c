@@ -44,10 +44,10 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#include "config/conf_usb.h"
-#include "ASF/common/services/usb/udc/udd.h"
-#include "ASF/common/services/usb/udc/udc_desc.h"
-#include "ASF/common/services/usb/class/cdc/device/udi_cdc.h"
+#include "conf_usb.h"
+#include "udd.h"
+#include "udc_desc.h"
+#include "udi_cdc.h"
 
 
 /**

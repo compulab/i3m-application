@@ -45,14 +45,14 @@
  */
 #include <stdint.h>
 
-#include "ASF/common/utils/interrupt.h"
-#include "ASF/xmega/utils/compiler.h"
-#include "ASF/common/utils/parts.h"
+#include "interrupt.h"
+#include "compiler.h"
+#include "parts.h"
 
 #include "tc.h"
-#include "ASF/common/services/clock/sysclk.h"
-#include "ASF/common/services/sleepmgr/sleepmgr.h"
-#include "ASF/xmega/utils/status_codes.h"
+#include "sysclk.h"
+#include "sleepmgr.h"
+#include "status_codes.h"
 
 #if defined(TCC0) || defined(__DOXYGEN__)
 //! \internal Local storage of Timer Counter TCC0 interrupt callback function

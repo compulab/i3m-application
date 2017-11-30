@@ -47,9 +47,9 @@
 #ifndef _UDC_DESC_H_
 #define _UDC_DESC_H_
 
-#include "config/conf_usb.h"
-#include "ASF/common/services/usb/usb_protocol.h"
-#include "ASF/common/services/usb/udc/udi.h"
+#include "conf_usb.h"
+#include "usb_protocol.h"
+#include "udi.h"
 
 #ifdef __cplusplus
 extern "C" {

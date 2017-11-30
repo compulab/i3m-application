@@ -47,10 +47,10 @@
 #ifndef _UDC_H_
 #define _UDC_H_
 
-#include "config/conf_usb.h"
-#include "ASF/common/services/usb/usb_protocol.h"
-#include "ASF/common/services/usb/udc/udc_desc.h"
-#include "ASF/common/services/usb/udc/udd.h"
+#include "conf_usb.h"
+#include "usb_protocol.h"
+#include "udc_desc.h"
+#include "udd.h"
 
 #if USB_DEVICE_VENDOR_ID == 0
 #   error USB_DEVICE_VENDOR_ID cannot be equal to 0

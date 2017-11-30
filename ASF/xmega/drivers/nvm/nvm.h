@@ -46,8 +46,8 @@
 #ifndef NVM_H
 #define NVM_H
 
-#include "ASF/xmega/utils/compiler.h"
-#include "ASF/xmega/drivers/cpu/ccp.h"
+#include <compiler.h>
+#include <ccp.h>
 
 #ifdef __cplusplus
 extern "C" {

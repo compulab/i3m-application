@@ -47,8 +47,8 @@
 #ifndef _XMEGA_GPIO_H_
 #define _XMEGA_GPIO_H_
 
-#include "ASF/xmega/utils/compiler.h"
-#include "ASF/common/services/ioport/ioport.h"
+#include "compiler.h"
+#include "ioport.h"
 
 #define gpio_pin_is_low(io_id) \
 	ioport_pin_is_low(io_id)

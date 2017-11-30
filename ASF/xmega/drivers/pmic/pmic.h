@@ -46,8 +46,8 @@
 #ifndef PMIC_H
 #define PMIC_H
 
-#include "ASF/xmega/utils/compiler.h"
-#include "ASF/xmega/drivers/cpu/ccp.h"
+#include <compiler.h>
+#include <ccp.h>
 
 /**
  * \defgroup pmic_group Programmable Multilevel Interrupt Controller

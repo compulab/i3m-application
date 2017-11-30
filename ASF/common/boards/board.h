@@ -59,7 +59,7 @@
  * \{
  */
 
-#include "ASF/xmega/utils/compiler.h"
+#include "compiler.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -197,7 +197,7 @@ extern "C" {
 #elif BOARD == STK600_RC044X
 #  include "stk600/rc044x/stk600_rc044x.h"
 #elif BOARD == STK600_RC064X
-#  include "../../xmega/boards/stk600/rc064x/stk600_rc064x.h"
+#  include "stk600/rc064x/stk600_rc064x.h"
 #elif BOARD == STK600_RC100X
 #  include "stk600/rc100x/stk600_rc100x.h"
 #elif BOARD == UC3_A3_XPLAINED

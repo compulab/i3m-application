@@ -70,7 +70,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-#include "ASF/common/utils/parts.h"
+#include <parts.h>
 
 #ifdef __ICCAVR__
 /*! \name Compiler Keywords
@@ -1031,9 +1031,9 @@ typedef U8                  Byte;       //!< 8-bit unsigned integer.
  */
 #define div_ceil(a, b)	(((a) + (b) - 1) / (b))
 
-#include "preprocessor/preprocessor.h"
+#include "preprocessor.h"
 #include "progmem.h"
-#include "../../common/utils/interrupt.h"
+#include "interrupt.h"
 
 
 #if (defined __GNUC__)

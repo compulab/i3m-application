@@ -47,8 +47,8 @@
 #ifndef _UDI_CDC_CONF_H_
 #define _UDI_CDC_CONF_H_
 
-#include "ASF/common/services/usb/class/cdc/usb_protocol_cdc.h"
-#include "config/conf_usb.h"
+#include "usb_protocol_cdc.h"
+#include "conf_usb.h"
 
 #ifndef  UDI_CDC_PORT_NB
 # define  UDI_CDC_PORT_NB 1

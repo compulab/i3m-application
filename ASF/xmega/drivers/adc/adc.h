@@ -46,12 +46,12 @@
 #ifndef ADC_H
 #define ADC_H
 
-#include "ASF/xmega/utils/compiler.h"
-#include "config/conf_adc.h"
-#include "ASF/xmega/drivers/nvm/nvm.h"
-#include "ASF/common/utils/parts.h"
-#include "ASF/common/services/sleepmgr/sleepmgr.h"
-#include "ASF/common/services/clock/sysclk.h"
+#include <compiler.h>
+#include <conf_adc.h>
+#include <nvm.h>
+#include <parts.h>
+#include <sleepmgr.h>
+#include <sysclk.h>
 
 #ifdef __cplusplus
 extern "C" {

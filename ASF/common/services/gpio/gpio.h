@@ -46,7 +46,7 @@
 #ifndef _GPIO_H_
 #define _GPIO_H_
 
-#include "ASF/common/utils/parts.h"
+#include <parts.h>
 
 #if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
 # include "sam_gpio/sam_gpio.h"

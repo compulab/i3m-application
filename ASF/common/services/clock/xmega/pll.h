@@ -46,7 +46,7 @@
 #ifndef XMEGA_PLL_H_INCLUDED
 #define XMEGA_PLL_H_INCLUDED
 
-#include "ASF/xmega/utils/compiler.h"
+#include <compiler.h>
 
 /**
  * \weakgroup pll_group

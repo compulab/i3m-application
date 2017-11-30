@@ -48,8 +48,8 @@
 
 #include <stdint.h>
 
-#include "ASF/xmega/utils/compiler.h"
-
+#include "compiler.h"
+#include "progmem.h"
 #ifdef __cplusplus
 extern "C" {
 #endif

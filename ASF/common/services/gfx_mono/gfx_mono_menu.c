@@ -45,7 +45,10 @@
 
 #include "gfx_mono_menu.h"
 #include "sysfont.h"
-#include "config/conf_menu.h"
+#include "gfx_mono.h"
+#include <conf_menu.h>
+
+#include "gfx_mono_menu.h"
 
 /**
  * \ingroup asfdoc_common2_gfx_mono_menu
