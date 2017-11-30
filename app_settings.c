@@ -37,8 +37,8 @@ static void setup_screen_saver_settings(void)
 
 static void setup_brightness_settings(void)
 {
-	if (eeprom_get_brightness_value() == 0x00)
-		eeprom_set_brigntness_value(BRIGHTNESS_DEFAULT);
+	if (eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS) == 0x00)
+		eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, BRIGHTNESS_DEFAULT);
 }
 
 static void setup_app_version(void)

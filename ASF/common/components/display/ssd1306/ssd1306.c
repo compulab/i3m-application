@@ -124,7 +124,7 @@ void ssd1306_init(void)
 	ssd1306_write_command(SSD1306_CMD_SET_COM_PINS);
 	ssd1306_write_command(0x12);
 
-	ssd1306_set_contrast(eeprom_get_brightness_value()); // was (0x8F), 0XE3
+	ssd1306_set_contrast(eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS)); // was (0x8F), 0XE3
 
 
 	// Set Pre-Charge as 15 Clocks & Discharge as 1 Clock

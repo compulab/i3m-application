@@ -9,15 +9,6 @@
 #include "eeprom_layout.h"
 #include <stdio.h>
 
-#define MAC_ADDRESS_EEPROM_ADDRESS			0x04
-
-#define PRODUCT_NAME_EEPROM_ADDRESS			0x80
-#define PRODUCT_OPTIONS_EEPROM_ADDRESS		0x90
-
-#define SCREEN_SAVER_TIME_EEPROM_ADDRESS	0x120
-#define SCREEN_SAVER_CONFIG_EEPROM_ADDRESS	0x121
-#define BRIGHTNESS_EEPROM_ADDRESS 			0x122
-
 #define ASCII_FIELD_LENGTH			16
 
 static void eeprom_get_ascii_field(char *output_ascii_field, uint8_t addr)
@@ -27,54 +18,6 @@ static void eeprom_get_ascii_field(char *output_ascii_field, uint8_t addr)
 
 	output_ascii_field[ASCII_FIELD_LENGTH - 1] = '\0';
 	return;
-}
-
-#define BRIGHTNESS_STEP				25
-
-uint8_t eeprom_get_brightness_value(void)
-{
-	return eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS);
-}
-
-uint8_t eeprom_get_brightness_level(void)
-{
-	uint8_t brightness = eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS);
-
-	if (brightness > (MAX_BRIGHTNESS_LEVEL -1) * BRIGHTNESS_STEP)
-		return MAX_BRIGHTNESS_LEVEL;
-	else if (brightness < BRIGHTNESS_STEP)
-		return 0;
-
-	return brightness / BRIGHTNESS_STEP;
-}
-
-void eeprom_increse_brightness_level(void)
-{
-	uint8_t brightness_level = eeprom_get_brightness_level();
-	if (brightness_level < MAX_BRIGHTNESS_LEVEL)
-		brightness_level++;
-	else
-		return;
-
-	uint8_t brightness = brightness_level * BRIGHTNESS_STEP;
-	eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, brightness);
-}
-
-void eeprom_decrese_brightness_level(void)
-{
-	uint8_t brightness_level = eeprom_get_brightness_level();
-	if (brightness_level > 0)
-		brightness_level--;
-	else
-		return;
-
-	uint8_t brightness = brightness_level * BRIGHTNESS_STEP;
-	eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, brightness);
-}
-
-void eeprom_set_brigntness_value(uint8_t new_value)
-{
-	eeprom_write_byte(BRIGHTNESS_EEPROM_ADDRESS, new_value);
 }
 
 uint8_t eeprom_get_screen_saver_config(void)

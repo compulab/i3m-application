@@ -22,11 +22,15 @@
 #define MIN_BRIGHTNESS_LEVEL		0
 #define MAX_BRIGHTNESS_LEVEL		10
 
-uint8_t eeprom_get_brightness_value(void);
-uint8_t eeprom_get_brightness_level(void);
-void eeprom_increse_brightness_level(void);
-void eeprom_decrese_brightness_level(void);
-void eeprom_set_brigntness_value(unsigned char new_value);
+#define MAC_ADDRESS_EEPROM_ADDRESS			0x04
+
+#define PRODUCT_NAME_EEPROM_ADDRESS			0x80
+#define PRODUCT_OPTIONS_EEPROM_ADDRESS		0x90
+
+#define SCREEN_SAVER_TIME_EEPROM_ADDRESS	0x120
+#define SCREEN_SAVER_CONFIG_EEPROM_ADDRESS	0x121
+#define BRIGHTNESS_EEPROM_ADDRESS 			0x122
+
 uint8_t eeprom_get_screen_saver_config(void);
 void eeprom_set_screen_saver_config(uint8_t new_config);
 uint8_t eeprom_get_screen_saver_time(void);
