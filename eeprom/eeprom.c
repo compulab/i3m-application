@@ -36,3 +36,8 @@ void eeprom_read_str(char *output_str, uint8_t addr, uint8_t str_length)
 	output_str[str_length - 1] = '\0';
 }
 
+void eeprom_read_byte_array(uint16_t reg_addr, uint8_t *output_array, uint8_t array_length)
+{
+	for (int i = 0; i < array_length; i++)
+		output_array[i] = eeprom_read_byte(reg_addr + i);
+}
