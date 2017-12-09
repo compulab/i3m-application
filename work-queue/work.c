@@ -21,9 +21,13 @@ static struct work_queue work_to_do = {
  */
 void *malloc_locked(size_t size)
 {
-	cli();
+	bool preenabled_interrupts = cpu_irq_is_enabled();
+	if (preenabled_interrupts)
+		cli();
+
 	void *ret = malloc(size);
-	sei();
+	if (preenabled_interrupts)
+		sei();
 	return ret;
 }
 
