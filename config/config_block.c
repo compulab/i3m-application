@@ -81,7 +81,9 @@ static struct gfx_label_node *load_frame_labels(struct cnf_label_node *cnf_label
 			return NULL;
 
 		memcpy_config(&cnf_label_node, cnf_label_pgmem, sizeof(struct cnf_label_node));
-		char *label = malloc_locked(sizeof(char) * length_P(cnf_label_node.label.text));
+		int label_length = length_P(cnf_label_node.label.text);
+		char *label = malloc_locked(sizeof(char) * (label_length + 1));
+		memset(label, 0, label_length + 1);
 		memcpy_config(label, cnf_label_node.label.text, length_P(cnf_label_node.label.text));
 		gfx_label_init(&gfx_label_node->label, label, cnf_label_node.label.x, cnf_label_node.label.y, cnf_label_node.font_id);
 		gfx_label_node->next = 0;

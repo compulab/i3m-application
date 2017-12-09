@@ -32,10 +32,11 @@ static int gfx_information_init_generic(struct gfx_information *info, enum infor
 										uint8_t info_data, uint8_t max_length, uint8_t x, uint8_t y, uint8_t font_id)
 {
 	gfx_item_init(&info->postion, x, y, 0, 0);
-	char *text = malloc_locked(max_length);
+	char *text = malloc_locked(max_length + 1);
 	if (text == NULL)
 		return -1;
 
+	memset(text, 0, max_length + 1);
 	gfx_text_init(&info->text, text, max_length, font_id);
 	info->info_type = info_type;
 	info->metadata = info_data;
