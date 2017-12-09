@@ -17,6 +17,6 @@ static void gfx_label_draw(struct gfx_label *label)
 void gfx_label_init(struct gfx_label *label, char *text, uint8_t x, uint8_t y, uint8_t font_id)
 {
 	gfx_item_init(&label ->postion, x, y, 0, 0);
-	gfx_text_init(&label->text, text, -1, font_id);
+	gfx_text_init(&label->text, text, strlen(text), font_id);
 	label->draw = gfx_label_draw;
 }
