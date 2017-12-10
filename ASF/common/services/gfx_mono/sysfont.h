@@ -65,7 +65,6 @@
 
 extern struct font sysfont;
 
-//extern struct font terminal_font;
 /** @} */
 
 #endif /* SYSFONT_H_INCLUDED */

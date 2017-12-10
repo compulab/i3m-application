@@ -56,8 +56,6 @@
 // Use macro from conf_sysfont.h to define font glyph data.
 SYSFONT_DEFINE_GLYPHS;
 
-//TERMINAL_FONT_DEFINE_GLYPHS;
-
 /**
  * \brief Initialize a basic system font
  *
@@ -74,14 +72,4 @@ struct font sysfont = {
 	},
 };
 
-//struct font terminal_font = {
-//	.type           = FONT_LOC_PROGMEM,
-//	.width          = TERMINAL_FONT_WIDTH,
-//	.height         = TERMINAL_FONT_HEIGHT,
-//	.first_char     = TERMINAL_FONT_FIRSTCHAR,
-//	.last_char      = TERMINAL_FONT_LASTCHAR,
-//	.data           = {
-//		.progmem        = terminal_glyphs,
-//	},
-//};
 /** @} */
