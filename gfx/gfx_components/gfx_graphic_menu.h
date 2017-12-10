@@ -32,5 +32,7 @@ void gfx_graphic_menu_move_cursor(struct gfx_graphic_menu *graphic_menu);
 void gfx_graphic_menu_init(struct gfx_graphic_menu *graphic_menu, uint8_t id,
 						  struct gfx_mono_menu *menu, struct gfx_graphic_menu_action *actions,
 						  struct gfx_image_node *graphic_items_head);
+//TODO: get rid of this
+uint8_t gfx_graphic_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode);
 
 #endif /* GFX_GFX_ACTION_MENU_H_ */

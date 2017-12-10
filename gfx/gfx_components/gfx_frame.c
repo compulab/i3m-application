@@ -84,7 +84,7 @@ static void handle_buttons_scroll_to_frame(struct gfx_frame *frame, uint8_t keyc
 
 	if (is_scroll_before_first_frame(keycode) || is_scroll_past_last_frame(keycode))
 		return;
-	 gfx_mono_menu_process_key(current_menu->menu, keycode);
+	 gfx_graphic_menu_process_key(current_menu->menu, keycode);
 	 //Invoke "display new frame" by simulating a KECODE ENTER event
 	 current_menu->handle_button(current_menu, GFX_MONO_MENU_KEYCODE_ENTER);
 }

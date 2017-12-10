@@ -111,7 +111,8 @@ extern "C" {
 /** @} */
 
 /** Maximum number of menu elements on display */
-#define GFX_MONO_MENU_ELEMENTS_PER_SCREEN ((GFX_MONO_LCD_HEIGHT / SYSFONT_LINESPACING) - 1)
+#define GFX_MONO_MENU_ELEMENTS_PER_SCREEN ((GFX_MONO_LCD_HEIGHT / \
+	SYSFONT_LINESPACING) - 1)
 
 /** Menu struct */
 struct gfx_mono_menu {
@@ -123,7 +124,7 @@ struct gfx_mono_menu {
 	uint8_t current_page;
 };
 
-void gfx_mono_menu_init(struct gfx_mono_menu *menu, bool redraw, bool is_progmem);
+void gfx_mono_menu_init(struct gfx_mono_menu *menu);
 uint8_t gfx_mono_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode);
 
 /** @} */

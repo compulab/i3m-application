@@ -5,6 +5,44 @@
 #include "display/display_render.h"
 #include "lib/syntax.h"
 
+uint8_t gfx_graphic_menu_process_key(struct gfx_mono_menu *menu, uint8_t keycode)
+{
+	menu->last_selection = menu->current_selection;
+	switch (keycode) {
+	case GFX_MONO_MENU_KEYCODE_UP:
+		if (menu->current_selection == menu->num_elements - 1) {
+			menu->current_selection = 0;
+		} else {
+			menu->current_selection++;
+		}
+
+		/* Nothing selected yet */
+		return GFX_MONO_MENU_EVENT_IDLE;
+
+	case GFX_MONO_MENU_KEYCODE_DOWN:
+		if (menu->current_selection) {
+			menu->current_selection--;
+		} else {
+			menu->current_selection = menu->num_elements - 1;
+		}
+
+		/* Nothing selected yet */
+		return GFX_MONO_MENU_EVENT_IDLE;
+
+	case GFX_MONO_MENU_KEYCODE_ENTER:
+		/* Got what we want. Return selection. */
+		return menu->current_selection;
+
+	case GFX_MONO_MENU_KEYCODE_BACK:
+		/* User pressed "back" key, inform user */
+		return GFX_MONO_MENU_EVENT_EXIT;
+
+	default:
+		/* Unknown key event */
+		return GFX_MONO_MENU_EVENT_IDLE;
+	}
+}
+
 static void update_action_visibility(struct gfx_graphic_menu_action *action)
 {
 	if (action->type != ACTION_TYPE_SHOW_FRAME) {
@@ -25,7 +63,7 @@ static void update_action_visibility(struct gfx_graphic_menu_action *action)
 static void gfx_menu_handle_button(struct gfx_graphic_menu *graphic_menu, uint8_t keycode)
 {
 	if (keycode != GFX_MONO_MENU_KEYCODE_ENTER) {
-		gfx_mono_menu_process_key(graphic_menu->menu, keycode);
+		gfx_graphic_menu_process_key(graphic_menu->menu, keycode);
 		gfx_graphic_menu_move_cursor(current_menu);
 		return;
 	}
