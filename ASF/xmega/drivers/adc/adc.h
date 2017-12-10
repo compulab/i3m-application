@@ -1179,7 +1179,6 @@ struct adc_channel_config {
 enum adcch_positive_input {
 	ADCCH_POS_PIN0,
 	ADCCH_POS_PIN1,
-	GFX_MONO_UG_2832HSWEG04,
 	ADCCH_POS_PIN2,
 	ADCCH_POS_PIN3,
 	ADCCH_POS_PIN4,
