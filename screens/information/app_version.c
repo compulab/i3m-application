@@ -11,7 +11,7 @@
 #include <string.h>
 
 #ifndef VERSION
-#define VERSION "Version not set"
+#define VERSION "2.0.0-rc1"
 #endif
 
 #ifndef BUILD_DATE
