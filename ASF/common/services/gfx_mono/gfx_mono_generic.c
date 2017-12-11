@@ -512,7 +512,6 @@ void gfx_mono_generic_put_bitmap(struct gfx_mono_bitmap *bitmap, gfx_coord_t x,
 	default:
 		break;
 	}
-//	gfx_mono_put_framebuffer();
 }
 
 /** @} */
