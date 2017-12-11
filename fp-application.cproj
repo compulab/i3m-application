@@ -1017,9 +1017,6 @@
     <None Include="ASF\common\services\clock\xmega\subdir.mk">
       <SubType>compile</SubType>
     </None>
-    <None Include="ASF\common\services\gfx_mono\subdir.mk">
-      <SubType>compile</SubType>
-    </None>
     <None Include="ASF\common\services\gfx_mono\tools\bitmap.py">
       <SubType>compile</SubType>
     </None>
