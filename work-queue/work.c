@@ -8,6 +8,7 @@
 #include "work.h"
 #include "layout.h"
 #include "asf.h"
+#include "lib/memory.h"
 
 bool wakeup;
 
@@ -15,21 +16,6 @@ static struct work_queue work_to_do = {
 	.first =  NULL,
 	.last =  NULL,
 };
-
-/*
- * Implemented with disabling interrupts.
- */
-void *malloc_locked(size_t size)
-{
-	bool preenabled_interrupts = cpu_irq_is_enabled();
-	if (preenabled_interrupts)
-		cli();
-
-	void *ret = malloc(size);
-	if (preenabled_interrupts)
-		sei();
-	return ret;
-}
 
 /*
  * Adding new work to the queue

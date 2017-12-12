@@ -6,7 +6,7 @@
  */
 
 #include "glcd_font.h"
-#include "work-queue/work.h"
+#include "lib/memory.h"
 
 struct glcd_FontConfig_t **fonts;
 uint16_t fonts_size;

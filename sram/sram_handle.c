@@ -8,6 +8,7 @@
 #include "sram_handle.h"
 #include "power/power.h"
 #include "twi/i2c_buffer.h"
+#include "lib/memory.h"
 #include "work-queue/work.h"
 #include "eeprom/eeprom_layout.h"
 #include <string.h>

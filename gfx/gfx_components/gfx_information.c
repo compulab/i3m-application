@@ -10,7 +10,7 @@
 #include "gfx/gfx_components/gfx_graphic_menu.h"
 #include "display/display_render.h"
 #include "screens/screens.h"
-#include "work-queue/work.h"
+#include "lib/memory.h"
 
 static void gfx_information_draw_string(struct gfx_information *info)
 {

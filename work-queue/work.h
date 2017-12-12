@@ -24,8 +24,6 @@ struct work_queue {
 
 extern bool wakeup;
 
-void *malloc_locked(size_t size);
-
 int insert_work(struct work *work);
 
 bool work_handler(void);
