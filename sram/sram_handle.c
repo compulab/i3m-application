@@ -24,12 +24,6 @@ static bool is_valid_register(int8_t index, uint8_t max_index)
 	return index >= 0 && index < max_index;
 }
 
-static void clear_req(void)
-{
-	if (i2c_buffer.raw[PENDR0] == 0)
-		i2c_buffer.layout.req = 0;
-}
-
 static void write_cpu_fq_msb(uint8_t cpu_addr)
 {
 	int8_t index = (cpu_addr - CPU0F_MSB)/2;
@@ -42,8 +36,6 @@ static void write_cpu_fq_msb(uint8_t cpu_addr)
 		else
 			computer_data.packed.cpu_freq_set &= ~((0x01) << index);
 	}
-	i2c_buffer.layout.cpufr = 0;
-	clear_req();
 }
 
 static void write_temp_control(void)
@@ -90,8 +82,6 @@ static void reset_to_bootloader(void)
 
 static void write_cpu_status(void)
 {
-	i2c_buffer.layout.cputr = 0;
-	clear_req();
 	if (i2c_buffer.raw[CPUTS] == 0) {
 		computer_data.packed.cpu_temp_set = 0;
 	} else {
@@ -121,8 +111,6 @@ static void write_hdd_status(void)
 		}
 		computer_data.packed.hdd_temp_set |= i2c_buffer.raw[HDDTS];
 	}
-	i2c_buffer.layout.hddtr = 0;
-	clear_req();
 }
 
 static void write_reset(void)
@@ -218,9 +206,6 @@ static void write_gpu_temp(void)
 	computer_data.details.gpu_temp_set = i2c_buffer.layout.gpus;
 	if (computer_data.details.gpu_temp_set)
 		computer_data.details.gpu_temp = i2c_buffer.layout.gput;
-
-	i2c_buffer.layout.gpu_temp_request = 0;
-	clear_req();
 }
 
 static void update_data(void *write_address)
