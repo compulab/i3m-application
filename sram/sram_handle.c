@@ -68,11 +68,6 @@ static void write_cpu_fq_msb(uint8_t cpu_addr)
 	clear_req();
 }
 
-static void read_temp_control(uint8_t *data)
-{
-	*data = 0x02 & computer_data.packed.other_temp_status;
-}
-
 static void write_temp_control(void)
 {
 	computer_data.details.gpu_temp = i2c_buffer.layout.gpus;
@@ -188,25 +183,6 @@ static void write_memory(uint8_t mem_addr) //Todo: change memory status set
 	}
 }
 
-static void read_bios_post_code(enum i2c_addr_space post_code_address, uint8_t *data)
-{
-	switch (post_code_address) {
-	case POST_CODE_LSB:
-		*data = computer_data.details.post_code_lsb;
-		break;
-	case POST_CODE_MSB:
-		*data = computer_data.details.post_code_msb;
-		break;
-	default:
-		break;
-	}
-}
-
-static void read_layout(uint8_t *data)
-{
-	*data = eeprom_read_byte(LAYOUT_VERSION_EEPROM_ADDRESS);
-}
-
 static void read_power_state(uint8_t *data)
 {
 	switch (current_power_state) {
@@ -225,14 +201,6 @@ static void read_power_state(uint8_t *data)
 	}
 }
 
-static void read_ambient(uint8_t *data)
-{
-	if (i2c_buffer.layout.ambs)
-		*data = i2c_buffer.layout.ambt;
-	else
-		*data = DEFAULT_DATA;
-}
-
 static void free_direct_string(void)
 {
 	if (direct_string_to_add != NULL) {
@@ -242,31 +210,6 @@ static void free_direct_string(void)
 	free(direct_string_to_add);
 	dmi_curr_state = DMI_IDLE;
 	clear_direct_help_vars();
-}
-
-static void read_fp_control(uint8_t *data)
-{
-	*data = i2c_buffer.layout.iwren << 7;
-}
-
-static void read_adc(enum i2c_addr_space adc_address, uint8_t *data)
-{
-	switch (adc_address) {
-	case ADC_LSB:
-		if (computer_data.details.adc_set)
-			*data = LSB(computer_data.packed.adc);
-		else
-			*data = 0xff;
-		break;
-	case ADC_MSB:
-		if (computer_data.details.adc_set)
-			*data = MSB(computer_data.packed.adc);
-		else
-			*data = 0xff;
-		break;
-	default:
-		break;
-	}
 }
 
 static int set_direct_string(void)
@@ -490,27 +433,29 @@ void handle_sram_read_request(enum i2c_addr_space addr, uint8_t *data)
 {
 	switch (addr) {
 	case POST_CODE_LSB:
+		*data = computer_data.details.post_code_lsb;
+		break;
 	case POST_CODE_MSB:
-		read_bios_post_code(addr, data);
+		*data = computer_data.details.post_code_msb;
 		break;
     case ADC_LSB:
+		*data = computer_data.details.adc_set ? LSB(computer_data.packed.adc) : 0xff;
 	case ADC_MSB:
-		read_adc(addr, data);
-		 break;
+		*data = computer_data.details.adc_set ? MSB(computer_data.packed.adc) : 0xff;
 	case AMBT:
-		read_ambient(data);
+		*data = i2c_buffer.layout.ambs ? i2c_buffer.layout.ambt : DEFAULT_DATA;
 		break;
 	case SENSORT:
-		read_temp_control(data);
+		*data = 0x02 & computer_data.packed.other_temp_status;
 		break;
 	case LAYOUT_VER:
-		read_layout(data);
+		*data = eeprom_read_byte(LAYOUT_VERSION_EEPROM_ADDRESS);
 		break;
 	case POWER_STATE:
 		read_power_state(data);
 		break;
 	case FPCTRL:
-		read_fp_control(data);
+		*data = i2c_buffer.layout.iwren << 7;
 		break;
 	default:
 		*data = i2c_buffer.raw[addr];
