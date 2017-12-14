@@ -59,7 +59,6 @@ static void handle_power_state_changed(void *data)
 		reset_temperatures();
 		break;
 	}
-	update_computer_state();
 }
 
 struct work power_state_work = { .do_work = handle_power_state_changed, .data = NULL, .next = NULL };

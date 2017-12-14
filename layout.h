@@ -45,14 +45,6 @@ struct direct_string_item {
 	struct direct_string_item *next;
 };
 
-enum computer_state_t {
-	COMPUTER_OFF,
-	COMPUTER_ON,
-	COMPUTER_IN_BIOS,
-	COMPUTER_IN_OS,
-	COMPUTER_DAEMON_WORK,
-};
-
 union updatable_info {
 	struct {
 		uint8_t post_code_lsb;
@@ -164,5 +156,4 @@ union updatable_info {
 };
 
 union updatable_info computer_data;
-enum computer_state_t computer_state;
 #endif /* LAYOUT_H_ */

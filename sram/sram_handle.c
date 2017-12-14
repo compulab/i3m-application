@@ -48,9 +48,6 @@ static bool is_valid_register(int8_t index, uint8_t max_index)
 
 static void clear_req(void)
 {
-	if (computer_state == COMPUTER_IN_OS)
-		computer_state = COMPUTER_DAEMON_WORK;
-
 	if (i2c_buffer.raw[PENDR0] == 0)
 		i2c_buffer.layout.req = 0;
 }
@@ -166,22 +163,9 @@ static void write_reset(void)
 #define POST_CODE_BIOS_START	0xE1		// BIOS post code that send when BIOS is end and the computer continue boot.
 #define	POST_CODE_BIOS_DONE		0xA0 		// BIOS post code that send when BIOS is end and the computer continue boot.
 
-void update_computer_state(void)
-{
-	if (current_power_state == POWER_OFF)
-		computer_state = COMPUTER_OFF;
-	else if (current_power_state == POWER_ON && computer_state == COMPUTER_OFF)
-		computer_state = COMPUTER_ON;
-	else if (computer_data.packed.post_code == POST_CODE_BIOS_START)
-		computer_state = COMPUTER_IN_BIOS;
-	else if ((computer_state == COMPUTER_IN_BIOS) && (computer_data.packed.post_code == POST_CODE_BIOS_DONE))
-		computer_state = COMPUTER_IN_OS;
-}
-
 static void write_post_code_lsb(void)
 {
 	computer_data.packed.post_code = i2c_buffer.layout.bios_post_code;
-	update_computer_state();
 }
 
 static void write_memory(uint8_t mem_addr) //Todo: change memory status set
