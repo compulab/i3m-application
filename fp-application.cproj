@@ -1211,6 +1211,12 @@
     <Compile Include="app_settings.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="sram\sram_direct_strings.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sram\sram_direct_strings.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="sram\sram_handle.c">
       <SubType>compile</SubType>
     </Compile>
