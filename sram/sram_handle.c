@@ -26,16 +26,19 @@ static bool is_valid_register(int8_t index, uint8_t max_index)
 
 static void write_cpu_fq_msb(uint8_t cpu_addr)
 {
-	int8_t index = (cpu_addr - CPU0F_MSB)/2;
-	if (!is_valid_register(index,MAX_CPU))
-		return ;
-	if (i2c_buffer.raw[cpu_addr] & CPU_FQ_MSB_MSK) {
-		computer_data.packed.cpu_freq[index] = (i2c_buffer.raw[cpu_addr] & CPU_FQ_MSB_MSK) << 8 | i2c_buffer.raw[cpu_addr - 1];
-		if (i2c_buffer.raw[cpu_addr] & CPU_FQ_VALID_BIT)
-			computer_data.packed.cpu_freq_set |= (0x01) << index;
-		else
-			computer_data.packed.cpu_freq_set &= ~((0x01) << index);
-	}
+	int8_t index = (cpu_addr - CPU0F_MSB) / 2;
+	if (!is_valid_register(index, MAX_CPU))
+		return;
+
+	if (!(i2c_buffer.raw[cpu_addr] & CPU_FQ_MSB_MSK))
+		return;
+
+	computer_data.packed.cpu_freq[index] = (i2c_buffer.raw[cpu_addr] & CPU_FQ_MSB_MSK) << 8 |
+											i2c_buffer.raw[cpu_addr - 1];
+	if (i2c_buffer.raw[cpu_addr] & CPU_FQ_VALID_BIT)
+		computer_data.packed.cpu_freq_set |= 1 << index;
+	else
+		computer_data.packed.cpu_freq_set &= ~(1 << index);
 }
 
 static void write_temp_control(void)
@@ -50,25 +53,26 @@ static void write_hd_sz_msb(uint8_t hdd_addr)
 	int8_t index = (hdd_addr - HDD0_SZ_MSB) / 2;
 	if (!is_valid_register(index, MAX_HDD))
 		return;
-	if (i2c_buffer.raw[hdd_addr] & HDD_SZ_STATUS_MSK) {
-		computer_data.packed.hdd_size[index] = (i2c_buffer.raw[hdd_addr - 1] & ~ MSB_MSK) | ((i2c_buffer.raw[hdd_addr] & HDD_SZ_MSK) << 8);
-		computer_data.packed.hdd_size_set |= (1 << index);
-		uint8_t factor = (i2c_buffer.raw[hdd_addr] & HDD_SZ_UNIT_MSK) ? 1 : 0;
-		computer_data.packed.hdd_units_tera |= (1 << index) & factor;
-	} else {
+
+	if (!(i2c_buffer.raw[hdd_addr] & HDD_SZ_STATUS_MSK)) {
 		computer_data.packed.hdd_size_set &= ~(1 << index);
+		return;
 	}
+
+	computer_data.packed.hdd_size[index] = (i2c_buffer.raw[hdd_addr - 1] & ~ MSB_MSK) |
+											((i2c_buffer.raw[hdd_addr] & HDD_SZ_MSK) << 8);
+	computer_data.packed.hdd_size_set |= (1 << index);
+	uint8_t factor = (i2c_buffer.raw[hdd_addr] & HDD_SZ_UNIT_MSK) ? 1 : 0;
+	computer_data.packed.hdd_units_tera |= (1 << index) & factor;
 }
 
 static void software_reset(void)
 {
 	uint8_t oldInterruptState = SREG;  // no real need to store the interrupt context as the reset will pre-empt its restoration
 	cli();
-
 	CCP = 0xD8;                        // Configuration change protection: allow protected IO regiser write
 	RST.CTRL = RST_SWRST_bm;           // Request software reset by writing to protected IO register
-
-	SREG=oldInterruptState;            // Restore interrupts enabled/disabled state (out of common decency - this line will never be reached because the reset will pre-empt it)
+	SREG = oldInterruptState;          // Restore interrupts enabled/disabled state (out of common decency - this line will never be reached because the reset will pre-empt it)
 }
 
 static void reset_to_bootloader(void)
@@ -84,33 +88,30 @@ static void write_cpu_status(void)
 {
 	if (i2c_buffer.raw[CPUTS] == 0) {
 		computer_data.packed.cpu_temp_set = 0;
-	} else {
-		computer_data.packed.cpu_temp_set |= i2c_buffer.raw[CPUTS];
-		uint8_t bit = 0x01;
-		for (uint8_t i = 0; i < MAX_CPU; i++) {
-			if (i2c_buffer.raw[CPUTS] & bit) {
-				if (computer_data.packed.cpu_temp[i] != i2c_buffer.raw[CPU0T + i]) {
-					computer_data.packed.cpu_temp[i] = i2c_buffer.raw[CPU0T + i];
-				}
-			}
-			bit = bit << 1;
-		}
+		return;
 	}
+
+	for (uint8_t i = 0; i < MAX_CPU; i++) {
+		if (i2c_buffer.raw[CPUTS] & (1 << i))
+			computer_data.packed.cpu_temp[i] = i2c_buffer.raw[CPU0T + i];
+	}
+
+	computer_data.packed.cpu_temp_set |= i2c_buffer.raw[CPUTS];
 }
 
 static void write_hdd_status(void)
 {
 	if (i2c_buffer.raw[HDDTS] == 0) {
 		computer_data.packed.hdd_temp_set = 0;
-	} else {
-		uint8_t bit = 0x01;
-		for (uint8_t i = 0 ; i < MAX_CPU; i++) {
-			if (i2c_buffer.raw[HDDTS] & bit)
-				computer_data.packed.hdd_temp[i] = i2c_buffer.raw[HDD0T + i];
-			bit = bit << 1;
-		}
-		computer_data.packed.hdd_temp_set |= i2c_buffer.raw[HDDTS];
+		return;
 	}
+
+	for (uint8_t i = 0 ; i < MAX_CPU; i++) {
+		if (i2c_buffer.raw[HDDTS] & (1 << i))
+			computer_data.packed.hdd_temp[i] = i2c_buffer.raw[HDD0T + i];
+	}
+
+	computer_data.packed.hdd_temp_set |= i2c_buffer.raw[HDDTS];
 }
 
 static void write_reset(void)
@@ -119,14 +120,6 @@ static void write_reset(void)
 		reset_to_bootloader();
 	else if (i2c_buffer.layout.rst)
 		software_reset();
-}
-
-#define POST_CODE_BIOS_START	0xE1		// BIOS post code that send when BIOS is end and the computer continue boot.
-#define	POST_CODE_BIOS_DONE		0xA0 		// BIOS post code that send when BIOS is end and the computer continue boot.
-
-static void write_post_code_lsb(void)
-{
-	computer_data.packed.post_code = i2c_buffer.layout.bios_post_code;
 }
 
 static void write_memory(uint8_t mem_addr) //Todo: change memory status set
@@ -239,7 +232,7 @@ static void update_data(void *write_address)
 			write_temp_control();
 			break;
 		case POST_CODE_LSB:
-			write_post_code_lsb();
+			computer_data.packed.post_code = i2c_buffer.layout.bios_post_code;
 			break;
 		case HDD0_SZ_MSB:
 		case HDD1_SZ_MSB:
