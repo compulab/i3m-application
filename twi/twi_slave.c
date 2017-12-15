@@ -77,7 +77,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  */
 #include "twi_slave.h"
 #include "i2c_buffer.h"
-#include "sram/sram_handle.h"
 #include "config/conf_twi.h"
 #include <stdbool.h>
 
@@ -141,7 +140,7 @@ static void twi_handle_read(uint8_t address)
 	if (slave_address == TWI_EEPROM_ADDRESS)
 		 data = eeprom_read_byte(address);
 	else if (slave_address == TWI_EXTEND_DATA_ADDRESS)
-		handle_sram_read_request(address, &data);
+		i2c_buffer_read_request(address, &data);
 	else
 		data = 0xff;
 
@@ -154,7 +153,7 @@ static int twi_handle_write(uint8_t data)
 	if (slave_address == TWI_EEPROM_ADDRESS) {
 		eeprom_write_byte(reg_address, data);
 	} else if (slave_address == TWI_EXTEND_DATA_ADDRESS) {
-		int res = handle_sram_write_request(reg_address, data);
+		int res = i2c_buffer_write_request(reg_address, data);
 		if (res != 0)
 			return res;
 	}

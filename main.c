@@ -1,6 +1,5 @@
 #include "twi/twi_slave.h"
 #include "scheduler/scheduler.h"
-#include "sram/sram_handle.h"
 #include "ASF/xmega/drivers/wdt/wdt.h"
 #include "twi/i2c_buffer.h"
 #include "power/power.h"
@@ -69,7 +68,7 @@ static void init(void)
 	cli();
 	gfx_mono_init();
 	glcd_init();
-	sram_handle_init();
+	i2c_buffer_init();
 	apply_app_settings();
 	adc_init();
 	pmic_init();

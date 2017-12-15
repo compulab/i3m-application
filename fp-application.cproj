@@ -1217,12 +1217,6 @@
     <Compile Include="sram\sram_direct_strings.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="sram\sram_handle.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="sram\sram_handle.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="tasks\adc_task.c">
       <SubType>compile</SubType>
     </Compile>

@@ -11,7 +11,6 @@
 #include "gfx/gfx_assets.h"
 #include "gfx/gfx_components/gfx_graphic_menu.h"
 #include "eeprom/eeprom_layout.h"
-#include "sram/sram_handle.h"
 #include <string.h>
 
 #define SLEEP_MSG 			"SLEEP"
