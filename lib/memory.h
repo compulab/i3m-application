@@ -8,6 +8,7 @@
 
 #ifndef MEMORY_H_
 #define MEMORY_H_
+#include <stdlib.h>
 
 void *malloc_locked(size_t size);
 
