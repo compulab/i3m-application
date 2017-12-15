@@ -8,7 +8,7 @@
 #include "lib/memory.h"
 #include "work-queue/work.h"
 #include "eeprom/eeprom_layout.h"
-#include "sram/sram_direct_strings.h"
+#include "twi/direct_strings.h"
 #include "power/power.h"
 #include <string.h>
 

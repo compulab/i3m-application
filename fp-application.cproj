@@ -1211,12 +1211,6 @@
     <Compile Include="app_settings.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="sram\sram_direct_strings.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="sram\sram_direct_strings.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="tasks\adc_task.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1227,6 +1221,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="twi\i2c_buffer.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="twi\direct_strings.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="twi\direct_strings.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="twi\twi_slave.c">
@@ -1396,7 +1396,6 @@
     <Folder Include="screens\sensors" />
     <Folder Include="screens\information" />
     <Folder Include="scheduler\" />
-    <Folder Include="sram\" />
     <Folder Include="twi\" />
     <Folder Include="work-queue\" />
   </ItemGroup>

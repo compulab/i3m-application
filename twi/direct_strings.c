@@ -9,6 +9,7 @@
 #include "twi/i2c_buffer.h"
 #include "lib/memory.h"
 #include "eeprom/eeprom_layout.h"
+#include "twi/direct_strings.h"
 #include "asf.h"
 #include <string.h>
 
