@@ -1175,12 +1175,6 @@
     <Compile Include="screens\screens.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="screens\screen_saver\screen_saver.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="screens\screen_saver\screen_saver.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="screens\sensors\power.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1392,7 +1386,6 @@
     <Folder Include="screens" />
     <Folder Include="screens\bios" />
     <Folder Include="screens\debug" />
-    <Folder Include="screens\screen_saver\" />
     <Folder Include="screens\sensors" />
     <Folder Include="screens\information" />
     <Folder Include="scheduler\" />

@@ -5,6 +5,7 @@
 #include "config/cnf_blk_components.h"
 #include "config/logos.h"
 #include "config/fonts.h"
+#include "config/menus/fp_dashboard.h"
 #include "menus_id.h"
 
 char __attribute__((section (".configData"))) main_menu_title[] = "Main Menu";
@@ -12,7 +13,7 @@ char __attribute__((section (".configData"))) main_menu_0[] = "Information";
 char __attribute__((section (".configData"))) main_menu_1[] = "    CPU";
 char __attribute__((section (".configData"))) main_menu_2[] = "    GPU";
 char __attribute__((section (".configData"))) main_menu_3[] = " Hard Drive";
-char __attribute__((section (".configData"))) main_menu_4[] = "Screen Saver";
+char __attribute__((section (".configData"))) main_menu_4[] = "Dashboard";
 char __attribute__((section (".configData"))) main_menu_5[] = " Power State";
 
 struct gfx_mono_menu  __attribute__((section (".configData"))) fp_main_mono_menu = {
@@ -25,35 +26,6 @@ struct gfx_mono_menu  __attribute__((section (".configData"))) fp_main_mono_menu
 	.strings[5] = main_menu_5,
 	.num_elements = 6,
 	.current_selection = 0
-};
-
-struct cnf_info_node __attribute__((section (".configData"))) screen_saver_info = {
-	.info = {
-		.info_type = SHOW_SCREEN_SAVER,
-		.information = 0,
-		.x = 10,
-		.y = 5,
-		.max_length = 22
-	},
-	.font_id = GLCD_FONT_SYSFONT_5X7,
-	.next = 0
-};
-
-char __attribute__((section (".configData"))) screen_saver_title_progmem[] = "Screen Saver";
-struct cnf_label_node __attribute__((section (".configData"))) screen_saver_title = {
-	.label = {
-		.text = screen_saver_title_progmem,
-		.x = (92 - 10 * 5) / 2,
-		.y = 55,
-	},
-	.font_id = GLCD_FONT_SYSFONT_5X7,
-	.next = 0
-};
-
-struct cnf_frame __attribute__((section (".configData"))) screen_saver_frame = {
-	.labels_head = &screen_saver_title,
-	.infos_head = &screen_saver_info,
-	.images_head = 0
 };
 
 char __attribute__((section (".configData"))) power_state_title_text[] = "Power State";
@@ -96,10 +68,10 @@ struct cnf_action_node __attribute__((section (".configData"))) show_airtop_powe
 	.next = 0
 };
 
-struct cnf_action_node __attribute__((section (".configData"))) show_airtop_screen_saver_action = {
+struct cnf_action_node __attribute__((section (".configData"))) show_airtop_dashboard_action = {
 	.action = {
 		.type = ACTION_TYPE_SHOW_FRAME,
-		.frame = &screen_saver_frame
+		.frame = &airtop_dashboard
 	},
 	.next = &show_airtop_power_menu_action
 };
@@ -109,7 +81,7 @@ struct cnf_action_node __attribute__((section (".configData"))) show_airtop_hdd_
 		.type = ACTION_TYPE_SHOW_MENU,
 		.menu_id = AIRTOP_HDD_MENU_ID
 	},
-	.next = &show_airtop_screen_saver_action
+	.next = &show_airtop_dashboard_action
 };
 
 struct cnf_action_node __attribute__((section (".configData"))) show_airtop_gpu_menu_action = {

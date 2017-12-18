@@ -135,15 +135,6 @@ static void action_types_init(void)
 	}
 }
 
-static bool is_action_frame(struct cnf_frame *cnf_frame)
-{
-	struct cnf_info_node cnf_info_node;
-	memcpy_config(&cnf_info_node, (void *)cnf_frame->infos_head, sizeof(struct cnf_info_node));
-	enum information_type info_type = cnf_info_node.info.info_type;
-
-	return (info_type == SHOW_SCREEN_SAVER);
-}
-
 static bool is_debug_frame(struct cnf_frame *cnf_frame)
 {
 	struct cnf_info_node cnf_info_node;
@@ -182,10 +173,6 @@ static int load_action(struct gfx_graphic_menu_action *action, struct cnf_action
 			gfx_frame_init(action->frame, load_frame_images(cnf_frame.images_head),
 						   load_frame_labels(cnf_frame.labels_head),
 						   load_frame_infos(cnf_frame.infos_head));
-		} else if (is_action_frame(&cnf_frame)) {
-			gfx_action_frame_init(action->frame, load_frame_images(cnf_frame.images_head),
-								  load_frame_labels(cnf_frame.labels_head),
-								  load_frame_infos(cnf_frame.infos_head));
 		} else if (is_debug_frame(&cnf_frame)) {
 			gfx_action_frame_init(action->frame, load_frame_images(cnf_frame.images_head),
 						   load_frame_labels(cnf_frame.labels_head),

@@ -34,7 +34,6 @@ enum information_type {
 	SHOW_POST_CODE,
 	SHOW_USB_SERIAL_INPUT,
 	SHOW_CUSTOM_MESSAGE,
-	SHOW_SCREEN_SAVER,
 };
 
 enum action_type {

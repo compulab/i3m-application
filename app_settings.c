@@ -5,10 +5,9 @@
  *  Author: Nikita
  */
 
-#include "screens/screen_saver/screen_saver.h"
 #include "eeprom/eeprom_layout.h"
 #include "eeprom/eeprom.h"
-
+#include "layout.h"
 
 #ifndef APPLICATION_VER_MSB
 #define APPLICATION_VER_MSB 0
@@ -17,23 +16,6 @@
 #ifndef APPLICATION_VER_LSB
 #define APPLICATION_VER_LSB 1
 #endif
-
-static void setup_screen_saver_settings(void)
-{
-	computer_data.packed.screen_saver_config = eeprom_read_byte(SCREEN_SAVER_CONFIG_EEPROM_ADDRESS);
-	computer_data.packed.screen_saver_update_time = eeprom_read_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS);
-
-	if (computer_data.packed.screen_saver_config == 0xff || computer_data.packed.screen_saver_update_time == 0xff) {
-		computer_data.packed.screen_saver_config = SCREEN_SAVER_CONFIGURATION_DEFAULT;
-		computer_data.packed.screen_saver_update_time = SCREEN_SAVER_TIME_DEFAULT;
-	}
-
-	if (computer_data.details.screen_saver_update_time < SCREEN_SAVER_SECOND_MIN_VALUE) {
-		computer_data.details.screen_saver_update_time = DEFAULT_SCREEN_SAVER_TIME;
-	} else {
-		computer_data.packed.screen_saver_update_time = eeprom_read_byte(SCREEN_SAVER_TIME_EEPROM_ADDRESS);
-	}
-}
 
 static void setup_brightness_settings(void)
 {
@@ -58,7 +40,6 @@ static void init_updateable_data(void)
 
 void apply_app_settings(void)
 {
-	setup_screen_saver_settings();
 	setup_brightness_settings();
 	setup_app_version();
 	init_updateable_data();
