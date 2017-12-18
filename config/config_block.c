@@ -11,10 +11,7 @@
 
 struct gfx_graphic_menu **graphic_menus;
 
-struct gfx_mono_bitmap splash_bitmap;
-
 struct gfx_frame *dashboard;
-struct gfx_frame *splash;
 
 uint8_t size_of_menus;
 uint8_t new_fonts_size;
@@ -221,32 +218,6 @@ static int graphic_item_init(struct gfx_image *menu_image, struct cnf_image * im
 	return 0;
 }
 
-static void splash_init(struct cnf_blk config_block)
-{
-	struct cnf_image_node cnf_image_node;
-	cnf_image_node.next = NULL;
-	cnf_image_node.image.height = config_block.splash_height;
-	cnf_image_node.image.width = config_block.splash_width;
-	cnf_image_node.image.x = 0;
-	cnf_image_node.image.y = 0;
-	cnf_image_node.image.bitmap_progmem = config_block.splash;
-
-	struct gfx_image_node *gfx_image_node = (struct gfx_image_node *)malloc_locked(sizeof(struct gfx_image_node));
-	if (gfx_image_node == NULL)
-		return;
-
-	gfx_image_node->image.bitmap = (struct gfx_mono_bitmap *)malloc_locked(sizeof(struct gfx_mono_bitmap));
-	//TODO: Possible memory leak here fix later
-	if (gfx_image_node->image.bitmap == NULL)
-		return;
-
-	gfx_image_init(&gfx_image_node->image, cnf_image_node.image.bitmap_progmem, cnf_image_node.image.height,
-				   cnf_image_node.image.width, cnf_image_node.image.x, cnf_image_node.image.y);
-
-	gfx_image_node->next = 0;
-	gfx_frame_init(splash, gfx_image_node, NULL, NULL);
-}
-
 static int load_fonts(struct cnf_font_node *cnf_font_node)
 {
 	struct cnf_font_node font_node;
@@ -347,7 +318,7 @@ int load_config_block(void)
 	if (new_fonts_size > 0 && config_block.fonts_head && load_fonts(config_block.fonts_head))
 			return -1;
 
-	dashboard = splash = NULL;
+	dashboard = NULL;
 	if (config_block.dashboard) {
 		dashboard = (struct gfx_frame *)malloc_locked(sizeof(struct gfx_frame));
 		if (dashboard == NULL)
@@ -355,13 +326,6 @@ int load_config_block(void)
 		memcpy_config(&cnf_frame, config_block.dashboard, sizeof(cnf_frame));
 		gfx_frame_init(dashboard, load_frame_images(cnf_frame.images_head), load_frame_labels(cnf_frame.labels_head),
 						load_frame_infos(cnf_frame.infos_head));
-	}
-
-	if (config_block.splash) {
-		splash = (struct gfx_frame *)malloc_locked(sizeof(struct gfx_frame));
-		if (splash == NULL)
-			return -1;
-		splash_init(config_block);
 	}
 
 	graphic_menus = (struct gfx_graphic_menu **)malloc_locked(sizeof(struct gfx_graphic_menu *) * size_of_menus);
