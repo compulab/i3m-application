@@ -12,7 +12,7 @@
 #include "menus_id.h"
 
 char __attribute__((section (".configData"))) airtop_info_menu_title[] = "Information";
-char __attribute__((section (".configData"))) app_version_title_progmem[] = "Application Ver";
+char __attribute__((section (".configData"))) app_version_title_progmem[] = "I3M app version";
 char __attribute__((section (".configData"))) production_codes_title_progmem[] = "Production Codes";
 char __attribute__((section (".configData"))) mac_address_title_progmem[] = "MAC Addresses";
 char __attribute__((section (".configData"))) post_code_title_progmem[] = "POST code";
