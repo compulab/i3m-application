@@ -102,7 +102,6 @@ struct cnf_blk  __attribute__((section (".configSec"))) menus_config = {
 	.menu_size = NUMBER_OF_MENUS,
 	.menus_head = &main_menu_node,
 	.fonts_head = &courier_new_13X21_font,
-	.dashboard = &airtop_dashboard,
 	.font_size = 3,
 };
 

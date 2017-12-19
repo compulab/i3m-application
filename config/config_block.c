@@ -153,16 +153,11 @@ static bool is_generic_frame(struct cnf_frame *cnf_frame)
 	return (info_type == SHOW_POWER_STATE);
 }
 
-static int load_action(struct gfx_graphic_menu_action *action, struct cnf_action config_action, struct cnf_frame * cnf_dashboard)
+static int load_action(struct gfx_graphic_menu_action *action, struct cnf_action config_action)
 {
 	action->type = config_action.type;
 	switch(config_action.type){
 	case ACTION_TYPE_SHOW_FRAME:
-		if (config_action.frame == cnf_dashboard) {
-			action->frame = dashboard;
-			return 0;
-		}
-
 		action->frame = (struct gfx_frame *)malloc_locked(sizeof(struct gfx_frame));
 		if (action->frame == NULL)
 			return -1;
@@ -274,7 +269,7 @@ static struct gfx_mono_menu *load_mono_menu(struct gfx_mono_menu *menu)
 	return mono_menu;
 }
 
-static struct gfx_graphic_menu_action *load_menu_actions(int num_of_actions, struct cnf_action_node *cnf_action_node, struct cnf_frame * cnf_dashboard)
+static struct gfx_graphic_menu_action *load_menu_actions(int num_of_actions, struct cnf_action_node *cnf_action_node)
 {
 	struct cnf_action_node action_node;
 	struct gfx_graphic_menu_action *actions = (struct gfx_graphic_menu_action *)malloc_locked(sizeof(struct gfx_graphic_menu_action) * num_of_actions);
@@ -283,7 +278,7 @@ static struct gfx_graphic_menu_action *load_menu_actions(int num_of_actions, str
 
 	for (uint8_t action_index = 0; cnf_action_node; action_index++, cnf_action_node = action_node.next) {
 		memcpy_config(&action_node, cnf_action_node, sizeof(struct cnf_action_node));
-		if (load_action(&(actions[action_index]), action_node.action, cnf_dashboard))
+		if (load_action(&(actions[action_index]), action_node.action))
 			return NULL;
 	}
 
@@ -295,7 +290,6 @@ int load_config_block(void)
 	struct cnf_blk config_block;
 	struct cnf_menu config_menu;
 	struct cnf_menu_node cnf_menu;
-	struct cnf_frame cnf_frame;
 
 	memcpy_config(&config_block, (void *)CONFIG_SECTION_ADDRESS, sizeof(struct cnf_blk));
 	size_of_menus = config_block.menu_size;
@@ -304,16 +298,6 @@ int load_config_block(void)
 
 	if (new_fonts_size > 0 && config_block.fonts_head && load_fonts(config_block.fonts_head))
 			return -1;
-
-	dashboard = NULL;
-	if (config_block.dashboard) {
-		dashboard = (struct gfx_frame *)malloc_locked(sizeof(struct gfx_frame));
-		if (dashboard == NULL)
-			return -1;
-		memcpy_config(&cnf_frame, config_block.dashboard, sizeof(cnf_frame));
-		gfx_frame_init(dashboard, load_frame_images(cnf_frame.images_head), load_frame_labels(cnf_frame.labels_head),
-						load_frame_infos(cnf_frame.infos_head));
-	}
 
 	graphic_menus = (struct gfx_graphic_menu **)malloc_locked(sizeof(struct gfx_graphic_menu *) * size_of_menus);
 	if (graphic_menus == NULL)
@@ -334,7 +318,7 @@ int load_config_block(void)
 		memcpy_config(&config_menu, cnf_menu.menu, sizeof(struct cnf_menu));
 		struct gfx_mono_menu *mono_menu = load_mono_menu(config_menu.menu);
 		gfx_graphic_menu_init(graphic_menus[config_menu.id], config_menu.id, mono_menu,
-							 load_menu_actions(mono_menu->num_elements, config_menu.actions_head, config_block.dashboard),
+							 load_menu_actions(mono_menu->num_elements, config_menu.actions_head),
 							 load_graphic_view(mono_menu->num_elements, config_menu.images_items_head));
 		cnf_menu_node = cnf_menu.next;
 	}
