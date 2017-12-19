@@ -13,7 +13,7 @@
 
 char __attribute__((section (".configData"))) airtop_info_menu_title[] = "Information";
 char __attribute__((section (".configData"))) app_version_title_progmem[] = "I3M app version";
-char __attribute__((section (".configData"))) production_codes_title_progmem[] = "Production Codes";
+char __attribute__((section (".configData"))) production_codes_title_progmem[] = "Serial number";
 char __attribute__((section (".configData"))) mac_address_title_progmem[] = "MAC Addresses";
 char __attribute__((section (".configData"))) airtop_info_go_back_to_main_progmem[] = "Back";
 
