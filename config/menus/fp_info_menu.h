@@ -32,7 +32,7 @@ struct cnf_info_node __attribute__((section (".configData"))) serial_number_info
 		.info_type = SHOW_SERIAL_NUMBER,
 		.information = 20,
 		.x = 0,
-		.y = 35,
+		.y = 34,
 		.max_length = 40
 	},
 	.font_id = GLCD_FONT_SYSFONT_5X7,
