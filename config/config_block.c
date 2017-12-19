@@ -11,8 +11,6 @@
 
 struct gfx_graphic_menu **graphic_menus;
 
-struct gfx_frame *dashboard;
-
 uint8_t size_of_menus;
 uint8_t new_fonts_size;
 
