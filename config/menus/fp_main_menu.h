@@ -14,7 +14,6 @@ char __attribute__((section (".configData"))) main_menu_1[] = "    CPU";
 char __attribute__((section (".configData"))) main_menu_2[] = "    GPU";
 char __attribute__((section (".configData"))) main_menu_3[] = " Hard Drive";
 char __attribute__((section (".configData"))) main_menu_4[] = "Dashboard";
-char __attribute__((section (".configData"))) main_menu_5[] = " Power State";
 
 struct gfx_mono_menu  __attribute__((section (".configData"))) fp_main_mono_menu = {
 	.title= main_menu_title,
@@ -23,57 +22,16 @@ struct gfx_mono_menu  __attribute__((section (".configData"))) fp_main_mono_menu
 	.strings[2] = main_menu_2,
 	.strings[3] = main_menu_3,
 	.strings[4] = main_menu_4,
-	.strings[5] = main_menu_5,
-	.num_elements = 6,
+	.num_elements = 5,
 	.current_selection = 0
-};
-
-char __attribute__((section (".configData"))) power_state_title_text[] = "Power State";
-char __attribute__((section (".configData"))) power_consumption_title_text[] = "Power Consumption";
-struct cnf_info_node __attribute__((section (".configData"))) power_consumption_info = {
-	.info = {
-		.info_type = SHOW_COMPUTER_POWER,
-		.information = 100,
-		.x = 45,
-		.y = 35,
-		.max_length = 20
-	},
-	.font_id = GLCD_FONT_COURIER_NEW_13X21,
-	.next = 0
-};
-
-struct cnf_info_node __attribute__((section (".configData"))) power_state_info = {
-	.info = {
-		.info_type = SHOW_POWER_STATE,
-		.information = 0,
-		.x = 0,
-		.y = 5,
-		.max_length = 20
-	},
-	.font_id = GLCD_FONT_COURIER_NEW_13X21,
-	.next = &power_consumption_info
-};
-
-struct cnf_frame __attribute__((section (".configData"))) power_state_frame = {
-	.labels_head = 0,
-	.infos_head = &power_state_info,
-	.images_head = 0
-};
-
-struct cnf_action_node __attribute__((section (".configData"))) show_airtop_power_menu_action = {
-	.action = {
-		.type = ACTION_TYPE_SHOW_FRAME,
-		.frame = &power_state_frame
-	},
-	.next = 0
 };
 
 struct cnf_action_node __attribute__((section (".configData"))) show_airtop_dashboard_action = {
 	.action = {
-		.type = ACTION_TYPE_SHOW_FRAME,
-		.frame = &airtop_dashboard
+		.type = ACTION_TYPE_SHOW_MENU,
+		.menu_id = AIRTOP_DASHBOARD_MENU_ID
 	},
-	.next = &show_airtop_power_menu_action
+	.next = 0
 };
 
 struct cnf_action_node __attribute__((section (".configData"))) show_airtop_hdd_menu_action = {
@@ -108,22 +66,13 @@ struct cnf_action_node __attribute__((section (".configData"))) show_airtop_info
 	.next = &show_airtop_cpu_menu_action
 };
 
-struct cnf_image_node  __attribute__((section (".configData"))) main_power_image = {
-	.image = {
-		.bitmap_progmem = power_bits,
-		.width = logo_width,
-		.height = logo_height
-	},
-	.next = 0
-};
-
 struct cnf_image_node  __attribute__((section (".configData"))) screen_saver_image = {
 	.image = {
 		.bitmap_progmem = screensaver_bits,
 		.width = logo_width,
 		.height = logo_height
 	},
-	.next = &main_power_image,
+	.next = 0,
 };
 
 struct cnf_image_node  __attribute__((section (".configData"))) main_hdd_image = {
