@@ -49,16 +49,11 @@ static struct gfx_image_node *load_frame_images(struct cnf_image_node *cnf_image
 	return image_head;
 }
 
-static bool is_valid_char(char ch)
-{
-	return ch != '\0' && ch != '\n';
-}
-
 static uint8_t length_P(char *str)
 {
 	uint8_t count = 0;
 	uint8_t temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)(str++));
-	while (is_valid_char(temp_char)) {
+	while (temp_char != '\0' && temp_char != '\n') {
 		count++;
 		temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)(str++));
 	}
@@ -133,24 +128,6 @@ static void action_types_init(void)
 	}
 }
 
-static bool is_debug_frame(struct cnf_frame *cnf_frame)
-{
-	struct cnf_info_node cnf_info_node;
-	memcpy_config(&cnf_info_node, (void *)cnf_frame->infos_head, sizeof(struct cnf_info_node));
-	enum information_type info_type = cnf_info_node.info.info_type;
-
-	return (info_type == SHOW_USB_SERIAL_INPUT);
-}
-
-static bool is_generic_frame(struct cnf_frame *cnf_frame)
-{
-	struct cnf_info_node cnf_info_node;
-	memcpy_config(&cnf_info_node, (void *)cnf_frame->infos_head, sizeof(struct cnf_info_node));
-	enum information_type info_type = cnf_info_node.info.info_type;
-
-	return (info_type == SHOW_POWER_STATE);
-}
-
 static int load_action(struct gfx_graphic_menu_action *action, struct cnf_action config_action)
 {
 	action->type = config_action.type;
@@ -162,20 +139,9 @@ static int load_action(struct gfx_graphic_menu_action *action, struct cnf_action
 
 		struct cnf_frame cnf_frame;
 		memcpy_config(&cnf_frame, config_action.frame, sizeof(cnf_frame));
-		if (is_generic_frame(&cnf_frame)) {
-			gfx_frame_init(action->frame, load_frame_images(cnf_frame.images_head),
-						   load_frame_labels(cnf_frame.labels_head),
-						   load_frame_infos(cnf_frame.infos_head));
-		} else if (is_debug_frame(&cnf_frame)) {
-			gfx_action_frame_init(action->frame, load_frame_images(cnf_frame.images_head),
-						   load_frame_labels(cnf_frame.labels_head),
-						   load_frame_infos(cnf_frame.infos_head));
-		} else {
-			gfx_context_frame_init(action->frame, load_frame_images(cnf_frame.images_head),
-								   load_frame_labels(cnf_frame.labels_head),
-								   load_frame_infos(cnf_frame.infos_head));
-		}
-
+		gfx_context_frame_init(action->frame, load_frame_images(cnf_frame.images_head),
+							   load_frame_labels(cnf_frame.labels_head),
+							   load_frame_infos(cnf_frame.infos_head));
 		return 0;
 	case ACTION_TYPE_SHOW_MENU:
 		action->menu_id = config_action.menu_id;
