@@ -5,6 +5,7 @@
  *  Author: Nikita
  */
 #include "asf.h"
+#include "memory.h"
 
 /*
  * Implemented with disabling interrupts.
