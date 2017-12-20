@@ -851,9 +851,6 @@
     <Compile Include="ASF\xmega\utils\status_codes.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="auto_generated.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="config\big_font.h">
       <SubType>compile</SubType>
     </Compile>
