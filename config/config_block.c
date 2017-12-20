@@ -46,6 +46,7 @@ static struct gfx_image_node *load_frame_images(struct cnf_image_node *cnf_image
 		frame_image_last = gfx_image_node;
 		cnf_image_pgmem = cnf_image_node.next;
 	}
+
 	return image_head;
 }
 
@@ -57,6 +58,7 @@ static uint8_t length_P(char *str)
 		count++;
 		temp_char = PROGMEM_READ_FAR_BYTE((uint8_t PROGMEM_PTR_T)(str++));
 	}
+
 	return count;
 }
 
@@ -84,6 +86,7 @@ static struct gfx_label_node *load_frame_labels(struct cnf_label_node *cnf_label
 		frame_label_last = gfx_label_node;
 		cnf_label_pgmem = cnf_label_node.next;
 	}
+
 	return label_head;
 }
 
@@ -110,6 +113,7 @@ static struct gfx_information_node *load_frame_infos(struct cnf_info_node *cnf_i
 		frame_information_last = gfx_information_node;
 		cnf_info_pgmem = cnf_info_node.next;
 	}
+
 	return information_head;
 }
 
@@ -161,6 +165,7 @@ static int graphic_item_init(struct gfx_image *menu_image, struct cnf_image * im
 	menu_image->bitmap->width = image_node->width;
 	menu_image->bitmap->data.progmem = image_node->bitmap_progmem;
 	menu_image->bitmap->type = GFX_MONO_BITMAP_SECTION;
+
 	return 0;
 }
 
@@ -186,6 +191,7 @@ static int load_fonts(struct cnf_font_node *cnf_font_node)
 		glcd_add_font(font, font_node.id);
 		cnf_font_node = font_node.next;
 	}
+
 	return 0;
 }
 
@@ -274,19 +280,17 @@ int load_config_block(void)
 			return -1;
 	}
 
-	for (int i = 0; i < size_of_menus; i++) {
-		if (cnf_menu_node == 0)
-			break;
-
+	for (int i = 0; i < size_of_menus && cnf_menu_node != 0; i++, cnf_menu_node = cnf_menu.next) {
 		memcpy_config(&cnf_menu, cnf_menu_node, sizeof(struct cnf_menu_node));
 		memcpy_config(&config_menu, cnf_menu.menu, sizeof(struct cnf_menu));
 		struct gfx_mono_menu *mono_menu = load_mono_menu(config_menu.menu);
 		gfx_graphic_menu_init(graphic_menus[config_menu.id], config_menu.id, mono_menu,
 							 load_menu_actions(mono_menu->num_elements, config_menu.actions_head),
 							 load_graphic_view(mono_menu->num_elements, config_menu.images_items_head));
-		cnf_menu_node = cnf_menu.next;
 	}
+
 	action_types_init();
 	gfx_gui_init(graphic_menus, graphic_menus[0]->menu->num_elements);
+
 	return 0;
 }
