@@ -12,6 +12,8 @@
 #include "display/display_render.h"
 #include "display/glcd-0.5.2/glcd_font.h"
 
+extern struct gfx_mono_bitmap splash_bitmap;
+
 int load_config_block(void);
 
 #endif /* GFX_MENU_HANDLER_H_ */
