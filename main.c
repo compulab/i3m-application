@@ -9,6 +9,7 @@
 #include "gfx/gfx_components/gfx_graphic_menu.h"
 #include "ASF/common/services/usb/udc/udc.h"
 #include "ASF/common/utils/stdio/stdio_usb/stdio_usb.h"
+#include "gfx/gfx_gui_control.h"
 #include "lib/sleep.h"
 #include "asf.h"
 
@@ -68,6 +69,7 @@ static void init(void)
 	cli();
 	gfx_mono_init();
 	glcd_init();
+	gfx_show_splash_screen(3000);
 	i2c_buffer_init();
 	apply_app_settings();
 	adc_init();
