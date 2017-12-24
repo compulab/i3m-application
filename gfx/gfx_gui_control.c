@@ -16,6 +16,7 @@
 
 struct gfx_frame *current_frame;
 struct gfx_graphic_menu *current_menu;
+struct gfx_frame *splash;
 
 static struct gfx_frame custom_message;
 static struct gfx_information_node custom_message_info = {
@@ -33,12 +34,27 @@ static bool gfx_in_menu(void)
 	return !current_frame;
 }
 
-void gfx_gui_init(struct gfx_graphic_menu **graphic_menus, uint8_t num_elements)
+void gfx_gui_init(struct gfx_graphic_menu **graphic_menus, uint8_t num_elements, struct gfx_frame *logo)
 {
 	gfx_information_init(&custom_message_info.information, SHOW_CUSTOM_MESSAGE,
 						 0, 64, 0, 0, GLCD_FONT_SYSFONT_5X7);
 	gfx_frame_init(&custom_message, NULL, NULL, &custom_message_info);
 	current_menu = graphic_menus[MAIN_MENU_ID];
+	splash = logo;
+}
+
+void gfx_show_splash_screen(uint16_t mdelay)
+{
+	struct gfx_frame *save_current_frame = current_frame;
+
+	gfx_switch_to_frame(splash);
+	if (mdelay) {
+		delay_ms(mdelay);
+		if (!save_current_frame)
+			gfx_switch_to_current_menu();
+		else
+			gfx_switch_to_frame(save_current_frame);
+	}
 }
 
 void gfx_switch_to_current_menu(void)

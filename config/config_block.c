@@ -328,7 +328,7 @@ int load_config_block(void)
 	}
 
 	action_types_init();
-	gfx_gui_init(graphic_menus, graphic_menus[0]->menu->num_elements);
+	gfx_gui_init(graphic_menus, graphic_menus[0]->menu->num_elements, splash);
 
 	return 0;
 }
