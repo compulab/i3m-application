@@ -64,10 +64,14 @@ static void handle_power_state_changed(void *data)
 
 struct work power_state_work = { .do_work = handle_power_state_changed, .data = NULL, .next = NULL };
 
+static bool can_update_power_state = false;
+
 static void update_power_state(void)
 {
-	enum power_state  last_power_state = current_power_state;
+	if (!can_update_power_state)
+		return;
 
+	enum power_state last_power_state = current_power_state;
 
 	uint8_t fp_s5 = gpio_pin_is_low(FP_S5) ? 0 : 1;
 	uint8_t fp_s4 = gpio_pin_is_low(FP_S4) ? 0 : 1;
@@ -82,6 +86,7 @@ static void update_power_state(void)
 
 void power_state_init(void)
 {
+	can_update_power_state = true;
 	update_power_state();
 }
 
