@@ -9,6 +9,7 @@
 #include "twi/i2c_buffer.h"
 #include "work-queue/work.h"
 #include "gfx/gfx_assets.h"
+#include "gfx/gfx_gui_control.h"
 #include "gfx/gfx_components/gfx_graphic_menu.h"
 #include "eeprom/eeprom_layout.h"
 #include <string.h>
@@ -46,6 +47,7 @@ static void handle_power_state_changed(void *data)
 	switch(current_power_state) {
 	case POWER_ON:
 		ssd1306_set_contrast(eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS));
+		gfx_switch_to_current_menu();
 		break;
 	case POWER_STD:
 		enter_dim_mode(HIBERNATE_MSG, 30, 25);
