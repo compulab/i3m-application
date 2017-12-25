@@ -68,19 +68,11 @@ static void update_power_state(void)
 {
 	enum power_state  last_power_state = current_power_state;
 
-	if (gpio_pin_is_low(FP_S5)) {
-		current_power_state = POWER_OFF;
-	} else if (gpio_pin_is_low(FP_S4)) {
-		if (last_power_state != POWER_ON) /* Hibernate mode can be only after power on*/
-			return;
-		current_power_state = POWER_STD;
-	} else if (gpio_pin_is_low(FP_S3)) {
-		if (last_power_state != POWER_ON) /* Sleep mode can be only after power on*/
-			return;
-		current_power_state = POWER_STR;
-	} else {
-		current_power_state = POWER_ON;
-	}
+
+	uint8_t fp_s5 = gpio_pin_is_low(FP_S5) ? 0 : 1;
+	uint8_t fp_s4 = gpio_pin_is_low(FP_S4) ? 0 : 1;
+	uint8_t fp_s3 = gpio_pin_is_low(FP_S3) ? 0 : 1;
+	current_power_state = fp_s5 | (fp_s4 << 1) | (fp_s3 << 2);
 
 	if (current_power_state != last_power_state) {
 		i2c_buffer.layout.power_state = current_power_state;
