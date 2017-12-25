@@ -11,6 +11,7 @@
 #include "work-queue/work.h"
 #include "scheduler/scheduler.h"
 #include "lib/syntax.h"
+#include "asf.h"
 
 #define MAIN_MENU_ID 	0
 
@@ -23,9 +24,11 @@ static struct gfx_information_node custom_message_info = {
 	.next = NULL
 };
 
-void gfx_display_msg(char *msg)
+void gfx_display_msg(char *msg, uint8_t x, uint8_t y)
 {
 	custom_message.information_head->information.text.text = msg;
+	custom_message.information_head->information.postion.x = x;
+	custom_message.information_head->information.postion.y = y;
 	gfx_switch_to_frame(&custom_message);
 }
 

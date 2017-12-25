@@ -19,6 +19,6 @@ void gfx_display_frame(struct gfx_frame *frame);
 void gfx_switch_to_frame(struct gfx_frame *frame);
 void gfx_switch_to_menu(struct gfx_graphic_menu *graphic_menu);
 void gfx_handle_button(uint8_t keycode);
-void gfx_display_msg(char *msg);
+void gfx_display_msg(char *msg, uint8_t x, uint8_t y);
 
 #endif /* GFX_GUI_H_ */

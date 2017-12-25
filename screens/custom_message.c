@@ -20,8 +20,8 @@ static void draw_custom_message(struct gfx_information *info)
 
 	uint16_t font_id = fonts_size > 1 ? 2 : GLCD_FONT_SYSFONT_5X7;
 	clear_screen();
-	uint8_t msg_x = GFX_MONO_LCD_WIDTH / 2 - ((strlen(message) * (get_font_by_type(font_id))->width) / 2);
-	uint8_t msg_y = 20;
+	uint8_t msg_x = info->postion.x;
+	uint8_t msg_y = info->postion.y;
 	draw_string_in_buffer(message, msg_x, msg_y, get_font_by_type(font_id));
 	gfx_mono_ssd1306_put_framebuffer();
 }

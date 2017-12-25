@@ -13,6 +13,5 @@
 void draw_control_signs_numeric(uint8_t selection, uint8_t min_index, uint8_t max_index);
 void draw_control_signs_arrows(uint8_t selection, uint8_t min_index, uint8_t max_index);
 void draw_standard_separator_line(void);
-void gfx_display_msg(char *msg);
 
 #endif /* GFX_GFX_ASSETS_H_ */

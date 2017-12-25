@@ -18,10 +18,10 @@
 #define POWER_OFF_MSG		"OFF"
 #define SLEEP_BRIGHTNESS 	100
 
-static void enter_dim_mode(char *msg)
+static void enter_dim_mode(char *msg, uint8_t x, uint8_t y)
 {
 	ssd1306_set_contrast(SLEEP_BRIGHTNESS);
-	gfx_display_msg(msg);
+	gfx_display_msg(msg, x, y);
 }
 
 enum power_state current_power_state = POWER_ON;
@@ -48,13 +48,13 @@ static void handle_power_state_changed(void *data)
 		ssd1306_set_contrast(eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS));
 		break;
 	case POWER_STD:
-		enter_dim_mode(HIBERNATE_MSG);
+		enter_dim_mode(HIBERNATE_MSG, 30, 25);
 		break;
 	case POWER_STR:
-		enter_dim_mode(SLEEP_MSG);
+		enter_dim_mode(SLEEP_MSG, 30, 20);
 		break;
 	case POWER_OFF:
-		enter_dim_mode(POWER_OFF_MSG);
+		enter_dim_mode(POWER_OFF_MSG, 40, 20);
 		reset_temperatures();
 		break;
 	}
