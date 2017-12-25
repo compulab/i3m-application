@@ -13,11 +13,11 @@ void draw_string_in_buffer(char *str, uint8_t x, uint8_t y, struct glcd_FontConf
 	struct glcd_FontConfig_t *best_font = font;
 
 	if (str_len * (font->width + 1) > GFX_MONO_LCD_WIDTH - x) {
-		x = 0;
+		//x = 0;
 		best_font = glcd_get_best_font(font, str_len + 1, GFX_MONO_LCD_WIDTH);
 
 		if (best_font == NULL) {
-			gfx_mono_draw_string(str, 0, y, &sysfont); //clear all line
+			gfx_mono_draw_string(str, x, y, &sysfont); //clear all line
 			return;
 		}
 	}
