@@ -126,7 +126,7 @@ struct cnf_info_node __attribute__((section (".configData"))) hdd0_temperature_i
 struct cnf_label_node __attribute__((section (".configData"))) hdd_size_title = {
 	.label = {
 		.text = hdd_size_title_progmem,
-		.x = 27,
+		.x = 45,
 		.y = 55,
 	},
 	.font_id = GLCD_FONT_SYSFONT_5X7,
