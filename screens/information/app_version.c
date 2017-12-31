@@ -10,8 +10,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#ifndef VERSION
-#define VERSION "2.0.0-rc1"
+#ifndef DEBUG_BUILD
+#define DEBUG_BUILD ""
 #endif
 
 #ifndef BUILD_DATE
@@ -38,7 +38,7 @@ static void sprintf_app_version(struct gfx_information *info, char *output_str)
 		break;
 
 	case VERSION_APP_VERSION_INDEX:
-		strcpy(output_str, "VER: " VERSION);
+		strcpy(output_str, "VER: " VERSION DEBUG_BUILD);
 		break;
 
 	default:
