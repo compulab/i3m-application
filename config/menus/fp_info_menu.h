@@ -219,7 +219,7 @@ struct cnf_image_node  __attribute__((section (".configData"))) info_part_number
 
 struct cnf_image_node  __attribute__((section (".configData"))) app_version_image = {
 	.image = {
-		.bitmap_progmem = info_bits,
+		.bitmap_progmem = app_version_bits,
 		.width = logo_width,
 		.height = logo_height
 	},
