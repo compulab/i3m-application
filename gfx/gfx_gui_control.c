@@ -11,6 +11,7 @@
 #include "work-queue/work.h"
 #include "scheduler/scheduler.h"
 #include "lib/syntax.h"
+#include "wdt.h"
 #include "asf.h"
 
 #define MAIN_MENU_ID 	0
@@ -52,7 +53,10 @@ void gfx_show_splash_screen(uint16_t mdelay)
 
 	gfx_switch_to_frame(splash);
 	if (mdelay) {
+		wdt_disable();
 		delay_ms(mdelay);
+		wdt_reset();
+		wdt_enable();
 		if (!save_current_frame)
 			gfx_switch_to_current_menu();
 		else
