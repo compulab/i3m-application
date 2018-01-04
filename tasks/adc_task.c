@@ -55,7 +55,7 @@ static struct work adc_work = { .do_work = update_adc };
 
 static double adc_get_recur_period(void)
 {
-	return 1;
+	return 0.5;
 }
 
 struct scheduler_task adc_tick_task = {
