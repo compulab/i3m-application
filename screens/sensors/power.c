@@ -46,7 +46,7 @@ static void sprintf_power_data(struct gfx_information *info, char *output_str)
 	else if (power >= 6 && power <= 300)
 		sprintf(output_str, "%ldW", power);
 	else
-		sprintf(output_str, "LOW");
+		sprintf(output_str, "<5W");
 }
 
 int gfx_information_init_show_power_data(struct gfx_information *info)
