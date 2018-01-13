@@ -136,6 +136,15 @@ static void action_types_init(void)
 	}
 }
 
+static bool is_action_frame(struct cnf_frame *cnf_frame)
+{
+	struct cnf_info_node cnf_info_node;
+	memcpy_config(&cnf_info_node, (void *)cnf_frame->infos_head, sizeof(struct cnf_info_node));
+	enum information_type info_type = cnf_info_node.info.info_type;
+
+	return (info_type == SET_BRIGHTNESS);
+}
+
 static int load_action(struct gfx_graphic_menu_action *action, struct cnf_action config_action)
 {
 	action->type = config_action.type;
@@ -147,9 +156,16 @@ static int load_action(struct gfx_graphic_menu_action *action, struct cnf_action
 
 		struct cnf_frame cnf_frame;
 		memcpy_config(&cnf_frame, config_action.frame, sizeof(cnf_frame));
-		gfx_context_frame_init(action->frame, load_frame_images(cnf_frame.images_head),
-							   load_frame_labels(cnf_frame.labels_head),
-							   load_frame_infos(cnf_frame.infos_head));
+		if (is_action_frame(&cnf_frame)) {
+			gfx_action_frame_init(action->frame, load_frame_images(cnf_frame.images_head),
+								  load_frame_labels(cnf_frame.labels_head),
+								  load_frame_infos(cnf_frame.infos_head));
+		} else {
+			gfx_context_frame_init(action->frame, load_frame_images(cnf_frame.images_head),
+								  load_frame_labels(cnf_frame.labels_head),
+								  load_frame_infos(cnf_frame.infos_head));
+		}
+
 		return 0;
 	case ACTION_TYPE_SHOW_MENU:
 		action->menu_id = config_action.menu_id;
