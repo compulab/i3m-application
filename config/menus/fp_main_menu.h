@@ -9,10 +9,10 @@
 #include "menus_id.h"
 
 char __attribute__((section (".configData"))) main_menu_title[] = "Main Menu";
-char __attribute__((section (".configData"))) main_menu_0[] = "Information";
-char __attribute__((section (".configData"))) main_menu_1[] = "    CPU";
-char __attribute__((section (".configData"))) main_menu_2[] = "    GPU";
-char __attribute__((section (".configData"))) main_menu_3[] = " Hard Drive";
+char __attribute__((section (".configData"))) main_menu_0[] = "System Info";
+char __attribute__((section (".configData"))) main_menu_1[] = "Processor";
+char __attribute__((section (".configData"))) main_menu_2[] = "Discrete Graphics";
+char __attribute__((section (".configData"))) main_menu_3[] = "Disks";
 char __attribute__((section (".configData"))) main_menu_4[] = "Dashboard";
 
 struct gfx_mono_menu  __attribute__((section (".configData"))) fp_main_mono_menu = {
