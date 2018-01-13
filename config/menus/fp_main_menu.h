@@ -14,6 +14,7 @@ char __attribute__((section (".configData"))) main_menu_1[] = "Processor";
 char __attribute__((section (".configData"))) main_menu_2[] = "Discrete Graphics";
 char __attribute__((section (".configData"))) main_menu_3[] = "Disks";
 char __attribute__((section (".configData"))) main_menu_4[] = "Dashboard";
+char __attribute__((section (".configData"))) main_menu_5[] = "Settings";
 
 struct gfx_mono_menu  __attribute__((section (".configData"))) fp_main_mono_menu = {
 	.title= main_menu_title,
@@ -22,8 +23,17 @@ struct gfx_mono_menu  __attribute__((section (".configData"))) fp_main_mono_menu
 	.strings[2] = main_menu_2,
 	.strings[3] = main_menu_3,
 	.strings[4] = main_menu_4,
-	.num_elements = 5,
+	.strings[5] = main_menu_5,
+	.num_elements = 6,
 	.current_selection = 0
+};
+
+struct cnf_action_node __attribute__((section (".configData"))) show_airtop_settings_action = {
+	.action = {
+		.type = ACTION_TYPE_SHOW_MENU,
+		.menu_id = AIRTOP_SETTINGS_MENU_ID
+	},
+	.next = 0
 };
 
 struct cnf_action_node __attribute__((section (".configData"))) show_airtop_dashboard_action = {
@@ -31,7 +41,7 @@ struct cnf_action_node __attribute__((section (".configData"))) show_airtop_dash
 		.type = ACTION_TYPE_SHOW_MENU,
 		.menu_id = AIRTOP_DASHBOARD_MENU_ID
 	},
-	.next = 0
+	.next = &show_airtop_settings_action
 };
 
 struct cnf_action_node __attribute__((section (".configData"))) show_airtop_hdd_menu_action = {
@@ -66,13 +76,22 @@ struct cnf_action_node __attribute__((section (".configData"))) show_airtop_info
 	.next = &show_airtop_cpu_menu_action
 };
 
-struct cnf_image_node  __attribute__((section (".configData"))) screen_saver_image = {
+struct cnf_image_node  __attribute__((section (".configData"))) settings_image = {
+	.image = {
+		.bitmap_progmem = settings_bits,
+		.width = logo_width,
+		.height = logo_height
+	},
+	.next = 0,
+};
+
+struct cnf_image_node  __attribute__((section (".configData"))) dashboard_image = {
 	.image = {
 		.bitmap_progmem = screensaver_bits,
 		.width = logo_width,
 		.height = logo_height
 	},
-	.next = 0,
+	.next = &settings_image,
 };
 
 struct cnf_image_node  __attribute__((section (".configData"))) main_hdd_image = {
@@ -81,7 +100,7 @@ struct cnf_image_node  __attribute__((section (".configData"))) main_hdd_image =
 		.width = logo_width,
 		.height = logo_height
 	},
-	.next = &screen_saver_image,
+	.next = &dashboard_image,
 };
 
 struct cnf_image_node  __attribute__((section (".configData"))) main_gpu_image = {

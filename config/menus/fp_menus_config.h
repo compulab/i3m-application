@@ -15,6 +15,7 @@
 #include "fp_hdd_menu.h"
 #include "fp_debug_menu.h"
 #include "fp_dashboard.h"
+#include "fp_settings_menu.h"
 #include "config/fonts.h"
 #include "config/logos.h"
 #include "config/cnf_blk_components.h"
@@ -72,9 +73,14 @@ struct cnf_font_node __attribute__((section (".configData"))) courier_new_13X21_
 	.next = &consolas_18x28_num_font,
 };
 
+struct cnf_menu_node __attribute__((section (".configData"))) airtop_settings_menu_node = {
+	.menu = &airtop_settings_menu_cnf,
+	.next = 0
+};
+
 struct cnf_menu_node __attribute__((section (".configData"))) airtop_dashboard_menu_node = {
 	.menu = &airtop_dashboard_menu_cnf,
-	.next = 0
+	.next = &airtop_settings_menu_node
 };
 
 struct cnf_menu_node __attribute__((section (".configData"))) airtop_hdd_menu_node = {

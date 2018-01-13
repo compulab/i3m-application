@@ -704,6 +704,9 @@
     <Compile Include="config\menus\fp_menus_config.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="config\menus\fp_settings_menu.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="config\menus\menus_id.h">
       <SubType>compile</SubType>
     </Compile>
