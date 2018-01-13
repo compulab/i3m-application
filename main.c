@@ -77,7 +77,6 @@ static void init(void)
 	power_state_init();
 	twi_slave_init();
 	sleepmgr_init();
-	usb_init();
 	tc_init();
 	scheduler_init(&TCC0);
 	tc_enable(&TCC0);
