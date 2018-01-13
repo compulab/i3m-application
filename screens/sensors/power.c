@@ -14,7 +14,7 @@ static void sprintf_power_state(struct gfx_information *info, char *output_str)
 {
 	switch (current_power_state) {
 	case POWER_ON:
-		strcpy(output_str, "Airtop on");
+		strcpy(output_str, "   On");
 		break;
 	case POWER_STR:
 		strcpy(output_str, "Sleep");
@@ -23,7 +23,7 @@ static void sprintf_power_state(struct gfx_information *info, char *output_str)
 		strcpy(output_str, "Hibernate");
 		break;
 	case POWER_OFF:
-		strcpy(output_str, "Airtop off");
+		strcpy(output_str, "   Off");
 		break;
 	default:
 		strcpy(output_str, "");
