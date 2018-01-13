@@ -151,7 +151,7 @@ static bool is_generic_frame(struct cnf_frame *cnf_frame)
 	memcpy_config(&cnf_info_node, (void *)cnf_frame->infos_head, sizeof(struct cnf_info_node));
 	enum information_type info_type = cnf_info_node.info.info_type;
 
-	return (info_type == SHOW_LOGO);
+	return (info_type == SHOW_LOGO || info_type == SCREEN_OFF);
 }
 
 static int load_action(struct gfx_graphic_menu_action *action, struct cnf_action config_action)

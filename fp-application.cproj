@@ -959,6 +959,9 @@
     <Compile Include="screens\settings\brightness.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="screens\settings\screen_off.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="screens\settings\settings.h">
       <SubType>compile</SubType>
     </Compile>
