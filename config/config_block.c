@@ -145,6 +145,15 @@ static bool is_action_frame(struct cnf_frame *cnf_frame)
 	return (info_type == SET_BRIGHTNESS);
 }
 
+static bool is_generic_frame(struct cnf_frame *cnf_frame)
+{
+	struct cnf_info_node cnf_info_node;
+	memcpy_config(&cnf_info_node, (void *)cnf_frame->infos_head, sizeof(struct cnf_info_node));
+	enum information_type info_type = cnf_info_node.info.info_type;
+
+	return (info_type == SHOW_LOGO);
+}
+
 static int load_action(struct gfx_graphic_menu_action *action, struct cnf_action config_action)
 {
 	action->type = config_action.type;
@@ -160,6 +169,10 @@ static int load_action(struct gfx_graphic_menu_action *action, struct cnf_action
 			gfx_action_frame_init(action->frame, load_frame_images(cnf_frame.images_head),
 								  load_frame_labels(cnf_frame.labels_head),
 								  load_frame_infos(cnf_frame.infos_head));
+		} else if (is_generic_frame(&cnf_frame)) {
+			gfx_frame_init(action->frame, load_frame_images(cnf_frame.images_head),
+						   load_frame_labels(cnf_frame.labels_head),
+						   load_frame_infos(cnf_frame.infos_head));
 		} else {
 			gfx_context_frame_init(action->frame, load_frame_images(cnf_frame.images_head),
 								  load_frame_labels(cnf_frame.labels_head),

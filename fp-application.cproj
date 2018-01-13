@@ -959,7 +959,7 @@
     <Compile Include="screens\settings\brightness.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="screens\settings\brightness.h">
+    <Compile Include="screens\settings\settings.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="screens\sensors\cpu.c">
@@ -981,6 +981,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="screens\information\information.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="screens\settings\show_logo.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="screens\string_formats.h">

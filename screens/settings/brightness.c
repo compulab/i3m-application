@@ -10,7 +10,7 @@
 #include "gfx/gfx_components/gfx_graphic_menu.h"
 #include "gfx/gfx_components/gfx_information.h"
 #include "eeprom/eeprom_layout.h"
-#include "brightness.h"
+#include "settings.h"
 
 #define BRIGHTNESS_STEP				25
 #define MIN_BRIGHTNESS_LEVEL		0
