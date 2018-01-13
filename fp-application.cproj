@@ -956,6 +956,12 @@
     <Compile Include="screens\sensors\power.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="screens\settings\brightness.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="screens\settings\brightness.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="screens\sensors\cpu.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1164,6 +1170,7 @@
     <Folder Include="screens" />
     <Folder Include="screens\bios" />
     <Folder Include="screens\debug" />
+    <Folder Include="screens\settings" />
     <Folder Include="screens\sensors" />
     <Folder Include="screens\information" />
     <Folder Include="scheduler\" />
