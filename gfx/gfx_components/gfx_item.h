@@ -15,7 +15,6 @@
 struct gfx_item {
 	uint8_t x, y;
 	uint8_t width, height;
-	bool visible;
 };
 
 void gfx_item_init(struct gfx_item *item, uint8_t x, uint8_t y, uint8_t width, uint8_t height);

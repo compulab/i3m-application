@@ -15,5 +15,4 @@ void gfx_item_init(struct gfx_item *item, uint8_t x, uint8_t y, uint8_t width, u
 	item->y = y;
 	item->width = width;
 	item->height = height;
-	item->visible = true;
 }
