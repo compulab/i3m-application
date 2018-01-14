@@ -102,12 +102,3 @@ int gfx_information_init(struct gfx_information *info, enum information_type inf
 
 	return gfx_information_init_type(info, info_type);
 }
-
-//TODO: for some reason font_id is part of cnf_info_node, instead of cnf_info.
-//Fix this later.
-int gfx_information_init_config(struct gfx_information *info, struct cnf_info *cnf_info, uint8_t font_id)
-{
-	return gfx_information_init(info, cnf_info->info_type, cnf_info->information,
-								cnf_info->max_length, cnf_info->x, cnf_info->y, font_id);
-}
-
