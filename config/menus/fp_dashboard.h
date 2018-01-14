@@ -52,8 +52,18 @@ struct cnf_info_node __attribute__((section (".configData"))) power_state_info =
 	.next = &power_consumption_info
 };
 
+struct cnf_label_node __attribute__((section (".configData"))) power_state_title = {
+	.label = {
+		.text = power_state_title_text,
+		.x = 30,
+		.y = 55,
+	},
+	.font_id = GLCD_FONT_SYSFONT_5X7,
+	.next = 0
+};
+
 struct cnf_frame __attribute__((section (".configData"))) power_state_frame = {
-	.labels_head = 0,
+	.labels_head = &power_state_title,
 	.infos_head = &power_state_info,
 	.images_head = 0
 };
@@ -70,6 +80,16 @@ struct cnf_info_node __attribute__((section (".configData"))) gpu_info = {
 	.next = 0,
 };
 
+struct cnf_label_node __attribute__((section (".configData"))) dashboard_title = {
+	.label = {
+		.text = dashboard_cpu_gpu_temp_progmem,
+		.x = 30,
+		.y = 55,
+	},
+	.font_id = GLCD_FONT_SYSFONT_5X7,
+	.next = 0,
+};
+
 struct cnf_label_node __attribute__((section (".configData"))) gpu_title = {
 	.label = {
 		.text = dashboard_gpu_progmem,
@@ -77,7 +97,7 @@ struct cnf_label_node __attribute__((section (".configData"))) gpu_title = {
 		.y = 5,
 	},
 	.font_id = GLCD_FONT_COURIER_NEW_13X21,
-	.next = 0,
+	.next = &dashboard_title,
 };
 
 struct cnf_info_node __attribute__((section (".configData"))) cput_info = {
