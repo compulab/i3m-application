@@ -51,12 +51,6 @@ static void update_action_visibility(struct gfx_graphic_menu_action *action)
 	}
 
 	bool visible = true;
-	list_foreach(struct gfx_information_node *, action->frame->information_head, info_node) {
-		visible = info_node->information.is_valid(&info_node->information);
-		if (!visible)
-			break;
-	}
-
 	action->visible = visible;
 }
 
