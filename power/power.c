@@ -79,6 +79,13 @@ static void update_power_state(void)
 	current_power_state = fp_s5 | (fp_s4 << 1) | (fp_s3 << 2);
 
 	if (current_power_state != last_power_state) {
+		//Airtop 2 changes startes very slowly. Hide this by displaying splash screen when going from
+		//off state to on state.
+		if (last_power_state == POWER_OFF) {
+			ssd1306_set_contrast(eeprom_read_byte(BRIGHTNESS_EEPROM_ADDRESS));
+			gfx_switch_to_current_menu();
+			gfx_show_splash_screen(3000);
+		}
 		i2c_buffer.layout.power_state = current_power_state;
 		insert_work(&power_state_work);
 	}
