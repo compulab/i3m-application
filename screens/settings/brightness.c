@@ -79,7 +79,7 @@ static void handle_brightness_buttons(struct gfx_information *info, uint8_t key)
 
 static void sprintf_brightness(struct gfx_information *info, char *output_str)
 {
-	sprintf(output_str, "%d ", eeprom_get_brightness_level());
+	sprintf(output_str, "%2d ", eeprom_get_brightness_level());
 }
 
 static void set_brightness_draw_graphic_signs(struct gfx_information *info)
