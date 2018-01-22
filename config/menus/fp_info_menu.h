@@ -19,9 +19,9 @@ char __attribute__((section (".configData"))) airtop_info_go_back_to_main_progme
 
 struct gfx_mono_menu  __attribute__((section (".configData"))) airtop_info_menu = {
 	.title = airtop_info_menu_title,
-	.strings[0] = app_version_title_progmem,
+	.strings[0] = mac_address_title_progmem,
 	.strings[1] = production_codes_title_progmem,
-	.strings[2] = mac_address_title_progmem,
+	.strings[2] = app_version_title_progmem,
 	.strings[3] = airtop_info_go_back_to_main_progmem,
 	.num_elements = 4,
 	.current_selection = 0
@@ -154,10 +154,10 @@ struct cnf_action_node __attribute__((section (".configData"))) info_menu_go_bac
 	.next = 0
 };
 
-struct cnf_action_node __attribute__((section (".configData"))) mac_address_action = {
+struct cnf_action_node __attribute__((section (".configData"))) app_version_action = {
 	.action = {
 		.type = ACTION_TYPE_SHOW_FRAME,
-		.frame = &mac_address_frame
+		.frame = &app_version_frame
 	},
 	.next = &info_menu_go_back_action
 };
@@ -167,13 +167,13 @@ struct cnf_action_node __attribute__((section (".configData"))) production_codes
 		.type = ACTION_TYPE_SHOW_FRAME,
 		.frame = &production_codes_frame
 	},
-	.next = &mac_address_action
+	.next = &app_version_action
 };
 
-struct cnf_action_node __attribute__((section (".configData"))) app_version_action = {
+struct cnf_action_node __attribute__((section (".configData"))) mac_address_action = {
 	.action = {
 		.type = ACTION_TYPE_SHOW_FRAME,
-		.frame = &app_version_frame
+		.frame = &mac_address_frame
 	},
 	.next = &production_codes_action
 };
@@ -187,9 +187,9 @@ struct cnf_image_node  __attribute__((section (".configData"))) info_back_to_mai
 	.next = 0
 };
 
-struct cnf_image_node  __attribute__((section (".configData"))) info_mac_address_image = {
+struct cnf_image_node  __attribute__((section (".configData"))) app_version_image = {
 	.image = {
-		.bitmap_progmem = mac_bits,
+		.bitmap_progmem = app_version_bits,
 		.width = logo_width,
 		.height = logo_height
 	},
@@ -202,12 +202,12 @@ struct cnf_image_node  __attribute__((section (".configData"))) info_part_number
 		.width = logo_width,
 		.height = logo_height
 	},
-	.next = &info_mac_address_image
+	.next = &app_version_image
 };
 
-struct cnf_image_node  __attribute__((section (".configData"))) app_version_image = {
+struct cnf_image_node  __attribute__((section (".configData"))) info_mac_address_image = {
 	.image = {
-		.bitmap_progmem = app_version_bits,
+		.bitmap_progmem = mac_bits,
 		.width = logo_width,
 		.height = logo_height
 	},
@@ -216,9 +216,9 @@ struct cnf_image_node  __attribute__((section (".configData"))) app_version_imag
 
 struct cnf_menu   __attribute__((section (".configData"))) airtop_info_menu_cnf = {
 	.menu = &airtop_info_menu,
-	.actions_head = &app_version_action,
+	.actions_head = &mac_address_action,
 	.id = AIRTOP_INFORMATION_MENU_ID,
-	.images_items_head = &app_version_image
+	.images_items_head = &info_mac_address_image
 };
 
 #endif /* FP_INFO_MENU_H */
