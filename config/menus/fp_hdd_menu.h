@@ -14,7 +14,7 @@
 #include "menus_id.h"
 
 char __attribute__((section (".configData"))) airtop_hdd_menu_title[] = "Hard Drive";
-char __attribute__((section (".configData"))) hdd_temperature_title_progmem[] = "HDD temperature";
+char __attribute__((section (".configData"))) hdd_temperature_title_progmem[] = "Disks temp.";
 char __attribute__((section (".configData"))) airtop_hdd_go_back_to_main_progmem[] = "Back";
 
 struct gfx_mono_menu  __attribute__((section (".configData"))) airtop_hdd_menu = {
@@ -76,8 +76,8 @@ struct cnf_info_node __attribute__((section (".configData"))) hdd0_temperature_i
 struct cnf_label_node __attribute__((section (".configData"))) hdd_temperature_title = {
 	.label = {
 		.text = hdd_temperature_title_progmem,
-		.x = 17,
-		.y = 55,
+		.x = (128 - 5 * 11) / 2,
+		.y = 54,
 	},
 	.font_id = GLCD_FONT_SYSFONT_5X7,
 	.next = 0
