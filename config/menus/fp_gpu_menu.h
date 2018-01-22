@@ -14,7 +14,7 @@
 #include "menus_id.h"
 
 char __attribute__((section (".configData"))) gpu_menu_title[] = "GPU";
-char __attribute__((section (".configData"))) gpu_temperature_title_progmem[] = "GPU temperature";
+char __attribute__((section (".configData"))) gpu_temperature_title_progmem[] = "GPU Temperature";
 char __attribute__((section (".configData"))) gpu_go_back_to_main_progmem[] = "Back";
 
 struct gfx_mono_menu  __attribute__((section (".configData"))) airtop_gpu_menu = {
@@ -40,8 +40,8 @@ struct cnf_info_node __attribute__((section (".configData"))) gpu_temperature_in
 struct cnf_label_node __attribute__((section (".configData"))) gpu_temperature_title = {
 	.label = {
 		.text = gpu_temperature_title_progmem,
-		.x = 17,
-		.y = 55,
+		.x = (128 - 5 * 15) / 2,
+		.y = 54,
 	},
 	.font_id = GLCD_FONT_SYSFONT_5X7,
 	.next = 0
