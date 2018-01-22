@@ -18,21 +18,12 @@
 #define BUILD_DATE __DATE__
 #endif
 
-#ifndef BUILD_TIME
-#define BUILD_TIME __TIME__
-#endif
-
-#define VERSION_BUILD_TIME_INDEX	0
+#define VERSION_APP_VERSION_INDEX	0
 #define VERSION_BUILD_DATE_INDEX	1
-#define VERSION_APP_VERSION_INDEX	2
 
 static void sprintf_app_version(struct gfx_information *info, char *output_str)
 {
 	switch (info->metadata) {
-	case VERSION_BUILD_TIME_INDEX:
-		strcpy(output_str, BUILD_TIME);
-		break;
-
 	case VERSION_BUILD_DATE_INDEX:
 		strcpy(output_str, BUILD_DATE);
 		break;

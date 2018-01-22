@@ -50,18 +50,6 @@ struct cnf_info_node __attribute__((section (".configData"))) part_number_info =
 	.next = &serial_number_info
 };
 
-struct cnf_info_node __attribute__((section (".configData"))) app_version2_info = {
-	.info = {
-		.info_type = SHOW_APP_VERSION,
-		.information = 2,
-		.x = 1,
-		.y = 25,
-		.max_length = 30
-	},
-	.font_id = GLCD_FONT_SYSFONT_5X7,
-	.next = 0
-};
-
 struct cnf_info_node __attribute__((section (".configData"))) app_version1_info = {
 	.info = {
 		.info_type = SHOW_APP_VERSION,
@@ -71,7 +59,7 @@ struct cnf_info_node __attribute__((section (".configData"))) app_version1_info 
 		.max_length = 15
 	},
 	.font_id = GLCD_FONT_SYSFONT_5X7,
-	.next = &app_version2_info,
+	.next = 0,
 };
 
 struct cnf_info_node __attribute__((section (".configData"))) app_version0_info = {
