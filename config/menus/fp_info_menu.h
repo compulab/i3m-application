@@ -81,11 +81,31 @@ struct cnf_info_node __attribute__((section (".configData"))) mac2_address_info 
 			.info_type = SHOW_MAC_ADDRESS,
 			.information = 1,
 			.x = 0,
-			.y = 25,
+			.y = 30,
 			.max_length = 22
 	},
 	.font_id = GLCD_FONT_SYSFONT_5X7,
 	.next = 0
+};
+
+struct cnf_label_node __attribute__((section (".configData"))) mac2_title = {
+	.label = {
+		.text = mac2_title_progmem,
+		.x = 0,
+		.y = 20,
+	},
+	.font_id = GLCD_FONT_SYSFONT_5X7,
+	.next = 0
+};
+
+struct cnf_label_node __attribute__((section (".configData"))) mac1_title = {
+	.label = {
+		.text = mac1_title_progmem,
+		.x = 0,
+		.y = 0,
+	},
+	.font_id = GLCD_FONT_SYSFONT_5X7,
+	.next = &mac2_title,
 };
 
 struct cnf_label_node __attribute__((section (".configData"))) app_version_title = {
@@ -109,7 +129,7 @@ struct cnf_info_node __attribute__((section (".configData"))) mac_address_info =
 		.info_type = SHOW_MAC_ADDRESS,
 		.information = 0,
 		.x = 0,
-		.y = 5,
+		.y = 10,
 		.max_length = 22
 	},
 	.font_id = GLCD_FONT_SYSFONT_5X7,
@@ -133,7 +153,7 @@ struct cnf_label_node __attribute__((section (".configData"))) mac_address_title
 		.y = 54,
 	},
 	.font_id = GLCD_FONT_SYSFONT_5X7,
-	.next = 0
+	.next = &mac1_title,
 };
 
 struct cnf_frame __attribute__((section (".configData"))) production_codes_frame = {
