@@ -13,12 +13,12 @@
 
 static inline void sprintf_freq(char *output_str, uint16_t fq)
 {
-	sprintf(output_str, "%d MHZ", fq);
+	sprintf(output_str, "%4d MHz", fq);
 }
 
 static inline void sprintf_temperature(char *output_str, int8_t temperature)
 {
-	sprintf(output_str, "%d%c", temperature, (uint8_t)128);
+	sprintf(output_str, "%2d%c", temperature, (uint8_t)128);
 }
 
 static inline void sprintf_inval_data(char *output_str) {
