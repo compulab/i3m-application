@@ -32,11 +32,11 @@ struct cnf_info_node __attribute__((section (".configData"))) power_consumption_
 	.info = {
 		.info_type = SHOW_COMPUTER_POWER,
 		.information = 100,
-		.x = 45,
-		.y = 33,
+		.x = 0,
+		.y = 5,
 		.max_length = 20
 	},
-	.font_id = GLCD_FONT_COURIER_NEW_13X21,
+	.font_id = GLCD_FONT_COURIER_NEW_7X11,
 	.next = 0
 };
 
@@ -45,10 +45,10 @@ struct cnf_info_node __attribute__((section (".configData"))) power_state_info =
 		.info_type = SHOW_POWER_STATE,
 		.information = 0,
 		.x = 0,
-		.y = 5,
+		.y = 15,
 		.max_length = 20
 	},
-	.font_id = GLCD_FONT_COURIER_NEW_13X21,
+	.font_id = GLCD_FONT_COURIER_NEW_7X11,
 	.next = &power_consumption_info
 };
 

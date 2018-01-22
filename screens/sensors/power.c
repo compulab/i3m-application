@@ -14,16 +14,16 @@ static void sprintf_power_state(struct gfx_information *info, char *output_str)
 {
 	switch (current_power_state) {
 	case POWER_ON:
-		strcpy(output_str, "   On");
+		strcpy(output_str, "State: On");
 		break;
 	case POWER_STR:
-		strcpy(output_str, "Sleep");
+		strcpy(output_str, "State: Sleep");
 		break;
 	case POWER_STD:
-		strcpy(output_str, "Hibernate");
+		strcpy(output_str, "State: Hibernate");
 		break;
 	case POWER_OFF:
-		strcpy(output_str, "   Off");
+		strcpy(output_str, "State: Off");
 		break;
 	default:
 		strcpy(output_str, "");
@@ -42,11 +42,11 @@ static void sprintf_power_data(struct gfx_information *info, char *output_str)
 	long power = computer_data.details.adc * 0.10137 + 2.9;
 
 	if (!computer_data.details.adc_set)
-		sprintf(output_str, "-");
+		sprintf(output_str, "Power: -");
 	else if (power >= 6 && power <= 300)
-		sprintf(output_str, "%ldW", power);
+		sprintf(output_str, "Power: %2ldW", power);
 	else
-		sprintf(output_str, "<5W");
+		sprintf(output_str, "Power: <5W");
 }
 
 int gfx_information_init_show_power_data(struct gfx_information *info)
