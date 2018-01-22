@@ -44,7 +44,8 @@ static void set_clr_cursor_vertical_lines(uint8_t frame_x, uint8_t frame_y, enum
 
 static void draw_selection_title(char *title)
 {
-	uint8_t title_pos_x = (GFX_MONO_LCD_WIDTH - strlen_PF((uint16_t)title + 0x10000)) / 4;
+	uint8_t font_width = 5;
+	uint8_t title_pos_x = (GFX_MONO_LCD_WIDTH - font_width * strlen_PF((uint16_t)title + 0x10000)) / 2;
 	gfx_mono_draw_progmem_string(title, title_pos_x, 54, &sysfont);
 }
 
