@@ -9,11 +9,11 @@
 #include "menus_id.h"
 
 char __attribute__((section (".configData"))) main_menu_title[] = "Main Menu";
-char __attribute__((section (".configData"))) main_menu_0[] = "System Info";
-char __attribute__((section (".configData"))) main_menu_1[] = "Processor";
-char __attribute__((section (".configData"))) main_menu_2[] = "Discrete Graphics";
-char __attribute__((section (".configData"))) main_menu_3[] = "Disks";
-char __attribute__((section (".configData"))) main_menu_4[] = "Dashboard";
+char __attribute__((section (".configData"))) main_menu_0[] = "CPU";
+char __attribute__((section (".configData"))) main_menu_1[] = "Graphics Card";
+char __attribute__((section (".configData"))) main_menu_2[] = "Disks";
+char __attribute__((section (".configData"))) main_menu_3[] = "Monitoring";
+char __attribute__((section (".configData"))) main_menu_4[] = "System Info";
 char __attribute__((section (".configData"))) main_menu_5[] = "Settings";
 
 struct gfx_mono_menu  __attribute__((section (".configData"))) fp_main_mono_menu = {
@@ -36,12 +36,20 @@ struct cnf_action_node __attribute__((section (".configData"))) show_airtop_sett
 	.next = 0
 };
 
+struct cnf_action_node __attribute__((section (".configData"))) show_airtop_info_menu_action = {
+	.action = {
+		.type = ACTION_TYPE_SHOW_MENU,
+		.menu_id = AIRTOP_INFORMATION_MENU_ID
+	},
+	.next = &show_airtop_settings_action
+};
+
 struct cnf_action_node __attribute__((section (".configData"))) show_airtop_dashboard_action = {
 	.action = {
 		.type = ACTION_TYPE_SHOW_MENU,
 		.menu_id = AIRTOP_DASHBOARD_MENU_ID
 	},
-	.next = &show_airtop_settings_action
+	.next = &show_airtop_info_menu_action
 };
 
 struct cnf_action_node __attribute__((section (".configData"))) show_airtop_hdd_menu_action = {
@@ -68,14 +76,6 @@ struct cnf_action_node __attribute__((section (".configData"))) show_airtop_cpu_
 	.next = &show_airtop_gpu_menu_action
 };
 
-struct cnf_action_node __attribute__((section (".configData"))) show_airtop_info_menu_action = {
-	.action = {
-		.type = ACTION_TYPE_SHOW_MENU,
-		.menu_id = AIRTOP_INFORMATION_MENU_ID
-	},
-	.next = &show_airtop_cpu_menu_action
-};
-
 struct cnf_image_node  __attribute__((section (".configData"))) settings_image = {
 	.image = {
 		.bitmap_progmem = settings_bits,
@@ -85,13 +85,22 @@ struct cnf_image_node  __attribute__((section (".configData"))) settings_image =
 	.next = 0,
 };
 
+struct cnf_image_node  __attribute__((section (".configData"))) main_info_image = {
+	.image = {
+		.bitmap_progmem = info_bits,
+		.width = logo_width,
+		.height = logo_height
+	},
+	.next = &settings_image
+};
+
 struct cnf_image_node  __attribute__((section (".configData"))) dashboard_image = {
 	.image = {
 		.bitmap_progmem = screensaver_bits,
 		.width = logo_width,
 		.height = logo_height
 	},
-	.next = &settings_image,
+	.next = &main_info_image,
 };
 
 struct cnf_image_node  __attribute__((section (".configData"))) main_hdd_image = {
@@ -121,20 +130,11 @@ struct cnf_image_node  __attribute__((section (".configData"))) main_cpu_image =
 	.next = &main_gpu_image
 };
 
-struct cnf_image_node  __attribute__((section (".configData"))) main_info_image = {
-	.image = {
-		.bitmap_progmem = info_bits,
-		.width = logo_width,
-		.height = logo_height
-	},
-	.next = &main_cpu_image
-};
-
 struct cnf_menu   __attribute__((section (".configData"))) fp_main_menu_cnf = {
 	.menu = &fp_main_mono_menu,
-	.actions_head = &show_airtop_info_menu_action,
+	.actions_head = &show_airtop_cpu_menu_action,
 	.id = MAIN_MENU_ID,
-	.images_items_head = &main_info_image
+	.images_items_head = &main_cpu_image
 };
 
 #endif /* FP_MAIN_MENU_H_ */
