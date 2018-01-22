@@ -11,9 +11,9 @@
 #include "../fonts.h"
 
 char __attribute__((section (".configData"))) fp_settings_menu_title[] = "Settings";
-char __attribute__((section (".configData"))) brightness_title_progmem[] = "Brightness";
-char __attribute__((section (".configData"))) logo_title_progmem[] = "Logo";
-char __attribute__((section (".configData"))) screen_off_title_progmem[] = "Screen off";
+char __attribute__((section (".configData"))) brightness_title_progmem[] = "Adjust Brightness";
+char __attribute__((section (".configData"))) logo_title_progmem[] = "Display Logo";
+char __attribute__((section (".configData"))) screen_off_title_progmem[] = "Turn-off Screen";
 char __attribute__((section (".configData"))) settings_back_to_main_title_progmem[] = "Back";
 
 struct gfx_mono_menu  __attribute__((section (".configData"))) settings_menu = {
@@ -41,8 +41,8 @@ struct cnf_info_node __attribute__((section (".configData"))) brightness_info = 
 struct cnf_label_node __attribute__((section (".configData"))) brightness_title = {
 		.label = {
 				.text = brightness_title_progmem,
-				.x = (92 - 2 * 5)  / 2,
-				.y = 55,
+				.x = (128 - 18 * 5)  / 2 - 3,
+				.y = 56,
 
 		},
 		.font_id = GLCD_FONT_SYSFONT_5X7,
