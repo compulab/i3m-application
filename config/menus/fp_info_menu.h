@@ -12,8 +12,10 @@
 #include "menus_id.h"
 
 char __attribute__((section (".configData"))) airtop_info_menu_title[] = "Information";
-char __attribute__((section (".configData"))) app_version_title_progmem[] = "I3M app version";
-char __attribute__((section (".configData"))) production_codes_title_progmem[] = "Serial number";
+char __attribute__((section (".configData"))) mac1_title_progmem[] = "LAN1";
+char __attribute__((section (".configData"))) mac2_title_progmem[] = "LAN2";
+char __attribute__((section (".configData"))) app_version_title_progmem[] = "I3M Version";
+char __attribute__((section (".configData"))) production_codes_title_progmem[] = "Part/Serial #";
 char __attribute__((section (".configData"))) mac_address_title_progmem[] = "MAC Addresses";
 char __attribute__((section (".configData"))) airtop_info_go_back_to_main_progmem[] = "Back";
 
@@ -89,8 +91,8 @@ struct cnf_info_node __attribute__((section (".configData"))) mac2_address_info 
 struct cnf_label_node __attribute__((section (".configData"))) app_version_title = {
 	.label = {
 		.text = app_version_title_progmem,
-		.x = (92 - 13 * 5) / 2,
-		.y = 55,
+		.x = (128 - 5 * 11) / 2,
+		.y = 54,
 	},
 	.font_id = GLCD_FONT_SYSFONT_5X7,
 	.next = 0
@@ -117,8 +119,8 @@ struct cnf_info_node __attribute__((section (".configData"))) mac_address_info =
 struct cnf_label_node __attribute__((section (".configData"))) production_codes_title = {
 	.label = {
 		.text = production_codes_title_progmem,
-		.x = (92 - 8 * 5) / 2,
-		.y = 55,
+		.x = (128 - 5 * 13) / 2,
+		.y = 54,
 	},
 	.font_id = GLCD_FONT_SYSFONT_5X7,
 	.next = 0
@@ -127,8 +129,8 @@ struct cnf_label_node __attribute__((section (".configData"))) production_codes_
 struct cnf_label_node __attribute__((section (".configData"))) mac_address_title = {
 	.label = {
 		.text = mac_address_title_progmem,
-		.x = (92 - 5 * 5) / 2,
-		.y = 55,
+		.x = (128 - 5 * 13) / 2,
+		.y = 54,
 	},
 	.font_id = GLCD_FONT_SYSFONT_5X7,
 	.next = 0
