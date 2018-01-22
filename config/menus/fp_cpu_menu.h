@@ -12,8 +12,8 @@
 #include "config/fonts.h"
 
 char __attribute__((section (".configData"))) airtop_cpu_menu_title[] = "CPU";
-char __attribute__((section (".configData"))) cpu_temperature_title_progmem[] = "CPU temperature";
-char __attribute__((section (".configData"))) cpu_frequency_title_progmem[] = "CPU frequency";
+char __attribute__((section (".configData"))) cpu_temperature_title_progmem[] = "Cores temp.";
+char __attribute__((section (".configData"))) cpu_frequency_title_progmem[] = "Cores freq.";
 char __attribute__((section (".configData"))) airtop_cpu_go_back_to_main_progmem[] = "Back";
 
 struct gfx_mono_menu  __attribute__((section (".configData"))) airtop_cpu_menu = {
@@ -124,8 +124,8 @@ struct cnf_info_node __attribute__((section (".configData"))) cpu0_temperature_i
 struct cnf_label_node __attribute__((section (".configData"))) cpu_frequency_title = {
 	.label = {
 		.text = cpu_frequency_title_progmem,
-		.x = 27,
-		.y = 55,
+		.x = (128 - 5 * 11) / 2,
+		.y = 54,
 	},
 	.font_id = GLCD_FONT_SYSFONT_5X7,
 	.next = 0
@@ -134,8 +134,8 @@ struct cnf_label_node __attribute__((section (".configData"))) cpu_frequency_tit
 struct cnf_label_node __attribute__((section (".configData"))) cpu_temperature_title = {
 	.label = {
 		.text = cpu_temperature_title_progmem,
-		.x = 17,
-		.y = 55,
+		.x = (128 - 5 * 11) / 2,
+		.y = 54,
 	},
 	.font_id = GLCD_FONT_SYSFONT_5X7,
 	.next = 0
