@@ -262,7 +262,7 @@
             <Value>GFX_MONO_UG_2832HSWEG04=1</Value>
             <Value>BOARD=STK600_RC064X</Value>
             <Value>IOPORT_XMEGA_COMPAT</Value>
-            <Value>VERSION=\"2.0.0\"</Value>
+            <Value>VERSION=\"2.1.0\"</Value>
             <Value>NDEBUG</Value>
           </ListValues>
         </avrgcc.compiler.symbols.DefSymbols>
@@ -367,7 +367,7 @@
             <Value>GFX_MONO_UG_2832HSWEG04=1</Value>
             <Value>BOARD=STK600_RC064X</Value>
             <Value>IOPORT_XMEGA_COMPAT</Value>
-            <Value>VERSION=\"2.0.0\"</Value>
+            <Value>VERSION=\"2.1.0\"</Value>
             <Value>DEBUG</Value>
             <Value>DEBUG_BUILD=\"-devel\"</Value>
           </ListValues>
@@ -474,7 +474,7 @@
             <Value>GFX_MONO_UG_2832HSWEG04=1</Value>
             <Value>BOARD=STK600_RC064X</Value>
             <Value>IOPORT_XMEGA_COMPAT</Value>
-            <Value>VERSION=\"2.0.0\"</Value>
+            <Value>VERSION=\"2.1.0\"</Value>
             <Value>NDEBUG</Value>
             <Value>CONFIG_SECTION_ONLY</Value>
           </ListValues>
