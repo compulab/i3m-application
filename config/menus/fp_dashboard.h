@@ -12,7 +12,7 @@
 #include "menus_id.h"
 
 char __attribute__((section (".configData"))) dashboard_menu_title[] = "Dashboard";
-char __attribute__((section (".configData"))) dashboard_cpu_gpu_temp_progmem[] = "CPU/GPU temp";
+char __attribute__((section (".configData"))) dashboard_cpu_gpu_temp_progmem[] = "CPU/GPU temp.";
 char __attribute__((section (".configData"))) dashboard_cput_progmem[] = "CPU";
 char __attribute__((section (".configData"))) dashboard_gpu_progmem[] = "GPU";
 char __attribute__((section (".configData"))) dashboard_cpu_temperature_title_progmem[] = "Cores temp.";
