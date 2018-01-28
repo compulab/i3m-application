@@ -42,11 +42,11 @@ static void sprintf_power_data(struct gfx_information *info, char *output_str)
 	long power = computer_data.details.adc * 0.10137 + 2.9;
 
 	if (!computer_data.details.adc_set)
-		sprintf(output_str, "Power: -");
+		sprintf(output_str, "-");
 	else if (power >= 6 && power <= 300)
-		sprintf(output_str, "Power: %2ldW", power);
+		sprintf(output_str, "%2ldW", power);
 	else
-		sprintf(output_str, "Power: <5W");
+		sprintf(output_str, "<5W");
 }
 
 int gfx_information_init_show_power_data(struct gfx_information *info)
