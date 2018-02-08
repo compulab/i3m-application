@@ -25,7 +25,7 @@ static void sprintf_serial_number(struct gfx_information *info, char *output_str
 			else
 				continue;
 		}
-		sprintf(&serial[serial_index], "%02d", serial_byte);
+		sprintf(&serial[serial_index], "%02x", serial_byte);
 		serial_index += 2;
 	}
 
