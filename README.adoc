@@ -1,0 +1,57 @@
+= Introduction
+
+The Airtop I3M application runs on the small screen at the front of Compulab Airtop computers. It displays hardware information such as temperature and clock speed, which it obtains from a complementary service application that runs on the computer.
+
+The Linux version of the service can be found at https://github.com/compulab/i3m-linux-daemon[^].
+
+= Building the app
+The app was developed using Atmel Studio 7.0. The *cproj* file with all the compile flags and build targets is included in the repository.
+
+Linux users using eclipse + CDT + AVR plugin can generate makefiles with the following method:
+
+. Import the project into eclipse as an existing project.
+. Right click on project name in Project Explorer Area 
+. Select Properties 
+. Select C/C++ Build => Builder Settings 
+. Check Generate Makefiles automatically in Makefile Generation Area. 
+. Click OK
+
+This method will generate the relevant makefiles, but further manual configuration is still necessary to setup the compile flags correctly. Consult the *cproj* file as a reference.
+
+== Build targets
+
+* *Release* and *Debug*: full application, which can be installed on an erased Airtop I3M.
+
+* *Config Section*: creates a binary that contains only the menus, screen layouts, splash screen, icons, and fonts. This image can be installed on an existing I3M installation to replace the UI, without replacing the entire application. Care should be taken to make sure that the config section is compatible with the preinstalled I3M application.
+
+= Installing the application
+
+The most convenient method is to connect the Atmel ICE debugger to the I3M J2 header, and use it to flush the application hex file via Atmel Studio's UI. On Linux, eclipse the AVR plugin has similar functionality for working with the ICE debugger.
+
+Another option on Linux is to use the I3M built-in firmware update mechanism. To use it, first switch the I3M into firmware update mode using one of the following methods:
+
+* Hold the left and right buttons as you power on the Airtop.
+* Send the "reset to bootloader" I2C command from Linux:
+```
+Linux-prompt $ I2CBUS=$(i2cdetect -l | grep smbus | head -1 | awk '{ print $1 }' | cut -d - -f 2)
+Linux-prompt $ i2cset -y $I2CBUS 0x21 0x80 2
+```
+
+You'll know that the device is in firmware update mode when you see the bootloader version on the I3M screen.
+Install the new firmware with the following command:
+
+`avrdude -c avrisp2 -p x256a3u -q -Uflash:w:hex/fp-application.hex`
+
+Now poweroff and poweron the Airtop.
+
+== Fuse settings
+
+The system fuses should be set as follows:
+|==========
+|fuse0|0xff
+|fuse1|0xfa
+|fuse2|0xbe
+|fuse4|0xe1
+|fuse5|0xe8
+|==========
+
