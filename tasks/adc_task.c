@@ -38,8 +38,8 @@ static double adc_avg(void)
 static void update_adc(void *data)
 {
 	double avg = adc_avg();
-	long power = avg * 0.10137 + 2.9;
-	if (power >= 6 && power <= 300) {
+	long power = (avg * 0.10137 + 2.9) * 1.5;
+	if (power >= 6 && power <= 360) {
 		computer_data.details.adc = avg;
 		computer_data.details.adc_set = 1;
 		current_power = power;
